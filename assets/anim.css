@@ -188,3 +188,8 @@ body{
   .aw-sidecard{display:flex; flex-direction:column; max-height: calc(100vh - 200px); overflow:auto}
   .aw-sidecard #awLog{max-height:none; flex:1; min-height:160px}
 }
+
+/* v3.1：侧栏超高时自身滚动，不撑破整页 */
+@media (min-height: 860px) and (min-width: 1200px){
+  .aw-side{max-height: calc(100vh - 200px); overflow-y: auto}
+}
