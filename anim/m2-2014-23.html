@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2014·23 两个秩 1 矩阵相似</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_concept_template.html，只改 AW.init 区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+// 一张推理卡片（body 里可写 $..$ / $$..$$ 公式）
+function card(n, cls, title, body){
+  return '<div class="aw-stepcard ' + (cls || '') + '"><h4><span class="n">' + n +
+         '</span>' + title + '</h4>' + body + '</div>';
+}
+
+// 推理链：每一步的完整内容（引擎按步数截取显示）
+var STEPS = [
+  { title: '审题眼：相似判据的完整链条',
+    cls: 'key',
+    body: '<p>判据：<b>$A$、$B$ 都可对角化且特征值相同 $\\Rightarrow$ 都相似于同一对角阵 $\\Rightarrow$ $A\\sim B$</b>（传递性）。两个矩阵都是<b>秩 1 矩阵</b>，特征值用「秩 + 迹」快速求出。</p>' },
+  { title: '矩阵 A（全 1 矩阵）的特征值',
+    cls: 'step',
+    body: '<p>每行相同，$\\operatorname{rank}(A)=1$，故 $\\lambda=0$ 至少是 $n-1$ 重；迹 $\\operatorname{tr}(A)=n$（对角线全为 1），特征值之和等于迹，故另一特征值为 $n$：$$\\lambda_A=n,\\ 0,\\ \\cdots,\\ 0.$$</p>' },
+  { title: '矩阵 A 可对角化（数出 n 个特征向量）',
+    cls: 'good',
+    body: '<p>$\\lambda=0$：$A\\boldsymbol x=\\boldsymbol0$ 即 $x_1+x_2+\\cdots+x_n=0$，一个约束方程，解空间维数 $n-1$；$\\lambda=n$：特征向量 $(1,1,\\cdots,1)^{\\mathrm T}$。共 $n$ 个线性无关特征向量，$$A\\sim\\Lambda=\\operatorname{diag}(n,0,\\cdots,0).$$</p>' },
+  { title: '矩阵 B（末列为 1,2,…,n）的特征值',
+    cls: 'step',
+    body: '<p>只有末列非零，$\\operatorname{rank}(B)=1$，$\\lambda=0$ 是 $n-1$ 重；迹 $\\operatorname{tr}(B)=n$（对角元只有 $(n,n)$ 处是 $n$），故特征值同为 $$\\lambda_B=n,\\ 0,\\ \\cdots,\\ 0.$$</p>' },
+  { title: '矩阵 B 可对角化（验证特征向量）',
+    cls: 'good',
+    body: '<p>$\\lambda=0$：$B\\boldsymbol x=\\boldsymbol0$ 是末列乘 $x_n$ 等于零，等价于 $x_n=0$，解空间维数 $n-1$；$\\lambda=n$：验证 $\\boldsymbol x=(1,2,\\cdots,n)^{\\mathrm T}$：$B\\boldsymbol x=x_n\\cdot(1,2,\\cdots,n)^{\\mathrm T}=n\\,\\boldsymbol x$ ✓。共 $n$ 个，$$B\\sim\\Lambda.$$</p>' },
+  { title: '反例警示：特征值相同还不够',
+    cls: 'bad',
+    body: '<p>$\\begin{pmatrix}0&1\\\\0&0\\end{pmatrix}$ 与零矩阵特征值同为 $0,0$，但前者是若尔当块、不可对角化，二者<b>不相似</b>。所以「都有 $n$ 个线性无关特征向量」这一环<b>不能省</b>。</p>' },
+  { title: '传递性收尾：证毕',
+    cls: 'good',
+    body: '<p>$A\\sim\\Lambda$ 且 $B\\sim\\Lambda$，由相似的传递性得 $A\\sim B$，<b>证毕</b>。三个条件缺一不可：同秩 1（同特征值）、同迹、都可对角化。</p>' },
+];
+
+var snaps = STEPS.map(function(s, i){
+  return {
+    cls: i === STEPS.length - 1 ? 'done' : 'step',
+    tag: '第 ' + (i + 1) + ' 步',
+    log: s.title,
+    html: STEPS.slice(0, i + 1).map(function(x, j){
+      return card(j + 1, x.cls, x.title, x.body);
+    }).join(''),
+    done: i === STEPS.length - 1,
+  };
+});
+
+AW.init({
+  title: "秩 1 矩阵相似证明：特征值相同 + 都可对角化",
+  subtitle: "考点：矩阵相似 · 秩 1 矩阵特征值 · 可对角化判据（2014 年数学二第 23 题）",
+  counterLabel: '推理步',
+  intro: '点击「▶ 播放」逐步展开证明推理链。',
+  /* 统一 render：复刻引擎默认的 sn.html 行为，再对舞台做公式渲染 */
+  render: function(stage, sn){
+    if(sn.html != null) stage.innerHTML = sn.html;
+    renderMathAfterSnap(stage);
+  },
+  snaps: snaps,
+  result: {
+    big: "$A\\sim\\Lambda\\sim B$，故 $A\\sim B$",
+    html: "结论：两矩阵特征值同为 $n,0,\\cdots,0$ 且都有 $n$ 个线性无关特征向量，都相似于 $\\Lambda=\\operatorname{diag}(n,0,\\cdots,0)$，由传递性 $A\\sim B$。<br>记忆锚点：<b>秩 1 矩阵的特征值 = 迹 + 一串 0</b>；$A$ 的 $\\lambda=n$ 特征向量 $(1,\\cdots,1)^{\\mathrm T}$，$B$ 的 $(1,2,\\cdots,n)^{\\mathrm T}$。易错：特征值相同不保证相似（若尔当块反例）。",
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

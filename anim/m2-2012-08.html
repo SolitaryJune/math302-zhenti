@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2012·08 列组合后的 Q⁻¹AQ</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改 AW.init 区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [];   // 推导板的持久 DOM 行
+
+var LINES = [
+  "<p><b>找过渡矩阵</b>：$Q$ 的列是 $P$ 的列的线性组合（第 1 列 $\\alpha_1+\\alpha_2$、第 2 列 $\\alpha_2$、第 3 列 $\\alpha_3$），故 $$Q=PC,\\qquad C=\\begin{pmatrix}1&0&0\\\\1&1&0\\\\0&0&1\\end{pmatrix}.$$</p>",
+  "<p><b>求 $C^{-1}$</b>：消去第 1 列里的组合，$$C^{-1}=\\begin{pmatrix}1&0&0\\\\-1&1&0\\\\0&0&1\\end{pmatrix}.$$</p>",
+  "<p><b>相似关系转移</b>：$$Q^{-1}AQ=(PC)^{-1}A(PC)=C^{-1}\\big(P^{-1}AP\\big)C=C^{-1}\\Lambda C,\\quad \\Lambda=\\mathrm{diag}(1,1,2).$$</p>",
+  "<p><b>先算 $\\Lambda C$</b>：$\\Lambda$ 左乘只缩放行，$$\\Lambda C=\\begin{pmatrix}1&0&0\\\\1&1&0\\\\0&0&2\\end{pmatrix}.$$</p>",
+  "<p><b>再左乘 $C^{-1}$</b>：$$C^{-1}\\Lambda C=\\begin{pmatrix}1&0&0\\\\-1&1&0\\\\0&0&1\\end{pmatrix}\\begin{pmatrix}1&0&0\\\\1&1&0\\\\0&0&2\\end{pmatrix}=\\begin{pmatrix}1&0&0\\\\0&1&0\\\\0&0&2\\end{pmatrix}=\\Lambda.$$</p>",
+  "<p><b>看清本质</b>：$\\alpha_1,\\alpha_2$ 同属特征值 $1$ 的特征子空间，线性组合 $\\alpha_1+\\alpha_2$ 仍是属于 $1$ 的特征向量；$\\alpha_3$ 对应 $2$ 不参与混合。</p>",
+  "<p><b>结论</b>：$Q^{-1}AQ=\\mathrm{diag}(1,1,2)$，<b>选 B</b>。</p>"
+];
+
+AW.init({
+  title: '列组合不变形：$Q^{-1}AQ=\\,?$',
+  subtitle: '考点：相似对角化与特征向量 · 方法：Q = PC → C⁻¹ΛC',
+  counterLabel: '已推演',
+  intro: '点击「▶ 播放」逐步演示每一步推导。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    ROWS.length = 0;
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    for(var k = 0; k < LINES.length; k++){
+      var d = AW.el('div', '', LINES[k]);
+      d.style.cssText = 'margin:8px 0;padding:9px 14px;border-left:3px solid #e2e8f0;background:#f8fafc;border-radius:0 12px 12px 0;font-size:14.5px;line-height:1.9;display:none;';
+      board.appendChild(d);
+      ROWS.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  render: function(stage, sn){
+    for(var k = 0; k < ROWS.length; k++){
+      var r = ROWS[k];
+      if(k >= sn.show){ r.style.display = 'none'; continue; }
+      r.style.display = 'block';
+      if(k === sn.show - 1 && !sn.done){
+        r.style.borderLeftColor = '#d97706';
+        r.style.background = '#fffbeb';
+      } else {
+        r.style.borderLeftColor = '#16a34a';
+        r.style.background = '#f8fafc';
+      }
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  snaps: [
+    { cls:'shift', tag:'找 C',    log:'Q 的列是 P 的列组合，把系数记进过渡矩阵 C：Q = PC', show:1, count:0 },
+    { cls:'step',  tag:'求逆',    log:'消去第 1 列的组合，写出 C 的逆', show:2, count:1 },
+    { cls:'step',  tag:'转移',    log:'代入 (PC)⁻¹A(PC)，相似链变成 C⁻¹ΛC', show:3, count:2 },
+    { cls:'ok',    tag:'乘一半',  log:'Λ 左乘只缩放行，算出 ΛC', show:4, count:3 },
+    { cls:'ok',    tag:'乘完',    log:'再左乘 C⁻¹，结果回到 Λ 本身：diag(1,1,2)', show:5, count:4 },
+    { cls:'step',  tag:'看本质',  log:'α₁+α₂ 仍是特征值 1 的特征向量，α₃ 对应 2 不动', show:6, count:5 },
+    { cls:'done',  tag:'完成',    log:'结论：Q⁻¹AQ = diag(1,1,2)，选 B', show:7, count:6, done:true },
+  ],
+
+  result: {
+    big: 'Q⁻¹AQ = diag(1,1,2)（选 B）',
+    html: '记忆锚点：<b>同一特征值的特征向量随便组合，对角矩阵不变形</b>。$Q=PC$ 后 $Q^{-1}AQ=C^{-1}\\Lambda C$；混合只发生在特征值同为 $1$ 的前两列之间，第 3 列的 $2$ 不参与。凡把对角元交换或错配（A、C、D）都源于误以为列组合会改变特征值对应关系。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

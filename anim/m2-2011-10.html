@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2011 数二第 10 题 · 一阶线性微分方程</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（与模板一致，勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+var LINES = [
+  '<p><b>题面：</b>解 $y\'+y=\\mathrm e^{-x}\\cos x$，满足 $y(0)=0$。</p>',
+  '<p><b>定型与积分因子：</b>一阶线性非齐次方程 $y\'+P(x)y=Q(x)$，这里 $P(x)=1$，积分因子 $$\\mu=e^{\\int 1\\,\\mathrm dx}=e^{x}.$$</p>',
+  '<p><b>乘 μ 凑导数：</b>两边乘 $e^x$，左边凑成乘积导数：$$\\bigl(y\\,e^{x}\\bigr)\'=e^{x}\\cdot e^{-x}\\cos x=\\cos x.$$</p>',
+  '<p><b>积分：</b>$$y\\,e^{x}=\\sin x+C.$$</p>',
+  '<p><b>通解：</b>$$y=e^{-x}\\bigl(\\sin x+C\\bigr).$$</p>',
+  '<p><b>代初值：</b>$y(0)=0\\Rightarrow e^{0}(\\sin0+C)=C=0$，故 $C=0$。</p>',
+  '<p><b>结论：</b>$$y=e^{-x}\\sin x.$$（验算：$y\'+y=e^{-x}\\cos x$ 且 $y(0)=0$，成立。）</p>'
+];
+
+var lineEls = [];
+
+AW.init({
+  title: '第 10 题 · $y\'+y=\\mathrm e^{-x}\\cos x$ 满足 $y(0)=0$ 的解',
+  subtitle: '考点：一阶线性非齐次方程 · 方法：积分因子法',
+  counterLabel: '推导步',
+  intro: '点击「▶ 播放」逐步演示：积分因子 → 凑导数 → 积分 → 定常数。',
+  ribbonTitle: '推导进度（✓ 完成）',
+  build: function(stage){
+    stage.innerHTML = '';
+    lineEls = [];
+    var wrap = AW.el('div', 'aw-scroll');
+    wrap.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>（每步揭示一行，公式由 KaTeX 渲染）'));
+    LINES.forEach(function(h){
+      var d = AW.el('div', 'aw-stepcard', h);
+      d.style.display = 'none';
+      wrap.appendChild(d);
+      lineEls.push(d);
+    });
+    stage.appendChild(wrap);
+  },
+  snaps: [
+    { cls:'step',  tag:'审题', count:0, reveal:1 },
+    { cls:'shift', tag:'定型', log:'一阶线性方程，P(x)=1，积分因子是 e 的 x 次方', count:1, reveal:2, hl:1, ribbon:{k:1, ok:true} },
+    { cls:'step',  tag:'凑导数', log:'两边乘 e^x 后，左边正好是 (y·e^x) 的导数，右边抵消成 cos x', count:2, reveal:3, hl:2, ribbon:{k:2, ok:true} },
+    { cls:'step',  tag:'积分', log:'两边积分得 y·e^x = sin x + C', count:3, reveal:4, hl:3, ribbon:{k:3, ok:true} },
+    { cls:'step',  tag:'通解', log:'除回 e^x 得通解 y = e^(-x)(sin x + C)', count:4, reveal:5, hl:4, ribbon:{k:4, ok:true} },
+    { cls:'step',  tag:'定常数', log:'代入 y(0)=0，解出 C=0', count:5, reveal:6, hl:5, ribbon:{k:5, ok:true} },
+    { cls:'done',  tag:'结论', log:'结论：y = e^(-x)·sin x（求导回代验算成立）', count:6, reveal:7, hl:6, good:true, done:true, ribbon:{k:6, ok:true} },
+  ],
+  render: function(stage, sn){
+    for(var j = 0; j < lineEls.length; j++){
+      lineEls[j].style.display = (j < (sn.reveal || 0)) ? '' : 'none';
+      lineEls[j].className = 'aw-stepcard' + (sn.hl === j ? (sn.good ? ' good' : ' key') : '');
+    }
+    renderMathAfterSnap(stage);
+  },
+  result: {
+    big: '填 y = e^(−x)·sin x',
+    html: '通解公式：$y=e^{-\\int P\\mathrm dx}\\Bigl(\\int Q\\,e^{\\int P\\mathrm dx}\\mathrm dx+C\\Bigr)$。本题 $P=1$：积分因子 $e^x$，$(ye^x)\'=\\cos x$，代 $y(0)=0$ 得 <b>$y=e^{-x}\\sin x$</b>。易错：积分因子是 $e^{+x}$ 不是 $e^{-x}$；通解必须带 $C$ 并用初值定值。',
+  },
+});
+</script>
+</body>
+</html>

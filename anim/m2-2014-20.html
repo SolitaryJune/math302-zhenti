@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2014·20 迭代函数列的面积极限</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改 AW.init 区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [];
+
+var LINES = [
+  "<p><b>审题</b>：$f(x)=\\dfrac{x}{1+x}$（$x\\in[0,1]$），$f_n$ 是 $f$ 自身迭代 $n$ 次；$S_n$ 是曲线 $y=f_n(x)$、直线 $x=1$ 与 $x$ 轴围成的面积，求 $\\lim\\limits_{n\\to\\infty}nS_n$。题眼：<b>先找出 $f_n$ 的显式</b>。</p>",
+  "<p><b>找规律</b>：$f$ 是分式线性函数，复合不改变形式、只改分母系数：$f_1=\\dfrac{x}{1+x}$，$f_2=f(f_1)=\\dfrac{x}{1+2x}$。猜 $f_n(x)=\\dfrac{x}{1+nx}$。</p>",
+  "<p><b>归纳验证</b>：设 $f_n=\\dfrac{x}{1+nx}$，则 $$f_{n+1}=f(f_n)=\\frac{\\frac{x}{1+nx}}{1+\\frac{x}{1+nx}}=\\frac{x}{1+(n+1)x},$$ 形式保持，归纳成立。</p>",
+  "<p><b>面积</b>：$[0,1]$ 上 $f_n(x)\\ge0$，$$S_n=\\int_0^1\\frac{x}{1+nx}\\,\\mathrm dx.$$</p>",
+  "<p><b>拆分被积函数</b>：$$\\frac{x}{1+nx}=\\frac1n\\cdot\\frac{nx}{1+nx}=\\frac1n\\left(1-\\frac{1}{1+nx}\\right).$$</p>",
+  "<p><b>算积分</b>：$$S_n=\\frac1n\\left[x-\\frac1n\\ln(1+nx)\\right]_0^1=\\frac1n-\\frac{\\ln(1+n)}{n^2}.$$</p>",
+  "<p><b>乘 $n$</b>：$$nS_n=1-\\frac{\\ln(1+n)}{n}.$$</p>",
+  "<p><b>取极限</b>：$\\dfrac{\\ln(1+n)}{n}\\to0$（对数增长慢于幂），故 $nS_n\\to1$。</p>",
+  "<p><b>验算</b>：$n=1$ 时 $S_1=\\int_0^1\\frac{x}{1+x}\\,\\mathrm dx=1-\\ln2\\approx0.307$，公式给 $\\frac11-\\frac{\\ln2}{1}$，一致。$$\\lim_{n\\to\\infty}nS_n=\\boxed{1}.$$</p>"
+];
+
+AW.init({
+  title: "迭代函数列 $f_n=\\dfrac{x}{1+nx}$ 与面积极限",
+  subtitle: "考点：函数迭代（归纳） · 定积分计算 · 极限（2014 年数学二第 20 题）",
+  counterLabel: "推导步",
+  ribbonTitle: "关键节点（✓ 已完成）",
+  intro: "点击「▶ 播放」逐步演示从找规律到求极限的全过程。",
+
+  build: function(stage){
+    stage.innerHTML = '';
+    ROWS.length = 0;
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    for(var k = 0; k < LINES.length; k++){
+      var d = AW.el('div', '', LINES[k]);
+      d.style.cssText = 'margin:8px 0;padding:9px 14px;border-left:3px solid #e2e8f0;background:#f8fafc;border-radius:0 12px 12px 0;font-size:14.5px;line-height:1.9;display:none;';
+      board.appendChild(d);
+      ROWS.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  render: function(stage, sn){
+    for(var k = 0; k < ROWS.length; k++){
+      var r = ROWS[k];
+      if(k >= sn.show){ r.style.display = 'none'; continue; }
+      r.style.display = 'block';
+      if(k === sn.show - 1 && !sn.done){
+        r.style.borderLeftColor = '#d97706';
+        r.style.background = '#fffbeb';
+      } else {
+        r.style.borderLeftColor = '#16a34a';
+        r.style.background = '#f8fafc';
+      }
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  snaps: [
+    { cls:"shift", tag:"审题",   log:"函数自己迭代自己，先把第 n 次迭代的显式公式找出来", show:1, count:0 },
+    { cls:"step",  tag:"找规律", log:"复合只改分母系数：一、二次迭代后分母里出现 1 和 2", show:2, count:1 },
+    { cls:"ok",    tag:"归纳验证", log:"假设第 n 次成立，代一层复合果然得到 n 加一，形式保持", show:3, count:2, ribbon:{k:1, ok:true} },
+    { cls:"step",  tag:"写面积", log:"曲线在第一象限非负，面积就是一个定积分", show:4, count:3 },
+    { cls:"step",  tag:"拆分",   log:"被积函数提出 n 分之一，拆成 1 减去一个分式", show:5, count:4 },
+    { cls:"ok",    tag:"算积分", log:"积出来是 n 分之一减去 n 平方分之对数", show:6, count:5, ribbon:{k:2, ok:true} },
+    { cls:"step",  tag:"乘 n",   log:"面积乘 n，得到 1 减去 n 分之对数", show:7, count:6 },
+    { cls:"step",  tag:"取极限", log:"对数增长慢于幂，那一项趋于零", show:8, count:7 },
+    { cls:"done",  tag:"完成",   log:"用 n 等于 1 验算公式一致，极限为 1", show:9, count:8, done:true },
+  ],
+
+  result: {
+    big: "$\\lim\\limits_{n\\to\\infty}nS_n=1$",
+    html: "记忆锚点：<b>分式线性函数 $\\frac{x}{1+x}$ 迭代 $n$ 次得 $\\frac{x}{1+nx}$（分母系数每次加一）</b>；$S_n=\\frac1n-\\frac{\\ln(1+n)}{n^2}$，面积按 $\\frac1n$ 速度衰减，故 $nS_n\\to1$。易错：把迭代猜成 $\\frac{nx}{1+nx}$ 或 $\\frac{x}{(1+x)^n}$；提出 $\\frac1n$ 后 $\\ln$ 项还带一个 $\\frac1n$。",
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2009·14 秩 1 矩阵的迹与相似</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_concept_template.html，只改题目专属区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+function card(n, cls, title, body){
+  return '<div class="aw-stepcard ' + (cls || '') + '"><h4><span class="n">' + n +
+         '</span>' + title + '</h4>' + body + '</div>';
+}
+
+var STEPS = [
+  { title: '审题：认清两个对象',
+    cls: 'key',
+    body: '<p>$\\boldsymbol\\alpha\\boldsymbol\\beta^{\\mathrm T}$ 是 $3\\times3$ 矩阵（列乘行），$\\boldsymbol\\beta^{\\mathrm T}\\boldsymbol\\alpha$ 是一个数（内积）；已知前者相似于 $\\mathrm{diag}(2,0,0)$。把矩阵和数连起来的桥梁是<b>迹</b>。</p>',
+    log: '矩阵与数之间，靠迹搭桥' },
+  { title: '关键恒等式',
+    cls: 'key',
+    body: '<p>$$\\operatorname{tr}\\big(\\boldsymbol\\alpha\\boldsymbol\\beta^{\\mathrm T}\\big)=\\sum_{i=1}^{3}\\alpha_i\\beta_i=\\boldsymbol\\beta^{\\mathrm T}\\boldsymbol\\alpha$$对角元恰是各对 $\\alpha_i\\beta_i$，求和正是内积。</p>',
+    log: 'tr(αβᵀ) = βᵀα' },
+  { title: '相似传迹',
+    cls: 'step',
+    body: '<p>相似矩阵迹相等：$\\operatorname{tr}\\big(\\boldsymbol\\alpha\\boldsymbol\\beta^{\\mathrm T}\\big)=\\operatorname{tr}\\,\\mathrm{diag}(2,0,0)=2+0+0=2$。</p>',
+    log: '相似矩阵迹相等，读出 2' },
+  { title: '得到结论',
+    cls: 'good',
+    body: '<p>$\\boldsymbol\\beta^{\\mathrm T}\\boldsymbol\\alpha=\\operatorname{tr}\\big(\\boldsymbol\\alpha\\boldsymbol\\beta^{\\mathrm T}\\big)=2$。</p>',
+    log: 'βᵀα = 2' },
+  { title: '特征值再印证',
+    cls: 'good',
+    body: '<p>$\\big(\\boldsymbol\\alpha\\boldsymbol\\beta^{\\mathrm T}\\big)\\boldsymbol\\alpha=\\boldsymbol\\alpha\\big(\\boldsymbol\\beta^{\\mathrm T}\\boldsymbol\\alpha\\big)$：$\\boldsymbol\\alpha$ 是特征向量，非零特征值恰为 $\\boldsymbol\\beta^{\\mathrm T}\\boldsymbol\\alpha=2$，与对角阵的非零特征值一致。</p>',
+    log: '秩 1 矩阵唯一非零特征值 = βᵀα' },
+  { title: '结论',
+    cls: 'good',
+    body: '<p>填 $\\boldsymbol\\beta^{\\mathrm T}\\boldsymbol\\alpha=2$。秩 1 矩阵必有 $n-1$ 个零特征值，唯一非零特征值就是 $\\boldsymbol\\beta^{\\mathrm T}\\boldsymbol\\alpha$。</p>',
+    log: '答案 2' },
+];
+
+var snaps = STEPS.map(function(s, i){
+  return {
+    cls: i === STEPS.length - 1 ? 'done' : 'step',
+    tag: '第 ' + (i + 1) + ' 步',
+    log: s.log || s.title,
+    count: i + 1,
+    ribbon: s.ribbon,
+    html: STEPS.slice(0, i + 1).map(function(x, j){
+      return card(j + 1, x.cls, x.title, x.body);
+    }).join(''),
+    done: i === STEPS.length - 1,
+  };
+});
+
+AW.init({
+  title: '$\\boldsymbol\\alpha\\boldsymbol\\beta^{\\mathrm T}\\sim\\mathrm{diag}(2,0,0)$，求 $\\boldsymbol\\beta^{\\mathrm T}\\boldsymbol\\alpha$',
+  subtitle: '考点：秩 1 矩阵 / 相似 · 方法：迹不变性 $\\operatorname{tr}(\\boldsymbol\\alpha\\boldsymbol\\beta^{\\mathrm T})=\\boldsymbol\\beta^{\\mathrm T}\\boldsymbol\\alpha$',
+  counterLabel: '推理步',
+  intro: '点击「▶ 播放」逐步展开推理链。',
+  render: function(stage, sn){
+    if(sn.html != null) stage.innerHTML = sn.html;
+    renderMathAfterSnap(stage);
+  },
+  snaps: snaps,
+  result: {
+    big: '$\\boldsymbol\\beta^{\\mathrm T}\\boldsymbol\\alpha = 2$',
+    html: '记忆锚点：<b>$\\operatorname{tr}(\\boldsymbol\\alpha\\boldsymbol\\beta^{\\mathrm T})=\\boldsymbol\\beta^{\\mathrm T}\\boldsymbol\\alpha$，相似矩阵迹相等</b>。不需要求出具体向量；秩 1 矩阵还有 $n-1$ 个零特征值别忘掉。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

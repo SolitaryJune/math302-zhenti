@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2019·21 中值定理证明（最大值 + 泰勒展开）</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+// 一张推理卡片（body 里可写 $..$ / $$..$$ 公式）
+function card(n, cls, title, body){
+  return '<div class="aw-stepcard ' + (cls || '') + '"><h4><span class="n">' + n +
+         '</span>' + title + '</h4>' + body + '</div>';
+}
+
+// 推理链：每一步的完整内容（引擎按步数截取显示）
+var STEPS = [
+  { title: '审题眼',
+    cls: 'key',
+    body: '<p>已知 $f$ 在 $[0,1]$ 二阶可导，$f(0)=0$，$f(1)=1$，$\\int_0^1 f\\,\\mathrm{d}x=1$。两问都指向<b>最值 + 泰勒展开</b>：积分条件的作用是把最大值的下界顶上去。</p>' },
+  { title: '(I) 第一步：最大值的下界',
+    cls: '',
+    body: '<p>设 $M=\\max_{[0,1]}f$。由 $f(x)\\le M$ 积分得 $\\int_0^1 f\\,\\mathrm{d}x\\le M$，即 $M\\ge1$——积分条件先喂给最大值。</p>' },
+  { title: '(I) 第二步：排除 $M=1$',
+    cls: 'bad',
+    body: '<p>若 $M=1$：$1-f(x)\\ge0$ 连续且 $\\int_0^1(1-f)\\,\\mathrm{d}x=1-1=0$。连续非负函数积分为零必恒为零 → $f\\equiv1$，与 $f(0)=0$ 矛盾。故 $M>1$。</p>' },
+  { title: '(I) 第三步：费马定理收口',
+    cls: 'good',
+    body: '<p>$f(0)=0<M$，$f(1)=1<M$，最大值点 $\\xi$ 只能在内部取得：$\\xi\\in(0,1)$，由费马定理 $f\'(\\xi)=0$。（积分中值定理只保证 $c\\in[0,1]$，而 $f(1)=1$ 可能顶在端点，此路不干净。）</p>' },
+  { title: '(II) 第一步：在驻点处向端点 0 展开',
+    cls: '',
+    body: '<p>在 $x=\\xi$ 处写带拉格朗日余项的泰勒公式，投影到 $x=0$：</p><p>$$f(0)=f(\\xi)+f\'(\\xi)(0-\\xi)+\\frac{f\'\'(\\eta)}{2}\\,\\xi^2,\\qquad \\eta\\in(0,\\xi).$$</p>' },
+  { title: '(II) 第二步：解出二阶导数值',
+    cls: '',
+    body: '<p>代入 $f(0)=0$ 与 $f\'(\\xi)=0$：</p><p>$$0=f(\\xi)+\\frac12 f\'\'(\\eta)\\xi^2\\ \\Rightarrow\\ f\'\'(\\eta)=-\\frac{2f(\\xi)}{\\xi^2}.$$</p>' },
+  { title: '(II) 第三步：双重放缩',
+    cls: 'good',
+    body: '<p>$f(\\xi)=M>1$；$0<\\xi<1\\Rightarrow\\xi^2<1\\Rightarrow\\dfrac1{\\xi^2}>1$。两个放大因子相乘：<b>$f\'\'(\\eta)=-\\dfrac{2M}{\\xi^2}<-2$</b>，且 $\\eta\\in(0,\\xi)\\subset(0,1)$。得证。</p>' },
+  { title: '结论',
+    cls: 'good',
+    body: '<p>两问得证：<b>$\\exists\\,\\xi\\in(0,1),\\ f\'(\\xi)=0$；$\\exists\\,\\eta\\in(0,1),\\ f\'\'(\\eta)<-2$</b>。记忆锚点：积分条件 → 最大值 $M>1$ → 内部驻点；驻点展开得 $f\'\'=-\\dfrac{2f(\\xi)}{\\xi^2}$，双因子放大。</p>' },
+];
+
+var snaps = STEPS.map(function(s, i){
+  return {
+    cls: i === STEPS.length - 1 ? 'done' : 'step',
+    tag: '第 ' + (i + 1) + ' 步',
+    log: s.title,
+    html: STEPS.slice(0, i + 1).map(function(x, j){
+      return card(j + 1, x.cls, x.title, x.body);
+    }).join(''),
+    done: i === STEPS.length - 1,
+  };
+});
+
+AW.init({
+  title: '2019·21　证 $f\'(\\xi)=0$ 与 $f\'\'(\\eta)<-2$',
+  subtitle: '考点：最值与费马定理 · 连续非负函数积分为零 · 泰勒公式放缩',
+  counterLabel: '已推演',
+  intro: '点击「▶ 播放」或「下一步」，逐张展开证明推理链。',
+  /* 统一 render：复刻引擎默认的 sn.html 行为，再对舞台做公式渲染 */
+  render: function(stage, sn){
+    if(sn.html != null) stage.innerHTML = sn.html;
+    renderMathAfterSnap(stage);
+  },
+  snaps: snaps,
+  result: {
+    big: '证毕：$f\'(\\xi)=0$（$\\xi\\in(0,1)$），$f\'\'(\\eta)<-2$（$\\eta\\in(0,1)$）',
+    html: '记忆锚点：<b>积分条件抬最大值下界，$M=1$ 用「连续非负 + 积分为零 → 恒为零」排除；驻点处向端点泰勒展开，$M>1$ 与 $\\dfrac1{\\xi^2}>1$ 双因子放大</b>。干扰路线：积分中值定理给的 $c\\in[0,1]$ 内部性不保（$f(1)=1$ 恰在端点顶住）。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

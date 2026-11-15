@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2021·15 三阶常系数齐次方程 y'''−y=0 的通解</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改题目专属区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [
+  "<b>① 审题：</b>$y\'\'\'-y=0$——三阶常系数齐次线性方程，走特征方程路线",
+  "<b>② 写特征方程：</b>$r^3-1=0$，用立方差公式分解：$$r^3-1=(r-1)(r^2+r+1)=0$$",
+  "<b>③ 实根：</b>$r_1=1$，对应独立解 $\\mathrm{e}^{x}$",
+  "<b>④ 共轭复根：</b>$r^2+r+1=0$，求根公式 $r=\\dfrac{-1\\pm\\sqrt{1-4}}{2}=-\\dfrac12\\pm\\dfrac{\\sqrt3}{2}i$，即 $\\alpha=-\\dfrac12,\\ \\beta=\\dfrac{\\sqrt3}{2}$",
+  "<b>⑤ 复根翻解：</b>$\\alpha\\pm\\beta i$ 对应 $\\mathrm{e}^{\\alpha x}\\cos\\beta x$ 与 $\\mathrm{e}^{\\alpha x}\\sin\\beta x$——即 $\\mathrm{e}^{-\\frac x2}\\cos\\dfrac{\\sqrt3}{2}x$ 与 $\\mathrm{e}^{-\\frac x2}\\sin\\dfrac{\\sqrt3}{2}x$",
+  "<b>⑥ 组装通解：</b>三阶方程需 3 个线性无关解、3 个任意常数：$$y=C_1\\mathrm{e}^{x}+\\mathrm{e}^{-\\frac12x}\\left(C_2\\cos\\frac{\\sqrt3}{2}x+C_3\\sin\\frac{\\sqrt3}{2}x\\right)$$",
+  "<b>⑦ 结论：</b>通解为 $y=C_1\\mathrm{e}^x+\\mathrm{e}^{-\\frac12x}\\left(C_2\\cos\\frac{\\sqrt3}{2}x+C_3\\sin\\frac{\\sqrt3}{2}x\\right)$（$C_1,C_2,C_3$ 为任意常数）"
+];
+
+AW.init({
+  title: '2021·15　$y\'\'\'-y=0$ 的通解',
+  subtitle: '考点：特征方程 · 立方差公式 · 实根与共轭复根对应解型',
+  counterLabel: '已推导',
+  ribbonTitle: '推导进度（✓ 完成）',
+  intro: '点击「▶ 播放」或「下一步」，特征方程 → 分解 → 按根型翻译 → 组装通解。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var inner = AW.el('div', '');
+    inner.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>：当前行亮琥珀色，已完成的行变绿'));
+    this._rows = [];
+    for (var i = 0; i < ROWS.length; i++){
+      var r = AW.el('div', 'aw-stepcard', ROWS[i]);
+      inner.appendChild(r);
+      this._rows.push(r);
+    }
+    wrap.appendChild(inner);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step',  tag:'审题',   log:'三阶常系数齐次方程，直接上特征方程法', count:0, ribbon:{k:1, ok:true} },
+    { cls:'shift', tag:'分解',   log:'立方差公式拆成一个一次因式和一个二次因式', count:1, ribbon:{k:2, ok:true} },
+    { cls:'ok',    tag:'实根',   log:'实根为一，给出指数解 e 的 x 次方', count:2, ribbon:{k:3, ok:true} },
+    { cls:'ok',    tag:'复根',   log:'判别式为负，得到一对共轭复根：实部负二分之一，虚部二分之根号三', count:3, ribbon:{k:4, ok:true} },
+    { cls:'ok',    tag:'翻解',   log:'复根翻成衰减振荡的两个实值解：衰减因子乘余弦与正弦', count:4, ribbon:{k:5, ok:true} },
+    { cls:'ok',    tag:'组装',   log:'三个独立解配三个任意常数，通解成形', count:5, ribbon:{k:6, ok:true} },
+    { cls:'done',  tag:'完成',   log:'结论：指数项加衰减振荡项，即为通解', count:6, ribbon:{k:7, ok:true}, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    var rows = this._rows;
+    for (var j = 0; j < rows.length; j++){
+      rows[j].className = 'aw-stepcard' + (j < i ? ' good' : (j === i ? ' key' : ''));
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '$y=C_1\\mathrm{e}^x+\\mathrm{e}^{-\\frac12x}\\left(C_2\\cos\\frac{\\sqrt3}{2}x+C_3\\sin\\frac{\\sqrt3}{2}x\\right)$',
+    html: '记忆锚点：<b>$r^3-1=(r-1)(r^2+r+1)$：单实根给 $\\mathrm{e}^{rx}$，共轭复根 $\\alpha\\pm\\beta i$ 给 $\\mathrm{e}^{\\alpha x}(\\cos\\beta x,\\sin\\beta x)$</b>。易错：只取实根少两个解；复根实部符号写成 $+\\frac12$；忘乘衰减因子 $\\mathrm{e}^{-x/2}$。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

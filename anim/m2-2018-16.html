@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2018·16 卷积型积分方程化微分方程</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+AW.init({
+  title: '2018·16　$\\int_0^x f(t)\\,\\mathrm{d}t+\\int_0^x t f(x-t)\\,\\mathrm{d}t=ax^{2}$，求 $f$ 与 $a$',
+  subtitle: '考点：变限积分方程 · 方法：换元 $u=x-t$ 剥离 $x$ → 求导化微分方程 → 平均值定参数',
+  counterLabel: '已完成',
+  ribbonTitle: '推导进度（✓ 完成）',
+  intro: '点击「▶ 播放」或「下一步」，看第二个积分里的 x 如何被洗出来。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var inner = AW.el('div', '');
+    inner.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>：当前行亮琥珀色，已完成的行变绿'));
+    var LINES = [
+      "$$\\int_0^{x} f(t)\\,\\mathrm{d}t+\\int_0^{x} t\\,f(x-t)\\,\\mathrm{d}t=ax^{2}$$<p><b>障碍：</b>第二个积分里 $x$ 藏在 $f$ 的辐角内，不能直接对 $x$ 求导。</p>",
+      "<b>① 换元：</b>令 $u=x-t$（$\\mathrm{d}t=-\\mathrm{d}u$，$t:0\\to x\\Rightarrow u:x\\to0$）：$\\displaystyle\\int_0^{x} t f(x-t)\\,\\mathrm{d}t=\\int_0^{x}(x-u)f(u)\\,\\mathrm{d}u$",
+      "<b>② 拆开：</b>$=x\\displaystyle\\int_0^{x}f(u)\\,\\mathrm{d}u-\\int_0^{x}u f(u)\\,\\mathrm{d}u$，代回原方程，$x$ 已全部提到积分号外",
+      "<b>③ 求导：</b>两边对 $x$ 求导，$x f(x)$ 与 $-x f(x)$ 对消：$$f(x)+\\int_0^{x}f(u)\\,\\mathrm{d}u=2ax$$",
+      "<b>④ 初值：</b>令 $x=0$：$f(0)+0=0\\Rightarrow f(0)=0$",
+      "<b>⑤ 再求导：</b>$f'+f=2a$ —— 一阶线性常系数微分方程",
+      "<b>⑥ 解方程：</b>通解 $f=C\\mathrm{e}^{-x}+2a$；由 $f(0)=0$ 得 $C=-2a$：$$f(x)=2a\\left(1-\\mathrm{e}^{-x}\\right)$$",
+      "<b>⑦ (II) 平均值：</b>$\\dfrac{1}{1-0}\\displaystyle\\int_0^{1}f\\,\\mathrm{d}x=2a\\left[x+\\mathrm{e}^{-x}\\right]_0^{1}=2a\\,\\mathrm{e}^{-1}=\\dfrac{2a}{\\mathrm{e}}$",
+      "<b>⑧ 定参数：</b>令 $\\dfrac{2a}{\\mathrm{e}}=1\\Rightarrow a=\\dfrac{\\mathrm{e}}{2}$；验算 $\\int_0^{1}\\mathrm{e}(1-\\mathrm{e}^{-x})\\,\\mathrm{d}x=\\mathrm{e}\\cdot\\mathrm{e}^{-1}=1$ ✓",
+      "<b>⑨ 结论：</b>(I) $f(x)=2a(1-\\mathrm{e}^{-x})$；(II) $a=\\dfrac{\\mathrm{e}}{2}$"
+    ];
+    this._rows = [];
+    for (var i = 0; i < LINES.length; i++){
+      var r = AW.el('div', 'aw-stepcard', LINES[i]);
+      inner.appendChild(r);
+      this._rows.push(r);
+    }
+    wrap.appendChild(inner);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step',  tag:'审题', log:'第二个积分的函数值里带着参数 x，直接求导会出错，先想办法把 x 洗出去', count:0, ribbon:{k:1, ok:true} },
+    { cls:'shift', tag:'换元', log:'令 u 等于 x 减 t，上下限翻转吃掉负号，被积函数变成 x 减 u 乘 f(u)', count:1, ribbon:{k:2, ok:true} },
+    { cls:'ok',    tag:'拆开', log:'拆成 x 倍的变限积分减去另一个变限积分，x 彻底脱离 f 的辐角', count:2, ribbon:{k:3, ok:true} },
+    { cls:'ok',    tag:'求导', log:'两边求导，乘积法则产生的两项恰好对消，得到 f 加变限积分等于 2ax', count:3, ribbon:{k:4, ok:true} },
+    { cls:'step',  tag:'取值', log:'令 x 为零，积分项消失，逼出初值 f(0)=0', count:4, ribbon:{k:5, ok:true} },
+    { cls:'ok',    tag:'再导', log:'再求一次导，积分号彻底消掉，得到一阶线性微分方程', count:5, ribbon:{k:6, ok:true} },
+    { cls:'ok',    tag:'解出', log:'通解带一个待定常数，用 f(0)=0 定出负二 a，得到 f 的表达式', count:6, ribbon:{k:7, ok:true} },
+    { cls:'step',  tag:'平均值', log:'第二问用平均值等于积分除以区间长度，积出来是 2a 除以 e', count:7, ribbon:{k:8, ok:true} },
+    { cls:'ok',    tag:'定参', log:'平均值等于一，解出 a 等于二分之 e，代回验算无误', count:8, ribbon:{k:9, ok:true} },
+    { cls:'done',  tag:'完成', log:'结论：f 等于 2a 倍的一减 e 的负 x 次方，a 等于二分之 e', count:9, ribbon:{k:10, ok:true}, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    var rows = this._rows;
+    for (var j = 0; j < rows.length; j++){
+      rows[j].className = 'aw-stepcard' + (j < i ? ' good' : (j === i ? ' key' : ''));
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '(I) $f(x)=2a(1-\\mathrm{e}^{-x})$　(II) $a=\\dfrac{\\mathrm{e}}{2}$',
+    html: '记忆锚点：<b>见到 $f(x\\pm t)$ 先换元剥离 $x$，再求导消积分号</b>；初值藏在求导后的等式里令 $x=0$。易错：不换元直接求导；换元后不拆 $x\\int_0^x f-\\int_0^x uf$ 导致对消项看不见；平均值忘除区间长度。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

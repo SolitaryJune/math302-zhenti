@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学·过程动画：抽象函数偏导组合消项（2013 年第 5 题）</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+var CARDS = [
+  { cls: 'key', title: '审题与记号',
+    body: '<p>$z=\\dfrac yx f(xy)$，$f$ 是<b>一元</b>可微函数：$f\'$ 表示对唯一自变量求导后再代入 $xy$。目标：$\\dfrac xy\\dfrac{\\partial z}{\\partial x}+\\dfrac{\\partial z}{\\partial y}$。</p>' },
+  { cls: '', title: '求 ∂z/∂x',
+    body: '<p>乘积法则 + 链式法则（$\\frac yx$ 自身也要求导）：</p>' +
+          '<p>$$\\frac{\\partial z}{\\partial x}=-\\frac{y}{x^2}f(xy)+\\frac yx f\'(xy)\\cdot y=-\\frac{y}{x^2}f+\\frac{y^2}{x}f\'.$$</p>' },
+  { cls: '', title: '求 ∂z/∂y',
+    body: '<p>链式因子是 $x$：</p>' +
+          '<p>$$\\frac{\\partial z}{\\partial y}=\\frac1x f(xy)+\\frac yx f\'(xy)\\cdot x=\\frac1x f+y f\'.$$</p>' },
+  { cls: 'key', title: '按系数组合',
+    body: '<p>$$\\frac xy\\cdot\\frac{\\partial z}{\\partial x}=\\frac xy\\Big(-\\frac{y}{x^2}f+\\frac{y^2}{x}f\'\\Big)=-\\frac1x f+y f\'.$$</p>' },
+  { cls: 'good', title: '相加消项',
+    body: '<p>$$\\Big(-\\frac1x f+yf\'\\Big)+\\Big(\\frac1x f+yf\'\\Big)=2y\\,f\'(xy).$$</p>' +
+          '<p>$\\frac1x f$ 一正一负<b>正好抵消</b>，只剩 $f\'$ 项——这是计算自检信号。</p>' },
+  { cls: 'good', title: '对照选项',
+    body: '<p>结果 $2y f\'(xy)$ 与 <b>A</b> 一致：B 符号反了，C/D 残留了本应消掉的 $f$ 项。</p>' },
+];
+
+AW.init({
+  title: '$\\dfrac xy\\dfrac{\\partial z}{\\partial x}+\\dfrac{\\partial z}{\\partial y}$ 逐步计算',
+  subtitle: '考点：多元函数微分 · 方法：分求偏导 → 组合消项',
+  counterLabel: '步数',
+  ribbonTitle: '选项判定（A=1 · B=2 · C=3 · D=4）',
+  intro: '点击「▶ 播放」逐步演示推导。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    stage.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>：每步点亮一行'));
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    this._cards = [];
+    for(var k = 0; k < CARDS.length; k++){
+      var d = AW.el('div', 'aw-stepcard ' + (CARDS[k].cls || ''),
+        '<h4><span class="n">' + (k + 1) + '</span>' + CARDS[k].title + '</h4>' + CARDS[k].body);
+      d.style.display = 'none';
+      board.appendChild(d);
+      this._cards.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'shift', tag:'审题', log:'f 是一元函数，目标式要求组合两个偏导' },
+    { cls:'step',  tag:'求偏导一', log:'乘积加链式，系数 y/x 对 x 也要导' },
+    { cls:'step',  tag:'求偏导二', log:'对 y 求导，链式因子是 x' },
+    { cls:'shift', tag:'组合', log:'乘上系数 x/y，负号来自 x 的倒数求导' },
+    { cls:'ok',    tag:'消项', log:'f/x 一正一负抵消，只剩 2y 倍的 f 导数' },
+    { cls:'done',  tag:'完成', log:'结果 2y f\'(xy)，答案 A', ribbon:{k:1, ok:true}, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    for(var k = 0; k < this._cards.length; k++){
+      this._cards[k].style.display = (k <= i) ? '' : 'none';
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '答案 A：$2y\\,f\'(xy)$',
+    html: '记忆锚点：<b>系数 $\\frac yx$ 自身也要求导</b>（别只对 $f(xy)$ 用链式）；组合后 $f$ 项应当抵消——若结果里还留着 $f$，多半漏了某一项。干扰项：B 符号反，C/D 残留 $f$。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2015 数二第 20 题 · 牛顿冷却定律（交互动画）</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  /* stage 同步渲染；结论卡/标题/副标题由引擎在 render 返回后才写入或只写一次，
+     用 setTimeout(0) 兜底渲染（后台标签页 setTimeout 仍会触发） */
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+AW.init({
+  title: '2015·20　牛顿冷却：$120^\\circ$C 降到 $21^\\circ$C 还需多久？',
+  subtitle: '考点：微分方程应用 · <b>牛顿冷却定律 + 分离变量</b>',
+  counterLabel: '已完成',
+  ribbonTitle: '推导进度（✓ 完成）',
+  intro: '点击「▶ 播放」或「下一步」，看温差如何每 30 分钟缩水到十分之一。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var inner = AW.el('div', '');
+    inner.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>：当前行亮琥珀色，已完成的行变绿'));
+    var LINES = [
+      '$$\\frac{\\mathrm dT}{\\mathrm dt}=-k\\,(T-20)\\quad(k>0),\\qquad T(0)=120,\\quad T(30)=30$$',
+      '<b>① 换元（盯住温差）：</b>令 $u=T-20$，则 $\\dfrac{\\mathrm du}{\\mathrm dt}=-ku$',
+      '<b>② 分离变量求解：</b>$u=C\\,\\mathrm e^{-kt}$，即 $T-20=C\\,\\mathrm e^{-kt}$',
+      '<b>③ 初值定 $C$：</b>$T(0)=120\\Rightarrow C=100$，故 $T-20=100\\,\\mathrm e^{-kt}$',
+      '<b>④ 用 30 分钟数据定 $k$：</b>$T(30)=30\\Rightarrow 10=100\\,\\mathrm e^{-30k}\\Rightarrow\\mathrm e^{-30k}=\\dfrac1{10}$',
+      '<b>⑤ 目标 $21^\\circ$C：</b>$1=100\\,\\mathrm e^{-kt}\\Rightarrow\\mathrm e^{-kt}=\\dfrac1{100}=\\Bigl(\\dfrac1{10}\\Bigr)^{\\!2}$',
+      '<b>⑥ 对比出规律：</b>每过 $30$ 分钟温差缩小到 $\\dfrac1{10}$；温差从 $10$ 到 $1$ 还需一个「周期」$\\Rightarrow$ 总时刻 $t=60$ 分钟',
+      '<b>⑦ 还需时间：</b>$60-30=30$ 分钟',
+      '<b>⑧ 验算：</b>$t=30$ 温差 $100\\times\\frac1{10}=10$（$T=30$ ✓）；$t=60$ 温差 $100\\times\\frac1{100}=1$（$T=21$ ✓）'
+    ];
+    this._rows = [];
+    for (var i = 0; i < LINES.length; i++){
+      var r = AW.el('div', 'aw-stepcard', LINES[i]);
+      inner.appendChild(r);
+      this._rows.push(r);
+    }
+    wrap.appendChild(inner);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step',  tag:'审题',   log:'变化率与温差成正比就是牛顿冷却定律，介质恒温二十度，别忘负号', count:0, ribbon:{k:1, ok:true} },
+    { cls:'ok',    tag:'换元',   log:'盯住温差这个量：令 u 等于温度减二十，方程变成标准衰减方程', count:1, ribbon:{k:2, ok:true} },
+    { cls:'ok',    tag:'求解',   log:'分离变量解出指数衰减形式', count:2, ribbon:{k:3, ok:true} },
+    { cls:'shift', tag:'定 C',  log:'初始温度一百二十度，温差初值是一百，常数确定', count:3, ribbon:{k:4, ok:true} },
+    { cls:'ok',    tag:'定 k',  log:'三十分钟后降到三十度，温差剩十，得到指数因子的关键取值', count:4, ribbon:{k:5, ok:true} },
+    { cls:'ok',    tag:'目标',  log:'目标二十一度对应温差一，正好是一百乘十分之一的平方', count:5, ribbon:{k:6, ok:true} },
+    { cls:'ok',    tag:'对比',  log:'每三十分钟温差缩到十分之一：十到一再花三十分钟，总时刻六十分钟', count:6, ribbon:{k:7, ok:true} },
+    { cls:'ok',    tag:'作答',  log:'题目问还需多久：总时刻减去已用的三十分钟，答案是三十分钟', count:7, ribbon:{k:8, ok:true} },
+    { cls:'done',  tag:'完成',   log:'验算两个时刻的温度都吻合', count:8, ribbon:{k:9, ok:true}, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    var rows = this._rows;
+    for (var j = 0; j < rows.length; j++){
+      rows[j].className = 'aw-stepcard' + (j < i ? ' good' : (j === i ? ' key' : ''));
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '还需冷却 $30$ 分钟',
+    html: '记忆锚点：<b>温差按指数衰减，$\\mathrm e^{-30k}=\\frac1{10}$ 说明「每 30 分钟缩水到十分之一」</b>——温差 $100\\to10\\to1$ 各花 30 分钟。易错：方程漏负号会解出升温发散；题目问「还需」要减去已用的 30 分钟（总时刻 60 分钟）。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

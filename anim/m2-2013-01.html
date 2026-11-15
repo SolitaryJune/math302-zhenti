@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学·概念动画：无穷小阶的比较（2013 年第 1 题）</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+function card(n, cls, title, body){
+  return '<div class="aw-stepcard ' + (cls || '') + '"><h4><span class="n">' + n +
+         '</span>' + title + '</h4>' + body + '</div>';
+}
+
+var STEPS = [
+  { title: '审题眼', cls: 'key',
+    body: '<p>由 $\\cos x-1=x\\sin\\alpha(x)$ 可解出 $\\sin\\alpha(x)=\\dfrac{\\cos x-1}{x}$。目标是定 $\\alpha(x)$ 对 $x$ 的阶——<b>只看一个数</b>：$\\lim_{x\\to0}\\dfrac{\\alpha(x)}{x}$。</p>' },
+  { title: '先看 sin α(x) 的去向', cls: '',
+    body: '<p>$x\\to0$ 时 $\\cos x-1\\sim-\\dfrac{x^2}{2}$，代入得</p>' +
+          '<p>$$\\sin\\alpha(x)=\\frac{\\cos x-1}{x}\\sim\\frac{-\\frac{x^2}{2}}{x}=-\\frac{x}{2}\\to0.$$</p>' },
+  { title: '反解出 α(x) → 0', cls: '',
+    body: '<p>条件 $\\lvert\\alpha(x)\\rvert&lt;\\dfrac\\pi2$ 保证 $\\sin$ 在该区间上严格单调（可以反解），所以 $\\sin\\alpha(x)\\to0\\Rightarrow\\alpha(x)\\to0$。于是 $\\alpha(x)$ 是无穷小，且 $\\alpha(x)\\sim\\sin\\alpha(x)$。</p>' },
+  { title: '定阶：算 lim α(x)/x', cls: 'key',
+    body: '<p>$$\\lim_{x\\to0}\\frac{\\alpha(x)}{x}=\\lim_{x\\to0}\\frac{\\sin\\alpha(x)}{x}=\\lim_{x\\to0}\\frac{\\cos x-1}{x^2}=\\lim_{x\\to0}\\frac{-\\frac{x^2}{2}}{x^2}=-\\frac12.$$</p>' },
+  { title: '选项 A：高阶？', cls: 'bad',
+    body: '<p>高阶要求 $\\lim\\frac{\\alpha(x)}{x}=0$，实际是 $-\\frac12\\ne0$。<b>排除</b>。</p>' },
+  { title: '选项 B：低阶？', cls: 'bad',
+    body: '<p>低阶要求 $\\lim\\frac{\\alpha(x)}{x}=\\infty$，实际极限有限。<b>排除</b>。</p>' },
+  { title: '选项 D：等价？', cls: 'bad',
+    body: '<p>等价要求 $\\lim\\frac{\\alpha(x)}{x}=1$，实际是 $-\\frac12$。<b>排除</b>。</p>' },
+  { title: '选项 C：同阶不等价 ✓', cls: 'good',
+    body: '<p>同阶不等价的定义：$\\lim\\frac{\\alpha(x)}{x}$ 为<b>非零有限常数且 $\\ne1$</b>。$-\\frac12$ 正中定义。答案选 <b>C</b>。</p>' },
+];
+
+var RIBBONS = [null, null, null, null,
+  {k:1, ok:false}, {k:2, ok:false}, {k:4, ok:false}, {k:3, ok:true}];
+
+var snaps = STEPS.map(function(s, i){
+  return {
+    cls: i === STEPS.length - 1 ? 'done' : (s.cls === 'bad' ? 'miss' : (s.cls === 'good' ? 'ok' : 'step')),
+    tag: '第 ' + (i + 1) + ' 步',
+    log: s.title.replace(' ✓', '，命中').replace('？', '——核对定义'),
+    html: STEPS.slice(0, i + 1).map(function(x, j){
+      return card(j + 1, x.cls, x.title, x.body);
+    }).join(''),
+    count: i + 1,
+    ribbon: RIBBONS[i],
+    done: i === STEPS.length - 1,
+  };
+});
+
+AW.init({
+  title: '$\\alpha(x)$ 的阶——由 $\\cos x-1=x\\sin\\alpha(x)$ 定阶',
+  subtitle: '考点：无穷小阶的比较 · 方法：解出配角 → 定极限 → 对号入座',
+  ribbonTitle: '选项判定（A=1 · B=2 · C=3 · D=4）',
+  intro: '点击「▶ 播放」逐步展开推理链。',
+  render: function(stage, sn){
+    if(sn.html != null) stage.innerHTML = sn.html;
+    renderMathAfterSnap(stage);
+  },
+  snaps: snaps,
+  result: {
+    big: '答案 C',
+    html: '记忆锚点：<b>定阶只看 $\\lim\\frac{\\alpha(x)}{x}$</b>：为 0 → 高阶，为 ∞ → 低阶，为 1 → 等价，<b>其余非零常数 → 同阶不等价</b>。本题极限为 $-\\frac12$。干扰项共性：把"同阶"与"等价"混为一谈——等价是同阶里极限恰为 1 的特例。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

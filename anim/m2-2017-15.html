@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2017·15 变限积分求极限</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+AW.init({
+  title: '2017·15　求 $\\lim\\limits_{x\\to0^{+}}\\dfrac{\\int_0^x\\sqrt{x-t}\\,\\mathrm{e}^{t}\\,\\mathrm{d}t}{\\sqrt{x^{3}}}$',
+  subtitle: '考点：变限积分求极限 · 方法：换元分离上限 $x$ → 洛必达 → 阶的估计',
+  counterLabel: '已完成',
+  ribbonTitle: '推导进度（✓ 完成）',
+  intro: '点击「▶ 播放」或「下一步」，看上限 x 如何被换元洗出积分号。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var inner = AW.el('div', '');
+    inner.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>：当前行亮琥珀色，已完成的行变绿'));
+    var LINES = [
+      "$$\\lim_{x\\to0^{+}}\\frac{\\int_0^x\\sqrt{x-t}\\,\\mathrm{e}^{t}\\,\\mathrm{d}t}{\\sqrt{x^{3}}}\\qquad\\left(\\tfrac00\\ \\text{型}\\right)$$",
+      "<b>① 障碍：</b>被积函数 $\\sqrt{x-t}$ 里混着上限 $x$，<b>不能直接用变限积分求导公式</b>",
+      "<b>② 换元：</b>令 $u=x-t$（$t=x-u$，$\\mathrm{d}t=-\\mathrm{d}u$；$t:0\\to x\\Rightarrow u:x\\to0$）",
+      "<b>③ 分离：</b>分子 $=\\mathrm{e}^{x}\\int_0^{x}\\sqrt{u}\\,\\mathrm{e}^{-u}\\,\\mathrm{d}u$，记为 $N(x)$——$x$ 已提到积分号外",
+      "<b>④ 定型：</b>原式 $=\\dfrac{N(x)}{x^{3/2}}$，分子分母同趋于 $0$，洛必达",
+      "<b>⑤ 分子求导：</b>$N'(x)=N(x)+\\sqrt{x}$（乘积法则 + 变限积分求导）",
+      "<b>⑥ 分母求导：</b>$\\left(x^{3/2}\\right)'=\\dfrac32\\sqrt{x}$，故 $L=\\lim\\limits_{x\\to0^{+}}\\left[\\dfrac{N(x)}{\\tfrac32\\sqrt{x}}+\\dfrac23\\right]$",
+      "<b>⑦ 估阶：</b>$\\int_0^{x}\\sqrt{u}\\,\\mathrm{e}^{-u}\\,\\mathrm{d}u\\sim\\int_0^{x}\\sqrt{u}\\,\\mathrm{d}u=\\dfrac23x^{3/2}$，于是 $\\dfrac{N(x)}{\\tfrac32\\sqrt{x}}\\sim\\dfrac49\\,x\\to0$",
+      "<b>⑧ 收尾：</b>$$L=0+\\dfrac23=\\dfrac23$$"
+    ];
+    this._rows = [];
+    for (var i = 0; i < LINES.length; i++){
+      var r = AW.el('div', 'aw-stepcard', LINES[i]);
+      inner.appendChild(r);
+      this._rows.push(r);
+    }
+    wrap.appendChild(inner);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step',  tag:'审题', log:'认清障碍：上限 x 藏在被积函数里，不能直接对变限积分求导', count:0, ribbon:{k:1, ok:true} },
+    { cls:'shift', tag:'换元', log:'令 u 等于 x 减 t，积分上下限跟着翻转，多出一个负号', count:1, ribbon:{k:2, ok:true} },
+    { cls:'ok',    tag:'分离', log:'e 的 x 次方提出积分号，x 与 t 彻底分离，新分子记作 N', count:2, ribbon:{k:3, ok:true} },
+    { cls:'step',  tag:'定型', log:'分子分母都趋于零，零比零型，启用洛必达法则', count:3, ribbon:{k:4, ok:true} },
+    { cls:'ok',    tag:'求导', log:'分子是乘积：一项是它本身，另一项由变限积分求导得到根号 x', count:4, ribbon:{k:5, ok:true} },
+    { cls:'ok',    tag:'化简', log:'分母求导得二分之三倍根号 x，式子拆成变式加常数三分之二', count:5, ribbon:{k:6, ok:true} },
+    { cls:'ok',    tag:'估阶', log:'被积函数里 e 的负 u 次方趋于一，积分等价于三分之二 x 的二分之三次方', count:6, ribbon:{k:7, ok:true} },
+    { cls:'ok',    tag:'收尾', log:'剩余分式等价于九分之四 x，趋于零，只剩常数', count:7, ribbon:{k:8, ok:true} },
+    { cls:'done',  tag:'完成', log:'结论：原极限等于三分之二', count:8, ribbon:{k:9, ok:true}, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    var rows = this._rows;
+    for (var j = 0; j < rows.length; j++){
+      rows[j].className = 'aw-stepcard' + (j < i ? ' good' : (j === i ? ' key' : ''));
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '极限 $=\\dfrac{2}{3}$',
+    html: '记忆锚点：<b>先分离、再求导、后估阶</b>——被积函数里混有上限 $x$ 时，第一动作是换元 $u=x-t$ 把 $x$ 提出积分号。易错：不换元直接「上限代入」求导；洛必达后丢掉 $N(x)$ 项；换元忘变限导致符号错。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

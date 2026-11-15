@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学·算法/过程类动画</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+/* 推导板：所有推导行在 build 时建好（含公式），render 按 i 逐行点亮 */
+var rows = [];
+function drow(html, at, green){
+  var d = AW.el('div', '', html);
+  d.style.cssText = 'margin:10px 0;padding:10px 16px;border-left:4px solid #cbd5e1;' +
+    'background:#f8fafc;border-radius:8px;font-size:15.5px;line-height:1.9;' +
+    'opacity:0.15;transform:translateX(-10px);transition:all .4s;';
+  rows.push({el: d, at: at, green: !!green});
+  return d;
+}
+
+AW.init({
+  title: '2010 数学二 第11题 · $y=\\ln(1-2x)$ 的 $n$ 阶导数 $y^{(n)}(0)$',
+  subtitle: '考点：麦克劳林展开系数法 · 方法：$y^{(n)}(0)=n!\\,a_n$',
+  counterLabel: '已推导',
+  intro: '点击「▶ 播放」逐步演示：展开成幂级数，读系数乘阶乘。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var inner = AW.el('div', '');
+    inner.appendChild(AW.el('div', 'aw-row-label',
+      '<b>推导板</b>：高阶导数在定点的值 $=$ 幂级数系数乘阶乘，避硬求导'));
+    inner.appendChild(drow(
+      '<b>系数法框架</b>：若 $y=\\sum_{k\\ge0}a_kx^k$，则 $y^{(n)}(0)=n!\\,a_n$——目标转为读出 $x^n$ 的系数', 1));
+    inner.appendChild(drow(
+      '<b>基本展开</b>：$\\ln(1+u)=u-\\dfrac{u^2}{2}+\\dfrac{u^3}{3}-\\cdots\\quad(\\lvert u\\rvert\\lt1)$', 2));
+    inner.appendChild(drow(
+      '<b>代入 $u=-2x$</b>：每项系数乘上 $(-1)^{k-1}(-1)^k=-1$，符号全部翻负：' +
+      '$\\ln(1-2x)=-\\displaystyle\\sum_{k=1}^{\\infty}\\frac{2^k}{k}\\,x^k$', 3));
+    inner.appendChild(drow(
+      '<b>读系数</b>：$x^n$ 的系数 $a_n=-\\dfrac{2^n}{n}$', 4));
+    inner.appendChild(drow(
+      '<b>乘阶乘</b>：$y^{(n)}(0)=n!\\cdot\\Big(-\\dfrac{2^n}{n}\\Big)=-2^n\\,(n-1)!$', 5, true));
+    inner.appendChild(drow(
+      '<b>自检</b>：$n=1$ 时 $y\'(0)=-2=-2^1\\cdot0!$ ✓；$n=2$ 时 $y^{\\prime\\prime}(0)=-4=-2^2\\cdot1!$ ✓；' +
+      '$n=3$ 时 $y^{(3)}(0)=-16=-2^3\\cdot2!$ ✓', 6));
+    wrap.appendChild(inner);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls: 'step',  tag: '审题',   log: '求 n 阶导数在零点的值，用幂级数系数法：先展开再读系数乘阶乘，不必硬算 n 阶导数', count: 1 },
+    { cls: 'step',  tag: '套公式', log: '写下 ln(1+u) 的标准展开，交错级数，系数带正负号', count: 2 },
+    { cls: 'shift', tag: '换元',   log: '代入 u 等于负 2x：正负因子相乘后每一项都变成负号，系数是 2 的 k 次方除以 k', count: 3 },
+    { cls: 'step',  tag: '读系数', log: 'x 的 n 次方前面系数是负的 2 的 n 次方除以 n', count: 4 },
+    { cls: 'shift', tag: '乘阶乘', log: 'n 的阶乘乘上去，除以 n 后剩下 n 减 1 的阶乘，答案是负 2 的 n 次方乘 n 减 1 的阶乘', count: 5 },
+    { cls: 'done',  tag: '完成',   log: '用 n 等于 1、2、3 逐个验证：负 2、负 4、负 16，全部吻合', count: 6, done: true },
+  ],
+
+  render: function(stage, sn, i){
+    for(var k = 0; k < rows.length; k++){
+      var r = rows[k];
+      var revealed = i >= r.at;
+      var active = revealed && r.at === i && !sn.done;
+      var green = sn.done && r.green;
+      r.el.style.opacity = revealed ? '1' : '0.15';
+      r.el.style.transform = revealed ? 'none' : 'translateX(-10px)';
+      r.el.style.background = green ? '#ecfdf3' : (active ? '#fff7e0' : '#f8fafc');
+      r.el.style.borderLeftColor = green ? '#16a34a' : (active ? '#f59e0b' : '#cbd5e1');
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '$y^{(n)}(0)=-2^n\\,(n-1)!$',
+    html: '记忆锚点：<b>$f^{(n)}(0)=n!\\,a_n$，系数全靠展开读</b>。两个易错：代 $u=-2x$ 后 $(-1)^{k-1}(-1)^k=-1$，符号全负；$n!\\cdot\\frac1n=(n-1)!$，别把阶乘除法算错。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

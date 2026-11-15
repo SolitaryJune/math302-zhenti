@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2013·18 中值定理两问接力证明</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改 AW.init 区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [];
+
+var LINES = [
+  "<p><b>审题</b>：$f$ 是 $[-1,1]$ 上的奇函数、有二阶导数，$f(1)=1$。要证 (1) $f'(\\xi)=1$（$\\xi\\in(0,1)$）；(2) $f''(\\eta)+f'(\\eta)=1$（$\\eta\\in(-1,1)$）。</p>",
+  "<p><b>奇函数的两大馈赠</b>：图象过原点，$f(0)=0$；奇函数的导数是偶函数，$f'(-x)=f'(x)$——第 (2) 问的钥匙，先记下。</p>",
+  "<p><b>(1) 在 $[0,1]$ 上拉格朗日中值定理</b>：存在 $\\xi\\in(0,1)$，$$f'(\\xi)=\\frac{f(1)-f(0)}{1-0}=\\frac{1-0}{1}=1.$$ 两问的接力棒 $\\xi$ 就是它。</p>",
+  "<p><b>(2) 目标变形</b>：$f''+f'=1$ 即 $f''+f'-1=0$。乘积求导给出桥梁：$$\\big(e^x(f'(x)-1)\\big)'=e^x\\big(f''(x)+f'(x)-1\\big)$$ 于是构造 $g(x)=e^x\\big(f'(x)-1\\big)$，要证的就是 $g'(\\eta)=0$——罗尔定理的形状。</p>",
+  "<p><b>找 $g$ 的两个等值端点</b>：由 (1)，$f'(\\xi)=1$；$f'$ 是偶函数，$f'(-\\xi)=f'(\\xi)=1$。$$g(\\xi)=e^{\\xi}\\cdot0=0,\\qquad g(-\\xi)=e^{-\\xi}\\cdot0=0$$</p>",
+  "<p><b>罗尔定理收尾</b>：$g$ 在 $[-\\xi,\\xi]\\subset(-1,1)$ 上连续可导，存在 $\\eta\\in(-\\xi,\\xi)$ 使 $g'(\\eta)=0$。</p>",
+  "<p><b>除掉恒正因子</b>：$g'(\\eta)=e^{\\eta}\\big(f''(\\eta)+f'(\\eta)-1\\big)=0$，$e^{\\eta}\\neq0$，两边除掉：$$f''(\\eta)+f'(\\eta)=1$$</p>",
+  "<p><b>结论</b>：(1) $\\exists\\,\\xi\\in(0,1),\\ f'(\\xi)=1$；(2) $\\exists\\,\\eta\\in(-1,1),\\ f''(\\eta)+f'(\\eta)=1$。均得证。$$\\boxed{\\;\\eta\\in(-\\xi,\\xi)\\subset(-1,1)\\;}$$</p>"
+];
+
+AW.init({
+  title: '拉格朗日开路、罗尔收尾：$f\'=1$ 与 $f\'\'+f\'=1$ 的接力',
+  subtitle: '考点：中值定理证明题 · 方法：奇函数性质 + 辅助函数 $g=e^x(f\'-1)$',
+  counterLabel: '推理步',
+  intro: '点击「▶ 播放」逐步演示两问的证明链条。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    ROWS.length = 0;
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    for(var k = 0; k < LINES.length; k++){
+      var d = AW.el('div', '', LINES[k]);
+      d.style.cssText = 'margin:8px 0;padding:9px 14px;border-left:3px solid #e2e8f0;background:#f8fafc;border-radius:0 12px 12px 0;font-size:14.5px;line-height:1.9;display:none;';
+      board.appendChild(d);
+      ROWS.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  render: function(stage, sn){
+    for(var k = 0; k < ROWS.length; k++){
+      var r = ROWS[k];
+      if(k >= sn.show){ r.style.display = 'none'; continue; }
+      r.style.display = 'block';
+      if(k === sn.show - 1 && !sn.done){
+        r.style.borderLeftColor = '#d97706';
+        r.style.background = '#fffbeb';
+      } else {
+        r.style.borderLeftColor = '#16a34a';
+        r.style.background = '#f8fafc';
+      }
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  snaps: [
+    { cls:'shift', tag:'审题',     log:'奇函数加端点值 f(1)=1，两问分别要 f′=1 与 f″+f′=1', show:1, count:0 },
+    { cls:'key',   tag:'挖条件',   log:'奇函数给两个礼物：f(0)=0，以及导函数是偶函数', show:2, count:1 },
+    { cls:'ok',    tag:'证(1)',    log:'[0,1] 上拉格朗日：割线斜率 (1−0)/(1−0)=1，得 ξ', show:3, count:2 },
+    { cls:'step',  tag:'造辅助',   log:'(2) 里出现导数的组合，凑成 eˣ(f′−1) 的导数，目标变成某函数导数为零', show:4, count:3 },
+    { cls:'ok',    tag:'找零点',   log:'ξ 处 f′=1，偶函数给 −ξ 处也是 1，g 两端都是 0', show:5, count:4 },
+    { cls:'ok',    tag:'罗尔',     log:'[−ξ,ξ] 在 (−1,1) 内部，罗尔定理给出 η 使 g′=0', show:6, count:5 },
+    { cls:'ok',    tag:'证(2)',    log:'除掉恒正的 e 的 η 次幂，得 f″+f′=1', show:7, count:6 },
+    { cls:'done',  tag:'完成',     log:'两问链条闭合：拉格朗日给 ξ，偶性翻出 −ξ，罗尔给 η', show:8, count:7, done:true },
+  ],
+
+  result: {
+    big: '$(1)\\ f\'(\\xi)=1;\\quad (2)\\ f\'\'(\\eta)+f\'(\\eta)=1$',
+    html: '记忆锚点：<b>见 $f\'\'+af\'$ 的组合就构造 $e^{ax}(f\'-c)$</b>；本题 $a=1,c=1$。奇函数三件套：$f(0)=0$、$f\'$ 偶、对称区间端点值互为相反数。易错：不带 $-1$ 时 $g(\\pm\\xi)$ 不相等，罗尔用不上。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

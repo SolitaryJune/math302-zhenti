@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2011 数二第 7 题 · 初等变换的矩阵语言</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（与模板一致，勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+var LINES = [
+  '<p><b>题面：</b>把 $A$ 的第 2 列加到第 1 列得 $B$；再交换 $B$ 的第 2、3 行得单位矩阵 $E$。求 $A$（用 $P_1$、$P_2$ 表示）。</p>',
+  '<p><b>认矩阵：</b>$P_1=\\begin{pmatrix}1&0&0\\\\1&1&0\\\\0&0&1\\end{pmatrix}$ 对应「第 2 列加到第 1 列」，$P_2=\\begin{pmatrix}1&0&0\\\\0&0&1\\\\0&1&0\\end{pmatrix}$ 对应「交换第 2、3 行」。</p>',
+  '<p><b>翻译句一（列变换 → 右乘）：</b>$$B=AP_1.$$</p>',
+  '<p><b>翻译句二（行变换 → 左乘）：</b>$$P_2B=E.$$</p>',
+  '<p><b>联立解出 A：</b>$$P_2\\,A\\,P_1=E\\ \\Longrightarrow\\ A=P_2^{-1}P_1^{-1}.$$</p>',
+  '<p><b>化简：</b>$P_2$ 交换两行、再换一次就还原，故 $P_2^{-1}=P_2$；$P_1^{-1}$ 只把那个 1 变号。故 $$A=P_2P_1^{-1},$$ <b>选 D</b>。</p>',
+  '<p><b>验证：</b>取 $A=P_2P_1^{-1}=\\begin{pmatrix}1&0&0\\\\0&0&1\\\\-1&1&0\\end{pmatrix}$，则 $AP_1=\\begin{pmatrix}1&0&0\\\\0&0&1\\\\0&1&0\\end{pmatrix}$，再交换其第 2、3 行恰得 $E$，完全吻合。</p>'
+];
+
+var lineEls = [];
+
+AW.init({
+  title: '第 7 题 · 由初等变换过程反解 $A$',
+  subtitle: '考点：初等矩阵 · 方法：行变换左乘、列变换右乘',
+  counterLabel: '推导步',
+  intro: '点击「▶ 播放」逐步演示：认矩阵 → 翻译两句话 → 联立求逆 → 化简。',
+  ribbonTitle: '推导进度（✓ 完成）',
+  build: function(stage){
+    stage.innerHTML = '';
+    lineEls = [];
+    var wrap = AW.el('div', 'aw-scroll');
+    wrap.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>（每步揭示一行，公式由 KaTeX 渲染）'));
+    LINES.forEach(function(h){
+      var d = AW.el('div', 'aw-stepcard', h);
+      d.style.display = 'none';
+      wrap.appendChild(d);
+      lineEls.push(d);
+    });
+    stage.appendChild(wrap);
+  },
+  snaps: [
+    { cls:'step',  tag:'审题', count:0, reveal:1 },
+    { cls:'shift', tag:'认矩阵', log:'先认出 P₁、P₂ 各自对应哪个初等变换', count:1, reveal:2, hl:1, ribbon:{k:1, ok:true} },
+    { cls:'step',  tag:'句一', log:'列变换等于右乘：B = A·P₁', count:2, reveal:3, hl:2, ribbon:{k:2, ok:true} },
+    { cls:'step',  tag:'句二', log:'行变换等于左乘：P₂·B = E', count:3, reveal:4, hl:3, ribbon:{k:3, ok:true} },
+    { cls:'step',  tag:'联立', log:'代入得 P₂AP₁ = E，两侧乘逆矩阵解出 A', count:4, reveal:5, hl:4, ribbon:{k:4, ok:true} },
+    { cls:'step',  tag:'化简', log:'交换矩阵自逆 P₂⁻¹ = P₂，于是 A = P₂P₁⁻¹', count:5, reveal:6, hl:5, ribbon:{k:5, ok:true} },
+    { cls:'done',  tag:'结论', log:'结论：A = P₂P₁⁻¹，选 D（已代回验证）', count:6, reveal:7, hl:6, good:true, done:true, ribbon:{k:6, ok:true} },
+  ],
+  render: function(stage, sn){
+    for(var j = 0; j < lineEls.length; j++){
+      lineEls[j].style.display = (j < (sn.reveal || 0)) ? '' : 'none';
+      lineEls[j].className = 'aw-stepcard' + (sn.hl === j ? (sn.good ? ' good' : ' key') : '');
+    }
+    renderMathAfterSnap(stage);
+  },
+  result: {
+    big: '选 D：A = P₂P₁⁻¹',
+    html: '核心口诀：<b>行变换左乘、列变换右乘</b>。链条：$B=AP_1$、$P_2B=E\\Rightarrow P_2AP_1=E\\Rightarrow A=P_2^{-1}P_1^{-1}=P_2P_1^{-1}$（$P_2$ 交换两行，自逆）。易错：解 $A$ 时两侧都要乘逆矩阵，漏乘一边就错选 A 或 B。',
+  },
+});
+</script>
+</body>
+</html>

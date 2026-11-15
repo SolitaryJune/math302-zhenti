@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2012·05 使不等式成立的充分条件</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_concept_template.html，只改题目专属区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+// 一张推理卡片（body 里可写 $..$ / $$..$$ 公式）
+function card(n, cls, title, body){
+  return '<div class="aw-stepcard ' + (cls || '') + '"><h4><span class="n">' + n +
+         '</span>' + title + '</h4>' + body + '</div>';
+}
+
+// 推理链：每一步的完整内容（引擎按步数截取显示）
+var STEPS = [
+  { title: '审题眼：偏导符号 = 单调方向',
+    cls: 'key',
+    body: '<p>$f_x>0$：固定 $y$，$x$ 增大 $f$ <b>增大</b>；$f_y<0$：固定 $x$，$y$ 增大 $f$ <b>减小</b>。目标 $f(x_1,y_1)<f(x_2,y_2)$ 要求：从点 1 走到点 2，$f$ <b>必定上升</b>。</p>',
+    log: 'f 随 x 增而增、随 y 增而减，目标是从点 1 到点 2 必升' },
+  { title: '增量公式拆成两项',
+    cls: 'key',
+    body: '<p>$$f(x_2,y_2)-f(x_1,y_1)=\\underbrace{f_x(\\xi,y_1)(x_2-x_1)}_{x\\ \\text{方向}}+\\underbrace{f_y(x_2,\\eta)(y_2-y_1)}_{y\\ \\text{方向}}.$$系数符号恒定：要差值稳定为正，需 $x_2-x_1>0$ 且 $y_2-y_1<0$。</p>',
+    log: '两个增量项必须同时为正才保险' },
+  { title: '选项 A（$x_1>x_2,\\ y_1<y_2$）',
+    cls: 'bad',
+    body: '<p>$\\Delta x=x_2-x_1<0$：正系数乘负数，$x$ 方向贡献<b>负</b>；$\\Delta y=y_2-y_1>0$：负系数乘正数，$y$ 方向贡献<b>负</b>。两项全负，$f$ 反而保证下降。</p>',
+    ribbon: {k:1, ok:false},
+    log: 'A：两方向都让 f 降，方向完全反了' },
+  { title: '选项 B（$x_1>x_2,\\ y_1>y_2$）',
+    cls: 'bad',
+    body: '<p>$x$ 方向贡献<b>负</b>、$y$ 方向贡献<b>正</b>——符号打架，一降一升无法保证差值为正，不是充分条件。</p>',
+    ribbon: {k:2, ok:false},
+    log: 'B：一个降一个升，结论不定' },
+  { title: '选项 C（$x_1<x_2,\\ y_1<y_2$）',
+    cls: 'bad',
+    body: '<p>$x$ 方向贡献<b>正</b>、$y$ 方向贡献<b>负</b>——同样打架，结论不定，不充分。</p>',
+    ribbon: {k:3, ok:false},
+    log: 'C：一升一降，同样不定' },
+  { title: '选项 D（$x_1<x_2,\\ y_1>y_2$）',
+    cls: 'good',
+    body: '<p>$\\Delta x>0$ 且 $f_x>0$，第一项为正；$\\Delta y<0$ 且 $f_y<0$，第二项也为正。<b>双正向</b>：差值必为正，$f(x_1,y_1)<f(x_2,y_2)$ 稳成立。</p>',
+    ribbon: {k:4, ok:true},
+    log: 'D：x 增使 f 升、y 减也使 f 升，双保险' },
+  { title: '结论',
+    cls: 'good',
+    body: '<p>充分条件是 $x_1<x_2,\\ y_1>y_2$，答案选 <b>D</b>。</p>',
+    log: '选 D' },
+];
+
+var snaps = STEPS.map(function(s, i){
+  return {
+    cls: i === STEPS.length - 1 ? 'done' : 'step',
+    tag: '第 ' + (i + 1) + ' 步',
+    log: s.log || s.title,
+    count: i + 1,
+    ribbon: s.ribbon,
+    html: STEPS.slice(0, i + 1).map(function(x, j){
+      return card(j + 1, x.cls, x.title, x.body);
+    }).join(''),
+    done: i === STEPS.length - 1,
+  };
+});
+
+AW.init({
+  title: '找充分条件：$f_x>0,\\ f_y<0$ 时的 $f(x_1,y_1)<f(x_2,y_2)$',
+  subtitle: '考点：偏导与单调性 · 方法：增量公式两项定号，逐项推演 A–D',
+  counterLabel: '推理步',
+  ribbonTitle: '选项检查（✓ 充分 / ✗ 不充分）',
+  intro: '点击「▶ 播放」逐步展开推理链。',
+  render: function(stage, sn){
+    if(sn.html != null) stage.innerHTML = sn.html;
+    renderMathAfterSnap(stage);
+  },
+  snaps: snaps,
+  result: {
+    big: '答案 D（x₁<x₂, y₁>y₂）',
+    html: '记忆锚点：<b>两个变量都得朝"让 f 变大"的方向动</b>——$x$ 要增（$f_x>0$）、$y$ 要减（$f_y<0$），即 $x_1<x_2$ 且 $y_1>y_2$。任何一个方向反向，另一方向的上升都可能被抵消，B、C 就是"打架型"干扰项。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

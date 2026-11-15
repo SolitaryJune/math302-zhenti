@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2012·03 部分和有界与通项收敛</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_concept_template.html，只改题目专属区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+// 一张推理卡片（body 里可写 $..$ / $$..$$ 公式）
+function card(n, cls, title, body){
+  return '<div class="aw-stepcard ' + (cls || '') + '"><h4><span class="n">' + n +
+         '</span>' + title + '</h4>' + body + '</div>';
+}
+
+// 推理链：每一步的完整内容（引擎按步数截取显示）
+var STEPS = [
+  { title: '审题眼：两个命题、两个方向',
+    cls: 'key',
+    body: '<p>$a_n>0$ 保证 $S_n=a_1+\\cdots+a_n$ <b>单调递增</b>。记 P＝「$\\{S_n\\}$ 有界」、Q＝「$\\{a_n\\}$ 收敛」，分别验证：P 能否推 Q（充分性）、Q 能否推 P（必要性）。</p>',
+    log: 'a_n>0 使 S_n 单调增，正反两个方向都要查' },
+  { title: '充分性 P $\\Rightarrow$ Q：成立',
+    cls: 'good',
+    body: '<p>$S_n$ 单调增又有界，由<b>单调有界准则</b> $S_n$ 收敛（即级数 $\\sum a_n$ 收敛），于是 $$a_n=S_n-S_{n-1}\\to S-S=0,$$即 $\\{a_n\\}$ 收敛到 0。</p>',
+    ribbon: {k:1, ok:true},
+    log: '单调 + 有界 ⇒ S_n 收敛 ⇒ a_n = S_n − S_{n−1} → 0' },
+  { title: '必要性 Q $\\Rightarrow$ P：反例否决',
+    cls: 'bad',
+    body: '<p>取 $a_n\\equiv1>0$：$\\{a_n\\}$ 收敛（极限 1），但 $S_n=n\\to+\\infty$，<b>无界</b>。通项收敛根本管不住部分和。</p>',
+    ribbon: {k:2, ok:false},
+    log: '反例 a_n ≡ 1：通项收敛，但 S_n = n 无界' },
+  { title: '排除 A / C / D',
+    cls: 'step',
+    body: '<p>充分性成立 ⇒ 排除 C（说"必要非充分"）与 D（说"都不要"）；必要性不成立 ⇒ 排除 A（说"充要"）。只剩 B。</p>',
+    log: '充分性✓、必要性✗，排除 A、C、D' },
+  { title: '结论',
+    cls: 'good',
+    body: '<p>「$\\{S_n\\}$ 有界」是「$\\{a_n\\}$ 收敛」的<b>充分非必要条件</b>，答案选 <b>B</b>。</p>',
+    log: '充分非必要，选 B' },
+];
+
+var snaps = STEPS.map(function(s, i){
+  return {
+    cls: i === STEPS.length - 1 ? 'done' : 'step',
+    tag: '第 ' + (i + 1) + ' 步',
+    log: s.log || s.title,
+    count: i + 1,
+    ribbon: s.ribbon,
+    html: STEPS.slice(0, i + 1).map(function(x, j){
+      return card(j + 1, x.cls, x.title, x.body);
+    }).join(''),
+    done: i === STEPS.length - 1,
+  };
+});
+
+AW.init({
+  title: '条件关系判定：$\\{S_n\\}$ 有界 vs $\\{a_n\\}$ 收敛',
+  subtitle: '考点：单调有界准则 · 方法：充分性走单调有界，必要性找反例 $a_n\\equiv1$',
+  counterLabel: '推理步',
+  ribbonTitle: '两个方向（✓ 成立 / ✗ 不成立）',
+  intro: '点击「▶ 播放」逐步展开推理链。',
+  render: function(stage, sn){
+    if(sn.html != null) stage.innerHTML = sn.html;
+    renderMathAfterSnap(stage);
+  },
+  snaps: snaps,
+  result: {
+    big: '答案 B（充分非必要）',
+    html: '记忆锚点：<b>单调有界准则正向锁死通项</b>：$a_n>0$ 时 $S_n$ 有界 $\\Rightarrow S_n$ 收敛 $\\Rightarrow a_n\\to0$。反向<b>不成立</b>——$a_n\\equiv1$ 收敛但 $S_n=n$ 无界。别把「通项 $\\to0$ 是级数收敛的必要条件」错当成「通项收敛能管住部分和」。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

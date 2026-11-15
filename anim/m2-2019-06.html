@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2019·06 极限为零与相切曲率相等的逻辑关系</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_concept_template.html，只改题目专属区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+// 一张推理卡片（body 里可写 $..$ / $$..$$ 公式）
+function card(n, cls, title, body){
+  return '<div class="aw-stepcard ' + (cls || '') + '"><h4><span class="n">' + n +
+         '</span>' + title + '</h4>' + body + '</div>';
+}
+
+// 推理链：每一步的完整内容（引擎按步数截取显示）
+var STEPS = [
+  { title: '审题：把两件事分别翻译，再比强弱',
+    cls: 'key',
+    body: '<p>条件 P：$\\lim_{x\\to a}\\frac{f(x)-g(x)}{(x-a)^2}=0$。条件 Q：两曲线在 $x=a$ 处<b>相切且曲率相等</b>。判断"P 是 Q 的什么条件"：先写出 P、Q 各自等价于什么，再看谁包含谁。设 $h(x)=f(x)-g(x)$。</p>',
+    log: '条件 P 与几何条件 Q 各自翻译' },
+  { title: '翻译 P：泰勒展开拆极限',
+    cls: 'step',
+    body: '<p>$h\'\'$ 在 $a$ 连续，故 $$h(x)=h(a)+h\'(a)(x-a)+\\frac{h\'\'(a)}{2}(x-a)^2+o\\big((x-a)^2\\big).$$ 除以 $(x-a)^2$ 要趋于 $0$，常数项与一次项必须先消失，二次项系数还要归零：$h(a)=0,\\ h\'(a)=0,\\ h\'\'(a)=0$。</p>',
+    log: '极限为零等价于函数值、一阶导、二阶导全相等' },
+  { title: '翻译 Q：相切 + 曲率相等',
+    cls: 'step',
+    body: '<p>相切 $\\Leftrightarrow f(a)=g(a)$ 且 $f\'(a)=g\'(a)$。曲率 $\\kappa=\\dfrac{\\lvert y\'\'\\rvert}{(1+y\'^2)^{3/2}}$；相切保证切线斜率相同、分母一致，故曲率相等 $\\Leftrightarrow \\lvert f\'\'(a)\\rvert=\\lvert g\'\'(a)\\rvert$。<b>注意绝对值！</b></p>',
+    log: '曲率相等只要求二阶导绝对值相等' },
+  { title: '充分性：P 能推出 Q',
+    cls: 'good',
+    body: '<p>$h(a)=h\'(a)=h\'\'(a)=0$ 给出相切，且 $f\'\'(a)=g\'\'(a)$ 当然蕴含 $\\lvert f\'\'(a)\\rvert=\\lvert g\'\'(a)\\rvert$。P $\\Rightarrow$ Q 成立。</p>',
+    log: 'P 推得出 Q：充分性成立', ribbon: {k:1, ok:true} },
+  { title: '必要性反例：Q 推不出 P',
+    cls: 'bad',
+    body: '<p>取 $a=0$，$f(x)=\\frac{x^2}{2}$，$g(x)=-\\frac{x^2}{2}$：两曲线在原点相切，$f\'\'=1$、$g\'\'=-1$，曲率都是 $1$；但 $$\\lim_{x\\to0}\\frac{f-g}{x^2}=\\frac{x^2}{x^2}=1\\neq0.$$ Q 成立而 P 不成立。</p>',
+    log: '反例：上凸下凹曲率相等，但极限为 1', ribbon: {k:2, ok:false} },
+  { title: '差距根源：曲率公式里的绝对值',
+    cls: 'bad',
+    body: '<p>几何条件允许 $f\'\'(a)=-g\'\'(a)\\neq0$（一凹一凸、弯曲程度相同），代数上却不相等。B 项（充要）就是忘了绝对值；C、D 把方向搞反或全盘否定。</p>',
+    log: '一个绝对值之差，充分不必要' },
+  { title: '结论',
+    cls: 'good',
+    body: '<p>P 是 Q 的<b>充分不必要条件</b>——答案选 <b>A</b>。</p>',
+    log: '选 A：充分不必要' },
+];
+
+var snaps = STEPS.map(function(s, i){
+  return {
+    cls: i === STEPS.length - 1 ? 'done' : (s.cls === 'bad' ? 'miss' : 'step'),
+    tag: '第 ' + (i + 1) + ' 步',
+    log: s.log || s.title,
+    count: i + 1,
+    ribbon: s.ribbon,
+    html: STEPS.slice(0, i + 1).map(function(x, j){
+      return card(j + 1, x.cls, x.title, x.body);
+    }).join(''),
+    done: i === STEPS.length - 1,
+  };
+});
+
+AW.init({
+  title: '$\\lim\\limits_{x\\to a}\\dfrac{f(x)-g(x)}{(x-a)^2}=0$ 与"相切且曲率相等"',
+  subtitle: '考点：曲率与充分必要关系 · 方法：泰勒拆极限、曲率看绝对值、反例定必要性',
+  counterLabel: '推理步',
+  ribbonTitle: '方向判定（✓ 能推 / ✗ 推不出）',
+  intro: '点击「▶ 播放」逐步展开推理链。',
+  render: function(stage, sn){
+    if(sn.html != null) stage.innerHTML = sn.html;
+    renderMathAfterSnap(stage);
+  },
+  snaps: snaps,
+  result: {
+    big: '答案 A：充分不必要条件',
+    html: '记忆锚点：<b>极限为 0 强到 $f\'\'(a)=g\'\'(a)$；相切 + 曲率相等只弱到 $\\lvert f\'\'(a)\\rvert=\\lvert g\'\'(a)\\rvert$</b>。反例 $\\pm\\frac{x^2}{2}$：一凹一凸、曲率同为 1、极限却为 1。强推弱成立、弱推强不行。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

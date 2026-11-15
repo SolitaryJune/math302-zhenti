@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2022·22 二次型正交对角化与瑞利商最小值</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [
+  "$$f=3x_1^2+4x_2^2+3x_3^2+2x_1x_3\\qquad(1)\\ \\text{求 } Q \\text{ 与标准形}\\qquad(2)\\ \\text{证 } \\min_{\\boldsymbol{x}\\neq0}\\frac{f(\\boldsymbol{x})}{\\boldsymbol{x}^{\\mathrm{T}}\\boldsymbol{x}}=2$$",
+  "<b>① 写矩阵：</b>交叉项系数 $2$ 平分到两端：$A=\\begin{pmatrix}3&0&1\\\\0&4&0\\\\1&0&3\\end{pmatrix}$（实对称）",
+  "<b>② 特征多项式：</b>按第 2 行展开：$\\lvert A-\\lambda E\\rvert=(4-\\lambda)\\big[(3-\\lambda)^2-1\\big]=(4-\\lambda)(\\lambda-2)(\\lambda-4)$",
+  "<b>③ 特征值：</b>$\\lambda_1=2$（单根），$\\lambda_2=\\lambda_3=4$（二重根）",
+  "<b>④ $\\lambda=2$：</b>$(A-2E)\\boldsymbol{x}=\\boldsymbol{0}\\Rightarrow x_1+x_3=0,\\ x_2=0$，取 $\\xi_1=(-1,0,1)^{\\mathrm{T}}$",
+  "<b>⑤ $\\lambda=4$：</b>$(A-4E)\\boldsymbol{x}=\\boldsymbol{0}\\Rightarrow x_1=x_3,\\ x_2$ 任意，取 $\\xi_2=(0,1,0)^{\\mathrm{T}},\\ \\xi_3=(1,0,1)^{\\mathrm{T}}$",
+  "<b>⑥ 正交单位化：</b>不同特征值的向量自动正交，$\\xi_2\\cdot\\xi_3=0$ 直接验证；单位化 $\\eta_1=\\frac{1}{\\sqrt2}(-1,0,1)^{\\mathrm{T}},\\ \\eta_2=(0,1,0)^{\\mathrm{T}},\\ \\eta_3=\\frac{1}{\\sqrt2}(1,0,1)^{\\mathrm{T}}$，拼成 $Q=(\\eta_1,\\eta_2,\\eta_3)$",
+  "<b>⑦ (1) 收尾：</b>$\\boldsymbol{x}=Q\\boldsymbol{y}$ 化为标准形 $f=2y_1^2+4y_2^2+4y_3^2$（对角系数就是特征值）",
+  "<b>⑧ (2) 保范数：</b>$Q^{\\mathrm{T}}Q=E\\Rightarrow\\boldsymbol{x}^{\\mathrm{T}}\\boldsymbol{x}=(Q\\boldsymbol{y})^{\\mathrm{T}}(Q\\boldsymbol{y})=\\boldsymbol{y}^{\\mathrm{T}}\\boldsymbol{y}$，且 $\\boldsymbol{x}\\ne\\boldsymbol{0}\\iff\\boldsymbol{y}\\ne\\boldsymbol{0}$",
+  "<b>⑨ 放缩：</b>$f=2y_1^2+4y_2^2+4y_3^2\\ge2(y_1^2+y_2^2+y_3^2)=2\\boldsymbol{x}^{\\mathrm{T}}\\boldsymbol{x}$，故 $\\dfrac{f}{\\boldsymbol{x}^{\\mathrm{T}}\\boldsymbol{x}}\\ge2$",
+  "<b>⑩ 取等：</b>取 $\\boldsymbol{y}=(1,0,0)^{\\mathrm{T}}$ 即 $\\boldsymbol{x}=\\eta_1=\\frac{1}{\\sqrt2}(-1,0,1)^{\\mathrm{T}}\\ne\\boldsymbol{0}$：$f=2,\\ \\boldsymbol{x}^{\\mathrm{T}}\\boldsymbol{x}=1$，比值恰为 $2$——下界可达到",
+  "<b>⑪ 结论：</b>$\\min\\limits_{\\boldsymbol{x}\\neq0}\\dfrac{f(\\boldsymbol{x})}{\\boldsymbol{x}^{\\mathrm{T}}\\boldsymbol{x}}=2$，即 $A$ 的最小特征值，证毕"
+];
+
+AW.init({
+  title: '2022·22　二次型正交对角化 + 瑞利商最小值',
+  subtitle: '考点：实对称矩阵正交对角化 · 标准形 · 正交变换保范数与放缩取等',
+  counterLabel: '已推进',
+  ribbonTitle: '推导进度（✓ 完成）',
+  intro: '点击「▶ 播放」或「下一步」，(1) 求特征值拼 Q，(2) 用保范数放缩证明最小值。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var inner = AW.el('div', '');
+    inner.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>：当前行亮琥珀色，已完成的行变绿'));
+    this._rows = [];
+    for (var i = 0; i < ROWS.length; i++){
+      var r = AW.el('div', 'aw-stepcard', ROWS[i]);
+      inner.appendChild(r);
+      this._rows.push(r);
+    }
+    wrap.appendChild(inner);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step',  tag:'审题',   log:'两问结构：先正交对角化拿标准形，再证比值的最小值', count:0, ribbon:{k:1, ok:true} },
+    { cls:'ok',    tag:'写矩阵', log:'交叉项系数 2 平分到对称的两个位置，各为一', count:1, ribbon:{k:2, ok:true} },
+    { cls:'ok',    tag:'特征式', log:'中间一行只有一个元素，按它展开最快，得到三个一次因式', count:2, ribbon:{k:3, ok:true} },
+    { cls:'ok',    tag:'特征值', log:'特征值是 2 和两个 4，单根加重根', count:3, ribbon:{k:4, ok:true} },
+    { cls:'ok',    tag:'解向量一', log:'二倍 A 减 2E 的零空间里取向量负一零一', count:4, ribbon:{k:5, ok:true} },
+    { cls:'ok',    tag:'解向量二', log:'特征值 4 的两个解向量天然正交，直接取零一零和一一', count:5, ribbon:{k:6, ok:true} },
+    { cls:'ok',    tag:'正交化', log:'只需单位化，三个单位向量按列拼成正交矩阵 Q', count:6, ribbon:{k:7, ok:true} },
+    { cls:'ok',    tag:'标准形', log:'标准形系数就是特征值，二四四，第一问完成', count:7, ribbon:{k:8, ok:true} },
+    { cls:'ok',    tag:'保范数', log:'正交变换不改变向量长度，分母原样搬到 y 上', count:8, ribbon:{k:9, ok:true} },
+    { cls:'ok',    tag:'放缩',   log:'分子逐项把 4 降到 2，得到比值不小于 2 的下界', count:9, ribbon:{k:10, ok:true} },
+    { cls:'ok',    tag:'取等',   log:'取第一个特征向量方向，比值恰好等于 2，下界取到', count:10, ribbon:{k:11, ok:true} },
+    { cls:'done',  tag:'完成',   log:'结论：最小值就是最小特征值 2，证明完毕', count:11, ribbon:{k:12, ok:true}, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    var rows = this._rows;
+    for (var j = 0; j < rows.length; j++){
+      rows[j].className = 'aw-stepcard' + (j < i ? ' good' : (j === i ? ' key' : ''));
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: "$f=2y_1^2+4y_2^2+4y_3^2,\\qquad \\min_{\\boldsymbol{x}\\neq0}\\frac{f(\\boldsymbol{x})}{\\boldsymbol{x}^{\\mathrm{T}}\\boldsymbol{x}}=2$",
+    html: "记忆锚点：<b>标准形系数 = 特征值；正交变换保范数 ⇒ $\\frac{x^{\\mathrm T}Ax}{x^{\\mathrm T}x}$ 的最小值 = 最小特征值</b>，下界要配取等向量才算证完。易错：交叉项系数忘平分；重根向量不验正交；只证下界不取等。",
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

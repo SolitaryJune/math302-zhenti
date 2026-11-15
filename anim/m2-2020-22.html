@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2020-22 二次型：定 a 与求 P · 逐步推导</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域 ================== */
+var rows = [];
+
+AW.init({
+  title: '二次型 $f$ 经 $x=Py$ 化为 $g$：求 $a$ 与 $P$',
+  subtitle: '考点：合同 ⇒ 惯性指数相同 · 配方法搭同一标准形求过渡矩阵',
+  counterLabel: '已推进',
+  intro: '点击「▶ 播放」：比惯性定 a，双配方接同一个 u 求 P。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    rows = [];
+    var wrap = AW.el('div', 'aw-scroll');
+    wrap.appendChild(AW.el('div', 'aw-row-label',
+      '<b>推导板</b>：$f=x_1^2+x_2^2+x_3^2+2a(x_1x_2+x_1x_3+x_2x_3)$，$g=y_1^2+y_2^2+4y_3^2+2y_1y_2$'));
+    var ROWS = [
+      '$$A=\\begin{pmatrix}1&a&a\\\\a&1&a\\\\a&a&1\\end{pmatrix},\\quad B=\\begin{pmatrix}1&1&0\\\\1&1&0\\\\0&0&4\\end{pmatrix};\\quad g=(y_1+y_2)^2+4y_3^2:\\ p^+=2,\\ r=2$$',
+      '$$A=(1-a)E+aJ\\ (J\\ \\text{全}1):\\quad \\lambda=1+2a\\,(\\text{单}),\\ 1-a\\,(\\text{二重})$$',
+      '$$a=-\\tfrac12:\\ \\lambda=0,\\tfrac32,\\tfrac32\\ \\checkmark(p^+=2,r=2);\\qquad a=1:\\ \\lambda=3,0,0\\ \\times(r=1)$$',
+      '$$a=-\\tfrac12:\\quad f=\\left(x_1-\\tfrac{x_2}2-\\tfrac{x_3}2\\right)^2+\\frac34(x_2-x_3)^2\\ \\Rightarrow\\ u_1=x_1-\\tfrac{x_2}2-\\tfrac{x_3}2,\\ u_2=\\tfrac{\\sqrt3}2(x_2-x_3),\\ u_3=x_3$$',
+      '$$g=(y_1+y_2)^2+(2y_3)^2:\\quad u_1=y_1+y_2,\\ u_2=2y_3,\\ u_3=y_2\\ \\text{（接同一组 } u\\text{）}$$',
+      '$$x=C_1u=C_1C_2^{-1}y:\\quad P=C_1C_2^{-1}=\\begin{pmatrix}1&2&\\tfrac{2\\sqrt3}3\\\\0&1&\\tfrac{4\\sqrt3}3\\\\0&1&0\\end{pmatrix},\\quad P^{\\mathrm T}AP=B$$'
+    ];
+    ROWS.forEach(function(html){
+      var row = AW.el('div', 'derive-row', html);
+      row.style.cssText = 'padding:6px 14px;margin:8px 0;border-radius:8px;' +
+        'border-left:4px solid #cbd5e1;background:#f8fafc;opacity:0;' +
+        'transform:translateY(8px);transition:all .35s ease;';
+      wrap.appendChild(row);
+      rows.push(row);
+    });
+    stage.appendChild(wrap);
+  },
+
+  render: function(stage, sn, i){
+    rows.forEach(function(row, j){
+      var vis = j < i;
+      var cur = vis && j === i - 1;
+      row.style.opacity = vis ? '1' : '0';
+      row.style.transform = vis ? 'translateY(0)' : 'translateY(8px)';
+      row.style.borderLeftColor = cur ? '#f59e0b' : (vis ? '#10b981' : '#cbd5e1');
+      row.style.background = cur ? '#fffbeb' : (vis ? '#f0fdf4' : '#f8fafc');
+    });
+    renderMathAfterSnap(stage);
+  },
+
+  snaps: [
+    { cls:'shift', tag:'审题', log:'可逆变换互化 = 矩阵合同，先看 g 的惯性指数', count:0 },
+    { cls:'ok',    tag:'看 g', log:'g 配方是两个正平方，正惯性指数 2、秩 2', count:1 },
+    { cls:'step',  tag:'算 A', log:'A 拆成 1 减 a 倍单位阵加 a 倍全 1 阵，特征值现成', count:2 },
+    { cls:'ok',    tag:'定 a', log:'要两正一零：a=负二分之一成立，a=1 秩不够被排除', count:3 },
+    { cls:'step',  tag:'配 f', log:'f 配方成两个平方，顺带定义标准形变量 u', count:4 },
+    { cls:'step',  tag:'配 g', log:'g 配方到同一组 u，两条变量链接通', count:5 },
+    { cls:'done',  tag:'结论', log:'P = C1 乘 C2 逆，回验 P 转置 A P = B', count:6, done:true },
+  ],
+
+  result: {
+    big: '$a=-\\dfrac12$；$P=\\begin{pmatrix}1&2&\\frac{2\\sqrt3}3\\\\0&1&\\frac{4\\sqrt3}3\\\\0&1&0\\end{pmatrix}$',
+    html: '正确答案：$a=-\\dfrac12$（特征值 $0,\\frac32,\\frac32$）；$P=\\begin{pmatrix}1&2&\\frac{2\\sqrt3}3\\\\0&1&\\frac{4\\sqrt3}3\\\\0&1&0\\end{pmatrix}$ 满足 $P^{\\mathrm T}AP=B$。记忆点：<b>合同比惯性指数与秩</b>；求 $P$ 时 $f,g$ 必须化成<b>同一个</b>标准形 $u_1^2+u_2^2$ 再衔接（$P$ 不唯一）。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

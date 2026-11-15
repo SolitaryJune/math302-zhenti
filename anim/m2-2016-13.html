@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2016·13 相关变化率：动点到原点距离的变化率</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改题目专属区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+// 推导板各行：与 snaps 一一对应（build 建立、render 按 i 点亮）
+var ROWS = [
+  { label: '第 0 步 · 审题',
+    h: '<p>动点 $P$ 在 $y=x^3$ 上，$l=\\sqrt{x^2+y^2}$ 为 $P$ 到原点的距离；$\\dfrac{\\mathrm dx}{\\mathrm dt}=v_0$ 为常数。求 $P$ 经过 $(1,1)$ 时的 $\\dfrac{\\mathrm dl}{\\mathrm dt}$——典型<b>相关变化率</b>。</p>' },
+  { label: '第 1 步 · 消去 y，先平方防根号',
+    h: '<p>把约束 $y=x^3$ 代入：$$l^2=x^2+y^2=x^2+x^6.$$ 对 $l^2$ 求导可绕开根号。</p>' },
+  { label: '第 2 步 · 两边对 t 求导（链式）',
+    h: '<p>$x$、$l$ 都随 $t$ 变：$$2l\\frac{\\mathrm dl}{\\mathrm dt}=(2x+6x^5)\\frac{\\mathrm dx}{\\mathrm dt}.$$ 右边 $6x^5$ 来自 $x^6$ 的链式求导。</p>' },
+  { label: '第 3 步 · 在 (1,1) 代入数据',
+    h: '<p>$l=\\sqrt{1+1}=\\sqrt2$，$2x+6x^5=2+6=8$，$\\dfrac{\\mathrm dx}{\\mathrm dt}=v_0$：$$2\\sqrt2\\,\\frac{\\mathrm dl}{\\mathrm dt}=8v_0.$$</p>' },
+  { label: '第 4 步 · 解出 dl/dt',
+    h: '<p>$$\\frac{\\mathrm dl}{\\mathrm dt}=\\frac{8v_0}{2\\sqrt2}=\\frac{4v_0}{\\sqrt2}=2\\sqrt2\\,v_0.$$</p>' },
+  { label: '第 5 步 · 结论',
+    h: '<p>点 $P$ 经过 $(1,1)$ 时，$l$ 对时间的变化率为 $\\boxed{2\\sqrt2\\,v_0}$。</p>' },
+];
+
+var rowEls = [];
+
+AW.init({
+  title: '动点沿 $y=x^3$ 运动，$l$ 对时间的变化率',
+  subtitle: '考点：相关变化率 · 方法：$l^2=x^2+x^6$ → 链式求导 → 点 (1,1) 代值',
+  counterLabel: '步骤',
+  intro: '点击「▶ 播放」逐步演示推导板上的六步计算。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    rowEls = [];
+    var wrap = AW.el('div', 'aw-scroll');
+    ROWS.forEach(function(r){
+      var d = AW.el('div', '');
+      d.style.cssText = 'padding:9px 14px;margin:8px 0;border-left:4px solid transparent;border-radius:10px;opacity:.15;transition:opacity .35s,background .35s,border-color .35s;';
+      d.innerHTML = '<div style="font-size:12.5px;color:#64748b;font-weight:700;margin-bottom:2px">' + r.label + '</div>' + r.h;
+      wrap.appendChild(d);
+      rowEls.push(d);
+    });
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step', tag:'审题',   log:'l、x 都随 t 变：相关变化率，先找 l 与 x 的关系式', count:0 },
+    { cls:'ok',   tag:'平方',   log:'代 y = x³ 后 l² = x² + x⁶，绕开根号求导', count:1 },
+    { cls:'step', tag:'求导',   log:'2l·dl/dt = (2x + 6x⁵)·dx/dt，链式法则两侧同时来', count:2 },
+    { cls:'ok',   tag:'代值',   log:'在 (1,1)：l = √2，2x + 6x⁵ = 8，dx/dt = v₀', count:3 },
+    { cls:'ok',   tag:'解出',   log:'dl/dt = 8v₀ / 2√2 = 2√2·v₀', count:4 },
+    { cls:'done', tag:'完成',   log:'答案 2√2·v₀', count:5, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    rowEls.forEach(function(d, j){
+      d.style.opacity = j <= i ? '1' : '.15';
+      d.style.borderLeftColor = j < i ? '#16a34a' : (j === i ? '#d97706' : 'transparent');
+      d.style.background = j === i ? '#fffbeb' : (j < i ? '#f6fef9' : 'transparent');
+    });
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: 'dl/dt = 2√2 · v₀',
+    html: '记忆锚点：<b>先平方再求导</b>——$l^2=x^2+x^6$ 避开根号；链式法则两侧同乘变化率，最后在指定点把 $l=\\sqrt2$、$x=1$ 一并代入。易错：漏掉 $x^6$ 贡献的 $6x^5$。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

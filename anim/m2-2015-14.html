@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2015·14 矩阵多项式的特征值与行列式</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改题目专属区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+var knownRow, lamRow, prinRow, gRow, detRow, gBoxes;
+
+// 一列：上方小标注 + 特征值格（复用引擎的 aw-box 样式）
+function capBox(cap, val){
+  var col = AW.el('div', 'aw-col');
+  col.appendChild(AW.el('div', 'aw-ptr', cap));
+  col.appendChild(AW.el('div', 'aw-box', val));
+  return col;
+}
+function makeRow(labelHtml){
+  var d = AW.el('div', '');
+  d.style.cssText = 'padding:9px 14px;margin:8px 0;border-left:4px solid transparent;border-radius:10px;opacity:.15;transition:opacity .35s,background .35s,border-color .35s;';
+  d.innerHTML = '<div style="font-size:12.5px;color:#64748b;font-weight:700;margin-bottom:2px">' + labelHtml + '</div>';
+  return d;
+}
+
+AW.init({
+  title: '$B=A^2-A+E$ 的行列式：$A$ 的特征值为 $2,-2,1$',
+  subtitle: '考点：矩阵多项式的特征值 · 方法：g(λ) 逐个代入，|B| = 特征值之积',
+  counterLabel: '步骤',
+  intro: '点击「▶ 播放」逐步演示特征值代入与行列式计算。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    gBoxes = [];
+
+    knownRow = makeRow('已知条件');
+    knownRow.insertAdjacentHTML('beforeend',
+      '<p>$A$ 的特征值为 $2,\\ -2,\\ 1$；$B=A^2-A+E=g(A)$，其中 $g(t)=t^2-t+1$。</p>');
+
+    lamRow = makeRow('$A$ 的特征值 $\\lambda$');
+    var lr = AW.el('div', 'aw-cells');
+    lr.appendChild(capBox('$\\lambda_1$', '2'));
+    lr.appendChild(capBox('$\\lambda_2$', '-2'));
+    lr.appendChild(capBox('$\\lambda_3$', '1'));
+    lamRow.appendChild(lr);
+
+    prinRow = makeRow('核心规律');
+    prinRow.insertAdjacentHTML('beforeend',
+      '<p>若 $Ae=\\lambda e$，则 $A^ke=\\lambda^ke$、$Ee=e$，从而 $$g(A)e=g(\\lambda)e\\ \\Longrightarrow\\ g(\\lambda)\\ \\text{是}\\ g(A)\\ \\text{的特征值}.$$</p>');
+
+    gRow = makeRow('$B=g(A)$ 的特征值 $g(\\lambda)$');
+    var gr = AW.el('div', 'aw-cells');
+    [['$g(2)$', '3'], ['$g(-2)$', '7'], ['$g(1)$', '1']].forEach(function(p){
+      var col = capBox(p[0], p[1]);
+      gBoxes.push(col.querySelector('.aw-box'));
+      gr.appendChild(col);
+    });
+    gRow.appendChild(gr);
+
+    detRow = makeRow('行列式 = 特征值之积');
+    detRow.insertAdjacentHTML('beforeend',
+      '<p>$$|B|=3\\times7\\times1=\\boxed{21}.$$</p>');
+
+    [knownRow, lamRow, prinRow, gRow, detRow].forEach(function(d){ stage.appendChild(d); });
+  },
+
+  snaps: [
+    { cls:'step',  tag:'审题',   log:'B=A²−A+E 是 A 的多项式，先想特征值路线', count:0 },
+    { cls:'shift', tag:'规律',   log:'矩阵多项式的特征值 = 把 λ 代入 g(t)', count:1 },
+    { cls:'ok',    tag:'代入',   log:'g(2)=3，g(−2)=7，g(1)=1 —— B 的特征值是 3,7,1', count:2 },
+    { cls:'ok',    tag:'求行列式', log:'3 阶行列式 = 三个特征值之积：3×7×1=21', count:3 },
+    { cls:'done',  tag:'完成',   log:'|B| = 21', count:4, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    var seq = [knownRow, lamRow, prinRow, gRow, detRow];
+    seq.forEach(function(d, j){
+      d.style.opacity = j <= i ? '1' : '.15';
+      d.style.borderLeftColor = j < i ? '#16a34a' : (j === i ? '#d97706' : 'transparent');
+      d.style.background = j === i ? '#fffbeb' : (j < i ? '#f6fef9' : 'transparent');
+    });
+    gBoxes.forEach(function(b, k){
+      b.className = 'aw-box' + (i >= 2 ? ' ok' : '') + (i === 3 || i === 4 ? ' hit' : '');
+    });
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '|B| = 21',
+    html: '记忆锚点：<b>矩阵多项式 $g(A)$ 的特征值 = $g(\\lambda)$</b>——$g(2)=3$、$g(-2)=7$、$g(1)=1$（平方项吞掉负号），3 阶行列式等于特征值之积 $3\\times7\\times1=21$。不必真把 $B$ 乘出来。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

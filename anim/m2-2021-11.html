@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2021·11 反常积分 ∫|x|·3^(−x²)dx</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改题目专属区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [
+  "<b>① 审题：</b>$\\displaystyle\\int_{-\\infty}^{+\\infty}|x|\\,3^{-x^2}\\,\\mathrm{d}x$——先看结构：$|x|$ 与 $3^{-x^2}$ 都是<b>偶函数</b>",
+  "<b>② 对称性去绝对值：</b>$\\displaystyle\\int_{-\\infty}^{+\\infty}|x|\\,3^{-x^2}\\mathrm{d}x=2\\int_0^{+\\infty}x\\,3^{-x^2}\\,\\mathrm{d}x$",
+  "<b>③ 凑微分：</b>$u=x^2,\\ \\mathrm{d}u=2x\\,\\mathrm{d}x$，即 $x\\,\\mathrm{d}x=\\dfrac12\\,\\mathrm{d}u$；$x:0\\to+\\infty$ 对应 $u:0\\to+\\infty$",
+  "<b>④ 系数相消：</b>$2\\cdot\\dfrac12=1$，积分化成 $\\displaystyle\\int_0^{+\\infty}3^{-u}\\,\\mathrm{d}u$——对称性的 2 与换元的 $\\dfrac12$ 恰好抵消",
+  "<b>⑤ 化成 e 指数：</b>$3^{-u}=\\mathrm{e}^{-u\\ln3}$，这是衰减指数，收敛",
+  "<b>⑥ 牛顿–莱布尼茨：</b>$\\displaystyle\\int_0^{+\\infty}\\mathrm{e}^{-u\\ln3}\\,\\mathrm{d}u=\\left[-\\frac{\\mathrm{e}^{-u\\ln3}}{\\ln3}\\right]_0^{+\\infty}=0-\\left(-\\dfrac1{\\ln3}\\right)$",
+  "<b>⑦ 结论：</b>原积分 $=\\dfrac1{\\ln3}$（等价写法 $\\log_3\\mathrm{e}$）"
+];
+
+AW.init({
+  title: '2021·11　$\\displaystyle\\int_{-\\infty}^{+\\infty}|x|\\,3^{-x^2}\\,\\mathrm{d}x$ 的值',
+  subtitle: '考点：偶函数对称性 · 凑微分 $u=x^2$ · 指数型反常积分',
+  counterLabel: '已推导',
+  ribbonTitle: '推导进度（✓ 完成）',
+  intro: '点击「▶ 播放」或「下一步」，偶倍半消、换元、收尾三段式。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var inner = AW.el('div', '');
+    inner.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>：当前行亮琥珀色，已完成的行变绿'));
+    this._rows = [];
+    for (var i = 0; i < ROWS.length; i++){
+      var r = AW.el('div', 'aw-stepcard', ROWS[i]);
+      inner.appendChild(r);
+      this._rows.push(r);
+    }
+    wrap.appendChild(inner);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step',  tag:'审题',   log:'全轴积分带绝对值，先看被积函数的奇偶性', count:0, ribbon:{k:1, ok:true} },
+    { cls:'shift', tag:'对称',   log:'偶函数积分等于半轴上的两倍，绝对值顺手去掉', count:1, ribbon:{k:2, ok:true} },
+    { cls:'ok',    tag:'换元',   log:'令 u 等于 x 平方，微分正好咬合，指数从负 x 平方变成负 u', count:2, ribbon:{k:3, ok:true} },
+    { cls:'ok',    tag:'消系数', log:'外面的二和里面的二分之一相乘归一，形式变得很干净', count:3, ribbon:{k:4, ok:true} },
+    { cls:'ok',    tag:'化指数', log:'三的负 u 次方改写成 e 的负 u 倍 ln 三，衰减型收敛', count:4, ribbon:{k:5, ok:true} },
+    { cls:'ok',    tag:'积分',   log:'原函数带上负号，上限处衰减为零，下限处补回一比 ln 三', count:5, ribbon:{k:6, ok:true} },
+    { cls:'done',  tag:'完成',   log:'结论：积分值为一比 ln 三，等价于 log 三 e', count:6, ribbon:{k:7, ok:true}, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    var rows = this._rows;
+    for (var j = 0; j < rows.length; j++){
+      rows[j].className = 'aw-stepcard' + (j < i ? ' good' : (j === i ? ' key' : ''));
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '$\\displaystyle\\int_{-\\infty}^{+\\infty}|x|\\,3^{-x^2}\\,\\mathrm{d}x=\\dfrac1{\\ln3}$',
+    html: '记忆锚点：<b>偶函数先减半，$u=x^2$ 凑微分消平方，$a^{-u}=\\mathrm{e}^{-u\\ln a}$ 化标准指数积分</b>。易错：丢掉对称性的 2 或换元的 $\\frac12$ 都会差一倍；$\\int\\mathrm{e}^{-ku}\\mathrm{d}u=-\\frac1k\\mathrm{e}^{-ku}$ 的负号不能丢。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

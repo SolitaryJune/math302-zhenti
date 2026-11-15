@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2021·07 定积分定义：黎曼和三要素</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_concept_template.html，只改题目专属区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+// 一张推理卡片（body 里可写 $..$ / $$..$$ 公式）
+function card(n, cls, title, body){
+  return '<div class="aw-stepcard ' + (cls || '') + '"><h4><span class="n">' + n +
+         '</span>' + title + '</h4>' + body + '</div>';
+}
+
+// 推理链：每一步的完整内容（引擎按步数截取显示）
+var STEPS = [
+  { title: '审题眼：三要素必须自洽',
+    cls: 'key',
+    log: '黎曼和检验三件事：分几份、取点落在哪、每份多宽',
+    body: '<p>定积分 = 「分割、取点、求和、取极限」：$\\displaystyle\\int_0^1f\\,\\mathrm{d}x=\\lim\\sum_k f(\\xi_k)\\,\\Delta x_k$。核心口诀：<b>宽度 = 总长 ÷ 项数</b>。$[0,1]$ 总长 1，$n$ 项配 $\\frac1n$，$2n$ 项配 $\\frac{1}{2n}$。</p>' },
+  { title: '构造合法方案',
+    cls: 'good',
+    log: 'n 等分取中点，宽度和取点完全自洽，就是选项 B',
+    body: '<p>$n$ 等分：第 $k$ 个小区间 $\\left[\\frac{k-1}{n},\\frac{k}{n}\\right]$，宽度 $\\frac1n$；取中点 $\\xi_k=\\frac{2k-1}{2n}$（确在区间内）。于是 $$\\int_0^1f\\,\\mathrm{d}x=\\lim_{n\\to\\infty}\\sum_{k=1}^{n}f\\!\\left(\\frac{2k-1}{2n}\\right)\\cdot\\frac1n.$$ 正是 B。</p>' },
+  { title: '排 A：宽度缩了一半',
+    cls: 'bad',
+    log: 'A 的取点与 B 相同，但宽度写成二 n 分之一，只有正确值一半',
+    body: '<p>A 的取点 $\\frac{2k-1}{2n}$ 与 B 相同且合法，但求和因子写成 $\\frac{1}{2n}$——$n$ 项却配了 $2n$ 等分的宽度，整个和是正确值的<b>一半</b>。</p>' },
+  { title: '排 C：项数与宽度错配',
+    cls: 'bad',
+    log: 'C 用二 n 个项却是 n 等分的宽度，结果翻倍',
+    body: '<p>C：$\\frac{k-1}{2n}$（$k=1,\\dots,2n$）是 $2n$ 等分的左端点，取点合法，但宽度本该 $\\frac{1}{2n}$，写成 $\\frac1n$ 后和是正确值的<b>两倍</b>。</p>' },
+  { title: '排 D：错得更离谱',
+    cls: 'bad',
+    log: 'D 是二 n 等分的右端点，宽度却写成 n 分之二，翻了四倍',
+    body: '<p>D：$\\frac{k}{2n}$ 是 $2n$ 等分的右端点，宽度该 $\\frac{1}{2n}$，写成 $\\frac2n$——和是正确值的<b>四倍</b>。</p>' },
+  { title: '澄清两个误区',
+    cls: 'key',
+    log: '四个选项取点全都合法，错误全藏在求和因子里',
+    body: '<p>四个选项的取点都合法（连续函数取左端点、右端点、中点极限都一样），<b>坑全在宽度与项数不匹配</b>。另外本题考定义本身，不能靠找原函数验证。</p>' },
+  { title: '结论',
+    cls: 'good',
+    log: '结论：只有 B 做到项数、宽度、取点三者匹配，选 B',
+    body: '<p>答案选 <b>B</b>。记忆锚点：先数项数 $m$，宽度只能是 $\\frac1m$——B 的「$n$ 项 $\\times\\frac1n$ + 中点取点」三要素全部自洽。</p>' },
+];
+
+var snaps = STEPS.map(function(s, i){
+  return {
+    cls: i === STEPS.length - 1 ? 'done' : 'step',
+    tag: '第 ' + (i + 1) + ' 步',
+    log: s.log || s.title,
+    html: STEPS.slice(0, i + 1).map(function(x, j){
+      return card(j + 1, x.cls, x.title, x.body);
+    }).join(''),
+    done: i === STEPS.length - 1,
+  };
+});
+
+AW.init({
+  title: '2021·07　用定义表示 $\\displaystyle\\int_0^1 f(x)\\,\\mathrm{d}x$',
+  subtitle: '考点：定积分定义（黎曼和）· 分割、取点、宽度三要素',
+  intro: '点击「▶ 播放」逐步展开推理链：先立标准，再逐项排错。',
+  /* 统一 render：复刻引擎默认的 sn.html 行为，再对舞台做公式渲染 */
+  render: function(stage, sn){
+    if(sn.html != null) stage.innerHTML = sn.html;
+    renderMathAfterSnap(stage);
+  },
+  snaps: snaps,
+  result: {
+    big: '答案 B　$\\displaystyle\\int_0^1f\\,\\mathrm{d}x=\\lim_{n\\to\\infty}\\sum_{k=1}^{n}f\\!\\left(\\frac{2k-1}{2n}\\right)\\frac1n$',
+    html: '记忆锚点：<b>宽度 = 总长 ÷ 项数</b>（$n$ 项配 $\\frac1n$，$2n$ 项配 $\\frac{1}{2n}$）。干扰项 A/C/D 的取点都合法，错全在求和因子与分法不匹配：一半、两倍、四倍。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

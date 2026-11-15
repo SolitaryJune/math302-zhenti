@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2026 数二第 18 题 · 含参变限积分求导与连续性（交互动画）</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+AW.init({
+  title: "2026·18　$f(x)=\\int_0^{x^2}g(xt)\\,dt$：求 $f'(x)$ 并讨论其在 $x=0$ 处的连续性",
+  subtitle: "考点：含参变限积分 · 关键：<b>先换元 $u=xt$ 消参</b>；$x=0$ 处必须用导数定义",
+  counterLabel: '已完成',
+  ribbonTitle: '推导进度（✓ 完成）',
+  intro: "点击「▶ 播放」或「下一步」，先消参化标准形，再补 x=0 的定义法求导。",
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var inner = AW.el('div', '');
+    inner.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>：当前行亮琥珀色，已完成的行变绿'));
+    var LINES = [
+      "<b>题目：</b>$g(x)$ 连续，$$f(x)=\\int_0^{x^2}g(xt)\\,dt$$　求 $f'(x)$，并判断 $f'(x)$ 在 $x=0$ 处的连续性",
+      "<b>审题：</b>被积函数 $g(xt)$ 里带着参数 $x$，上限 $x^2$ 也含 $x$ —— <b>不能直接套</b>变限积分求导公式，第一步必须换元消参",
+      "<b>换元：</b>令 $u=xt$，则 $dt=\\dfrac{du}{x}$；$t:0\\to x^2$ 对应 $u:0\\to x^3$：$$f(x)=\\frac{1}{x}\\int_0^{x^3}g(u)\\,du\\qquad(x\\ne0)$$",
+      "<b>求导：</b>记 $\\Phi(x)=\\int_0^{x^3}g(u)\\,du$，则 $\\Phi'(x)=3x^2g(x^3)$；对 $f=\\dfrac{\\Phi}{x}$ 用商法则：$$f'(x)=\\frac{x\\Phi'(x)-\\Phi(x)}{x^2}=3xg(x^3)-\\frac{1}{x^2}\\int_0^{x^3}g(u)\\,du\\quad(x\\ne0)$$",
+      "<b>特殊点 $x=0$：</b>换元时除了 $x$，上面的表达式失效；$f(0)=\\int_0^0g(0)\\,dt=0$，改用<b>导数定义</b>：$$f'(0)=\\lim_{x\\to0}\\frac{f(x)-f(0)}{x}=\\lim_{x\\to0}\\frac{1}{x^2}\\int_0^{x^3}g(u)\\,du$$",
+      "<b>算 $f'(0)$：</b>由 $g$ 连续，$\\int_0^{x^3}g(u)\\,du=g(0)x^3+o(x^3)$（积分区间长 $x^3$，比 $x^2$ 高一阶），故 $$f'(0)=\\lim_{x\\to0}\\big(g(0)x+o(x)\\big)=0$$",
+      "<b>连续性：</b>回到 $x\\ne0$ 的表达式取极限：第一项 $3xg(x^3)\\to0$；第二项 $\\dfrac{1}{x^2}\\int_0^{x^3}g(u)\\,du=g(0)x+o(x)\\to0$，于是 $\\lim_{x\\to0}f'(x)=0=f'(0)$",
+      "<b>最终结论：</b>$$f'(x)=\\begin{cases}3xg(x^3)-\\dfrac{1}{x^2}\\displaystyle\\int_0^{x^3}g(u)\\,du, & x\\ne0,\\\\ 0, & x=0,\\end{cases}$$　且 $f'(x)$ 在 $x=0$ 处<b>连续</b>"
+    ];
+    this._rows = [];
+    for (var i = 0; i < LINES.length; i++){
+      var r = AW.el('div', 'aw-stepcard', LINES[i]);
+      inner.appendChild(r);
+      this._rows.push(r);
+    }
+    wrap.appendChild(inner);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step',  tag:'审题',   log:'被积函数 g(xt) 里混着参数 x，直接套变限积分求导公式会出错，先想清楚这一点', count:0, ribbon:{k:1, ok:true} },
+    { cls:'shift', tag:'定策略', log:'第一步永远是换元消参：令 u = xt，把被积函数变成只含 u 的形式', count:1, ribbon:{k:2, ok:true} },
+    { cls:'step',  tag:'换元',   log:'换元后 t 的范围 0 到 x² 变成 u 的范围 0 到 x³，外面多出系数 1/x', count:2, ribbon:{k:3, ok:true} },
+    { cls:'ok',    tag:'求导',   log:'对上限 x³ 用链式求导得 3x²·g(x³)，再用商法则，得到 x≠0 时 f′ 的表达式', count:3, ribbon:{k:4, ok:true} },
+    { cls:'shift', tag:'分界点', log:'x = 0 处换元时除了 x，表达式失效，f′ 必须回到定义去算', count:4, ribbon:{k:5, ok:true} },
+    { cls:'ok',    tag:'算极限', log:'积分区间长度是 x³ 量级，比 x² 高一阶，所以 f′(0) = 0', count:5, ribbon:{k:6, ok:true} },
+    { cls:'step',  tag:'连续性', log:'再对表达式取极限：两项在 0 处都趋于 0，极限值恰好等于 f′(0)', count:6, ribbon:{k:7, ok:true} },
+    { cls:'ok',    tag:'拼结果', log:'写出分段形式的 f′，并确认它在 x = 0 处连续', count:7, ribbon:{k:8, ok:true} },
+    { cls:'done',  tag:'完成',   log:'结论：f′ 的分段表达式如推导板所示，且 f′ 在 x = 0 处连续', count:8, ribbon:{k:9, ok:true}, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    var rows = this._rows;
+    for (var j = 0; j < rows.length; j++){
+      rows[j].className = 'aw-stepcard' + (j < i ? ' good' : (j === i ? ' key' : ''));
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: "$f'(0)=0$，$f'(x)$ 在 $x=0$ 处连续",
+    html: "$x\\ne0$：$f'(x)=3xg(x^3)-\\dfrac{1}{x^2}\\displaystyle\\int_0^{x^3}g(u)\\,du$；$x=0$：$f'(0)=0$。<br>记忆锚点：<b>含参变限积分先换元 $u=xt$ 消参</b>；分界点必须用导数定义单独算；连续性验证 $\\lim_{x\\to0}f'(x)=f'(0)$。",
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

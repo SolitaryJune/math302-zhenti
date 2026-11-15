@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2020-16 含参变限积分求导 · 逐步推导</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域 ================== */
+var rows = [];
+
+AW.init({
+  title: '$g(x)=\\int_0^1 f(xt)\\,\\mathrm dt$ 的导数与连续性',
+  subtitle: '考点：变限积分求导 · 条件：$f$ 连续且 $\\lim_{x\\to0}\\frac{f(x)}x=1$',
+  counterLabel: '已推进',
+  intro: '点击「▶ 播放」：先化简 g，再分段求导，最后验证连续。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    rows = [];
+    var wrap = AW.el('div', 'aw-scroll');
+    wrap.appendChild(AW.el('div', 'aw-row-label',
+      '<b>推导板</b>：$g(x)=\\int_0^1 f(xt)\\,\\mathrm dt$，$f$ 连续，$\\lim_{x\\to0}\\frac{f(x)}x=1$'));
+    var ROWS = [
+      '$$\\lim_{x\\to0}\\frac{f(x)}x=1\\ \\text{且}\\ f\\ \\text{连续}\\ \\Rightarrow\\ f(0)=0;\\qquad g(0)=\\int_0^1 f(0)\\,\\mathrm dt=0$$',
+      '$$g(x)=\\int_0^1 f(xt)\\,\\mathrm dt\\ \\xrightarrow{\\ u=xt\\ }\\ \\frac1x\\int_0^x f(u)\\,\\mathrm du\\qquad(x\\neq0)$$',
+      '$$g\'(x)=\\frac{x f(x)-\\int_0^x f(u)\\,\\mathrm du}{x^2}=\\frac{f(x)}x-\\frac{1}{x^2}\\int_0^x f(u)\\,\\mathrm du\\qquad(x\\neq0)$$',
+      '$$g\'(0)=\\lim_{x\\to0}\\frac{g(x)-g(0)}x=\\lim_{x\\to0}\\frac{1}{x^2}\\int_0^x f(u)\\,\\mathrm du=\\lim_{x\\to0}\\frac{f(x)}{2x}=\\frac12$$',
+      '$$\\lim_{x\\to0}g\'(x)=1-\\frac12=\\frac12=g\'(0)\\ \\Rightarrow\\ g\'(x)\\ \\text{在}\\ x=0\\ \\text{处连续}$$',
+      '$$g\'(x)=\\begin{cases}\\dfrac{f(x)}x-\\dfrac{1}{x^2}\\displaystyle\\int_0^x f(t)\\,\\mathrm dt, & x\\neq0,\\\\[2mm]\\dfrac12, & x=0.\\end{cases}$$'
+    ];
+    ROWS.forEach(function(html){
+      var row = AW.el('div', 'derive-row', html);
+      row.style.cssText = 'padding:6px 14px;margin:8px 0;border-radius:8px;' +
+        'border-left:4px solid #cbd5e1;background:#f8fafc;opacity:0;' +
+        'transform:translateY(8px);transition:all .35s ease;';
+      wrap.appendChild(row);
+      rows.push(row);
+    });
+    stage.appendChild(wrap);
+  },
+
+  render: function(stage, sn, i){
+    rows.forEach(function(row, j){
+      var vis = j < i;
+      var cur = vis && j === i - 1;
+      row.style.opacity = vis ? '1' : '0';
+      row.style.transform = vis ? 'translateY(0)' : 'translateY(8px)';
+      row.style.borderLeftColor = cur ? '#f59e0b' : (vis ? '#10b981' : '#cbd5e1');
+      row.style.background = cur ? '#fffbeb' : (vis ? '#f0fdf4' : '#f8fafc');
+    });
+    renderMathAfterSnap(stage);
+  },
+
+  snaps: [
+    { cls:'shift', tag:'审题', log:'被积函数含参数 x，先换元再求导；x=0 处单独处理', count:0 },
+    { cls:'step',  tag:'定 f(0)', log:'极限 f(x)/x=1 分母趋于 0，逼出 f(0)=0，g(0) 也随之算出', count:1 },
+    { cls:'step',  tag:'换元', log:'令 u=xt，把含参积分化成变限积分乘 1/x', count:2 },
+    { cls:'ok',    tag:'求导', log:'商法则加变限积分求导，得到 x 不为 0 时的 g 一撇', count:3 },
+    { cls:'step',  tag:'补点', log:'x=0 用导数定义，洛必达后用条件极限得 1/2', count:4 },
+    { cls:'ok',    tag:'验证连续', log:'g 一撇的极限是 1 减 1/2，恰好等于 g 一撇在 0 点的值', count:5 },
+    { cls:'done',  tag:'结论', log:'分段导函数拼成完整答案，且在 x=0 连续', count:6, done:true },
+  ],
+
+  result: {
+    big: '$g\'(0)=\\dfrac12$，且 $g\'(x)$ 在 $x=0$ 处连续',
+    html: '正确答案：$x\\neq0$ 时 $g\'(x)=\\dfrac{f(x)}x-\\dfrac{1}{x^2}\\displaystyle\\int_0^x f(t)\\,\\mathrm dt$，$g\'(0)=\\dfrac12$，$g\'(x)$ 在 $x=0$ 处连续。记忆点：<b>含参积分先换元 $u=xt$</b>；分段点处<b>必须用定义补导数</b>，再用「极限值 = 函数值」收尾。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

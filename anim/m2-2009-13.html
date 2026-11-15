@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2009·13 幂指函数的最小值</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改 AW.init 区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [];
+
+var LINES = [
+  "<p><b>幂指函数先取对数</b>：$y=x^{2x}>0$，$\\ln y=2x\\ln x$——底和指数都含变量，取对数后变成普通乘积。</p>",
+  "<p><b>对数求导</b>：$$\\frac{y\'}{y}=2\\ln x+2x\\cdot\\frac{1}{x}=2\\ln x+2$$</p>",
+  "<p><b>驻点</b>：令 $y\'=0\\iff 2\\ln x+2=0\\iff\\ln x=-1\\iff x=\\dfrac{1}{\\mathrm e}$。</p>",
+  "<p><b>判号</b>：$x<\\dfrac{1}{\\mathrm e}$ 时 $y\'<0$，$x>\\dfrac{1}{\\mathrm e}$ 时 $y\'>0$——先减后增，$x=\\dfrac{1}{\\mathrm e}$ 是 $(0,1]$ 上唯一驻点 $\\Rightarrow$ <b>最小值点</b>。</p>",
+  "<p><b>最小值</b>：$$y\\Big|_{x=1/\\mathrm e}=\\Big(\\frac{1}{\\mathrm e}\\Big)^{2/\\mathrm e}=\\mathrm e^{-\\frac{2}{\\mathrm e}}\\approx0.49$$</p>",
+  "<p><b>端点核对</b>：$x\\to0^+$ 时 $2x\\ln x\\to0\\Rightarrow y\\to1$；$x=1$ 时 $y=1$；两端值均大于 $\\mathrm e^{-2/\\mathrm e}$，结论成立。</p>"
+];
+
+AW.init({
+  title: '$y=x^{2x}$ 在 $(0,1]$ 上的最小值',
+  subtitle: '考点：极值与单调性 · 方法：取对数 → 求导定驻点 → 端点校验',
+  counterLabel: '步数',
+  intro: '点击「▶ 播放」逐步演示每一步推导。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    ROWS.length = 0;
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    for(var k = 0; k < LINES.length; k++){
+      var d = AW.el('div', '', LINES[k]);
+      d.style.cssText = 'margin:8px 0;padding:9px 14px;border-left:3px solid #e2e8f0;background:#f8fafc;border-radius:0 12px 12px 0;font-size:14.5px;line-height:1.9;display:none;';
+      board.appendChild(d);
+      ROWS.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  render: function(stage, sn){
+    for(var k = 0; k < ROWS.length; k++){
+      var r = ROWS[k];
+      if(k >= sn.show){ r.style.display = 'none'; continue; }
+      r.style.display = 'block';
+      if(k === sn.show - 1 && !sn.done){
+        r.style.borderLeftColor = '#d97706';
+        r.style.background = '#fffbeb';
+      } else {
+        r.style.borderLeftColor = '#16a34a';
+        r.style.background = '#f8fafc';
+      }
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  snaps: [
+    { cls:'shift', tag:'取对数', log:'底和指数都含变量，取对数化成乘积', show:1, count:0 },
+    { cls:'step',  tag:'求导',   log:'两边对 x 求导，右边得 2lnx + 2', show:2, count:1 },
+    { cls:'ok',    tag:'驻点',   log:'令导数为零，解出 x = 1/e', show:3, count:2 },
+    { cls:'ok',    tag:'判号',   log:'先减后增，1/e 是最小值点', show:4, count:3 },
+    { cls:'step',  tag:'求值',   log:'代入得 e^(−2/e)，约 0.49', show:5, count:4 },
+    { cls:'done',  tag:'完成',   log:'端点值都是 1，比 0.49 大，最小值确认', show:6, count:5, done:true },
+  ],
+
+  result: {
+    big: '$\\mathrm e^{-\\frac{2}{\\mathrm e}}$（约 0.49）',
+    html: '记忆锚点：<b>幂指函数三步走：取对数 → 求导定驻点 → 端点校验</b>。注意 $x\\to0^+$ 时 $2x\\ln x\\to0$，$y\\to1$ 而不是 $0$。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

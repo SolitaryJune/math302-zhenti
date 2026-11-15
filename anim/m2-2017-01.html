@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2017·01 分段函数在 x=0 处连续求 ab</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_concept_template.html，只改题目专属区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+// 一张推理卡片（body 里可写 $..$ / $$..$$ 公式）
+function card(n, cls, title, body){
+  return '<div class="aw-stepcard ' + (cls || '') + '"><h4><span class="n">' + n +
+         '</span>' + title + '</h4>' + body + '</div>';
+}
+
+// 推理链：每一步的完整内容（引擎按步数截取显示）
+var STEPS = [
+  { title: '审题：连续 = 三个值相等',
+    cls: 'key',
+    body: '<p>分段函数在分界点 $x=0$ 连续，要求<b>左极限 = 右极限 = $f(0)$</b>。这道题其实是把一个条件翻译成一个小方程。</p>',
+    log: '连续三值相等，目标锁定右极限' },
+  { title: '左侧与函数值：都是 b',
+    cls: 'step',
+    body: '<p>$x\\le 0$ 时 $f(x)=b$，故 $f(0)=b$，且左极限 $\\lim_{x\\to0^-}f(x)=b$。于是连续性等价于：右极限 $=b$。</p>',
+    log: 'x≤0 时 f 恒为 b，f(0)=b' },
+  { title: '右极限：等价无穷小 $1-\\cos u\\sim\\dfrac{u^2}{2}$',
+    cls: 'step',
+    body: '<p>$x\\to0^+$ 时 $\\sqrt{x}\\to0$，取 $u=\\sqrt{x}$：$$1-\\cos\\sqrt{x}\\sim\\frac{(\\sqrt{x})^2}{2}=\\frac{x}{2}$$ 故右极限 $\\lim_{x\\to0^+}\\dfrac{1-\\cos\\sqrt{x}}{ax}=\\lim_{x\\to0^+}\\dfrac{x/2}{ax}=\\dfrac{1}{2a}$。</p>',
+    ribbon: {k:1, ok:true},
+    log: '等价无穷小：1−cos√x 与 x 同阶' },
+  { title: '解方程得 ab',
+    cls: 'good',
+    body: '<p>令右极限等于 $b$：$\\dfrac{1}{2a}=b\\ \\Longrightarrow\\ 2ab=1\\ \\Longrightarrow\\ ab=\\dfrac{1}{2}$。</p>',
+    ribbon: {k:2, ok:true},
+    log: '1/(2a)=b，得 ab=1/2' },
+  { title: '逐项排错 B / C / D',
+    cls: 'bad',
+    body: '<p>B（$ab=-\\dfrac12$）：$1-\\cos\\sqrt{x}>0$、$x>0$，比值为正，负号无来由。C（$ab=0$）：误把 $1-\\cos\\sqrt{x}$ 当 $x$ 的高阶无穷小，实际<b>同阶</b>。D（$ab=2$）：漏了 $1-\\cos u\\sim\\dfrac{u^2}{2}$ 里的 $\\dfrac12$，多算一倍。</p>',
+    log: 'B 符号错、C 阶数错、D 漏系数' },
+  { title: '结论',
+    cls: 'good',
+    body: '<p>右极限 $=\\dfrac{1}{2a}=b$，即 $ab=\\dfrac{1}{2}$——答案选 <b>A</b>。</p>',
+    log: 'ab = 1/2，选 A' },
+];
+
+var snaps = STEPS.map(function(s, i){
+  return {
+    cls: i === STEPS.length - 1 ? 'done' : 'step',
+    tag: '第 ' + (i + 1) + ' 步',
+    log: s.log || s.title,
+    count: i + 1,
+    ribbon: s.ribbon,
+    html: STEPS.slice(0, i + 1).map(function(x, j){
+      return card(j + 1, x.cls, x.title, x.body);
+    }).join(''),
+    done: i === STEPS.length - 1,
+  };
+});
+
+AW.init({
+  title: '分段函数在 $x=0$ 处连续：$f(x)=\\begin{cases}\\dfrac{1-\\cos\\sqrt{x}}{ax}, & x>0\\\\ b, & x\\le0\\end{cases}$',
+  subtitle: '考点：连续与间断 · 等价无穷小 · 方法：左右极限与函数值对齐',
+  counterLabel: '推理步',
+  ribbonTitle: '关键环节（✓ 完成）',
+  intro: '点击「▶ 播放」逐步展开推理链。',
+  render: function(stage, sn){
+    if(sn.html != null) stage.innerHTML = sn.html;
+    renderMathAfterSnap(stage);
+  },
+  snaps: snaps,
+  result: {
+    big: '答案 A：$ab=\\dfrac{1}{2}$',
+    html: '记忆锚点：<b>$1-\\cos u\\sim\\dfrac{u^2}{2}$</b>，取 $u=\\sqrt{x}$ 得 $1-\\cos\\sqrt{x}\\sim\\dfrac{x}{2}$（与 $x$ <b>同阶</b>）。分段点连续 = 左右极限与函数值三者对齐，剩下的就是解 $\\dfrac{1}{2a}=b$。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

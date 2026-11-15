@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2011 数二第 1 题 · 等价无穷小的阶与系数</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（与模板一致，勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  /* stage 同步渲染；结论卡/标题/副标题用 setTimeout(0) 兜底 */
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+var LINES = [
+  '<p><b>题面：</b>当 $x\\to0$ 时，$f(x)=3\\sin x-\\sin 3x$ 与 $c\\,x^k$ 是等价无穷小，求 $k$ 与 $c$。</p>',
+  '<p><b>三倍角公式消元：</b>$$\\sin 3x=3\\sin x-4\\sin^3x\\ \\Longrightarrow\\ f(x)=3\\sin x-\\sin 3x=4\\sin^3x.$$一次项 $3\\sin x-3\\sin x$ 恰好消光，只剩纯三次结构。</p>',
+  '<p><b>取等价首项：</b>$x\\to0$ 时 $\\sin x\\sim x$，故 $$4\\sin^3x\\sim 4x^3,$$ 对照 $c\\,x^k$ 读出 $k=3,\\ c=4$。</p>',
+  '<p><b>泰勒展开复核：</b>$$\\sin x=x-\\frac{x^3}{6}+o(x^3),\\qquad \\sin 3x=3x-\\frac{27x^3}{6}+o(x^3),$$ $$f(x)=\\Bigl(-\\frac{3}{6}+\\frac{27}{6}\\Bigr)x^3+o(x^3)=4x^3+o(x^3).$$</p>',
+  '<p><b>结论：</b>$f(x)\\sim 4x^3$，即 $k=3,\\ c=4$，<b>选 C</b>。</p>'
+];
+
+var lineEls = [];
+
+AW.init({
+  title: '第 1 题 · $3\\sin x-\\sin 3x\\sim c\\,x^k$ 的阶与系数',
+  subtitle: '考点：等价无穷小比较 · 方法：三倍角公式消元 / 泰勒展开取首项',
+  counterLabel: '推导步',
+  intro: '点击「▶ 播放」逐步演示：先消一次项，再取首项读出阶数与系数。',
+  ribbonTitle: '推导进度（✓ 完成）',
+  build: function(stage){
+    stage.innerHTML = '';
+    lineEls = [];
+    var wrap = AW.el('div', 'aw-scroll');
+    wrap.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>（每步揭示一行，公式由 KaTeX 渲染）'));
+    LINES.forEach(function(h){
+      var d = AW.el('div', 'aw-stepcard', h);
+      d.style.display = 'none';
+      wrap.appendChild(d);
+      lineEls.push(d);
+    });
+    stage.appendChild(wrap);
+  },
+  snaps: [
+    { cls:'step',  tag:'审题', count:0, reveal:1 },
+    { cls:'shift', tag:'消元', log:'用三倍角公式 sin3x = 3sinx − 4sin³x 代入，一次项恰好全部消掉', count:1, reveal:2, hl:1, ribbon:{k:1, ok:true} },
+    { cls:'step',  tag:'取首项', log:'sin x 与 x 等价，立方后 4sin³x 与 4x³ 等价，读出 k=3、c=4', count:2, reveal:3, hl:2, ribbon:{k:2, ok:true} },
+    { cls:'step',  tag:'复核', log:'改用泰勒展开到三次项，首项系数同样算出 +4', count:3, reveal:4, hl:3, ribbon:{k:3, ok:true} },
+    { cls:'done',  tag:'结论', log:'结论：k=3，c=4，选 C', count:4, reveal:5, hl:4, good:true, done:true, ribbon:{k:4, ok:true} },
+  ],
+  render: function(stage, sn){
+    for(var j = 0; j < lineEls.length; j++){
+      lineEls[j].style.display = (j < (sn.reveal || 0)) ? '' : 'none';
+      lineEls[j].className = 'aw-stepcard' + (sn.hl === j ? (sn.good ? ' good' : ' key') : '');
+    }
+    renderMathAfterSnap(stage);
+  },
+  result: {
+    big: '选 C：k=3，c=4',
+    html: '记忆锚点：<b>$\\sin 3x=3\\sin x-4\\sin^3x$</b> 让一次项当场消光，$f(x)=4\\sin^3x\\sim 4x^3$。易错：等价替换不能用在<b>相减</b>的项上——$3\\sin x-\\sin 3x$ 直接换成 $3x-3x=0$ 会丢掉全部主导项，必须展开（或用三倍角）看清首项。',
+  },
+});
+</script>
+</body>
+</html>

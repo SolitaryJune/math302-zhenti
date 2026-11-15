@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2023·18 二元函数驻点分类与极值判别</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [
+  "<b>① 偏导数：</b>$f_x=\\mathrm e^{\\cos y}+x,\\qquad f_y=-x\\,\\mathrm e^{\\cos y}\\sin y$",
+  "<b>② 解 $f_x=0$：</b>$x=-\\mathrm e^{\\cos y}\\neq0$（右端恒为负，$x$ 不可能是 $0$）",
+  "<b>③ 代入 $f_y=0$：</b>只能 $\\sin y=0\\ \\Rightarrow\\ y=k\\pi$（$k\\in\\mathbb Z$）",
+  "<b>④ 第一类：</b>$y=2k\\pi$，$\\cos y=1\\ \\Rightarrow\\ x=-\\mathrm e$，驻点 $(-\\mathrm e,\\ 2k\\pi)$",
+  "<b>⑤ 第二类：</b>$y=(2k+1)\\pi$，$\\cos y=-1\\ \\Rightarrow\\ x=-\\mathrm e^{-1}$，驻点 $\\big(-\\mathrm e^{-1},\\ (2k+1)\\pi\\big)$",
+  "<b>⑥ 二阶偏导：</b>$A=f_{xx}=1,\\quad B=f_{xy}=-\\mathrm e^{\\cos y}\\sin y,\\quad C=f_{yy}=-x\\,\\mathrm e^{\\cos y}(\\cos y-\\sin^2y)$",
+  "<b>⑦ 驻点处化简：</b>$\\sin y=0\\ \\Rightarrow\\ B=0$，且 $C=-x\\,\\mathrm e^{\\cos y}\\cos y$",
+  "<b>⑧ 判 $(-\\mathrm e,2k\\pi)$：</b>$C=-(-\\mathrm e)\\cdot\\mathrm e=\\mathrm e^2$，$AC-B^2=\\mathrm e^2>0$，$A=1>0\\ \\Rightarrow$ 极小值点",
+  "<b>⑨ 算极小值：</b>$f(-\\mathrm e,2k\\pi)=-\\mathrm e\\cdot\\mathrm e+\\frac{\\mathrm e^2}{2}=-\\frac{\\mathrm e^2}{2}$",
+  "<b>⑩ 判 $\\big(-\\mathrm e^{-1},(2k+1)\\pi\\big)$：</b>$C=-\\mathrm e^{-2}$，$AC-B^2=-\\mathrm e^{-2}<0\\ \\Rightarrow$ 鞍点，非极值",
+  "<b>⑪ 结论：</b>只有极小值 $f(-\\mathrm e,2k\\pi)=-\\frac{\\mathrm e^2}{2}$（$k\\in\\mathbb Z$），<b>无极大值</b>"
+];
+var rowEls = [];
+
+AW.init({
+  title: '2023·18　二元函数驻点分类与极值判别',
+  subtitle: '考点：无条件极值 · 驻点联立求解 · $AC-B^2$ 判别法',
+  counterLabel: '已推进',
+  ribbonTitle: '推导进度（✓ 完成）',
+  intro: '点击「▶ 播放」或「下一步」：先解驻点分两类，再用二阶判别法逐个定性。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var inner = AW.el('div', '');
+    inner.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>：当前行亮琥珀色，已完成的行变绿'));
+    rowEls = [];
+    for (var i = 0; i < ROWS.length; i++){
+      var r = AW.el('div', 'aw-stepcard', ROWS[i]);
+      inner.appendChild(r);
+      rowEls.push(r);
+    }
+    wrap.appendChild(inner);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step', tag:'求偏导', log:'第①步：分别对 x 和 y 求偏导，注意 y 只出现在指数和正弦里', count:0,  ribbon:{k:1,  ok:true} },
+    { cls:'ok',   tag:'解方程一', log:'第②步：第一个偏导为零，解出 x 等于负的指数幂，恒不为零', count:1,  ribbon:{k:2,  ok:true} },
+    { cls:'ok',   tag:'解方程二', log:'第③步：代回第二个偏导，x 和指数都不为零，只能正弦为零', count:2,  ribbon:{k:3,  ok:true} },
+    { cls:'ok',   tag:'分类一', log:'第④步：偶数倍派上余弦为一，x 取负的 e，得第一类驻点', count:3,  ribbon:{k:4,  ok:true} },
+    { cls:'ok',   tag:'分类二', log:'第⑤步：奇数倍派上余弦为负一，x 取负的 e 倒数，得第二类驻点', count:4,  ribbon:{k:5,  ok:true} },
+    { cls:'ok',   tag:'二阶偏导', log:'第⑥步：写出 A、B、C 三个二阶偏导，B 是混合偏导', count:5,  ribbon:{k:6,  ok:true} },
+    { cls:'ok',   tag:'化简',   log:'第⑦步：驻点处正弦为零，混合偏导变成零，C 也大幅简化', count:6,  ribbon:{k:7,  ok:true} },
+    { cls:'ok',   tag:'判别一', log:'第⑧步：第一类驻点判别值为正、A 也为正，是极小值点', count:7,  ribbon:{k:8,  ok:true} },
+    { cls:'ok',   tag:'极小值', log:'第⑨步：把驻点代回原函数，负 e 平方加一半，得负的二分之一个 e 平方', count:8,  ribbon:{k:9,  ok:true} },
+    { cls:'ok',   tag:'判别二', log:'第⑩步：第二类驻点判别值为负，是鞍点，不是极值点', count:9,  ribbon:{k:10, ok:true} },
+    { cls:'done', tag:'完成',   log:'第⑪步：结论——只有一族极小值点，没有极大值', count:10, ribbon:{k:11, ok:true}, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    for (var j = 0; j < rowEls.length; j++){
+      rowEls[j].className = 'aw-stepcard' + (j < i ? ' good' : (j === i ? ' key' : ''));
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: "$\\text{极小值 } f(-\\mathrm e,\\,2k\\pi)=-\\frac{\\mathrm e^2}{2},\\qquad \\text{无极大值}$",
+    html: "结论：<b>驻点两族——$(-\\mathrm e,\\,2k\\pi)$ 处 $AC-B^2=\\mathrm e^2>0$ 且 $A=1>0$，取极小值 $-\\dfrac{\\mathrm e^2}{2}$（$k\\in\\mathbb Z$）；$\\big(-\\mathrm e^{-1},(2k+1)\\pi\\big)$ 处 $AC-B^2<0$，是鞍点</b>。记忆锚点：$f_y=0$ 先排除 $x=0$（因为 $f_x=0$ 强制 $x=-\\mathrm e^{\\cos y}\\neq0$），只留 $\\sin y=0$；判别时 $AC-B^2>0$ 还必须配 $A$ 的符号。易错：驻点漏一族；$x$ 误取 $0$；极小值代成偏导数。",
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

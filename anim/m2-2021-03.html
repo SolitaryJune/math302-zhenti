@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2021·03 相关变化率：体积与表面积</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改题目专属区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [
+  "<b>① 审题：</b>$\\dfrac{\\mathrm{d}r}{\\mathrm{d}t}=2,\\ \\dfrac{\\mathrm{d}h}{\\mathrm{d}t}=-3$，在 $r=10,\\ h=5$ 处求 $\\dfrac{\\mathrm{d}V}{\\mathrm{d}t},\\dfrac{\\mathrm{d}S}{\\mathrm{d}t}$——相关变化率=公式+链式法则+代值",
+  "<b>② 列公式：</b>$V=\\pi r^2h$；封闭圆柱全面积 $S=2\\pi r^2+2\\pi rh$（两底 + 侧面）——两底不能漏",
+  "<b>③ 体积求导：</b>链式法则 $\\dfrac{\\mathrm{d}V}{\\mathrm{d}t}=\\pi\\left(2r\\dfrac{\\mathrm{d}r}{\\mathrm{d}t}h+r^2\\dfrac{\\mathrm{d}h}{\\mathrm{d}t}\\right)$——两项一个来自半径、一个来自高",
+  "<b>④ 代入算体积率：</b>$\\pi\\left(2\\cdot10\\cdot2\\cdot5+10^2\\cdot(-3)\\right)=\\pi(200-300)=-100\\pi\\ \\mathrm{cm^3/s}$——高在缩，负项占上风",
+  "<b>⑤ 表面积求导：</b>$\\dfrac{\\mathrm{d}S}{\\mathrm{d}t}=4\\pi r\\dfrac{\\mathrm{d}r}{\\mathrm{d}t}+2\\pi\\left(\\dfrac{\\mathrm{d}r}{\\mathrm{d}t}h+r\\dfrac{\\mathrm{d}h}{\\mathrm{d}t}\\right)$——底与侧各算各的",
+  "<b>⑥ 代入算表面率：</b>$4\\pi\\cdot10\\cdot2+2\\pi(2\\cdot5+10\\cdot(-3))=80\\pi-40\\pi=40\\pi\\ \\mathrm{cm^2/s}$",
+  "<b>⑦ 结论：</b>$\\dfrac{\\mathrm{d}V}{\\mathrm{d}t}=-100\\pi\\ \\mathrm{cm^3/s}$（体积在减小），$\\dfrac{\\mathrm{d}S}{\\mathrm{d}t}=40\\pi\\ \\mathrm{cm^2/s}$（表面积在增大）——选 C"
+];
+
+AW.init({
+  title: '2021·03　圆柱体体积与表面积的变化率',
+  subtitle: '考点：相关变化率 · 链式法则 · $V=\\pi r^2h$，$S=2\\pi r^2+2\\pi rh$',
+  counterLabel: '已推导',
+  ribbonTitle: '推导进度（✓ 完成）',
+  intro: '点击「▶ 播放」或「下一步」，公式 → 求导 → 代值，两个几何量一气呵成。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var inner = AW.el('div', '');
+    inner.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>：当前行亮琥珀色，已完成的行变绿'));
+    this._rows = [];
+    for (var i = 0; i < ROWS.length; i++){
+      var r = AW.el('div', 'aw-stepcard', ROWS[i]);
+      inner.appendChild(r);
+      this._rows.push(r);
+    }
+    wrap.appendChild(inner);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step',  tag:'审题',   log:'已知半径和高各自的变化速率，求体积和表面积的瞬时变化率', count:0, ribbon:{k:1, ok:true} },
+    { cls:'shift', tag:'列公式', log:'体积是派 r 方乘 h，表面积要算全：两个底加一个侧', count:1, ribbon:{k:2, ok:true} },
+    { cls:'ok',    tag:'求导',   log:'体积对时间求导出两项：半径贡献一项、高贡献一项', count:2, ribbon:{k:3, ok:true} },
+    { cls:'ok',    tag:'代值',   log:'正二百派减负三百派，体积每秒减少一百派立方厘米', count:3, ribbon:{k:4, ok:true} },
+    { cls:'ok',    tag:'求导',   log:'表面积分底和侧两块：底随半径变大，侧随高缩短而收缩', count:4, ribbon:{k:5, ok:true} },
+    { cls:'ok',    tag:'代值',   log:'八十派减四十派，表面积每秒增加四十派平方厘米', count:5, ribbon:{k:6, ok:true} },
+    { cls:'done',  tag:'完成',   log:'结论：体积率负一百派、表面率正四十派，选 C', count:6, ribbon:{k:7, ok:true}, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    var rows = this._rows;
+    for (var j = 0; j < rows.length; j++){
+      rows[j].className = 'aw-stepcard' + (j < i ? ' good' : (j === i ? ' key' : ''));
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '选 C　$\\dfrac{\\mathrm{d}V}{\\mathrm{d}t}=-100\\pi\\ \\mathrm{cm^3/s}$，$\\dfrac{\\mathrm{d}S}{\\mathrm{d}t}=40\\pi\\ \\mathrm{cm^2/s}$',
+    html: '记忆锚点：<b>相关变化率三步：写公式 → 链式求导 → 代瞬时值；封闭圆柱 $S$ 含两底</b>。易错：漏两底得 $-40\\pi$（选项 D）；$\\frac{\\mathrm{d}h}{\\mathrm{d}t}=-3$ 的负号丢失会把体积率算成正。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

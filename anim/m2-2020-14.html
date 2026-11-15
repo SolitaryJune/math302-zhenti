@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学·算法/过程类动画：四阶行列式倍加造零展开</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+AW.init({
+  title: '四阶行列式 $\\begin{vmatrix}a&0&-1&1\\\\0&a&1&-1\\\\-1&1&a&0\\\\1&-1&0&a\\end{vmatrix}$ 的计算',
+  subtitle: '考点：行列式计算 · 方法：倍加变换造零 → 按零最多的列展开',
+  counterLabel: '推导步',
+  intro: '点击「▶ 播放」逐步化简并展开。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    var lines = [
+      '<b>原行列式</b>：$$D=\\begin{vmatrix}a&0&-1&1\\\\0&a&1&-1\\\\-1&1&a&0\\\\1&-1&0&a\\end{vmatrix}$$ 观察：第 3、4 列的前两行互为相反数 → 倍加造零',
+      '<b>列变换 $c_3\\to c_3+c_4$（值不变）</b>：第 1 行 $-1+1=0$、第 2 行 $1+(-1)=0$：$$D=\\begin{vmatrix}a&0&0&1\\\\0&a&0&-1\\\\-1&1&a&0\\\\1&-1&a&a\\end{vmatrix}$$',
+      '<b>行变换 $r_4\\to r_4-r_3$（值不变）</b>：第 4 行变 $(2,\\,-2,\\,0,\\,a)$：$$D=\\begin{vmatrix}a&0&0&1\\\\0&a&0&-1\\\\-1&1&a&0\\\\2&-2&0&a\\end{vmatrix}$$',
+      '<b>按第 3 列展开</b>：只剩 $a_{33}=a$ 非零，符号 $(-1)^{3+3}=+1$：$$D=a\\cdot\\begin{vmatrix}a&0&1\\\\0&a&-1\\\\2&-2&a\\end{vmatrix}$$',
+      '<b>三阶按第一行展开</b>：$$\\begin{vmatrix}a&0&1\\\\0&a&-1\\\\2&-2&a\\end{vmatrix}=a\\begin{vmatrix}a&-1\\\\-2&a\\end{vmatrix}+1\\cdot\\begin{vmatrix}0&a\\\\2&-2\\end{vmatrix}$$ 其中 $\\begin{vmatrix}a&-1\\\\-2&a\\end{vmatrix}=a^2-2$，$\\begin{vmatrix}0&a\\\\2&-2\\end{vmatrix}=-2a$',
+      '<b>合并</b>：三阶 $=a(a^2-2)-2a=a^3-4a$，故 $D=a\\left(a^3-4a\\right)=a^4-4a^2$',
+      '<b>验算 + 答案</b>：取 $a=1$，原行列式数值复核 $=-3=a^4-4a^2$；取 $a=2$ 复核 $=0=16-16$。<b>答案：$a^4-4a^2$</b>',
+    ];
+    this._lines = [];
+    for(var i=0;i<lines.length;i++){
+      var d = AW.el('div', '', lines[i]);
+      d.style.cssText = 'padding:9px 14px;margin:7px 0;border-left:3px solid transparent;border-radius:10px;transition:all .35s;opacity:.28;font-size:15px;line-height:1.9;';
+      board.appendChild(d);
+      this._lines.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'shift', tag:'审题',   log:'第 3、4 列前两行互为相反数，先倍加造零', count:0 },
+    { cls:'step',  tag:'列加',   log:'第 3 列加上第 4 列：前两行的第 3 列归零，值不变', count:1 },
+    { cls:'step',  tag:'行减',   log:'第 4 行减第 3 行：第 4 行第 3 列也归零，值不变', count:2 },
+    { cls:'ok',    tag:'展开',   log:'第 3 列只剩 a₃₃ = a 一个非零元，按它展开降成三阶', count:3 },
+    { cls:'step',  tag:'三阶',   log:'三阶按第一行展开，拆成两个二阶行列式', count:4 },
+    { cls:'step',  tag:'合并',   log:'两个二阶分别是 a²−2 与 −2a，三阶为 a³−4a，乘 a 得 a⁴−4a²', count:5 },
+    { cls:'done',  tag:'完成',   log:'结论：D = a⁴ − 4a²，数值验算吻合', count:6, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    for(var j=0;j<this._lines.length;j++){
+      var L = this._lines[j];
+      L.style.opacity = j<=i ? '1' : '0.28';
+      L.style.borderLeftColor = (j===i) ? '#d97706' : (j<i ? '#16a34a' : 'transparent');
+      L.style.background = (j===i) ? '#fef3c7' : 'transparent';
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '$D=a^4-4a^2$',
+    html: '记忆锚点：<b>倍加变换（某行/列加减另一行/列的倍数）不改变行列式的值</b>——先造零再展开，比硬按行展开稳得多。易错：$(-1)^{3+3}=+1$ 行列数从 1 数起；三阶展开里 $a(a^2-2)+(-2a)=a^3-4a$，负号别丢。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

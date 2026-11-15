@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学·算法类动画：行等价判定——化到同一个行最简形</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+AW.init({
+  title: '哪个矩阵能行变换出 $\\begin{pmatrix}1&1&0&1\\\\0&0&1&2\\\\0&0&0&0\\end{pmatrix}$',
+  subtitle: '考点：行等价 ⟺ 行最简形相同 · 方法：先比秩，再比主元列位置',
+  counterLabel: '检验步',
+  intro: '点击「▶ 播放」逐个选项消元比对。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    wrap.appendChild(AW.el('div', 'aw-row-label',
+      '<b>目标矩阵 $R$</b>（行最简形：秩 2，主元在第 1、3 列）'));
+    var m = AW.el('div', '');
+    m.style.cssText = 'margin:4px 0 14px;width:max-content;';
+    var rows = [
+      { chars:['1','1','0','1'], cls:['ok','','',''] },
+      { chars:['0','0','1','2'], cls:['','','ok',''] },
+      { chars:['0','0','0','0'], cls:['dim','dim','dim','dim'] },
+    ];
+    rows.forEach(function(r){
+      m.appendChild(AW.cellRow(r.chars, r.cls, null, 1));
+    });
+    wrap.appendChild(m);
+    var board = AW.el('div', '');
+    var lines = [
+      '<b>A</b>：$r_2-r_1=(0,1,1,2)$，$r_3-2r_1=(0,1,1,2)$，两行相同消为零，秩 2；行最简形 $\\begin{pmatrix}1&0&-1&-1\\\\0&1&1&2\\\\0&0&0&0\\end{pmatrix}$，主元在第 1、2 列 $\\ne$ $R$ → <b>排除</b>',
+      '<b>B</b>：$r_2-r_1=(0,0,2,4)\\to(0,0,1,2)$，$r_3-r_1=(0,0,1,2)$，两行相同消为零，秩 2；留下的两行正是 $(1,1,0,1)$ 与 $(0,0,1,2)$，且第一行第 3 列已是 0，行最简形<b>恰为 $R$</b> ✓',
+      '<b>C</b>：$r_2-r_3=(0,0,0,3)$，三行线性无关，秩 $3\\ne2$ → <b>排除</b>',
+      '<b>D</b>：$r_2-r_1=(0,1,0,0)$，$r_3-2r_1=(0,1,0,0)$，秩 2；行最简形 $\\begin{pmatrix}1&0&2&3\\\\0&1&0&0\\\\0&0&0&0\\end{pmatrix}$，主元在第 1、2 列 $\\ne$ $R$ → <b>排除</b>',
+      '<b>结论</b>：行等价比「同秩」强，必须行最简形逐元素相同——只有 <b>B</b> 落在 $R$ 上 → 选 B',
+    ];
+    this._lines = [];
+    for(var i=0;i<lines.length;i++){
+      var d = AW.el('div', '', lines[i]);
+      d.style.cssText = 'padding:9px 14px;margin:7px 0;border-left:3px solid transparent;border-radius:10px;transition:all .35s;opacity:.28;font-size:15px;line-height:1.9;';
+      board.appendChild(d);
+      this._lines.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step', tag:'判据', log:'行等价 ⟺ 行最简形相同；R 秩 2，主元列 1、3', count:0 },
+    { cls:'miss', tag:'A 排除', log:'秩虽为 2，但行最简形主元在第 1、2 列', count:1, ribbon:{k:1, ok:false} },
+    { cls:'ok',   tag:'B 通过', log:'消元后留下的两行恰是 R 的两行，行最简形完全一致', count:2, ribbon:{k:2, ok:true} },
+    { cls:'miss', tag:'C 排除', log:'三行线性无关，秩 3 ≠ 2，秩就不等', count:3, ribbon:{k:3, ok:false} },
+    { cls:'miss', tag:'D 排除', log:'秩为 2，但主元列位置与 R 不同', count:4, ribbon:{k:4, ok:false} },
+    { cls:'done', tag:'完成', log:'结论：只有 B 与目标矩阵行等价，选 B', count:5, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    for(var j=0;j<this._lines.length;j++){
+      var L = this._lines[j];
+      L.style.opacity = j<=i-1 ? '1' : '0.28';
+      L.style.borderLeftColor = (j===i-1) ? '#d97706' : (j<i-1 ? '#16a34a' : 'transparent');
+      L.style.background = (j===i-1) ? '#fef3c7' : 'transparent';
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '答案 B',
+    html: '记忆锚点：<b>行等价 ⟺ 行最简形相同；秩相等只是必要条件，主元列位置（行空间）才是最终裁决</b>。A、D 都是「秩对了、主元列不对」的陷阱；C 连秩都不等。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

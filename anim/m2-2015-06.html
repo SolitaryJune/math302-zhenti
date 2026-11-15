@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2015·06 双曲线—射线区域的极坐标累次积分</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改题目专属区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+// 推导板各行：与 snaps 一一对应（build 建立、render 按 i 点亮）
+var ROWS = [
+  { label: '第 0 步 · 审题',
+    h: '<p>$D$ 在第一象限，由双曲线 $2xy=1,\\ 4xy=1$ 与过原点的射线 $y=x,\\ y=\\sqrt3\\,x$ 围成。<b>极坐标</b>最自然：射线给 $\\theta$ 范围，双曲线给 $r$ 范围。</p>' },
+  { label: '第 1 步 · 射线定 θ',
+    h: '<p>$y=x\\Rightarrow\\tan\\theta=1\\Rightarrow\\theta=\\dfrac{\\pi}{4}$；$y=\\sqrt3\\,x\\Rightarrow\\tan\\theta=\\sqrt3\\Rightarrow\\theta=\\dfrac{\\pi}{3}$。故 $\\theta\\in\\Big[\\dfrac{\\pi}{4},\\dfrac{\\pi}{3}\\Big]$。</p>' },
+  { label: '第 2 步 · 核心恒等式',
+    h: '<p>代入 $x=r\\cos\\theta,\\ y=r\\sin\\theta$：$$xy=r^2\\cos\\theta\\sin\\theta=\\dfrac{r^2}{2}\\sin2\\theta.$$</p>' },
+  { label: '第 3 步 · 外侧双曲线 2xy=1',
+    h: '<p>$r^2\\sin2\\theta=1\\Rightarrow r=\\dfrac{1}{\\sqrt{\\sin2\\theta}}$（$xy$ 大、离原点远，是 $r$ 的<b>上限</b>）。</p>' },
+  { label: '第 4 步 · 内侧双曲线 4xy=1',
+    h: '<p>$2r^2\\sin2\\theta=1\\Rightarrow r=\\dfrac{1}{\\sqrt{2\\sin2\\theta}}$（$xy$ 小、靠原点，是 $r$ 的<b>下限</b>）。注意两个式子都要<b>开平方</b>。</p>' },
+  { label: '第 5 步 · 别忘 Jacobian',
+    h: '<p>面积微元 $\\mathrm{d}x\\,\\mathrm{d}y=r\\,\\mathrm{d}r\\,\\mathrm{d}\\theta$，被积函数换成 $f(r\\cos\\theta,\\ r\\sin\\theta)$。</p>' },
+  { label: '第 6 步 · 组装（= 选项 B）',
+    h: '<p>$$\\iint_D f\\,\\mathrm{d}x\\mathrm{d}y=\\int_{\\pi/4}^{\\pi/3}\\mathrm{d}\\theta\\int_{1/\\sqrt{2\\sin2\\theta}}^{1/\\sqrt{\\sin2\\theta}}f(r\\cos\\theta,\\,r\\sin\\theta)\\,r\\,\\mathrm{d}r,$$ 与选项 <b>B</b> 一致。</p>' },
+];
+
+var rowEls = [];
+
+AW.init({
+  title: '把 $\\iint_D f\\,\\mathrm{d}x\\mathrm{d}y$ 化为极坐标累次积分',
+  subtitle: '考点：二重积分换极坐标 · 方法：射线定 θ 限，双曲线定 r 限，微元补 r',
+  counterLabel: '步骤',
+  intro: '点击「▶ 播放」逐步演示极坐标化的七个环节。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    rowEls = [];
+    var wrap = AW.el('div', 'aw-scroll');
+    ROWS.forEach(function(r){
+      var d = AW.el('div', '');
+      d.style.cssText = 'padding:9px 14px;margin:8px 0;border-left:4px solid transparent;border-radius:10px;opacity:.15;transition:opacity .35s,background .35s,border-color .35s;';
+      d.innerHTML = '<div style="font-size:12.5px;color:#64748b;font-weight:700;margin-bottom:2px">' + r.label + '</div>' + r.h;
+      wrap.appendChild(d);
+      rowEls.push(d);
+    });
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step',  tag:'审题',     log:'两条射线 + 两条双曲线围成，用极坐标', count:0 },
+    { cls:'ok',    tag:'定 θ',    log:'y=x 给 θ=π/4，y=√3x 给 θ=π/3', count:1 },
+    { cls:'shift', tag:'恒等式',  log:'xy = r²cosθsinθ = (r²/2)sin2θ', count:2 },
+    { cls:'ok',    tag:'外 r 限', log:'2xy=1 解出 r=1/√(sin2θ)，作上限', count:3 },
+    { cls:'ok',    tag:'内 r 限', log:'4xy=1 解出 r=1/√(2sin2θ)，作下限（记得开方）', count:4 },
+    { cls:'shift', tag:'补微元',  log:'dxdy = r dr dθ，别丢 Jacobian 因子 r', count:5 },
+    { cls:'done',  tag:'完成',    log:'组装结果与选项 B 一致，选 B', count:6, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    rowEls.forEach(function(d, j){
+      d.style.opacity = j <= i ? '1' : '.15';
+      d.style.borderLeftColor = j < i ? '#16a34a' : (j === i ? '#d97706' : 'transparent');
+      d.style.background = j === i ? '#fffbeb' : (j < i ? '#f6fef9' : 'transparent');
+    });
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '答案 B',
+    html: '记忆锚点：<b>射线定 $\\theta$、双曲线定 $r$</b>；由 $xy=\\frac{r^2}{2}\\sin2\\theta$ 解 $r$ 时<b>必须开平方</b>（排除 A/C），微元 $\\mathrm{d}x\\mathrm{d}y=r\\,\\mathrm{d}r\\,\\mathrm{d}\\theta$ 的 $r$ 不能丢（排除 C/D）——两关全过才是 B。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

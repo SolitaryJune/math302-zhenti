@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2009·04 累次积分合并换序</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改 AW.init 区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [];
+
+var LINES = [
+  "<p><b>两个累次积分 = 两块相邻区域</b>：先各自写成不等式，再统一次序拼接。</p>",
+  "<p>第一块 $\\displaystyle\\int_1^2\\mathrm dx\\int_x^2 f\\,\\mathrm dy$ 对应 $$D_1:\\ 1\\le x\\le 2,\\quad x\\le y\\le 2$$</p>",
+  "<p>第二块 $\\displaystyle\\int_1^2\\mathrm dy\\int_y^{4-y} f\\,\\mathrm dx$ 对应 $$D_2:\\ 1\\le y\\le 2,\\quad y\\le x\\le 4-y$$</p>",
+  "<p>把 $D_1$ 改写成先 $x$ 后 $y$：$$D_1:\\ 1\\le y\\le 2,\\quad 1\\le x\\le y$$</p>",
+  "<p><b>沿 $x=y$ 拼接</b>：每条水平线上 $D_1$ 给 $x\\in[1,\\,y]$，$D_2$ 给 $x\\in[y,\\,4-y]$，两段首尾相接，合成 $$D_1\\cup D_2:\\ 1\\le y\\le 2,\\quad 1\\le x\\le 4-y$$</p>",
+  "<p><b>合并结果</b>：$$\\int_1^2\\mathrm dy\\int_1^{4-y}f(x,y)\\,\\mathrm dx$$与选项 C 一致。</p>"
+];
+
+AW.init({
+  title: '两块累次积分合并与换序：$\\int_1^2\\mathrm dx\\int_x^2 f\\,\\mathrm dy+\\int_1^2\\mathrm dy\\int_y^{4-y} f\\,\\mathrm dx$',
+  subtitle: '考点：二重积分次序 · 方法：区域不等式翻译 → 统一先 x 后 y → 拼接',
+  counterLabel: '步数',
+  intro: '点击「▶ 播放」逐步演示每一步推导。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    ROWS.length = 0;
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    for(var k = 0; k < LINES.length; k++){
+      var d = AW.el('div', '', LINES[k]);
+      d.style.cssText = 'margin:8px 0;padding:9px 14px;border-left:3px solid #e2e8f0;background:#f8fafc;border-radius:0 12px 12px 0;font-size:14.5px;line-height:1.9;display:none;';
+      board.appendChild(d);
+      ROWS.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  render: function(stage, sn){
+    for(var k = 0; k < ROWS.length; k++){
+      var r = ROWS[k];
+      if(k >= sn.show){ r.style.display = 'none'; continue; }
+      r.style.display = 'block';
+      if(k === sn.show - 1 && !sn.done){
+        r.style.borderLeftColor = '#d97706';
+        r.style.background = '#fffbeb';
+      } else {
+        r.style.borderLeftColor = '#16a34a';
+        r.style.background = '#f8fafc';
+      }
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  snaps: [
+    { cls:'shift', tag:'审题',    log:'两个积分各圈一块区域，先写不等式再统一为先 x 后 y', show:1, count:0 },
+    { cls:'step',  tag:'写 D1',   log:'第一块：x 从 1 到 2，y 从 x 到 2', show:2, count:1 },
+    { cls:'step',  tag:'写 D2',   log:'第二块：y 从 1 到 2，x 从 y 到 4−y', show:3, count:2 },
+    { cls:'shift', tag:'改写 D1', log:'D1 换方向描述：y 从 1 到 2，x 从 1 到 y', show:4, count:3 },
+    { cls:'ok',    tag:'拼接',    log:'两块在 x = y 处首尾相接，合成 1 ≤ x ≤ 4−y', show:5, count:4 },
+    { cls:'done',  tag:'完成',    log:'合并成先 x 后 y 的单一积分，与选项 C 一致', show:6, count:5, done:true },
+  ],
+
+  result: {
+    big: '选 C',
+    html: '记忆锚点：<b>先翻译成不等式，再对齐外层变量</b>。$D_1$ 给 $x\\in[1,\\,y]$、$D_2$ 给 $x\\in[y,\\,4-y]$，在 $x=y$ 处无缝拼成 $[1,\\,4-y]$；选项 B 丢掉左半块、D 只含 $D_1$、A 次序没统一。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

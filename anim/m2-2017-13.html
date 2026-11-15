@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2017·13 交换积分次序求累次积分</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改 AW.init 区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [];
+
+var LINES = [
+  "<p><b>第一步：识局</b>。$\\dfrac{\\tan x}{x}$ 没有初等原函数——原积分 $\\displaystyle\\int_0^1\\mathrm{d}y\\int_y^1\\dfrac{\\tan x}{x}\\,\\mathrm{d}x$ 先对 $x$ 积是死路，标准动作：<b>交换积分次序</b>。</p>",
+  "<p><b>第二步：写出积分区域</b>。内层 $x$ 从 $y$ 到 $1$、外层 $y$ 从 $0$ 到 $1$，即 $$D=\\{(x,y)\\mid 0\\le y\\le x\\le 1\\},$$ 是以 $(0,0)$、$(1,0)$、$(1,1)$ 为顶点的三角形（由 $y=x$、$x=1$、$y=0$ 围成）。</p>",
+  "<p><b>第三步：交换次序</b>。改为先 $y$ 后 $x$：$x$ 从 $0$ 到 $1$，固定 $x$ 时 $y$ 从 $0$ 到 $x$：$$\\int_0^1\\mathrm{d}x\\int_0^x\\frac{\\tan x}{x}\\,\\mathrm{d}y.$$</p>",
+  "<p><b>第四步：内层积分</b>。$\\dfrac{\\tan x}{x}$ 与 $y$ 无关，内层 = 被积函数 × 区间长度：$$\\int_0^x\\frac{\\tan x}{x}\\,\\mathrm{d}y=\\frac{\\tan x}{x}\\cdot x=\\tan x.$$ 分母 $x$ 恰好被长度 $x$ 消掉——这就是换序的目的。</p>",
+  "<p><b>第五步：外层积分</b>$$\\int_0^1\\tan x\\,\\mathrm{d}x=\\Big[-\\ln\\lvert\\cos x\\rvert\\Big]_0^1=-\\ln\\cos 1-\\bigl(-\\ln 1\\bigr)=-\\ln\\cos 1.$$（$\\cos 0=1$，$\\ln 1=0$。）</p>",
+  "<p><b>易错对照</b>：死磕 $\\tan x/x$ 的原函数永远积不出；区域写成 $y\\ge x$ 就换错了（内层下限是 $x=y$ 说明 $y\\le x$）；$\\int\\tan x\\,\\mathrm{d}x=-\\ln\\lvert\\cos x\\rvert$ 的符号与绝对值别丢。答案等价写法 $\\ln\\sec 1$。</p>"
+];
+
+AW.init({
+  title: '$\\displaystyle\\int_0^1\\mathrm{d}y\\int_y^1\\frac{\\tan x}{x}\\,\\mathrm{d}x$',
+  subtitle: '考点：二重积分累次积分换序 · 方法：画区域 D={0≤y≤x≤1} → 先 y 后 x → 内层约掉 x',
+  counterLabel: '已执行',
+  intro: '点击「▶ 播放」逐步演示每一步推导。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    ROWS.length = 0;
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    for(var k = 0; k < LINES.length; k++){
+      var d = AW.el('div', '', LINES[k]);
+      d.style.cssText = 'margin:8px 0;padding:9px 14px;border-left:3px solid #e2e8f0;background:#f8fafc;border-radius:0 12px 12px 0;font-size:14.5px;line-height:1.9;display:none;';
+      board.appendChild(d);
+      ROWS.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  render: function(stage, sn){
+    for(var k = 0; k < ROWS.length; k++){
+      var r = ROWS[k];
+      if(k >= sn.show){ r.style.display = 'none'; continue; }
+      r.style.display = 'block';
+      if(k === sn.show - 1 && !sn.done){
+        r.style.borderLeftColor = '#d97706';
+        r.style.background = '#fffbeb';
+      } else {
+        r.style.borderLeftColor = '#16a34a';
+        r.style.background = '#f8fafc';
+      }
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  snaps: [
+    { cls:'shift', tag:'识局',   log:'tanx/x 无初等原函数，先对 x 积是死路 → 换序', show:1, count:0 },
+    { cls:'step',  tag:'画区域', log:'内层 x: y→1，外层 y: 0→1，D = {0≤y≤x≤1} 三角形', show:2, count:1 },
+    { cls:'step',  tag:'换序',   log:'改为先 y 后 x：x: 0→1，y: 0→x', show:3, count:2 },
+    { cls:'ok',    tag:'内层',   log:'被积函数与 y 无关，×x 恰好约掉分母，内层 = tanx', show:4, count:3 },
+    { cls:'done',  tag:'完成',   log:'∫₀¹ tanx dx = −lncos1，选最终答案 −lncos1', show:5, count:4, done:true },
+    { cls:'step',  tag:'易错',   log:'区域方向、tan 原函数符号、绝对值', show:6, count:5, done:true },
+  ],
+
+  result: {
+    big: '积分值 $=-\\ln\\cos 1$',
+    html: '记忆锚点：<b>内层积不出就换序</b>；换序前必先把区域写成不等式 $0\\le y\\le x\\le1$。内层积出 $\\tan x$ 是本题的"题眼"——长度 $x$ 消掉分母 $x$。等价写法 $\\ln\\sec 1$。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

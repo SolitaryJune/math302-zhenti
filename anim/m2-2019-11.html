@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2019·11 抽象复合函数的偏导组合</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改 AW.init 区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [];
+
+var LINES = [
+  "<p><b>审题</b>：$z=y\\,f\\left(\\dfrac{y^2}{x}\\right)$，中间变量 $u=\\dfrac{y^2}{x}$。目标：算出组合 $\\boldsymbol{2x\\dfrac{\\partial z}{\\partial x}+y\\dfrac{\\partial z}{\\partial y}}$——先分别求偏导，再合并观察。</p>",
+  "<p><b>链式因子</b>：$$\\frac{\\partial u}{\\partial x}=-\\frac{y^2}{x^2},\\qquad \\frac{\\partial u}{\\partial y}=\\frac{2y}{x}.$$</p>",
+  "<p><b>对 $x$ 求偏导</b>（$y$ 视为常数）：$$\\frac{\\partial z}{\\partial x}=y\\,f\'(u)\\cdot\\left(-\\frac{y^2}{x^2}\\right)=-\\frac{y^3}{x^2}\\,f\'(u).$$</p>",
+  "<p><b>对 $y$ 求偏导</b>（前面有因子 $y$，必须用乘积法则）：$$\\frac{\\partial z}{\\partial y}=\\underbrace{f(u)}_{\\text{乘积法则}}+y\\,f\'(u)\\cdot\\frac{2y}{x}=f(u)+\\frac{2y^2}{x}\\,f\'(u).$$</p>",
+  "<p><b>代入组合</b>：$$2x\\frac{\\partial z}{\\partial x}=-\\frac{2y^3}{x}f\'(u),\\qquad y\\frac{\\partial z}{\\partial y}=y\\,f(u)+\\frac{2y^3}{x}f\'(u).$$</p>",
+  "<p><b>$f\'$ 项相消</b>：两项系数 $-\\dfrac{2y^3}{x}$ 与 $+\\dfrac{2y^3}{x}$ 互为相反数，全部抵消，只剩 $$2x\\frac{\\partial z}{\\partial x}+y\\frac{\\partial z}{\\partial y}=y\\,f\\left(\\frac{y^2}{x}\\right).$$</p>",
+  "<p><b>结论</b>：组合值 $=\\boldsymbol{y\\,f\\left(\\dfrac{y^2}{x}\\right)}$。自检：结果里不应残留任何 $f\'$。</p>"
+];
+
+AW.init({
+  title: '$z=y\\,f\\!\\left(\\dfrac{y^2}{x}\\right)$，求 $2x\\,z_x+y\\,z_y$',
+  subtitle: '考点：多元复合函数偏导 · 方法：链式法则 + 乘积法则，看 f′ 项相消',
+  counterLabel: '已执行',
+  intro: '点击「▶ 播放」逐步演示求偏导与合并。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    ROWS.length = 0;
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    for(var k = 0; k < LINES.length; k++){
+      var d = AW.el('div', '', LINES[k]);
+      d.style.cssText = 'margin:8px 0;padding:9px 14px;border-left:3px solid #e2e8f0;background:#f8fafc;border-radius:0 12px 12px 0;font-size:14.5px;line-height:1.9;display:none;';
+      board.appendChild(d);
+      ROWS.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  render: function(stage, sn){
+    for(var k = 0; k < ROWS.length; k++){
+      var r = ROWS[k];
+      if(k >= sn.show){ r.style.display = 'none'; continue; }
+      r.style.display = 'block';
+      if(k === sn.show - 1 && !sn.done){
+        r.style.borderLeftColor = '#d97706';
+        r.style.background = '#fffbeb';
+      } else {
+        r.style.borderLeftColor = '#16a34a';
+        r.style.background = '#f8fafc';
+      }
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  snaps: [
+    { cls:'shift', tag:'审题',   log:'设中间变量 u = y²/x，目标是算一个组合偏导', show:1, count:0 },
+    { cls:'step',  tag:'链式因子', log:'u 对 x 是负的 y²/x²，对 y 是 2y/x', show:2, count:1 },
+    { cls:'step',  tag:'求 z_x', log:'对 x 求偏导，y 当常数，得负的 f′ 项', show:3, count:2 },
+    { cls:'step',  tag:'求 z_y', log:'对 y 求偏导要用乘积法则，别丢 f 本身那一项', show:4, count:3 },
+    { cls:'step',  tag:'组合',   log:'两个偏导分别乘 2x 与 y 后再相加', show:5, count:4 },
+    { cls:'ok',    tag:'相消',   log:'含 f′ 的两项系数互为相反数，全部抵消', show:6, count:5, ribbon:{k:1, ok:true} },
+    { cls:'done',  tag:'完成',   log:'组合值 = y·f(y²/x)', show:7, count:6, done:true },
+  ],
+
+  result: {
+    big: '答案：$y\\,f\\!\\left(\\dfrac{y^2}{x}\\right)$',
+    html: '记忆锚点：<b>$z_x$ 出负 $f\'$ 项、$y z_y$ 出正 $f\'$ 项，正好抵消</b>。三个易错：$u_x=-\\frac{y^2}{x^2}$ 的负号、$z_y$ 的乘积法则（$f$ 与 $f\'$ 两项）、最终答案不应残留 $f\'$。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

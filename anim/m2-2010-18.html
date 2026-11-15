@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>m2-2010-18 椭圆截面贮油罐的油质量</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+var PAGES = [
+  "<p><b>几何结构（文字描述）</b>：贮油罐横截面是长轴 $2a$、短轴 $2b$ 的椭圆，罐长 $l$，平放。油面高度 $\\dfrac32b$ 从罐底量起。</p><p>体积 = 浸油截面积 $S\\times$ 罐长 $l$，质量 $m=\\rho V$。</p>",
+  "<p>建坐标：椭圆 $\\dfrac{x^2}{a^2}+\\dfrac{y^2}{b^2}=1$，$y$ 轴竖直向上，罐底最低点 $y=-b$。油面在</p>$$y=-b+\\frac32b=\\frac b2,$$<p>浸油部分为 $-b\\le y\\le\\dfrac b2$ 的一段椭圆。</p>",
+  "<p>在高度 $y$ 处，椭圆的半宽 $x=a\\sqrt{1-\\dfrac{y^2}{b^2}}$，水平条带长 $2x$：</p>$$S=\\int_{-b}^{b/2}2a\\sqrt{1-\\frac{y^2}{b^2}}\\,\\mathrm dy$$",
+  "<p>换元 $y=b\\sin t$（$\\mathrm dy=b\\cos t\\,\\mathrm dt$）：$y=-b\\leftrightarrow t=-\\dfrac\\pi2$，$y=\\dfrac b2\\leftrightarrow t=\\dfrac\\pi6$：</p>$$S=2ab\\int_{-\\pi/2}^{\\pi/6}\\cos^2t\\,\\mathrm dt$$",
+  "<p>降幂公式：</p>$$\\cos^2t=\\frac{1+\\cos2t}{2}$$",
+  "<p>逐项积分：</p>$$S=2ab\\cdot\\frac12\\Big[t+\\frac{\\sin2t}{2}\\Big]_{-\\pi/2}^{\\pi/6}=ab\\Big[t+\\frac{\\sin2t}{2}\\Big]_{-\\pi/2}^{\\pi/6}$$",
+  "<p>代上下限（$\\sin\\dfrac\\pi3=\\dfrac{\\sqrt3}2$，$\\sin(-\\pi)=0$）：</p>$$S=ab\\Big[\\Big(\\frac\\pi6+\\frac{\\sqrt3}4\\Big)-\\Big(-\\frac\\pi2\\Big)\\Big]=ab\\Big(\\frac{2\\pi}3+\\frac{\\sqrt3}4\\Big)$$",
+  "<p>乘罐长与密度：</p>$$V=Sl=\\Big(\\frac{2\\pi}3+\\frac{\\sqrt3}4\\Big)abl,\\qquad m=\\rho V=\\Big(\\frac{2\\pi}3+\\frac{\\sqrt3}4\\Big)abl\\,\\rho$$",
+  "<p>验算：满罐截面 $\\pi ab\\approx3.14ab$，本结果 $S\\approx2.53ab$，油面高于中心线、约占八成，量级合理 ✓</p>$$m=\\Big(\\frac{2\\pi}3+\\frac{\\sqrt3}4\\Big)abl\\rho$$"
+];
+
+AW.init({
+  title: "2010·18　平放椭圆贮油罐（油深 $\\frac32b$）的油质量",
+  subtitle: "考点：定积分应用 · 截面面积 · 三角换元（无图题：文字描述几何）",
+  counterLabel: "步数",
+  intro: "点击「▶ 播放」逐步演示：建系 → 条带积分 → 换元 → 求质量。",
+
+  build: function(stage){
+    stage.innerHTML = "";
+    var wrap = AW.el("div", "aw-scroll");
+    wrap.appendChild(AW.el("div", "aw-row-label", "<b>推导板</b>：体积 = 浸油截面积 × 罐长，质量 = ρ × 体积"));
+    this._board = AW.el("div", "", "");
+    wrap.appendChild(this._board);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:"shift", tag:"审题", log:"柱体平放，油的质量 = 密度 × 浸油体积 = 密度 × 截面浸油面积 × 罐长", count:0 },
+    { cls:"step", tag:"建系定油面", log:"椭圆中心为原点、y 轴向上，罐底在 y=−b；油深 3b/2 从底部量起，油面在 y=b/2", count:1 },
+    { cls:"step", tag:"条带积分", log:"高度 y 处条带长 2a·√(1−y²/b²)，从 −b 积到 b/2", count:2 },
+    { cls:"step", tag:"换元", log:"令 y=b·sin t：下限 t=−π/2，上限 t=π/6（注意不是 π/2），积分变成 cos²t", count:3 },
+    { cls:"step", tag:"降幂", log:"用 cos²t = (1+cos2t)/2 把平方化成一次", count:4 },
+    { cls:"ok", tag:"原函数", log:"积分得 ab·[t + sin2t/2]，在 −π/2 到 π/6 上取值", count:5 },
+    { cls:"ok", tag:"代上下限", log:"上限 π/6+√3/4，下限 −π/2，相减得 ab(2π/3+√3/4)", count:6 },
+    { cls:"step", tag:"算质量", log:"体积乘罐长 l，质量再乘密度 ρ", count:7 },
+    { cls:"done", tag:"完成", log:"结果 m = (2π/3+√3/4)·abl·ρ，与满罐截面 π ab 比约占八成，合理", count:8, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    this._board.innerHTML = PAGES[i];
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: "m = (2π/3 + √3/4)·abl·ρ",
+    html: "最终答案：$m=\\rho V=\\Big(\\dfrac{2\\pi}3+\\dfrac{\\sqrt3}4\\Big)abl\\rho$。<br>" +
+          "记忆点：油深 $\\dfrac32b$ 是<b>从罐底量的</b>，油面实际在 $y=\\dfrac b2$；换元 $y=b\\sin t$ 后上限是 $\\dfrac\\pi6$ 而非 $\\dfrac\\pi2$。",
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

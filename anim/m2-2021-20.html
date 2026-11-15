@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2021·20 一阶线性方程与法线截距最小值</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [
+  "$$xy^{\\prime}-6y=-6,\\qquad y(\\sqrt{3})=10\\qquad\\text{先解方程，再优化截距}$$",
+  "<b>① (I) 化标准形：</b>$y^{\\prime}-\\dfrac{6}{x}y=-\\dfrac{6}{x}$（$x\\ne0$），积分因子 $\\mu=\\mathrm{e}^{-\\int\\frac{6}{x}\\mathrm{d}x}=x^{-6}$",
+  "<b>② 乘积分因子：</b>$\\left(x^{-6}y\\right)^{\\prime}=-6x^{-7}$ —— 左边凑成一个导数",
+  "<b>③ 积分得通解：</b>$x^{-6}y=x^{-6}+C\\ \\Rightarrow\\ y=1+Cx^{6}$",
+  "<b>④ 定常数：</b>$y(\\sqrt{3})=10$：$(\\sqrt{3})^6=27$，$1+27C=10\\Rightarrow C=\\dfrac13$，故 $$y=1+\\frac{1}{3}x^{6}$$",
+  "<b>⑤ (II) 法线斜率：</b>$y^{\\prime}=2x^{5}$，点 $P(x_0,y_0)$ 处法线斜率为 $-\\dfrac{1}{2x_0^{5}}$（切线斜率的负倒数）",
+  "<b>⑥ 法线方程与截距：</b>$Y-y_0=-\\dfrac{1}{2x_0^{5}}\\left(X-x_0\\right)$，令 $X=0$：$$I_y=y_0+\\frac{1}{2x_0^{4}}=1+\\frac{1}{3}x_0^{6}+\\frac{1}{2x_0^{4}}$$",
+  "<b>⑦ 求导找驻点：</b>记 $g(x)=\\dfrac{1}{3}x^{6}+\\dfrac{1}{2}x^{-4}$，$g^{\\prime}(x)=2x^{5}-2x^{-5}=2\\cdot\\dfrac{x^{10}-1}{x^{5}}$，驻点 $x=\\pm1$",
+  "<b>⑧ 判号定最小：</b>$x=1$ 与 $x=-1$ 两侧 $g^{\\prime}$ 均由负变正，两处都是最小值点",
+  "<b>⑨ 结论：</b>$x=\\pm1$ 时 $y_0=1+\\dfrac13=\\dfrac{4}{3}$：$$P=\\left(\\pm1,\\ \\frac{4}{3}\\right),\\qquad I_y^{\\min}=1+\\frac{1}{3}+\\frac{1}{2}=\\frac{11}{6}$$"
+];
+
+AW.init({
+  title: "2021·20　一阶线性方程与法线 $y$ 轴截距的最小值",
+  subtitle: "考点：积分因子法 · 法线斜率取负倒数 · 含 $x^{-4}$ 项的最值",
+  counterLabel: "推导步数",
+  ribbonTitle: "推导进度（✓ 完成）",
+  intro: "点击「▶ 播放」或「下一步」，先解方程，再优化法线截距。",
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var inner = AW.el('div', '');
+    inner.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>：当前步亮琥珀色，已完成步变绿'));
+    this._rows = [];
+    for (var i = 0; i < ROWS.length; i++){
+      var r = AW.el('div', 'aw-stepcard', ROWS[i]);
+      inner.appendChild(r);
+      this._rows.push(r);
+    }
+    wrap.appendChild(inner);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    {"cls": "step", "tag": "审题", "log": "先解微分方程，第二问再优化法线的 y 轴截距", "count": 0, "ribbon": {"k": 1, "ok": true}},
+    {"cls": "shift", "tag": "标准化", "log": "除以 x 化成标准形，积分因子是 x 的负六次方", "count": 1, "ribbon": {"k": 2, "ok": true}},
+    {"cls": "ok", "tag": "积分因子", "log": "乘积分因子后左边凑成导数，右端只剩幂函数", "count": 2, "ribbon": {"k": 3, "ok": true}},
+    {"cls": "ok", "tag": "通解", "log": "积分得通解，y 等于一加 C 乘 x 六次方", "count": 3, "ribbon": {"k": 4, "ok": true}},
+    {"cls": "ok", "tag": "定常数", "log": "代入根号三处的初值，C 等于三分之一，第一问完成", "count": 4, "ribbon": {"k": 5, "ok": true}},
+    {"cls": "shift", "tag": "法线", "log": "切线斜率是二 x 五次方，法线取负倒数", "count": 5, "ribbon": {"k": 6, "ok": true}},
+    {"cls": "ok", "tag": "截距", "log": "法线方程令横坐标为零得 y 轴截距，含 x 负四次方项", "count": 6, "ribbon": {"k": 7, "ok": true}},
+    {"cls": "ok", "tag": "驻点", "log": "对截距主体求导，驻点为正负一", "count": 7, "ribbon": {"k": 8, "ok": true}},
+    {"cls": "ok", "tag": "判号", "log": "两个驻点两侧导数都由负变正，都是最小值点", "count": 8, "ribbon": {"k": 9, "ok": true}},
+    {"cls": "ok", "tag": "结论", "log": "代回得纵坐标三分之四，截距最小值为六分之十一", "count": 9, "ribbon": {"k": 10, "ok": true}},
+    {"cls": "done", "tag": "完成", "log": "完成：两点对称同时取最小，答案全部确定", "count": 10, "ribbon": {"k": 11, "ok": true}, "done": true}
+  ],
+
+  render: function(stage, sn, i){
+    var rows = this._rows;
+    for (var j = 0; j < rows.length; j++){
+      rows[j].className = 'aw-stepcard' + (j < i ? ' good' : (j === i ? ' key' : ''));
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: "$(\\mathrm{I})\\ y=1+\\dfrac{1}{3}x^{6}$；$(\\mathrm{II})\\ P\\left(\\pm1,\\dfrac{4}{3}\\right)$，$I_y^{\\min}=\\dfrac{11}{6}$",
+    html: "记忆锚点：<b>法线斜率 $=-1/y^{\\prime}$；$y$ 轴截距令 $X=0$</b>。易错：漏掉偶函数对称点 $x=-1$；把 $y$ 轴截距当成 $x$ 轴截距（令 $Y=0$）。"
+  }
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

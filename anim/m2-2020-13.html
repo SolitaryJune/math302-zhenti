@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学·算法/过程类动画：二阶常系数方程 + 反常积分</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+AW.init({
+  title: '$y^{\\prime\\prime}+2y^\\prime+y=0$，$y(0)=0$，$y^\\prime(0)=1$：求 $\\int_0^{+\\infty}y\\,\\mathrm{d}x$',
+  subtitle: '考点：二阶常系数齐次方程 + 反常积分 · 方法：特征根 → 定常数 → 分部积分',
+  counterLabel: '推导步',
+  intro: '点击「▶ 播放」先解方程再算积分。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    var lines = [
+      '<b>特征方程</b>：$r^2+2r+1=(r+1)^2=0\\Rightarrow$ 二重根 $r=-1$',
+      '<b>通解</b>（二重根必须带 $x$）：$$y=(C_1+C_2x)\\,e^{-x}$$',
+      '<b>定 $C_1$</b>：$y(0)=C_1=0$',
+      '<b>定 $C_2$</b>：$y^\\prime=C_2e^{-x}-(C_1+C_2x)e^{-x}$，代 $y^\\prime(0)=1$ 得 $C_2-C_1=1\\Rightarrow C_2=1$，故 $y=xe^{-x}$',
+      '<b>分部积分</b>：$$\\int_0^{+\\infty}xe^{-x}\\,\\mathrm{d}x=\\big[-xe^{-x}\\big]_0^{+\\infty}+\\int_0^{+\\infty}e^{-x}\\,\\mathrm{d}x$$',
+      '<b>算两块</b>：$\\lim_{x\\to+\\infty}xe^{-x}=0$（指数压倒幂），$x=0$ 处也是 0；$\\int_0^{+\\infty}e^{-x}\\,\\mathrm{d}x=\\big[-e^{-x}\\big]_0^{+\\infty}=1$',
+      '<b>答案：$\\displaystyle\\int_0^{+\\infty}y\\,\\mathrm{d}x=1$</b>',
+    ];
+    this._lines = [];
+    for(var i=0;i<lines.length;i++){
+      var d = AW.el('div', '', lines[i]);
+      d.style.cssText = 'padding:9px 14px;margin:7px 0;border-left:3px solid transparent;border-radius:10px;transition:all .35s;opacity:.28;font-size:15px;line-height:1.9;';
+      board.appendChild(d);
+      this._lines.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step',  tag:'特征根', log:'特征方程是完全平方，得二重根 −1', count:0 },
+    { cls:'shift', tag:'通解',   log:'二重根的通解必须写成 (C1 + C2x)·e^(−x)，多一层 x', count:1 },
+    { cls:'step',  tag:'定 C1',  log:'代 y(0)=0，得 C1 = 0', count:2 },
+    { cls:'ok',    tag:'定 C2',  log:'乘积法则求导后代 y′(0)=1，得 C2 = 1，解为 y = x·e^(−x)', count:3 },
+    { cls:'step',  tag:'分部',   log:'x 与 e^(−x) 分部积分，边界项与积分互移', count:4 },
+    { cls:'step',  tag:'算块',   log:'边界项因指数压倒幂而归零；e^(−x) 从 0 到无穷积出 1', count:5 },
+    { cls:'done',  tag:'完成',   log:'结论：反常积分值为 1', count:6, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    for(var j=0;j<this._lines.length;j++){
+      var L = this._lines[j];
+      L.style.opacity = j<=i ? '1' : '0.28';
+      L.style.borderLeftColor = (j===i) ? '#d97706' : (j<i ? '#16a34a' : 'transparent');
+      L.style.background = (j===i) ? '#fef3c7' : 'transparent';
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '$\\displaystyle\\int_0^{+\\infty}y\\,\\mathrm{d}x=1$',
+    html: '记忆锚点：<b>二重根 $(r+1)^2=0$ 通解 $y=(C_1+C_2x)e^{-x}$</b>——少写 $x$ 两个初值就定不出。积分端：$\\int_0^{+\\infty}xe^{-x}\\mathrm{d}x=\\Gamma(2)=1$，分部积分后边界项 $\\lim_{x\\to+\\infty}xe^{-x}=0$ 自动消失。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

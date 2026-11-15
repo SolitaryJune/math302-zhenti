@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2019·12 曲线 y=ln cosx 的弧长</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改 AW.init 区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [];
+
+var LINES = [
+  "<p><b>审题</b>：显函数 $y=\\ln\\cos x$ 在 $\\left[0,\\frac{\\pi}{6}\\right]$ 上的弧长，套公式 $$s=\\int_a^b\\sqrt{1+y\'^2}\\,\\mathrm{d}x.$$ 成败关键：根号内能否化成<b>完全平方</b>。</p>",
+  "<p><b>求导</b>：$$y\'=\\frac{-\\sin x}{\\cos x}=-\\tan x.$$</p>",
+  "<p><b>根号内化简</b>：$$1+y\'^2=1+\\tan^2x=\\sec^2x\\ \\Longrightarrow\\ \\sqrt{1+y\'^2}=\\sec x.$$ 区间 $\\left[0,\\frac{\\pi}{6}\\right]$ 上 $\\cos x>0$、$\\sec x>0$，去根号没有绝对值负担。</p>",
+  "<p><b>套积分公式</b>：熟背 $\\int\\sec x\\,\\mathrm{d}x=\\ln\\lvert\\sec x+\\tan x\\rvert+C$，$$s=\\Big[\\ln\\lvert\\sec x+\\tan x\\rvert\\Big]_0^{\\frac{\\pi}{6}}.$$</p>",
+  "<p><b>代上限</b>：$\\sec\\frac{\\pi}{6}=\\dfrac{2}{\\sqrt3}$、$\\tan\\frac{\\pi}{6}=\\dfrac{1}{\\sqrt3}$，相加得 $\\dfrac{3}{\\sqrt3}=\\sqrt3$；<b>代下限</b>：$\\sec0+\\tan0=1$，$\\ln1=0$。</p>",
+  "<p><b>结果</b>：$$s=\\ln\\sqrt3=\\frac12\\ln3.$$ 等价写法：$\\dfrac{\\ln3}{2}$、$\\ln3^{\\frac12}$。</p>",
+  "<p><b>结论</b>：弧长 $=\\boldsymbol{\\dfrac12\\ln3}$。</p>"
+];
+
+AW.init({
+  title: '曲线 $y=\\ln\\cos x$ 在 $\\left[0,\\frac{\\pi}{6}\\right]$ 上的弧长',
+  subtitle: '考点：定积分应用（弧长） · 方法：1+y′²=sec²x + ∫sec dx 公式',
+  counterLabel: '已执行',
+  intro: '点击「▶ 播放」逐步演示弧长计算。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    ROWS.length = 0;
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    for(var k = 0; k < LINES.length; k++){
+      var d = AW.el('div', '', LINES[k]);
+      d.style.cssText = 'margin:8px 0;padding:9px 14px;border-left:3px solid #e2e8f0;background:#f8fafc;border-radius:0 12px 12px 0;font-size:14.5px;line-height:1.9;display:none;';
+      board.appendChild(d);
+      ROWS.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  render: function(stage, sn){
+    for(var k = 0; k < ROWS.length; k++){
+      var r = ROWS[k];
+      if(k >= sn.show){ r.style.display = 'none'; continue; }
+      r.style.display = 'block';
+      if(k === sn.show - 1 && !sn.done){
+        r.style.borderLeftColor = '#d97706';
+        r.style.background = '#fffbeb';
+      } else {
+        r.style.borderLeftColor = '#16a34a';
+        r.style.background = '#f8fafc';
+      }
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  snaps: [
+    { cls:'shift', tag:'审题',   log:'弧长公式里根号内要化成完全平方才好办', show:1, count:0 },
+    { cls:'step',  tag:'求导',   log:'y′ = −tan x', show:2, count:1 },
+    { cls:'ok',    tag:'化简',   log:'1 加 tan² 恰为 sec²，开方得 sec x', show:3, count:2, ribbon:{k:1, ok:true} },
+    { cls:'step',  tag:'积分',   log:'套 sec x 的积分公式 ln|sec x + tan x|', show:4, count:3 },
+    { cls:'step',  tag:'代限',   log:'上限处 sec+tan = √3，下限处 ln1 = 0', show:5, count:4 },
+    { cls:'ok',    tag:'结果',   log:'s = ln √3 = 二分之一 ln 3', show:6, count:5, ribbon:{k:2, ok:true} },
+    { cls:'done',  tag:'完成',   log:'弧长 = ½ ln 3', show:7, count:6, done:true },
+  ],
+
+  result: {
+    big: '答案：$\\dfrac12\\ln3$',
+    html: '记忆锚点：<b>$y\'=-\\tan x\\Rightarrow1+y\'^2=\\sec^2x$，弧长 $=\\int\\sec x\\,\\mathrm{d}x$</b>。两个必背：$1+\\tan^2x=\\sec^2x$、$\\int\\sec x\\,\\mathrm{d}x=\\ln\\lvert\\sec x+\\tan x\\rvert+C$；等价写法 $\\ln\\sqrt3$。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

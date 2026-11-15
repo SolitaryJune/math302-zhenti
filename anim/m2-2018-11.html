@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2018·11 无穷限反常积分</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改 AW.init 区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [];
+
+var LINES = [
+  "<p><b>第一步：审题定位「反常」在哪</b>$$x^2-4x+3=(x-1)(x-3)$$ 奇点是 $1$ 和 $3$；下限 $5$ 大于二者，$[5,+\\infty)$ 上被积函数连续——唯一反常来自上限 $+\\infty$，按定义先积到 $b$ 再取极限。</p>",
+  "<p><b>第二步：部分分式分解</b>设 $\\dfrac1{(x-1)(x-3)}=\\dfrac{A}{x-1}+\\dfrac{B}{x-3}$，由 $1=A(x-3)+B(x-1)$：令 $x=3$ 得 $B=\\dfrac12$，令 $x=1$ 得 $A=-\\dfrac12$：$$\\frac1{x^2-4x+3}=\\frac12\\left(\\frac1{x-3}-\\frac1{x-1}\\right).$$</p>",
+  "<p><b>第三步：先积到 $b$（合并成一个对数）</b>$$\\int_5^{b}\\frac{\\mathrm dx}{x^2-4x+3}=\\frac12\\ln\\frac{x-3}{x-1}\\Big|_5^{b}=\\frac12\\left[\\ln\\frac{b-3}{b-1}-\\ln\\frac{5-3}{5-1}\\right]$$ （$x\\ge5$ 时 $x-3,\\,x-1$ 都正，绝对值直接去掉。）</p>",
+  "<p><b>第四步：取极限 $b\\to+\\infty$</b>$$\\frac{b-3}{b-1}\\to1\\ \\Longrightarrow\\ \\ln\\frac{b-3}{b-1}\\to0;\\qquad \\ln\\frac{5-3}{5-1}=\\ln\\frac12=-\\ln2.$$</p>",
+  "<p><b>第五步：合并结果</b>$$\\int_5^{+\\infty}\\frac{\\mathrm dx}{x^2-4x+3}=\\frac12\\big[0-(-\\ln2)\\big]=\\frac12\\ln2.$$</p>",
+  "<p><b>排错</b>：把 $\\dfrac1{x-3}$ 与 $\\dfrac1{x-1}$ 各自「积到无穷再相减」——两个都发散，发散量不能抵消；必须先合并成 $\\ln\\dfrac{x-3}{x-1}$ 再取极限。常数 $-\\ln2$ 也不能丢。</p>",
+  "<p><b>结论</b>$$\\int_5^{+\\infty}\\frac{\\mathrm dx}{x^2-4x+3}=\\frac12\\ln2\\quad(\\text{填空答案})$$</p>"
+];
+
+AW.init({
+  title: '$\\displaystyle\\int_5^{+\\infty}\\frac{1}{x^2-4x+3}\\,\\mathrm dx$',
+  subtitle: '考点：反常积分 · 部分分式 · 方法：先合并对数再取极限',
+  counterLabel: '推导步',
+  intro: '点击「▶ 播放」：审题 → 拆分 → 积到 b → 取极限。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    ROWS.length = 0;
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    for(var k = 0; k < LINES.length; k++){
+      var d = AW.el('div', '', LINES[k]);
+      d.style.cssText = 'margin:8px 0;padding:9px 14px;border-left:3px solid #e2e8f0;background:#f8fafc;border-radius:0 12px 12px 0;font-size:14.5px;line-height:1.9;display:none;';
+      board.appendChild(d);
+      ROWS.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  render: function(stage, sn){
+    for(var k = 0; k < ROWS.length; k++){
+      var r = ROWS[k];
+      if(k >= sn.show){ r.style.display = 'none'; continue; }
+      r.style.display = 'block';
+      if(k === sn.show - 1 && !sn.done){
+        r.style.borderLeftColor = '#d97706';
+        r.style.background = '#fffbeb';
+      } else {
+        r.style.borderLeftColor = '#16a34a';
+        r.style.background = '#f8fafc';
+      }
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  snaps: [
+    { cls:'shift', tag:'审题',   log:'奇点 1、3 在下限 5 左边，只有上限 +∞ 反常', show:1, count:0 },
+    { cls:'step',  tag:'部分分式', log:'1/((x−1)(x−3)) = ½(1/(x−3) − 1/(x−1))', show:2, count:1, ribbon:{k:1, ok:true} },
+    { cls:'step',  tag:'积到 b',  log:'合并成 ½·ln((x−3)/(x−1)) 再代上下限', show:3, count:2, ribbon:{k:2, ok:true} },
+    { cls:'ok',    tag:'取极限',  log:'(b−3)/(b−1)→1，ln→0；下限给 −ln2', show:4, count:3, ribbon:{k:3, ok:true} },
+    { cls:'ok',    tag:'合并',   log:'½[0−(−ln2)] = ½ln2', show:5, count:4 },
+    { cls:'miss',  tag:'排错',   log:'两项各积到∞再相减=发散量乱抵，错误', show:6, count:5 },
+    { cls:'done',  tag:'完成',   log:'填空答案：½ ln2', show:7, count:6, done:true, ribbon:{k:4, ok:true} },
+  ],
+
+  result: {
+    big: '填空答案：$\\dfrac12\\ln 2$',
+    html: '记忆锚点：<b>反常积分必须先合并、再取极限</b>——$\\displaystyle\\int_5^{+\\infty}\\Big(\\frac1{x-3}-\\frac1{x-1}\\Big)dx=\\frac12\\left.\\ln\\frac{x-3}{x-1}\\right|_5^{+\\infty}$，两项单独都发散、不许分开算。系数 $\\dfrac12$ 与常数 $\\ln2$ 一个都不能丢。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

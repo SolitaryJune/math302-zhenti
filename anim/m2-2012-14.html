@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2012·14 行列式 |BA*| 的计算</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改 AW.init 区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [];   // 推导板的持久 DOM 行
+
+var LINES = [
+  "<p><b>盘家底</b>：$|A|=3$，$A$ 是 $3$ 阶矩阵（$n=3$）；$B$ 由交换 $A$ 的第 1、2 行得到。目标 $\\big|BA^{*}\\big|$。三件工具：<b>换行变号</b>、<b>$|A^{*}|=|A|^{n-1}$</b>、<b>乘积拆分</b>。</p>",
+  "<p><b>第一件：变号</b>。交换两行使行列式变号，$$|B|=-|A|=-3.$$</p>",
+  "<p><b>第二件：伴随公式现场还原</b>。由 $AA^{*}=|A|E$ 两边取行列式，$$|A|\\cdot\\big|A^{*}\\big|=|A|^{n}\\ \\Longrightarrow\\ \\big|A^{*}\\big|=|A|^{n-1}.$$</p>",
+  "<p><b>代入</b>：$n=3$，$\\big|A^{*}\\big|=|A|^{2}=3^{2}=9$。</p>",
+  "<p><b>第三件：乘积拆分</b>。$$\\big|BA^{*}\\big|=|B|\\cdot\\big|A^{*}\\big|=(-3)\\times9.$$</p>",
+  "<p><b>结论</b>：$\\big|BA^{*}\\big|=-27$。</p>"
+];
+
+AW.init({
+  title: '行列式连锁反应：$\\big|BA^{*}\\big|=\\,?$',
+  subtitle: '考点：行列式性质与伴随矩阵 · 方法：变号 → |A*|=|A|^(n−1) → 乘积拆分',
+  counterLabel: '已推演',
+  intro: '点击「▶ 播放」逐步演示每一步推导。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    ROWS.length = 0;
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    for(var k = 0; k < LINES.length; k++){
+      var d = AW.el('div', '', LINES[k]);
+      d.style.cssText = 'margin:8px 0;padding:9px 14px;border-left:3px solid #e2e8f0;background:#f8fafc;border-radius:0 12px 12px 0;font-size:14.5px;line-height:1.9;display:none;';
+      board.appendChild(d);
+      ROWS.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  render: function(stage, sn){
+    for(var k = 0; k < ROWS.length; k++){
+      var r = ROWS[k];
+      if(k >= sn.show){ r.style.display = 'none'; continue; }
+      r.style.display = 'block';
+      if(k === sn.show - 1 && !sn.done){
+        r.style.borderLeftColor = '#d97706';
+        r.style.background = '#fffbeb';
+      } else {
+        r.style.borderLeftColor = '#16a34a';
+        r.style.background = '#f8fafc';
+      }
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  snaps: [
+    { cls:'shift', tag:'盘家底', log:'|A|=3、n=3，B 是 A 交换第 1、2 行；三件工具依次上', show:1, count:0 },
+    { cls:'ok',    tag:'变号',   log:'交换两行行列式变号：|B| = −|A| = −3', show:2, count:1 },
+    { cls:'step',  tag:'还原公式', log:'忘公式不怕：AA* = |A|E 两边取行列式，解出 |A*| = |A|^(n−1)', show:3, count:2 },
+    { cls:'ok',    tag:'代值',   log:'n=3：|A*| = |A|² = 9', show:4, count:3 },
+    { cls:'ok',    tag:'拆乘积', log:'|BA*| = |B| × |A*| = (−3) × 9', show:5, count:4 },
+    { cls:'done',  tag:'完成',   log:'结论：|BA*| = −27', show:6, count:5, done:true },
+  ],
+
+  result: {
+    big: '|BA*| = −27',
+    html: '记忆锚点：<b>一条链：换行变号 → $|A^{*}|=|A|^{\\,n-1}$ → 乘积拆分</b>。$|B|=-3$、$\\big|A^{*}\\big|=|A|^{2}=9$、$\\big|BA^{*}\\big|=-27$。两大易错：漏掉行交换的负号（错得 27）、把伴随公式记成 $|A|^{n}$（错得 81）。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

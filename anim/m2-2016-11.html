@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2016·11 由两个特解反构微分方程</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改题目专属区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+// 推导板各行：与 snaps 一一对应（build 建立、render 按 i 点亮）
+var ROWS = [
+  { label: '第 0 步 · 审题',
+    h: '<p>已知 $y_1=x^2-\\mathrm e^x$ 与 $y_2=x^2$ 都是某<b>一阶非齐次线性</b>方程 $y\'+P(x)y=Q(x)$ 的特解，求这个方程。武器：解的结构定理。</p>' },
+  { label: '第 1 步 · 两特解之差 = 齐次解',
+    h: '<p>$$y_1-y_2=(x^2-\\mathrm e^x)-x^2=-\\mathrm e^x.$$ 结构定理：任两特解之差必满足对应<b>齐次</b>方程 $y\'+Py=0$。齐次解里藏着 $\\mathrm e^x$。</p>' },
+  { label: '第 2 步 · 定 P(x)',
+    h: '<p>齐次通解为 $C\\mathrm e^{-\\int P\\mathrm dx}$。既然 $C\\mathrm e^{x}$ 形式的 $-\\mathrm e^x$ 是解，代回 $\\bar y\'+P\\bar y=0$：$$\\mathrm e^x+P(x)\\mathrm e^x=0\\ \\Longrightarrow\\ P(x)=-1.$$ 方程形如 $y\'-y=Q(x)$。</p>' },
+  { label: '第 3 步 · 代特解定 Q(x)',
+    h: '<p>用最干净的 $y=x^2$（$y\'=2x$）：$$Q(x)=y\'-y=2x-x^2.$$</p>' },
+  { label: '第 4 步 · 用另一个特解验收',
+    h: '<p>$y=x^2-\\mathrm e^x$：$y\'=2x-\\mathrm e^x$，$$y\'-y=(2x-\\mathrm e^x)-(x^2-\\mathrm e^x)=2x-x^2\\ \\checkmark$$ 两个特解全部吻合，方程无误。</p>' },
+  { label: '第 5 步 · 结论',
+    h: '<p>$$y\'-y=2x-x^2$$ 即所求的一阶非齐次线性微分方程。</p>' },
+];
+
+var rowEls = [];
+
+AW.init({
+  title: '以 $y=x^2-\\mathrm e^x$ 与 $y=x^2$ 为特解的一阶方程',
+  subtitle: '考点：线性方程解的结构 · 方法：特解之差 → 定 $P$ → 代特解 → 定 $Q$',
+  counterLabel: '步骤',
+  intro: '点击「▶ 播放」逐步演示推导板上的六步反构。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    rowEls = [];
+    var wrap = AW.el('div', 'aw-scroll');
+    ROWS.forEach(function(r){
+      var d = AW.el('div', '');
+      d.style.cssText = 'padding:9px 14px;margin:8px 0;border-left:4px solid transparent;border-radius:10px;opacity:.15;transition:opacity .35s,background .35s,border-color .35s;';
+      d.innerHTML = '<div style="font-size:12.5px;color:#64748b;font-weight:700;margin-bottom:2px">' + r.label + '</div>' + r.h;
+      wrap.appendChild(d);
+      rowEls.push(d);
+    });
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step', tag:'审题',   log:'两个特解已知，倒推方程 y′ + P·y = Q', count:0 },
+    { cls:'ok',   tag:'作差',   log:'y₁ − y₂ = −e^x，特解之差是齐次方程的解', count:1 },
+    { cls:'ok',   tag:'定 P',   log:'齐次解含 e^x ⇒ P(x) = −1，方程形如 y′ − y = Q', count:2 },
+    { cls:'step', tag:'定 Q',   log:'代 y = x²：Q = 2x − x²', count:3 },
+    { cls:'ok',   tag:'验收',   log:'另一特解 y₁ 代入同样成立，双重验证通过', count:4 },
+    { cls:'done', tag:'完成',   log:'方程为 y′ − y = 2x − x²', count:5, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    rowEls.forEach(function(d, j){
+      d.style.opacity = j <= i ? '1' : '.15';
+      d.style.borderLeftColor = j < i ? '#16a34a' : (j === i ? '#d97706' : 'transparent');
+      d.style.background = j === i ? '#fffbeb' : (j < i ? '#f6fef9' : 'transparent');
+    });
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: "y′ − y = 2x − x²",
+    html: '记忆锚点：<b>特解之差 = 齐次解</b>——作差露出 $\\mathrm e^x$，齐次通解 $C\\mathrm e^{x}$ 钉死 $P=-1$；再用干净的特解 $x^2$ 定出 $Q=2x-x^2$。易错：别把 $-\\mathrm e^x$ 误当非齐次项。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学·概念动画：四条曲线谁有渐近线（2014 年第 2 题）</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+function card(n, cls, title, body){
+  return '<div class="aw-stepcard ' + (cls || '') + '"><h4><span class="n">' + n +
+         '</span>' + title + '</h4>' + body + '</div>';
+}
+
+var STEPS = [
+  { title: '审题眼：三类渐近线的判据', cls: 'key', tag: '审题', log: '无竖直、无水平，重点查斜渐近线 k 与 b',
+    body: '<p>竖直：找 $x_0$ 使 $y\\to\\infty$——四条曲线处处连续，<b>无</b>；水平：$\\lim_{x\\to\\infty}y$ 有限——都含增长项 $x$ 或 $x^2$，<b>无</b>。只剩斜渐近线：</p>' +
+          '<p>$$k=\\lim_{x\\to\\infty}\\frac{y}{x},\\qquad b=\\lim_{x\\to\\infty}(y-kx),$$</p>' +
+          '<p><b>$k$、$b$ 都要存在且有限</b>。</p>' },
+  { title: '检验 A：$y=x+\\sin x$', cls: 'bad', tag: '选项 A', log: 'k 等于 1 存在，但 b 是 sin x 在无穷远振荡，不存在',
+    ribbon: {k:1, ok:false},
+    body: '<p>$k=\\lim\\limits_{x\\to\\infty}\\dfrac{x+\\sin x}{x}=1$ 存在，但</p>' +
+          '<p>$$b=\\lim_{x\\to\\infty}(y-x)=\\lim_{x\\to\\infty}\\sin x$$</p>' +
+          '<p><b>振荡不存在</b>——无斜渐近线。只验 $k$ 不验 $b$ 就会误判。</p>' },
+  { title: '检验 B：$y=x^{2}+\\sin x$', cls: 'bad', tag: '选项 B', log: 'y/x 趋于无穷，斜率不存在',
+    ribbon: {k:2, ok:false},
+    body: '<p>$\\dfrac{y}{x}=x+\\dfrac{\\sin x}{x}\\to\\infty$，斜率极限不存在，谈不上任何渐近线。</p>' },
+  { title: '检验 C：$y=x+\\sin\\dfrac{1}{x}$', cls: 'good', tag: '选项 C', log: 'k 等于 1、b 等于 0，双存在，有斜渐近线 y=x',
+    ribbon: {k:3, ok:true},
+    body: '<p>$k=1+\\lim\\limits_{x\\to\\infty}\\dfrac{\\sin(1/x)}{x}=1$；</p>' +
+          '<p>$$b=\\lim_{x\\to\\infty}(y-x)=\\lim_{x\\to\\infty}\\sin\\frac1x=\\sin 0=0.$$</p>' +
+          '<p>$k$、$b$ 双存在，有斜渐近线 $y=x$。</p>' },
+  { title: '检验 D：$y=x^{2}+\\sin\\dfrac{1}{x}$', cls: 'bad', tag: '选项 D', log: 'y/x 仍趋于无穷，无渐近线',
+    ribbon: {k:4, ok:false},
+    body: '<p>$\\dfrac{y}{x}=x+\\dfrac{\\sin(1/x)}{x}\\to\\infty$；$\\sin\\dfrac1x\\to0$ 改变不了 $x^2$ 的增长。</p>' },
+  { title: '结论', cls: 'good', tag: '完成', log: '只有 C 有渐近线，答案 C',
+    body: '<p>四条曲线中只有 C 存在渐近线（斜渐近线 $y=x$），选 <b>C</b>。</p>' },
+];
+
+var snaps = STEPS.map(function(s, i){
+  return {
+    cls: i === STEPS.length - 1 ? 'done' : (s.cls === 'bad' ? 'miss' : 'step'),
+    tag: s.tag,
+    log: s.log,
+    html: STEPS.slice(0, i + 1).map(function(x, j){
+      return card(j + 1, x.cls, x.title, x.body);
+    }).join(''),
+    ribbon: s.ribbon,
+    done: i === STEPS.length - 1,
+  };
+});
+
+AW.init({
+  title: '【2014 数二·2】下列曲线中有渐近线的是',
+  subtitle: '考点：渐近线判定 · 选项逐条推演',
+  counterLabel: '步数',
+  ribbonTitle: '选项判定（✓ 有 / ✗ 无）',
+  intro: '点击「▶ 播放」逐条检验 A–D。',
+  render: function(stage, sn){
+    if(sn.html != null) stage.innerHTML = sn.html;
+    renderMathAfterSnap(stage);
+  },
+  snaps: snaps,
+  result: {
+    big: '答案 C（渐近线 y = x）',
+    html: '记忆锚点：<b>斜渐近线要 $k$、$b$ 双存在</b>：A 卡在 $b=\\lim\\sin x$ 振荡不存在；B、D 卡在 $y/x\\to\\infty$。同一个 $\\sin$，自变量是 $x$ 还是 $\\dfrac1x$，命运完全不同。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

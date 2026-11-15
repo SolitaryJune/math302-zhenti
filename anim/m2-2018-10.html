@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2018·10 拐点处的切线方程</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改 AW.init 区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [];
+
+var LINES = [
+  "<p><b>第一步：求一、二阶导数（定义域 $x>0$）</b>$$y=x^2+2\\ln x\\ \\Longrightarrow\\ y\'=2x+\\frac2x,\\qquad y\'\'=2-\\frac{2}{x^2}.$$</p>",
+  "<p><b>第二步：找拐点候选</b>令 $y\'\'=0$：$$2-\\frac{2}{x^2}=0\\ \\Longrightarrow\\ x^2=1\\ \\Longrightarrow\\ x=1$$ （$x=-1$ 不在定义域内，舍去。）</p>",
+  "<p><b>第三步：验证变号</b>$$0<x<1:\\ y\'\'<0\\ (\\text{上凸})，\\qquad x>1:\\ y\'\'>0\\ (\\text{下凸})$$ 二阶导变号，$\\left(1,\\,y(1)\\right)$ 确为拐点。</p>",
+  "<p><b>第四步：算拐点坐标</b>$$y(1)=1^2+2\\ln1=1\\ \\Longrightarrow\\ \\text{拐点 }(1,\\,1)。$$</p>",
+  "<p><b>第五步：算切线斜率（是一阶导！）</b>$$y\'(1)=2\\cdot1+\\frac21=4.$$ 注意切线斜率由 $y\'$ 给出，$y\'\'(1)=0$ 只说明凹凸性在此切换。</p>",
+  "<p><b>第六步：点斜式</b>$$y-1=4(x-1)\\ \\Longrightarrow\\ y=4x-3.$$</p>",
+  "<p><b>排错</b>：把斜率写成 $y\'\'(1)=0$（水平切线）——斜率永远是 $y\'$ 的值；忘掉 $\\ln x$ 的定义域取 $x=-1$——负根必须舍。</p>",
+  "<p><b>结论</b>$$\\text{拐点 }(1,1)，\\quad \\text{切线 } y=4x-3\\quad(\\text{填空答案})$$</p>"
+];
+
+AW.init({
+  title: '曲线 $y=x^2+2\\ln x$ 在拐点处的切线方程',
+  subtitle: '考点：拐点判定 · 导数几何意义 · 方法：找点 → 验变号 → 点斜式',
+  counterLabel: '推导步',
+  intro: '点击「▶ 播放」：求导 → 找拐点 → 验变号 → 写切线。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    ROWS.length = 0;
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    for(var k = 0; k < LINES.length; k++){
+      var d = AW.el('div', '', LINES[k]);
+      d.style.cssText = 'margin:8px 0;padding:9px 14px;border-left:3px solid #e2e8f0;background:#f8fafc;border-radius:0 12px 12px 0;font-size:14.5px;line-height:1.9;display:none;';
+      board.appendChild(d);
+      ROWS.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  render: function(stage, sn){
+    for(var k = 0; k < ROWS.length; k++){
+      var r = ROWS[k];
+      if(k >= sn.show){ r.style.display = 'none'; continue; }
+      r.style.display = 'block';
+      if(k === sn.show - 1 && !sn.done){
+        r.style.borderLeftColor = '#d97706';
+        r.style.background = '#fffbeb';
+      } else {
+        r.style.borderLeftColor = '#16a34a';
+        r.style.background = '#f8fafc';
+      }
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  snaps: [
+    { cls:'shift', tag:'求导',   log:'y′=2x+2/x，y″=2−2/x²，注意 x>0', show:1, count:0 },
+    { cls:'step',  tag:'找候选', log:'y″=0 ⇒ x²=1 ⇒ x=1（−1 舍去）', show:2, count:1 },
+    { cls:'ok',    tag:'验变号', log:'左负右正，二阶导变号，(1,1) 是拐点', show:3, count:2, ribbon:{k:1, ok:true} },
+    { cls:'step',  tag:'算坐标', log:'y(1)=1，拐点 (1,1)', show:4, count:3 },
+    { cls:'ok',    tag:'算斜率', log:'切线斜率 = y′(1) = 4，不是 y″(1)=0', show:5, count:4, ribbon:{k:2, ok:true} },
+    { cls:'step',  tag:'写切线', log:'y−1=4(x−1) ⇒ y=4x−3', show:6, count:5, ribbon:{k:3, ok:true} },
+    { cls:'miss',  tag:'排错',   log:'斜率≠y″(1)=0；x=−1 不在定义域', show:7, count:6 },
+    { cls:'done',  tag:'完成',   log:'切线方程 y=4x−3', show:8, count:7, done:true, ribbon:{k:4, ok:true} },
+  ],
+
+  result: {
+    big: '填空答案：$y=4x-3$',
+    html: '记忆锚点：<b>拐点处切线的斜率仍是一阶导 $y\'$</b>，$y\'\'=0$ 只负责找点与验变号。流程四拍：$y\'\'=0$ 找候选 → 两侧验变号 → 算 $(x_0,y_0)$ 与 $y\'(x_0)$ → 点斜式。别忘了 $\\ln x$ 把 $x=-1$ 挡在定义域外。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

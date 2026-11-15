@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学·算法类动画：二重积分交换次序（抛物线区域分块）</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+AW.init({
+  title: '$\\int_{-2}^{2}\\mathrm dx\\int_{4-x^2}^{4}f\\,\\mathrm dy$ 交换积分次序',
+  subtitle: '考点：二重积分交换次序 · 方法：画区域 → 固定 $y$ 解 $x$ 的不等式 → 分块',
+  counterLabel: '推导步',
+  intro: '点击「▶ 播放」逐步演示区域的还原与重新分块。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    var lines = [
+      '<b>还原区域</b>：先 $y$ 后 $x$，区域是抛物线上方、$y=4$ 下方的横条 $$D=\\{(x,\\,y)\\mid -2\\le x\\le2,\\ \\ 4-x^2\\le y\\le4\\}$$ 抛物线 $y=4-x^2$ 顶点 $(0,4)$，在 $x=\\pm2$ 处 $y=0$，故 $0\\le y\\le4$。',
+      '<b>固定 $y$ 解不等式</b>：$y\\ge4-x^2\\iff x^2\\ge4-y\\iff \\lvert x\\rvert\\ge\\sqrt{4-y}$ ——落在抛物线<b>两侧之外</b>，不是之内！',
+      '<b>分块</b>：结合 $-2\\le x\\le2$，$x$ 分成左右两段 $$x\\in\\bigl[-2,\\,-\\sqrt{4-y}\\bigr]\\ \\cup\\ \\bigl[\\sqrt{4-y},\\,2\\bigr]$$',
+      '<b>重写累次积分</b>：$$\\int_0^4\\Bigl[\\int_{-2}^{-\\sqrt{4-y}}f\\,\\mathrm dx+\\int_{\\sqrt{4-y}}^{2}f\\,\\mathrm dx\\Bigr]\\mathrm dy$$ 两段的上下限都是从抛物线支到 $\\pm2$，顺序不可颠倒。',
+      '<b>辨析干扰项</b>：B 把第一段写成 $\\int_{-2}^{\\sqrt{4-y}}$（把抛物线内部也算进来）；C 把第二段上下限颠倒；D 乱用对称性提系数 $2$——$f(x,y)$ 未必是 $x$ 的偶函数。',
+      '<b>结论</b>：与选项 <b>A</b> 完全一致。',
+    ];
+    this._lines = [];
+    for(var i=0;i<lines.length;i++){
+      var d = AW.el('div', '', lines[i]);
+      d.style.cssText = 'padding:9px 14px;margin:7px 0;border-left:3px solid transparent;border-radius:10px;transition:all .35s;opacity:.28;font-size:15px;line-height:1.9;';
+      board.appendChild(d);
+      this._lines.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step',  tag:'画区域', log:'抛物线上方、y=4 下方的横条，y 从 0 到 4', count:0 },
+    { cls:'shift', tag:'解不等式', log:'x² ≥ 4−y，即 |x| ≥ √(4−y)，注意是两侧之外', count:1 },
+    { cls:'step',  tag:'分块', log:'结合 −2 ≤ x ≤ 2，x 分成左右两段', count:2 },
+    { cls:'ok',    tag:'重写', log:'先 x 后 y：左右两段相加，y 从 0 积到 4', count:3 },
+    { cls:'miss',  tag:'辨析', log:'B 把内部算进来，C 上下限颠倒，D 乱用对称性', count:4 },
+    { cls:'done',  tag:'完成', log:'结论：与选项 A 一致，选 A', count:5, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    for(var j=0;j<this._lines.length;j++){
+      var L = this._lines[j];
+      L.style.opacity = j<=i ? '1' : '0.28';
+      L.style.borderLeftColor = (j===i) ? '#d97706' : (j<i ? '#16a34a' : 'transparent');
+      L.style.background = (j===i) ? '#fef3c7' : 'transparent';
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '选 A',
+    html: '记忆锚点：<b>$y\\ge4-x^2$ 解出来是 $\\lvert x\\rvert\\ge\\sqrt{4-y}$（两侧之外），天然分左右两块，每块从抛物线支积到 $\\pm2$</b>。易错：解成 $\\lvert x\\rvert\\le\\sqrt{4-y}$ 就是 B；上下限颠倒就是 C；$f$ 不是偶函数时不能提 $2$（D）。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

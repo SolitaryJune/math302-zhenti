@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学·算法/过程类动画：有理函数定积分拆项配方</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+AW.init({
+  title: '$\\displaystyle\\int_0^1\\frac{2x+3}{x^2-x+1}\\,\\mathrm{d}x$：拆项 + 配方',
+  subtitle: '考点：定积分计算 · 方法：拆「导数倍 + 常数」→ 对数项 + 反正切项',
+  counterLabel: '计算步',
+  intro: '点击「▶ 播放」逐步演示拆项与配方流程。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    var lines = [
+      '<b>审题</b>：分母 $x^2-x+1$ 判别式 $<0$ 不可约；分母导数 $(x^2-x+1)\'=2x-1$，把分子对准它拆：$$2x+3=(2x-1)+4$$',
+      '<b>对数部分</b>：$$I_1=\\int_0^1\\frac{2x-1}{x^2-x+1}\\,\\mathrm{d}x=\\Bigl[\\ln(x^2-x+1)\\Bigr]_0^1=\\ln1-\\ln1=0$$',
+      '<b>配方</b>：$$x^2-x+1=\\Bigl(x-\\frac12\\Bigr)^2+\\frac34$$',
+      '<b>反正切部分</b>：$$I_2=\\frac{2}{\\sqrt3}\\arctan\\frac{2x-1}{\\sqrt3}\\Bigg|_0^1$$',
+      '<b>代上下限</b>：$x=1$ 时 $\\arctan\\dfrac{1}{\\sqrt3}=\\dfrac{\\pi}{6}$；$x=0$ 时为 $-\\dfrac{\\pi}{6}$，相减得 $$I_2=\\frac{2}{\\sqrt3}\\cdot\\frac{\\pi}{3}=\\frac{2\\pi}{3\\sqrt3}$$',
+      '<b>合并</b>：$$I=0+4\\cdot\\frac{2\\pi}{3\\sqrt3}=\\frac{8\\pi}{3\\sqrt3}=\\frac{8\\sqrt3\\,\\pi}{9}$$',
+    ];
+    this._lines = [];
+    for(var i=0;i<lines.length;i++){
+      var d = AW.el('div', '', lines[i]);
+      d.style.cssText = 'padding:9px 14px;margin:7px 0;border-left:3px solid transparent;border-radius:10px;transition:all .35s;opacity:.28;font-size:15px;line-height:1.9;';
+      board.appendChild(d);
+      this._lines.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step',  tag:'审题拆分', log:'分母不可约，分子拆成 (2x−1)+4，对数项加常数项', count:0 },
+    { cls:'ok',    tag:'对数项',   log:'凑微分得 ln(x²−x+1)，两端都代出 ln1，恰好为 0', count:1 },
+    { cls:'shift', tag:'配方',     log:'配方成 (x−1/2)² + 3/4，标准反正切形状', count:2 },
+    { cls:'shift', tag:'反正切',   log:'套公式 (2/√3)·arctan((2x−1)/√3)', count:3 },
+    { cls:'ok',    tag:'代限',     log:'上 arctan(1/√3)=π/6、下为 −π/6，相减得 π/3', count:4 },
+    { cls:'done',  tag:'完成',     log:'0 + 4×2π/(3√3) = 8√3π/9', count:5, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    for(var j=0;j<this._lines.length;j++){
+      var L = this._lines[j];
+      L.style.opacity = j<=i ? '1' : '0.28';
+      L.style.borderLeftColor = (j===i) ? '#d97706' : (j<i ? '#16a34a' : 'transparent');
+      L.style.background = (j===i) ? '#fef3c7' : 'transparent';
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '$\\dfrac{8\\sqrt3\\,\\pi}{9}$',
+    html: '记忆锚点：<b>分母不可约就拆「导数倍 + 常数」</b>：导数倍部分得对数（本题恰好为 0），常数部分配方得反正切 $\\dfrac{2}{\\sqrt3}\\arctan\\dfrac{2x-1}{\\sqrt3}$。易错：配方中心 $\\frac12$ 的符号、$\\arctan\\frac{1}{\\sqrt3}=\\frac{\\pi}{6}$ 的值。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

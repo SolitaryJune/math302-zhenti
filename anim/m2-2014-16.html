@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2014·16 微分方程的极值</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改 AW.init 区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [];
+
+var LINES = [
+  "<p><b>审题</b>：$x^2+y^2y'=1-y'$，$y(2)=0$。一阶方程且 $y'$ 藏在两项里，先把 $y'$ 解出来，看它的符号由谁决定。</p>",
+  "<p><b>解出导数</b>：归并含 $y'$ 的项：$y'(1+y^2)=1-x^2$，即 $$y'=\\frac{1-x^2}{1+y^2}.$$ 分母 $1+y^2>0$ 恒正，<b>符号完全由 $1-x^2$ 决定</b>，与 $y$ 无关。</p>",
+  "<p><b>驻点</b>：令 $1-x^2=0$ 得 $x=\\pm1$。但报极值必须知道函数值 $y(\\pm1)$，先解出积分曲线。</p>",
+  "<p><b>分离变量</b>：$(1+y^2)\\,\\mathrm dy=(1-x^2)\\,\\mathrm dx$，两边积分：$$y+\\frac{y^3}{3}=x-\\frac{x^3}{3}+C.$$</p>",
+  "<p><b>初值定常数</b>：代入 $x=2,\\ y=0$：$0=2-\\dfrac83+C$，得 $C=\\dfrac23$，积分曲线为 $$y+\\frac{y^3}{3}=x-\\frac{x^3}{3}+\\frac23.$$</p>",
+  "<p><b>$x=1$ 处</b>：右端 $=1-\\dfrac13+\\dfrac23=\\dfrac43$，即 $y^3+3y-4=0$。试根 $y=1$：$(y-1)(y^2+y+4)=0$，二次因子判别式 $1-16<0$ 无实根，唯一实根 $\\boxed{y=1}$。</p>",
+  "<p><b>$x=-1$ 处</b>：右端 $=-1+\\dfrac13+\\dfrac23=0$，即 $y\\bigl(3+y^2\\bigr)=0$，得 $\\boxed{y=0}$。</p>",
+  "<p><b>左右判号</b>：$y'$ 与 $1-x^2$ 同号。$x=-1$ 两侧由负变正 → <b>极小值 $y(-1)=0$</b>；$x=1$ 两侧由正变负 → <b>极大值 $y(1)=1$</b>。全程不需要 $y''$。</p>",
+  "<p><b>验算收尾</b>：$x=1,y=1$：左端 $1+\\frac13=\\frac43$ ✓；$x=-1,y=0$：左端 $0$，右端 $-1+\\frac13+\\frac23=0$ ✓。$$y_{\\max}=y(1)=1,\\qquad y_{\\min}=y(-1)=0.$$</p>"
+];
+
+AW.init({
+  title: "从方程到极值：先解出 $y'$，再解出 $y$",
+  subtitle: "考点：可分离变量微分方程 · 极值判别（2014 年数学二第 16 题）",
+  counterLabel: "推导步",
+  ribbonTitle: "两个驻点（✓ 已求出函数值）",
+  intro: "点击「▶ 播放」逐步演示求极值的完整流程。",
+
+  build: function(stage){
+    stage.innerHTML = '';
+    ROWS.length = 0;
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    for(var k = 0; k < LINES.length; k++){
+      var d = AW.el('div', '', LINES[k]);
+      d.style.cssText = 'margin:8px 0;padding:9px 14px;border-left:3px solid #e2e8f0;background:#f8fafc;border-radius:0 12px 12px 0;font-size:14.5px;line-height:1.9;display:none;';
+      board.appendChild(d);
+      ROWS.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  render: function(stage, sn){
+    for(var k = 0; k < ROWS.length; k++){
+      var r = ROWS[k];
+      if(k >= sn.show){ r.style.display = 'none'; continue; }
+      r.style.display = 'block';
+      if(k === sn.show - 1 && !sn.done){
+        r.style.borderLeftColor = '#d97706';
+        r.style.background = '#fffbeb';
+      } else {
+        r.style.borderLeftColor = '#16a34a';
+        r.style.background = '#f8fafc';
+      }
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  snaps: [
+    { cls:"shift", tag:"审题",     log:"导数藏在方程两项里，先把它单独解出来", show:1, count:0 },
+    { cls:"step",  tag:"解出导数", log:"分母是一加 y 平方，恒为正，导数符号只看分子一减 x 平方", show:2, count:1 },
+    { cls:"step",  tag:"找驻点",   log:"分子为零给出两个驻点，但还要知道这两处的函数值", show:3, count:2 },
+    { cls:"step",  tag:"分离变量", log:"含 y 的归左边，含 x 的归右边，两边各自积分", show:4, count:3 },
+    { cls:"ok",    tag:"定常数",   log:"代入初始条件，积分常数是三分之二", show:5, count:4, ribbon:{k:1, ok:true} },
+    { cls:"ok",    tag:"驻点一",   log:"x 等于 1 处解三次方程，唯一实根 y 等于 1", show:6, count:5, ribbon:{k:2, ok:true} },
+    { cls:"ok",    tag:"驻点二",   log:"x 等于 -1 处右端为零，解得 y 等于 0", show:7, count:6, ribbon:{k:3, ok:true} },
+    { cls:"step",  tag:"判极值",   log:"导数符号由一减 x 平方决定：左边由负变正取极小，右边由正变负取极大", show:8, count:7 },
+    { cls:"done",  tag:"完成",     log:"代回验算两条都吻合，极大值 1、极小值 0", show:9, count:8, done:true },
+  ],
+
+  result: {
+    big: "极大值 $y(1)=1$，极小值 $y(-1)=0$",
+    html: "记忆锚点：<b>先解出 $y'=\\frac{1-x^2}{1+y^2}$，分母恒正 → 符号只看 $1-x^2$</b>。驻点 $x=\\pm1$ 处的函数值靠分离变量 $y+\\frac{y^3}{3}=x-\\frac{x^3}{3}+\\frac23$ 反解：$y(1)=1$，$y(-1)=0$。易错：不解方程直接报极值；三次方程 $y^3+3y-4=0$ 先试根 $y=1$ 再因式分解。",
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

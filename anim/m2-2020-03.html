@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学·算法/过程类动画：凑微分换元计算定积分</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+AW.init({
+  title: '$\\int_0^1\\dfrac{\\arcsin\\sqrt{x}}{\\sqrt{x(1-x)}}\\,\\mathrm{d}x$ 逐步换元演示',
+  subtitle: '考点：定积分换元 · 方法：凑微分 $t=\\arcsin\\sqrt{x}$',
+  counterLabel: '推导步',
+  intro: '点击「▶ 播放」逐步演示换元全过程。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    var lines = [
+      '<b>原式</b>：$$I=\\int_0^1\\frac{\\arcsin\\sqrt{x}}{\\sqrt{x(1-x)}}\\,\\mathrm{d}x$$',
+      '<b>凑微分信号</b>：$\\mathrm{d}\\left(\\arcsin\\sqrt{x}\\right)=\\dfrac{1}{2\\sqrt{x(1-x)}}\\,\\mathrm{d}x$ —— 被积式恰好只差 2 倍',
+      '<b>换元</b>：令 $t=\\arcsin\\sqrt{x}$，即 $x=\\sin^2t$，$t\\in\\left[0,\\frac{\\pi}{2}\\right]$',
+      '<b>微分与分母同步化简</b>：$\\mathrm{d}x=2\\sin t\\cos t\\,\\mathrm{d}t$，$\\sqrt{x(1-x)}=\\sqrt{\\sin^2t\\cos^2t}=\\sin t\\cos t$',
+      '<b>代入约分</b>：$$I=\\int_0^{\\frac{\\pi}{2}}\\frac{t}{\\sin t\\cos t}\\cdot2\\sin t\\cos t\\,\\mathrm{d}t=\\int_0^{\\frac{\\pi}{2}}2t\\,\\mathrm{d}t$$',
+      '<b>积出</b>：$I=t^2\\Big|_0^{\\frac{\\pi}{2}}=\\dfrac{\\pi^2}{4}$',
+      '<b>答案：$\\dfrac{\\pi^2}{4}$，选 A</b>',
+    ];
+    this._lines = [];
+    for(var i=0;i<lines.length;i++){
+      var d = AW.el('div', '', lines[i]);
+      d.style.cssText = 'padding:9px 14px;margin:7px 0;border-left:3px solid transparent;border-radius:10px;transition:all .35s;opacity:.28;font-size:15px;line-height:1.9;';
+      board.appendChild(d);
+      this._lines.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step',  tag:'审题',   log:'分子是 arcsin 根号 x，分母带根号 x(1-x)，联想凑微分', count:0 },
+    { cls:'shift', tag:'凑微分', log:'arcsin 根号 x 的导数恰是分母的一半，决定换元', count:1 },
+    { cls:'step',  tag:'设 t',   log:'令 t 等于 arcsin 根号 x，反解出 x 等于 sin 平方 t，范围 0 到二分之 π', count:2 },
+    { cls:'step',  tag:'换微分', log:'dx 换成 2 sin t cos t dt，分母开方恰好等于 sin t cos t', count:3 },
+    { cls:'ok',    tag:'化简',   log:'分子分母约掉 sin t cos t，只剩 2t', count:4 },
+    { cls:'step',  tag:'积分',   log:'2t 的原函数是 t 平方，代入上下限得 π²/4', count:5 },
+    { cls:'done',  tag:'完成',   log:'结论：积分值 π²/4，选 A', count:6, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    for(var j=0;j<this._lines.length;j++){
+      var L = this._lines[j];
+      L.style.opacity = j<=i ? '1' : '0.28';
+      L.style.borderLeftColor = (j===i) ? '#d97706' : (j<i ? '#16a34a' : 'transparent');
+      L.style.background = (j===i) ? '#fef3c7' : 'transparent';
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '$\\dfrac{\\pi^2}{4}$（选 A）',
+    html: '记忆锚点：<b>$\\dfrac{\\mathrm{d}}{\\mathrm{d}x}\\arcsin\\sqrt{x}=\\dfrac{1}{2\\sqrt{x(1-x)}}$</b>——见到 $\\arcsin\\sqrt{x}$ 与 $\\dfrac{1}{\\sqrt{x(1-x)}}$ 同框就换元 $t=\\arcsin\\sqrt{x}$。易错：换元后分子剩 $2t$，漏掉因子 2 会错成 $\\dfrac{\\pi^2}{8}$。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

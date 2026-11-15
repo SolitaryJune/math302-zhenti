@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学·过程动画：配方定负惯性指数（2014 年第 14 题）</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+var CARDS = [
+  { cls: 'key', title: '审题与选方法',
+    body: '<p>负惯性指数 = 标准形中<b>负系数的个数</b> = 负特征值个数。含参数 $a$ 时配方法最快，不必硬解特征方程。</p>' },
+  { cls: '', title: '写出二次型矩阵',
+    body: '<p>$$A=\\begin{pmatrix}1&0&a\\\\0&-1&2\\\\a&2&0\\end{pmatrix},\\qquad f=x_{1}^{2}-x_{2}^{2}+2ax_{1}x_{3}+4x_{2}x_{3}.$$</p>' },
+  { cls: '', title: '配掉 $x_{1}$',
+    body: '<p>$$f=(x_{1}+ax_{3})^{2}-a^{2}x_{3}^{2}-x_{2}^{2}+4x_{2}x_{3}.$$</p>' +
+          '<p>注意补偿项 $-a^{2}x_{3}^{2}$。</p>' },
+  { cls: '', title: '配掉 $x_{2}$（系数为负）',
+    body: '<p>$$-x_{2}^{2}+4x_{2}x_{3}=-(x_{2}-2x_{3})^{2}+4x_{3}^{2}.$$</p>' +
+          '<p>作可逆替换 $y_{1}=x_{1}+ax_{3},\\ y_{2}=x_{2}-2x_{3},\\ y_{3}=x_{3}$。</p>' },
+  { cls: 'ok', title: '标准形出炉',
+    body: '<p>$$f=y_{1}^{2}-y_{2}^{2}+(4-a^{2})\\,y_{3}^{2}.$$</p>' +
+          '<p>前两个系数 $+1$、$-1$ 与 $a$ 无关，已经锁定。</p>' },
+  { cls: 'step', title: '按负系数个数列不等式',
+    body: '<p>负惯性指数为 $1$：第三个系数<b>不为负</b>即可（为 $0$ 不增加负系数）：</p>' +
+          '<p>$$4-a^{2}\\ge0.$$</p>' },
+  { cls: 'good', title: '边界讨论与结论',
+    body: '<p>$\\lvert a\\rvert<2$：$(+,-,+)$，负惯性指数 $1$；$a=\\pm2$：$(+,-,0)$，仍为 $1$；$\\lvert a\\rvert>2$：$(+,-,-)$，变 $2$，不合。故</p>' +
+          '<p>$$a\\in[-2,2].$$</p>' },
+];
+
+AW.init({
+  title: '【2014 数二·14】负惯性指数为 1 时 $a$ 的范围',
+  subtitle: '考点：二次型标准形 / 惯性定理 · 方法：配方法',
+  counterLabel: '已执行',
+  ribbonTitle: '关键节点',
+  intro: '点击「▶ 播放」逐步演示配方与边界讨论。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    stage.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>：每步点亮一张卡'));
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    this._cards = [];
+    for(var k = 0; k < CARDS.length; k++){
+      var d = AW.el('div', 'aw-stepcard ' + (CARDS[k].cls || ''),
+        '<h4><span class="n">' + (k + 1) + '</span>' + CARDS[k].title + '</h4>' + CARDS[k].body);
+      d.style.display = 'none';
+      board.appendChild(d);
+      this._cards.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'shift', tag:'审题', log:'负惯性指数 = 标准形负系数个数，选配方法', count:0 },
+    { cls:'step',  tag:'矩阵', log:'对称矩阵对角是 1、−1、0，A(1,3)=A(3,1)=a', count:1 },
+    { cls:'step',  tag:'配 x1', log:'x₁ 项配成完全平方，补偿 −a²x₃²', count:2 },
+    { cls:'step',  tag:'配 x2', log:'x₂ 系数为负，提出负号配成 −(x₂−2x₃)²', count:3, ribbon:{k:1, ok:true} },
+    { cls:'ok',    tag:'标准形', log:'f = y₁² − y₂² + (4−a²)y₃²', count:4, ribbon:{k:2, ok:true} },
+    { cls:'step',  tag:'不等式', log:'负系数只能有一个：4−a² ≥ 0', count:5 },
+    { cls:'done',  tag:'完成', log:'含端点：a ∈ [−2, 2]', count:6, ribbon:{k:3, ok:true}, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    for(var k = 0; k < this._cards.length; k++){
+      this._cards[k].style.display = (k <= i) ? '' : 'none';
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '答案 a ∈ [−2, 2]',
+    html: '记忆锚点：<b>配方到 $y_{1}^{2}-y_{2}^{2}+(4-a^{2})y_{3}^{2}$ 后看符号表</b>：$(+,-,0)$ 的 $0$ 不算负系数，所以 $a=\\pm2$ 含在区间内（闭区间）；$\\lvert a\\rvert>2$ 时负系数变 2 个。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2015 数二第 18 题 · 对称性化简二重积分（交互动画）</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  /* stage 同步渲染；结论卡/标题/副标题由引擎在 render 返回后才写入或只写一次，
+     用 setTimeout(0) 兜底渲染（后台标签页 setTimeout 仍会触发） */
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+AW.init({
+  title: '2015·18　$\\displaystyle\\iint_D x(x+y)\\,\\mathrm dx\\,\\mathrm dy$，$D=\\{x^2+y^2\\le2,\\ y\\ge x^2\\}$',
+  subtitle: '考点：二重积分 · <b>对称性化简 + 直角坐标累次积分 + 三角换元</b>',
+  counterLabel: '已完成',
+  ribbonTitle: '推导进度（✓ 完成）',
+  intro: '点击「▶ 播放」或「下一步」，看 xy 项如何被对称性干掉、剩下的一半怎么收口。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var inner = AW.el('div', '');
+    inner.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>：当前行亮琥珀色，已完成的行变绿'));
+    var LINES = [
+      '$$I=\\iint_D x(x+y)\\,\\mathrm dx\\,\\mathrm dy,\\qquad D=\\{x^{2}+y^{2}\\le2,\\ y\\ge x^{2}\\}$$',
+      '<b>① 定范围（求交点）：</b>$y=x^2$ 代入 $x^2+y^2=2$ 得 $x^2+x^4=2\\Rightarrow(x^2-1)(x^2+2)=0$，交点 $(\\pm1,1)$；$-1\\le x\\le1,\\ x^2\\le y\\le\\sqrt{2-x^2}$',
+      '<b>② 对称性砍掉 $xy$：</b>$D$ 关于 $y$ 轴对称；$x(x+y)=x^2+xy$，$xy$ 关于 $x$ 为奇函数 $\\Rightarrow\\iint_Dxy\\,\\mathrm dx\\,\\mathrm dy=0$，只剩 $\\iint_Dx^2$',
+      '<b>③ 化累次积分（先 $y$ 后 $x$）：</b>$I=\\int_{-1}^{1}x^2\\bigl(\\sqrt{2-x^2}-x^2\\bigr)\\mathrm dx=2\\int_0^1x^2\\sqrt{2-x^2}\\,\\mathrm dx-2\\int_0^1x^4\\,\\mathrm dx$',
+      '<b>④ 第二项：</b>$2\\int_0^1x^4\\,\\mathrm dx=\\dfrac25$',
+      '<b>⑤ 第一项换元：</b>令 $x=\\sqrt2\\sin t\\ (t:0\\to\\tfrac\\pi4)$：$2\\int_0^{\\pi/4}4\\sin^2t\\cos^2t\\,\\mathrm dt=2\\int_0^{\\pi/4}\\sin^22t\\,\\mathrm dt$',
+      '<b>⑥ 降幂收口：</b>$2\\int_0^{\\pi/4}\\dfrac{1-\\cos4t}2\\,\\mathrm dt=\\Bigl[t-\\dfrac{\\sin4t}4\\Bigr]_0^{\\pi/4}=\\dfrac\\pi4$',
+      '<b>⑦ 合并：</b>$I=\\dfrac\\pi4-\\dfrac25$'
+    ];
+    this._rows = [];
+    for (var i = 0; i < LINES.length; i++){
+      var r = AW.el('div', 'aw-stepcard', LINES[i]);
+      inner.appendChild(r);
+      this._rows.push(r);
+    }
+    wrap.appendChild(inner);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step',  tag:'审题',   log:'区域由抛物线和圆围成，被积函数拆开后先看对称性再动手', count:0, ribbon:{k:1, ok:true} },
+    { cls:'ok',    tag:'交点',   log:'两条边界联立得四次方程，正根只有 x 平方等于一，交点在正负一处', count:1, ribbon:{k:2, ok:true} },
+    { cls:'shift', tag:'对称',   log:'区域关于 y 轴对称，xy 项是关于 x 的奇函数，整体积分直接归零', count:2, ribbon:{k:3, ok:true} },
+    { cls:'ok',    tag:'累次',   log:'先 y 后 x 化为累次积分，再用偶函数性质把区间砍半乘二', count:3, ribbon:{k:4, ok:true} },
+    { cls:'ok',    tag:'第二项', log:'x 四次方直接积分，第二项等于五分之二', count:4, ribbon:{k:5, ok:true} },
+    { cls:'ok',    tag:'换元',   log:'第一项令 x 等于根号二乘正弦 t，上下限换成零到四分之派', count:5, ribbon:{k:6, ok:true} },
+    { cls:'ok',    tag:'降幂',   log:'正弦平方余弦平方凑成二倍角再降幂，积分出来恰是四分之派', count:6, ribbon:{k:7, ok:true} },
+    { cls:'done',  tag:'完成',   log:'两项相减：积分等于四分之派减五分之二', count:7, ribbon:{k:8, ok:true}, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    var rows = this._rows;
+    for (var j = 0; j < rows.length; j++){
+      rows[j].className = 'aw-stepcard' + (j < i ? ' good' : (j === i ? ' key' : ''));
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '$I=\\dfrac\\pi4-\\dfrac25$',
+    html: '记忆锚点：<b>二重积分第一步查对称性</b>——对称区域上奇函数项直接归零（$\\iint_D xy=0$）。易错：换元 $x=\\sqrt2\\sin t$ 时 $x:0\\to1$ 对应 $t:0\\to\\frac\\pi4$（不是 $\\frac\\pi2$）；$\\sin^2t\\cos^2t$ 先凑 $\\sin^22t$ 再降幂。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

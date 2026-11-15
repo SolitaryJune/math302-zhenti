@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学·算法类动画：克服引力的功（微元法 + 力的分解）</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+AW.init({
+  title: '质点 $P$ 沿 $x$ 轴远离 $Q(0,1)$：克服引力的功',
+  subtitle: '考点：定积分应用（变力做功） · 方法：引力大小 × $x$ 方向方向余弦 → 微元积分',
+  counterLabel: '推导步',
+  intro: '点击「▶ 播放」逐步演示微元的建立与积分。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    var lines = [
+      '<b>布局</b>：$Q$ 固定在 $(0,1)$，$P$ 在 $(x,0)$ 沿 $x$ 轴正向移动到 $(l,0)$。两单位质点引力大小 $$F=\\frac{G\\cdot1\\cdot1}{r^2}=\\frac{G}{x^2+1},\\qquad r^2=x^2+1$$',
+      '<b>方向</b>：引力沿 $P\\to Q$，方向向量 $(-x,\\,1)$，单位化后 $x$ 方向方向余弦为 $\\dfrac{-x}{\\sqrt{x^2+1}}$ $$F_x=F\\cdot\\frac{-x}{\\sqrt{x^2+1}}=-\\frac{Gx}{(x^2+1)^{3/2}}$$ $x>0$ 时 $F_x<0$，是阻碍前进的阻力分量。',
+      '<b>微元</b>：只有 $x$ 方向分量做功（垂直分量不做功），克服它做正功 $$\\mathrm dW=\\lvert F_x\\rvert\\,\\mathrm dx=\\frac{Gx}{(x^2+1)^{3/2}}\\,\\mathrm dx$$',
+      '<b>积分</b>：从 $x=0$ 积到 $x=l$ $$W=\\int_0^l\\frac{Gx}{(x^2+1)^{3/2}}\\,\\mathrm dx\\qquad\\Longrightarrow\\qquad \\text{选 B}$$',
+      '<b>验算</b>：令 $u=x^2+1$，$\\mathrm du=2x\\,\\mathrm dx$，$$W=\\int\\frac G2u^{-3/2}\\mathrm du=-Gu^{-1/2}\\Bigl|=G\\Bigl(1-\\frac1{\\sqrt{l^2+1}}\\Bigr)>0$$ 随 $l$ 增大而增大、趋于 $G$，符合直觉。',
+      '<b>辨析干扰项</b>：A 拿引力大小 $\\dfrac{G}{x^2+1}$ 直接积（没投影）；C 丢掉分子 $x$；D 把 $x$ 分量与 $y$ 分量的分子 $x$、$1$ 相加——垂直分量不做功。',
+    ];
+    this._lines = [];
+    for(var i=0;i<lines.length;i++){
+      var d = AW.el('div', '', lines[i]);
+      d.style.cssText = 'padding:9px 14px;margin:7px 0;border-left:3px solid transparent;border-radius:10px;transition:all .35s;opacity:.28;font-size:15px;line-height:1.9;';
+      board.appendChild(d);
+      this._lines.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step',  tag:'布局', log:'P 在 (x,0)，Q 在 (0,1)，距离平方 x²+1，引力大小 G/(x²+1)', count:0 },
+    { cls:'shift', tag:'投影', log:'引力沿 P→Q，x 方向分量是 Gx/(x²+1)^(3/2)，指向负方向是阻力', count:1 },
+    { cls:'step',  tag:'微元', log:'只有 x 方向分量做功，克服它做正功：大小乘 dx', count:2 },
+    { cls:'ok',    tag:'积分', log:'从 0 积到 l，被积函数正是选项 B', count:3 },
+    { cls:'step',  tag:'验算', log:'换元 u=x²+1 算出闭式 G(1−1/√(l²+1))，恒正且趋于 G', count:4 },
+    { cls:'miss',  tag:'辨析', log:'A 没投影，C 丢分子 x，D 把垂直分量也加进来', count:5 },
+    { cls:'done',  tag:'完成', log:'结论：W = ∫ Gx/(x²+1)^(3/2) dx，选 B', count:6, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    for(var j=0;j<this._lines.length;j++){
+      var L = this._lines[j];
+      L.style.opacity = j<=i ? '1' : '0.28';
+      L.style.borderLeftColor = (j===i) ? '#d97706' : (j<i ? '#16a34a' : 'transparent');
+      L.style.background = (j===i) ? '#fef3c7' : 'transparent';
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '$W=\\displaystyle\\int_0^l\\frac{Gx}{(x^2+1)^{3/2}}\\,\\mathrm dx$（选 B）',
+    html: '记忆锚点：<b>变力做功三步：力的大小 → 乘运动方向的方向余弦 → 沿路程积分；垂直于运动方向的分量不做功</b>。$\\dfrac{G}{(x^2+1)^{3/2}}=\\dfrac{G}{x^2+1}\\cdot\\dfrac{x}{\\sqrt{x^2+1}}$，分子上的 $x$ 就是投影的痕迹。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2020-19 极坐标二重积分 · 逐步推导</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域 ================== */
+var rows = [];
+
+AW.init({
+  title: '计算 $\\displaystyle\\iint_D\\frac{\\sqrt{x^2+y^2}}{x}\\,\\mathrm dx\\,\\mathrm dy$',
+  subtitle: '考点：极坐标二重积分 · 区域 $D$：$x=1,\\ x=2,\\ y=x$ 与 $x$ 轴围成',
+  counterLabel: '已推进',
+  intro: '点击「▶ 播放」：极坐标定限、化简被积函数、逐次积分。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    rows = [];
+    var wrap = AW.el('div', 'aw-scroll');
+    wrap.appendChild(AW.el('div', 'aw-row-label',
+      '<b>推导板</b>：$D$ 由 $x=1,\\ x=2,\\ y=x$ 与 $x$ 轴围成（第一象限内的梯形区域）'));
+    var ROWS = [
+      '$$D:\\ 1\\le x\\le2,\\ 0\\le y\\le x\\ \\Rightarrow\\ \\theta\\in\\left[0,\\tfrac\\pi4\\right]\\quad(x\\text{ 轴到 } y=x)$$',
+      '$$x=1,2\\ \\Rightarrow\\ r\\cos\\theta=1,2\\ \\Rightarrow\\ r=\\sec\\theta,\\ 2\\sec\\theta$$',
+      '$$\\frac{\\sqrt{x^2+y^2}}x=\\frac{r}{r\\cos\\theta}=\\sec\\theta,\\qquad \\mathrm dx\\,\\mathrm dy=r\\,\\mathrm dr\\,\\mathrm d\\theta$$',
+      '$$I=\\int_0^{\\pi/4}\\sec\\theta\\,\\mathrm d\\theta\\int_{\\sec\\theta}^{2\\sec\\theta}r\\,\\mathrm dr=\\int_0^{\\pi/4}\\sec\\theta\\cdot\\frac32\\sec^2\\theta\\,\\mathrm d\\theta$$',
+      '$$\\int\\sec^3\\theta\\,\\mathrm d\\theta=\\frac12\\left(\\sec\\theta\\tan\\theta+\\ln\\lvert\\sec\\theta+\\tan\\theta\\rvert\\right)$$',
+      '$$I=\\frac32\\cdot\\frac12\\left(\\sqrt2+\\ln(1+\\sqrt2)\\right)=\\frac34\\left(\\sqrt2+\\ln(1+\\sqrt2)\\right)$$'
+    ];
+    ROWS.forEach(function(html){
+      var row = AW.el('div', 'derive-row', html);
+      row.style.cssText = 'padding:6px 14px;margin:8px 0;border-radius:8px;' +
+        'border-left:4px solid #cbd5e1;background:#f8fafc;opacity:0;' +
+        'transform:translateY(8px);transition:all .35s ease;';
+      wrap.appendChild(row);
+      rows.push(row);
+    });
+    stage.appendChild(wrap);
+  },
+
+  render: function(stage, sn, i){
+    rows.forEach(function(row, j){
+      var vis = j < i;
+      var cur = vis && j === i - 1;
+      row.style.opacity = vis ? '1' : '0';
+      row.style.transform = vis ? 'translateY(0)' : 'translateY(8px)';
+      row.style.borderLeftColor = cur ? '#f59e0b' : (vis ? '#10b981' : '#cbd5e1');
+      row.style.background = cur ? '#fffbeb' : (vis ? '#f0fdf4' : '#f8fafc');
+    });
+    renderMathAfterSnap(stage);
+  },
+
+  snaps: [
+    { cls:'shift', tag:'审题', log:'被积函数含根号 x平方加y平方，上极坐标', count:0 },
+    { cls:'step',  tag:'定角度', log:'下边是 x 轴，上边是 y=x，角度从 0 到四分之π', count:1 },
+    { cls:'step',  tag:'定半径', log:'两条竖线化成 r = secθ 和 2secθ，不是常数', count:2 },
+    { cls:'ok',    tag:'化简', log:'被积函数变成 secθ，面积元记得乘 r', count:3 },
+    { cls:'step',  tag:'内层', log:'先对 r 积分，得二分之三倍 secθ 平方', count:4 },
+    { cls:'step',  tag:'套公式', log:'sec 三次方的原函数是标准公式，系数二分之一别丢', count:5 },
+    { cls:'done',  tag:'结论', log:'代限合并，答案是四分之三倍（根号2 + ln(1+根号2)）', count:6, done:true },
+  ],
+
+  result: {
+    big: '$I=\\dfrac34\\left(\\sqrt2+\\ln(1+\\sqrt2)\\right)$',
+    html: '正确答案：$\\displaystyle\\iint_D\\frac{\\sqrt{x^2+y^2}}x\\,\\mathrm dx\\,\\mathrm dy=\\frac34\\left(\\sqrt2+\\ln(1+\\sqrt2)\\right)$。记忆点：<b>竖线 $x=c$ 在极坐标下是 $r=c\\sec\\theta$</b>；被积函数化成 $\\sec\\theta$ 后内层积出 $\\frac32\\sec^2\\theta$；<b>面积元 $r\\,\\mathrm dr\\,\\mathrm d\\theta$ 的 $r$ 不能丢</b>。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

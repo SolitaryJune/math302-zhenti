@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2022·20 链式法则、回代求 f 与二元极值</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [
+  "$$\\frac{\\partial f(u,v)}{\\partial u}-\\frac{\\partial f(u,v)}{\\partial v}=2(u-v)\\mathrm{e}^{-(u+v)},\\qquad f(u,0)=u^2\\mathrm{e}^{-u}$$",
+  "<b>① (I) 链式法则：</b>令 $u=x,\\ v=y-x$，$y$ 固定时 $\\dfrac{\\partial u}{\\partial x}=1,\\ \\dfrac{\\partial v}{\\partial x}=-1$：$g_x=f_u-f_v\\big|_{(x,\\,y-x)}$",
+  "<b>② (I) 代入条件：</b>$u+v=y,\\ u-v=2x-y$：$g_x=2(2x-y)\\mathrm{e}^{-y}=(4x-2y)\\mathrm{e}^{-y}$",
+  "<b>③ (II) 对 $x$ 积分：</b>$y$ 视为参数，「常数」是待定函数：$g(x,y)=(2x^2-2xy)\\mathrm{e}^{-y}+\\varphi(y)$",
+  "<b>④ 回代：</b>令 $x=u,\\ y=u+v$：$2u^2-2u(u+v)=-2uv$，得 $f(u,v)=-2uv\\,\\mathrm{e}^{-(u+v)}+\\varphi(u+v)$",
+  "<b>⑤ 定 $\\varphi$：</b>令 $v=0$：$f(u,0)=\\varphi(u)=u^2\\mathrm{e}^{-u}$，故 $\\varphi(t)=t^2\\mathrm{e}^{-t}$",
+  "<b>⑥ 合并：</b>$f(u,v)=\\mathrm{e}^{-(u+v)}\\big[(u+v)^2-2uv\\big]=(u^2+v^2)\\mathrm{e}^{-(u+v)}$（验算两条条件均满足）",
+  "<b>⑦ 驻点：</b>记 $S=u^2+v^2,\\ E=\\mathrm{e}^{-(u+v)}$：$f_u=(2u-S)E,\\ f_v=(2v-S)E$；令其为零 ⇒ $u=v$，$2u-2u^2=0$ ⇒ 驻点 $(0,0)$ 与 $(1,1)$",
+  "<b>⑧ 二阶偏导：</b>$f_{uu}=(2-4u+S)E,\\ f_{vv}=(2-4v+S)E,\\ f_{uv}=(S-2u-2v)E$",
+  "<b>⑨ 判 $(0,0)$：</b>$S=0,E=1$：$A=2,\\ B=0,\\ C=2$，$AC-B^2=4>0$ 且 $A>0$ → <b>极小值</b> $f(0,0)=0$",
+  "<b>⑩ 判 $(1,1)$：</b>$S=2,E=\\mathrm{e}^{-2}$：$A=C=0,\\ B=-2\\mathrm{e}^{-2}$，$AC-B^2=-4\\mathrm{e}^{-4}<0$ → 非极值（鞍点）",
+  "<b>⑪ 收尾：</b>(I) $g_x=(4x-2y)\\mathrm{e}^{-y}$；(II) $f=(u^2+v^2)\\mathrm{e}^{-(u+v)}$，唯一极值是极小值 $0$"
+];
+
+AW.init({
+  title: '2022·20　链式法则 + 回代求 $f$ + 二元极值',
+  subtitle: '考点：复合函数偏导 · 对 $x$ 积分回代 · 驻点与 $AC-B^2$ 判别',
+  counterLabel: '已推进',
+  ribbonTitle: '推导进度（✓ 完成）',
+  intro: '点击「▶ 播放」或「下一步」，(I) 一问一答，(II) 从积分回代到极值判别共八步。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var inner = AW.el('div', '');
+    inner.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>：当前行亮琥珀色，已完成的行变绿'));
+    this._rows = [];
+    for (var i = 0; i < ROWS.length; i++){
+      var r = AW.el('div', 'aw-stepcard', ROWS[i]);
+      inner.appendChild(r);
+      this._rows.push(r);
+    }
+    wrap.appendChild(inner);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step',  tag:'审题',   log:'条件给了偏导差和一个边界条件，两问分别是求 g 的偏导与求 f 加极值', count:0, ribbon:{k:1, ok:true} },
+    { cls:'ok',    tag:'链式',   log:'对 x 求偏导时 v 的系数是负一，正好凑出条件里的偏导差', count:1, ribbon:{k:2, ok:true} },
+    { cls:'ok',    tag:'代入',   log:'把新变量代入右端，得到 4x 减 2y 乘 e 负 y，第一问完成', count:2, ribbon:{k:3, ok:true} },
+    { cls:'ok',    tag:'积分',   log:'第二问先把 y 当参数对 x 积分，别忘了加待定函数 φ(y)', count:3, ribbon:{k:4, ok:true} },
+    { cls:'ok',    tag:'回代',   log:'换回原变量，交叉项合并成负 2uv，φ 的自变量变成 u 加 v', count:4, ribbon:{k:5, ok:true} },
+    { cls:'ok',    tag:'定 φ',   log:'令 v 等于零，用边界条件确定 φ 是 t 平方乘 e 负 t', count:5, ribbon:{k:6, ok:true} },
+    { cls:'ok',    tag:'合并',   log:'展开合并后 f 化成 u 平方加 v 平方乘指数因子，回代验算成立', count:6, ribbon:{k:7, ok:true} },
+    { cls:'ok',    tag:'驻点',   log:'两个一阶偏导同时为零推出 u 等于 v，驻点有原点和一一两个', count:7, ribbon:{k:8, ok:true} },
+    { cls:'ok',    tag:'二阶',   log:'写出三个二阶偏导，准备逐点判别', count:8, ribbon:{k:9, ok:true} },
+    { cls:'ok',    tag:'判原点', log:'原点处判别式为 4 且 A 为正，取到极小值零', count:9, ribbon:{k:10, ok:true} },
+    { cls:'miss',  tag:'判一一', log:'一一处判别式为负，是鞍点不是极值，直接淘汰', count:10, ribbon:{k:11, ok:false} },
+    { cls:'done',  tag:'完成',   log:'结论：唯一极值是原点处的极小值 0', count:11, ribbon:{k:12, ok:true}, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    var rows = this._rows;
+    for (var j = 0; j < rows.length; j++){
+      rows[j].className = 'aw-stepcard' + (j < i ? ' good' : (j === i ? ' key' : ''));
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: "(I) $\\dfrac{\\partial g}{\\partial x}=(4x-2y)\\mathrm{e}^{-y}$；　(II) $f=(u^2+v^2)\\mathrm{e}^{-(u+v)}$，极小值 $f(0,0)=0$",
+    html: "记忆锚点：<b>条件给 $f_u-f_v$ 就往「$v=y-x$」这类代换上凑；对 $x$ 积分时的「常数」是 $\\varphi(y)$；极值判别 $AC-B^2>0$ 且看 $A$ 定大小</b>。易错：链式漏负号；忘加 $\\varphi(y)$；把鞍点误判成极大值。",
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

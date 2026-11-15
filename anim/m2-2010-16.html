@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>m2-2010-16 积分放缩与夹逼求极限</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+var PAGES = [
+  "<p>比较 $u_n=\\displaystyle\\int_0^1|\\ln t|[\\ln(1+t)]^n\\,\\mathrm dt$ 与 $\\displaystyle\\int_0^1 t^n|\\ln t|\\,\\mathrm dt$（$n=1,2,\\dots$），并求 $\\lim\\limits_{n\\to\\infty}u_n$。</p><p>两个被积式只差一个因子：$[\\ln(1+t)]^n$ 与 $t^n$。</p>",
+  "<p>关键不等式（构造原函数证明）：</p>$$\\varphi(t)=t-\\ln(1+t),\\quad \\varphi(0)=0,\\ \\ \\varphi'(t)=\\frac{t}{1+t}>0$$<p>故在 $(0,1)$ 上 $0<\\ln(1+t)<t$。</p>",
+  "<p>$n$ 次幂保持不等号（两端非负），同乘正因子 $|\\ln t|$ 再积分：</p>$$u_n=\\int_0^1|\\ln t|[\\ln(1+t)]^n\\mathrm dt<\\int_0^1 t^n|\\ln t|\\,\\mathrm dt$$",
+  "<p>(2) 分部积分算上界（$(0,1)$ 上 $|\\ln t|=-\\ln t$，取 $u=-\\ln t$，$\\mathrm dv=t^n\\mathrm dt$）：</p>$$\\int_0^1 t^n(-\\ln t)\\,\\mathrm dt=\\Big[-\\ln t\\cdot\\frac{t^{n+1}}{n+1}\\Big]_0^1+\\frac1{n+1}\\int_0^1 t^n\\,\\mathrm dt$$",
+  "<p>边界项检验：$t\\to1$ 时 $\\ln1=0$；$t\\to0^+$ 时 $t^{n+1}\\ln t\\to0$。边界项为 $0$。</p>",
+  "<p>只剩下一块幂函数积分：</p>$$\\int_0^1 t^n|\\ln t|\\,\\mathrm dt=\\frac1{n+1}\\cdot\\frac1{n+1}=\\frac1{(n+1)^2}$$",
+  "<p>被积函数非负给出 $u_n\\ge0$，夹逼成立：</p>$$0\\le u_n<\\frac1{(n+1)^2}\\longrightarrow0$$",
+  "<p>由夹逼准则，$\\displaystyle\\lim_{n\\to\\infty}u_n=0$。</p>"
+];
+
+AW.init({
+  title: "2010·16　放缩 + 分部积分 + 夹逼：$\\lim_{n\\to\\infty}u_n$",
+  subtitle: "考点：$\\ln(1+t)<t$ · 积分比较 · 分部积分 · 夹逼准则",
+  counterLabel: "步数",
+  intro: "点击「▶ 播放」逐步演示：(1) 比较大小 (2) 夹逼求极限。",
+
+  build: function(stage){
+    stage.innerHTML = "";
+    var wrap = AW.el("div", "aw-scroll");
+    wrap.appendChild(AW.el("div", "aw-row-label", "<b>推导板</b>（本题两问：(1) 比较大小；(2) 求极限）"));
+    this._board = AW.el("div", "", "");
+    wrap.appendChild(this._board);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:"shift", tag:"审题", log:"两道积分的被积式只差一个因子：[ln(1+t)]ⁿ 与 tⁿ，先比较这个因子", count:0 },
+    { cls:"step", tag:"关键不等式", log:"构造 φ(t)=t−ln(1+t)，导数恒正、φ(0)=0，得到 0<ln(1+t)<t", count:1 },
+    { cls:"ok", tag:"逐点比较", log:"n 次幂后不等号保持，同乘正因子 |ln t| 再积分，得到 uₙ 的上界", count:2 },
+    { cls:"step", tag:"分部积分", log:"算上界：u 取 −ln t，dv 取 tⁿdt，拆成边界项加一个幂函数积分", count:3 },
+    { cls:"step", tag:"边界项", log:"t→1 端 ln1=0；t→0⁺ 端 t^{n+1}ln t→0，边界项整体消失", count:4 },
+    { cls:"ok", tag:"上界值", log:"上界等于 1/(n+1)·1/(n+1) = 1/(n+1)²", count:5 },
+    { cls:"step", tag:"夹逼", log:"uₙ 非负且小于 1/(n+1)²，两端一起趋于 0", count:6 },
+    { cls:"done", tag:"完成", log:"由夹逼准则，n→∞ 时 uₙ → 0", count:7, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    this._board.innerHTML = PAGES[i];
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: "(1) uₙ < ∫₀¹ tⁿ|ln t|dt　(2) lim uₙ = 0",
+    html: "结论：(1) $\\displaystyle\\int_0^1|\\ln t|[\\ln(1+t)]^n\\mathrm dt<\\int_0^1 t^n|\\ln t|\\,\\mathrm dt$；(2) $\\displaystyle\\lim_{n\\to\\infty}u_n=0$。<br>" +
+          "记忆点：<b>$\\ln(1+t)<t$（$t>0$）</b>是本题的钥匙；上界 $\\dfrac1{(n+1)^2}$ 由分部积分算出，$t^{n+1}\\ln t\\to0$（$t\\to0^+$）保证边界项消失。",
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2021·17 变限积分型无穷减无穷极限</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [
+  "$$L=\\lim_{x\\to0}\\left(\\frac{1+\\int_0^x \\mathrm{e}^{t^2}\\,\\mathrm{d}t}{\\mathrm{e}^x-1}-\\frac{1}{\\sin x}\\right)\\qquad\\text{型：}\\infty-\\infty\\text{，先通分}$$",
+  "<b>① 通分合并：</b>$$L=\\lim_{x\\to0}\\frac{\\left(1+\\int_0^x \\mathrm{e}^{t^2}\\,\\mathrm{d}t\\right)\\sin x-\\left(\\mathrm{e}^x-1\\right)}{\\left(\\mathrm{e}^x-1\\right)\\sin x}$$",
+  "<b>② 分母降阶：</b>$\\mathrm{e}^x-1\\sim x,\\ \\sin x\\sim x$，故分母 $\\sim x^2$ —— 分子只需展开到 $x^2$ 项",
+  "<b>③ 变限积分展开：</b>由 $\\mathrm{e}^{t^2}=1+t^2+o(t^2)$ 逐项积分：$$\\int_0^x \\mathrm{e}^{t^2}\\,\\mathrm{d}t=x+\\frac{x^3}{3}+o(x^3)\\ \\Rightarrow\\ 1+\\int_0^x \\mathrm{e}^{t^2}\\,\\mathrm{d}t=1+x+o(x)$$",
+  "<b>④ 乘到 $x^2$：</b>由 $\\sin x=x+o(x^2)$：$$\\left(1+\\int_0^x \\mathrm{e}^{t^2}\\,\\mathrm{d}t\\right)\\sin x=\\left(1+x+o(x)\\right)\\left(x+o(x^2)\\right)=x+x^2+o(x^2)$$",
+  "<b>⑤ 减指数项：</b>$\\mathrm{e}^x-1=x+\\dfrac{x^2}{2}+o(x^2)$，分子 $=\\left(x+x^2\\right)-\\left(x+\\dfrac{x^2}{2}\\right)+o(x^2)=\\dfrac{x^2}{2}+o(x^2)$",
+  "<b>⑥ 取极限：</b>$$L=\\lim_{x\\to0}\\frac{\\dfrac{x^2}{2}+o(x^2)}{x^2}=\\dfrac{1}{2}$$"
+];
+
+AW.init({
+  title: "2021·17　变限积分型 $\\infty-\\infty$ 型极限",
+  subtitle: "考点：通分合并 · 等价无穷小降阶 · 泰勒展开定系数",
+  counterLabel: "推导步数",
+  ribbonTitle: "推导进度（✓ 完成）",
+  intro: "点击「▶ 播放」或「下一步」，逐步完成通分、降阶与泰勒展开。",
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var inner = AW.el('div', '');
+    inner.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>：当前步亮琥珀色，已完成步变绿'));
+    this._rows = [];
+    for (var i = 0; i < ROWS.length; i++){
+      var r = AW.el('div', 'aw-stepcard', ROWS[i]);
+      inner.appendChild(r);
+      this._rows.push(r);
+    }
+    wrap.appendChild(inner);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    {"cls": "step", "tag": "审题", "log": "无穷减无穷型，两个分母 e 的 x 次方减一与 sin x 都趋于零，先通分合并", "count": 0, "ribbon": {"k": 1, "ok": true}},
+    {"cls": "shift", "tag": "通分", "log": "通分写成一个分式，分子是两项相减", "count": 1, "ribbon": {"k": 2, "ok": true}},
+    {"cls": "ok", "tag": "降阶", "log": "分母两个因子都等价于 x，整个分母是 x 平方量级，分子只需展开到 x 平方项", "count": 2, "ribbon": {"k": 3, "ok": true}},
+    {"cls": "ok", "tag": "展开", "log": "被积函数先泰勒再逐项积分，变限积分等于 x 加三分之 x 立方，一加它等于一加 x 加余项", "count": 3, "ribbon": {"k": 4, "ok": true}},
+    {"cls": "ok", "tag": "乘积", "log": "与 sin x 相乘保留到 x 平方项，乘积为 x 加 x 平方加余项", "count": 4, "ribbon": {"k": 5, "ok": true}},
+    {"cls": "ok", "tag": "定阶", "log": "指数项展开后相减，一阶项抵消，分子只剩二分之 x 平方", "count": 5, "ribbon": {"k": 6, "ok": true}},
+    {"cls": "ok", "tag": "收尾", "log": "分子除以 x 平方取极限，答案为二分之一", "count": 6, "ribbon": {"k": 7, "ok": true}},
+    {"cls": "done", "tag": "完成", "log": "完成：极限值等于二分之一，关键是展开阶数要够到 x 平方", "count": 7, "ribbon": {"k": 8, "ok": true}, "done": true}
+  ],
+
+  render: function(stage, sn, i){
+    var rows = this._rows;
+    for (var j = 0; j < rows.length; j++){
+      rows[j].className = 'aw-stepcard' + (j < i ? ' good' : (j === i ? ' key' : ''));
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: "$L=\\dfrac{1}{2}$",
+    html: "记忆锚点：<b>分母等价降阶到 $x^2$，分子泰勒也只到 $x^2$，$x^2$ 的系数之差即极限</b>。易错：加减项不能直接用等价无穷小；变限积分要积出 $\\dfrac{x^3}{3}$ 才能对上 $x^2$ 阶。"
+  }
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

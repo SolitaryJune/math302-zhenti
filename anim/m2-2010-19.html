@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>m2-2010-19 线性变换化简二阶 PDE</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+var PAGES = [
+  "<p>已知 $4\\dfrac{\\partial^2u}{\\partial x^2}+12\\dfrac{\\partial^2u}{\\partial x\\partial y}+5\\dfrac{\\partial^2u}{\\partial y^2}=0$，求 $a,b$ 使变换 $\\xi=x+ay,\\ \\eta=x+by$ 把它化成 $\\dfrac{\\partial^2u}{\\partial\\xi\\partial\\eta}=0$。</p>",
+  "<p>一阶链式法则（$\\xi_x=\\eta_x=1,\\ \\xi_y=a,\\ \\eta_y=b$）：</p>$$u_x=u_\\xi+u_\\eta,\\qquad u_y=a\\,u_\\xi+b\\,u_\\eta$$",
+  "<p>$u_x$ 再对 $x$ 求导（每项各走两条链）：</p>$$u_{xx}=u_{\\xi\\xi}+2u_{\\xi\\eta}+u_{\\eta\\eta}$$",
+  "<p>$u_x$ 再对 $y$ 求导（四条链合并）：</p>$$u_{xy}=a\\,u_{\\xi\\xi}+(a+b)\\,u_{\\xi\\eta}+b\\,u_{\\eta\\eta}$$",
+  "<p>$u_y$ 再对 $y$ 求导：</p>$$u_{yy}=a^2u_{\\xi\\xi}+2ab\\,u_{\\xi\\eta}+b^2u_{\\eta\\eta}$$",
+  "<p>代入 $4u_{xx}+12u_{xy}+5u_{yy}=0$，按三个二阶项归类：</p><p>$u_{\\xi\\xi}$ 的系数：$4+12a+5a^2$<br>$u_{\\eta\\eta}$ 的系数：$4+12b+5b^2$<br>$u_{\\xi\\eta}$ 的系数：$8+12(a+b)+10ab$</p>",
+  "<p>要只剩 $u_{\\xi\\eta}$ 项，两个「对角」系数必须同时为零：</p>$$5a^2+12a+4=0,\\qquad 5b^2+12b+4=0$$",
+  "<p>解同一个二次方程：</p>$$5r^2+12r+4=0\\ \\Longrightarrow\\ r=\\frac{-12\\pm8}{10}\\in\\Big\\{-2,\\ -\\frac25\\Big\\}$$",
+  "<p>变换必须可逆，故 $a\\ne b$（否则 $\\xi=\\eta$）：两个根分别配给 $a,b$：</p>$$\\{a,\\,b\\}=\\Big\\{-2,\\ -\\frac25\\Big\\}\\quad(a\\ne b)$$",
+  "<p>验证中间项系数非零（可两边同除）：</p>$$8+12\\Big(-\\frac{12}5\\Big)+10\\cdot\\frac45=-\\frac{64}5\\ne0\\ \\Longrightarrow\\ \\frac{\\partial^2u}{\\partial\\xi\\partial\\eta}=0$$"
+];
+
+AW.init({
+  title: "2010·19　线性变换 $\\xi=x+ay,\\ \\eta=x+by$ 化简二阶偏微分方程",
+  subtitle: "考点：多元复合求导（链式法则） · 二阶项系数归类 · 特征方程",
+  counterLabel: "步数",
+  intro: "点击「▶ 播放」逐步演示：一阶链式 → 二阶链式 → 系数归类 → 解根。",
+
+  build: function(stage){
+    stage.innerHTML = "";
+    var wrap = AW.el("div", "aw-scroll");
+    wrap.appendChild(AW.el("div", "aw-row-label", "<b>推导板</b>：$4u_{xx}+12u_{xy}+5u_{yy}=0$ 在新坐标下的形态"));
+    this._board = AW.el("div", "", "");
+    wrap.appendChild(this._board);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:"shift", tag:"审题", log:"目标是让变换后只剩混合偏导 u_ξη 一项——先求一阶偏导的链式表达", count:0 },
+    { cls:"step", tag:"一阶链式", log:"u_x = u_ξ + u_η，u_y = a·u_ξ + b·u_η", count:1 },
+    { cls:"step", tag:"u_xx", log:"u_x 再对 x 求导，得到 u_ξξ + 2u_ξη + u_ηη", count:2 },
+    { cls:"step", tag:"u_xy", log:"u_x 再对 y 求导，四条链合并：a·u_ξξ + (a+b)u_ξη + b·u_ηη", count:3 },
+    { cls:"step", tag:"u_yy", log:"u_y 再对 y 求导：a²u_ξξ + 2ab·u_ξη + b²u_ηη", count:4 },
+    { cls:"step", tag:"系数归类", log:"代入原方程，三个二阶项各自的系数都整理出来", count:5 },
+    { cls:"ok", tag:"提条件", log:"要化成 u_ξη=0，必须 u_ξξ 与 u_ηη 的系数同时为零", count:6 },
+    { cls:"ok", tag:"解特征方程", log:"5r²+12r+4=0 的两根：r = (−12±8)/10，即 −2 和 −2/5", count:7 },
+    { cls:"ok", tag:"分配根", log:"a、b 各取一根且不能相同（否则变换退化），两组解可对调", count:8 },
+    { cls:"done", tag:"完成", log:"中间项系数 = −64/5 ≠ 0，两边同除即得 u_ξη = 0，a、b 确定", count:9, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    this._board.innerHTML = PAGES[i];
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: "a=−2, b=−2/5　或　a=−2/5, b=−2",
+    html: "最终答案：$\\begin{cases}a=-2,\\\\ b=-\\dfrac25\\end{cases}$ 或 $\\begin{cases}a=-\\dfrac25,\\\\ b=-2\\end{cases}$。<br>" +
+          "记忆点：<b>$u_{\\xi\\xi}$ 与 $u_{\\eta\\eta}$ 的系数对 $a$、$b$ 是同一个二次式 $5r^2+12r+4$</b>，两根分别交给 $a,b$（必须不同，否则 $\\xi=\\eta$ 变换退化）。",
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

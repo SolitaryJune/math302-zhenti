@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2022·17 一点线性展开求 $f'(1)$</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [
+  "$$\\lim_{x\\to0}\\frac{f(\\mathrm{e}^{x^2})-3f(1+\\sin^2x)}{x^2}=2,\\qquad f \\text{ 仅在 } x=1 \\text{ 处可导，求 } f'(1)$$",
+  "<b>① 选工具：</b>只给一点可导 → 一阶线性逼近 $f(1+t)=f(1)+f'(1)\\,t+o(t)\\ (t\\to0)$",
+  "<b>② 增量化阶：</b>$\\mathrm{e}^{x^2}-1\\sim x^2$，$\\sin^2x\\sim x^2$（$x\\to0$），两个内层自变量都趋于 $1$",
+  "<b>③ 记 $a=f(1),\\ b=f'(1)$：</b>$f(\\mathrm{e}^{x^2})=f\\big(1+(\\mathrm{e}^{x^2}-1)\\big)=a+b\\,x^2+o(x^2)$",
+  "<b>④ 同理：</b>$f(1+\\sin^2x)=a+b\\sin^2x+o(x^2)=a+b\\,x^2+o(x^2)$",
+  "<b>⑤ 合并分子：</b>$(a+bx^2)-3(a+bx^2)+o(x^2)=-2a-2bx^2+o(x^2)$",
+  "<b>⑥ 除以 $x^2$：</b>$\\dfrac{f(\\mathrm{e}^{x^2})-3f(1+\\sin^2x)}{x^2}=\\dfrac{-2a}{x^2}-2b+o(1)$，极限应等于 $2$",
+  "<b>⑦ 极限有限 ⇒ 奇异项消失：</b>$a\\neq0$ 时 $\\dfrac{-2a}{x^2}$ 发散，故 $a=f(1)=0$",
+  "<b>⑧ 收尾：</b>剩下 $-2b+o(1)\\to-2b=2\\ \\Rightarrow\\ f'(1)=-1$"
+];
+
+AW.init({
+  title: '2022·17　一点线性展开 + 等价无穷小求 $f\'(1)$',
+  subtitle: '考点：一点可导的线性逼近 · 等价无穷小定阶 · 极限有限定参数',
+  counterLabel: '已推进',
+  ribbonTitle: '推导进度（✓ 完成）',
+  intro: '点击「▶ 播放」或「下一步」，看八个步骤如何从「只在一点可导」逼出 $f\'(1)=-1$。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var inner = AW.el('div', '');
+    inner.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>：当前行亮琥珀色，已完成的行变绿'));
+    this._rows = [];
+    for (var i = 0; i < ROWS.length; i++){
+      var r = AW.el('div', 'aw-stepcard', ROWS[i]);
+      inner.appendChild(r);
+      this._rows.push(r);
+    }
+    wrap.appendChild(inner);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step',  tag:'审题',   log:'条件只给一点可导，能用的一阶线性逼近，目标是导数值', count:0, ribbon:{k:1, ok:true} },
+    { cls:'shift', tag:'定工具', log:'写出一点处的线性逼近公式，增量趋于零时误差是高阶小量', count:1, ribbon:{k:2, ok:true} },
+    { cls:'ok',    tag:'化阶',   log:'两个内层增量分别等价于 x 平方，都压到同一阶', count:2, ribbon:{k:3, ok:true} },
+    { cls:'ok',    tag:'展开一', log:'把第一个函数值展开成 a 加 b 乘 x 平方再加高阶小量', count:3, ribbon:{k:4, ok:true} },
+    { cls:'ok',    tag:'展开二', log:'第二个函数值同样展开，形式完全一致', count:4, ribbon:{k:5, ok:true} },
+    { cls:'ok',    tag:'合并',   log:'分子按一比三合并，剩负 2a 减 2b 乘 x 平方', count:5, ribbon:{k:6, ok:true} },
+    { cls:'ok',    tag:'去除',   log:'整体除以 x 平方，出现负 2a 除以 x 平方的奇异项', count:6, ribbon:{k:7, ok:true} },
+    { cls:'ok',    tag:'定 f1',  log:'极限有限要求奇异项消失，于是 f 一 的值为零', count:7, ribbon:{k:8, ok:true} },
+    { cls:'done',  tag:'完成',   log:'结论：剩下负 2b 等于 2，导数值为负 1', count:8, ribbon:{k:9, ok:true}, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    var rows = this._rows;
+    for (var j = 0; j < rows.length; j++){
+      rows[j].className = 'aw-stepcard' + (j < i ? ' good' : (j === i ? ' key' : ''));
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: "$f(1)=0,\\qquad f'(1)=-1$",
+    html: "记忆锚点：<b>只在一点可导 → 用 $f(1+t)=f(1)+f'(1)t+o(t)$；极限是有限值 ⇒ 分子上发散的 $\\dfrac{-2a}{x^2}$ 必须消失，先定 $f(1)$ 再定 $f'(1)$</b>。易错：对一点可导的函数乱用二阶展开；漏答 $f(1)=0$ 这个采分点。",
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

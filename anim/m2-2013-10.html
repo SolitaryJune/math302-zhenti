@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学·过程动画：反函数求导先找对应点（2013 年第 10 题）</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+var CARDS = [
+  { cls: 'key', title: '反函数求导的框架',
+    body: '<p>$\\dfrac{\\mathrm dx}{\\mathrm dy}=\\dfrac1{f\'(x)}$，但公式里的 $x$ 必须是满足 $f(x)=y$ 的那个点。目标 $y=0$：<b>先找对应的 $x$</b>。</p>' },
+  { cls: '', title: '定对应点：y=0 ⟺ x=−1',
+    body: '<p>$f(x)=\\displaystyle\\int_{-1}^x\\sqrt{1-\\mathrm e^t}\\,\\mathrm dt$，被积函数沿路径恒正（$t\\le0\\Rightarrow1-\\mathrm e^t\\ge0$）。积分值为零 $\\iff$ 上下限重合：</p>' +
+          '<p>$$f(x)=0\\;\\Longleftrightarrow\\;x=-1.$$</p>' },
+  { cls: 'key', title: '变限积分求导',
+    body: '<p>$$f\'(x)=\\sqrt{1-\\mathrm e^x}\\;\\Rightarrow\\;f\'(-1)=\\sqrt{1-\\mathrm e^{-1}}&gt;0.$$</p>' },
+  { cls: 'good', title: '取倒数',
+    body: '<p>$$\\left.\\frac{\\mathrm dx}{\\mathrm dy}\\right|_{y=0}=\\frac1{f\'(-1)}=\\frac1{\\sqrt{1-\\mathrm e^{-1}}}.$$</p>' +
+          '<p>等价形式：分子分母同乘 $\\sqrt{\\mathrm e}$，即 $\\sqrt{\\dfrac{\\mathrm e}{\\mathrm e-1}}$。</p>' },
+  { cls: '', title: '核对适用条件',
+    body: '<p>$f$ 的定义域为 $x\\le0$（保证 $1-\\mathrm e^t\\ge0$）；$f\'(-1)$ 存在且非零，反函数导数公式适用。注意 $f\'(0)=0$ 处反函数不可导——幸好我们求的是 $y=0$（对应 $x=-1$）。</p>' },
+];
+
+AW.init({
+  title: '$\\left.\\dfrac{\\mathrm dx}{\\mathrm dy}\\right|_{y=0}$ 的求取过程',
+  subtitle: '考点：变限积分 · 方法：定对应点 → 变限求导 → 取倒数',
+  counterLabel: '步数',
+  intro: '点击「▶ 播放」逐步演示推导。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    stage.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>：每步点亮一行'));
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    this._cards = [];
+    for(var k = 0; k < CARDS.length; k++){
+      var d = AW.el('div', 'aw-stepcard ' + (CARDS[k].cls || ''),
+        '<h4><span class="n">' + (k + 1) + '</span>' + CARDS[k].title + '</h4>' + CARDS[k].body);
+      d.style.display = 'none';
+      board.appendChild(d);
+      this._cards.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'shift', tag:'框架', log:'反函数导数取倒数，但先要找 y=0 对应的点' },
+    { cls:'step',  tag:'定点', log:'被积函数恒正，积分值为零等价于上下限重合' },
+    { cls:'shift', tag:'求导', log:'变限积分求导得 f 的导数，代入 x=−1' },
+    { cls:'ok',    tag:'取倒数', log:'导数值的倒数就是答案，并给等价形式' },
+    { cls:'done',  tag:'完成', log:'核对定义域与适用条件，收工', done:true },
+  ],
+
+  render: function(stage, sn, i){
+    for(var k = 0; k < this._cards.length; k++){
+      this._cards[k].style.display = (k <= i) ? '' : 'none';
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '$\\dfrac{1}{\\sqrt{1-\\mathrm e^{-1}}}$',
+    html: '记忆锚点：<b>反函数求导先找对应点</b>（解 $f(x)=y$），再 $\\frac{\\mathrm dx}{\\mathrm dy}=\\frac1{f\'(x)}$；恒正的被积函数让"积分值为零 ⟺ 上下限重合"成立。等价写法 $\\sqrt{\\frac{\\mathrm e}{\\mathrm e-1}}$。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

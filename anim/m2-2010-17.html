@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>m2-2010-17 参数方程二阶导反求 ψ(t)</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+var PAGES = [
+  "<p>参数方程 $x=2t+t^2,\\ y=\\psi(t)$（$t>-1$），已知 $\\dfrac{\\mathrm d^2y}{\\mathrm dx^2}=\\dfrac{3}{4(1+t)}$，$\\psi(1)=\\dfrac52$，$\\psi'(1)=6$，求 $\\psi(t)$。</p>",
+  "<p>先算 $x$ 对 $t$ 的导数，写出商 $\\dfrac{\\mathrm dy}{\\mathrm dx}$：</p>$$\\frac{\\mathrm dx}{\\mathrm dt}=2+2t=2(1+t)\\ \\Longrightarrow\\ \\frac{\\mathrm dy}{\\mathrm dx}=\\frac{\\psi'(t)}{2(1+t)}$$",
+  "<p>二阶导 = （一阶导对 $t$ 求导）$\\div$ $\\dfrac{\\mathrm dx}{\\mathrm dt}$：</p>$$\\frac{\\mathrm d^2y}{\\mathrm dx^2}=\\frac{\\dfrac{\\mathrm d}{\\mathrm dt}\\Big[\\dfrac{\\psi'(t)}{2(1+t)}\\Big]}{2(1+t)}=\\frac{(1+t)\\psi''-\\psi'}{4(1+t)^3}$$",
+  "<p>代入已知条件，交叉相乘：</p>$$\\frac{(1+t)\\psi''-\\psi'}{4(1+t)^3}=\\frac{3}{4(1+t)}\\ \\Longrightarrow\\ (1+t)\\psi''-\\psi'=3(1+t)^2$$",
+  "<p>降阶：令 $w=\\psi'$，方程化为关于 $w$ 的一阶线性方程：</p>$$w'-\\frac{1}{1+t}\\,w=3(1+t)$$",
+  "<p>两边乘积分因子 $\\dfrac1{1+t}$，左端变成乘积的导数：</p>$$\\Big(\\frac{w}{1+t}\\Big)'=3\\ \\Longrightarrow\\ \\frac{w}{1+t}=3t+C_1\\ \\Longrightarrow\\ w=(1+t)(3t+C_1)$$",
+  "<p>用 $\\psi'(1)=6$ 定 $C_1$：</p>$$\\psi'(1)=2\\,(3+C_1)=6\\ \\Longrightarrow\\ C_1=0,\\quad \\psi'(t)=3t+3t^2$$",
+  "<p>再积分一次：</p>$$\\psi(t)=\\frac32t^2+t^3+C_2$$",
+  "<p>用 $\\psi(1)=\\dfrac52$ 定 $C_2$：</p>$$\\psi(1)=\\frac32+1+C_2=\\frac52\\ \\Longrightarrow\\ C_2=0$$",
+  "<p>验算：$\\psi''=3+6t$，则 $(1+t)(3+6t)-(3t+3t^2)=3(1+t)^2$，代回二阶导公式恰为 $\\dfrac{3}{4(1+t)}$ ✓</p>$$\\boxed{\\psi(t)=\\frac32t^2+t^3}$$"
+];
+
+AW.init({
+  title: "2010·17　参数方程二阶导反求 $\\psi(t)$",
+  subtitle: "考点：参数方程求导 · 一阶线性微分方程（积分因子法） · 初始条件定常数",
+  counterLabel: "步数",
+  intro: "点击「▶ 播放」逐步演示：二阶导公式 → 降阶 → 积分因子 → 定常数。",
+
+  build: function(stage){
+    stage.innerHTML = "";
+    var wrap = AW.el("div", "aw-scroll");
+    wrap.appendChild(AW.el("div", "aw-row-label", "<b>推导板</b>：由 $\\dfrac{\\mathrm d^2y}{\\mathrm dx^2}=\\dfrac{3}{4(1+t)}$ 反解 $\\psi$"));
+    this._board = AW.el("div", "", "");
+    wrap.appendChild(this._board);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:"shift", tag:"审题", log:"已知参数方程的二阶导数，反过来求 y=ψ(t)——先写出二阶导的参数表达式", count:0 },
+    { cls:"step", tag:"一阶导", log:"x 对 t 求导得 2(1+t)，于是 dy/dx = ψ′(t) 除以 2(1+t)", count:1 },
+    { cls:"step", tag:"二阶导", log:"一阶导再对 t 求导（用商的法则），整体再除以 dx/dt，得分式 [(1+t)ψ″−ψ′]/4(1+t)³", count:2 },
+    { cls:"ok", tag:"列方程", log:"代入已知二阶导 3/4(1+t)，两边同乘 4(1+t)³，得 (1+t)ψ″−ψ′=3(1+t)²", count:3 },
+    { cls:"step", tag:"降阶", log:"令 w=ψ′，二阶方程降为一阶线性方程 w′ − w/(1+t) = 3(1+t)", count:4 },
+    { cls:"step", tag:"积分因子", log:"乘上积分因子 1/(1+t)，左端凑成 (w/(1+t))′，积分得 w=(1+t)(3t+C₁)", count:5 },
+    { cls:"ok", tag:"定 C₁", log:"用 ψ′(1)=6：2(3+C₁)=6，解得 C₁=0，故 ψ′=3t+3t²", count:6 },
+    { cls:"step", tag:"积分", log:"对 ψ′ 再积分一次，得到 ψ = (3/2)t² + t³ + C₂", count:7 },
+    { cls:"ok", tag:"定 C₂", log:"用 ψ(1)=5/2：3/2+1+C₂=5/2，解得 C₂=0", count:8 },
+    { cls:"done", tag:"完成", log:"两个常数都收掉，ψ(t) = (3/2)t² + t³，验算无误", count:9, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    this._board.innerHTML = PAGES[i];
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: "ψ(t) = (3/2)t² + t³",
+    html: "最终答案：$\\psi(t)=\\dfrac32t^2+t^3$。<br>" +
+          "记忆点：<b>参数二阶导 =（对 $t$ 求导）$\\div\\ x'_t$</b>，不能写成 $\\psi''/2(1+t)$；含 $\\psi'$ 的方程令 $w=\\psi'$ 降阶，$\\psi'(1)$ 与 $\\psi(1)$ 分别收 $C_1,C_2$。",
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

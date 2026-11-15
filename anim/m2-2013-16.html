@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2013·16 两种旋转体积之比定 a</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改 AW.init 区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [];
+
+var LINES = [
+  "<p><b>审题</b>：$D$ 是曲线 $y=x^{1/3}$、直线 $x=a\\ (a>0)$ 与 $x$ 轴围成的图形，即 $0\\le x\\le a$，$0\\le y\\le x^{1/3}$。曲线也可写成 $x=y^3$。分别求绕 $x$ 轴、绕 $y$ 轴的体积。</p>",
+  "<p><b>绕 $x$ 轴（圆盘法）</b>：竖条旋转成圆盘，半径 $y=x^{1/3}$：$$V_x=\\pi\\int_0^a y^2\\,\\mathrm dx=\\pi\\int_0^a x^{2/3}\\,\\mathrm dx$$</p>",
+  "<p><b>算出 $V_x$</b>：$$V_x=\\pi\\cdot\\frac{3}{5}\\,x^{5/3}\\Big|_0^a=\\frac{3\\pi}{5}\\,a^{5/3}$$</p>",
+  "<p><b>绕 $y$ 轴（柱壳法）</b>：竖条绕 $y$ 轴扫出薄壳，周长 $2\\pi x$、高 $y=x^{1/3}$、厚 $\\mathrm dx$：$$V_y=2\\pi\\int_0^a x\\,y\\,\\mathrm dx=2\\pi\\int_0^a x^{4/3}\\,\\mathrm dx$$（免反解 $x=y^3$）</p>",
+  "<p><b>算出 $V_y$</b>：$$V_y=2\\pi\\cdot\\frac{3}{7}\\,x^{7/3}\\Big|_0^a=\\frac{6\\pi}{7}\\,a^{7/3}$$</p>",
+  "<p><b>代入条件 $V_y=10V_x$</b>：$$\\frac{6\\pi}{7}\\,a^{7/3}=10\\cdot\\frac{3\\pi}{5}\\,a^{5/3}=6\\pi a^{5/3}$$</p>",
+  "<p><b>约去 $6\\pi a^{5/3}$</b>（$a>0$）：$$\\frac{1}{7}\\,a^{2/3}=1\\quad\\Rightarrow\\quad a^{2/3}=7$$</p>",
+  "<p><b>解出 $a$</b>：$$a=7^{3/2}=\\sqrt{7^3}=7\\sqrt7$$</p>",
+  "<p><b>验算</b>：$a^{2/3}=(7^{3/2})^{2/3}=7$，代回 $V_y/V_x=10$ 成立。$$\\boxed{\\;a=7\\sqrt7\\;}$$</p>"
+];
+
+AW.init({
+  title: '$V_y=10V_x$：一条幂函数曲线的两种旋转体积',
+  subtitle: '考点：定积分应用（旋转体） · 方法：圆盘法 + 柱壳法',
+  counterLabel: '推导步',
+  ribbonTitle: '两个体积（✓ 已算出）',
+  intro: '点击「▶ 播放」逐步演示两个体积的计算与方程求解。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    ROWS.length = 0;
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    for(var k = 0; k < LINES.length; k++){
+      var d = AW.el('div', '', LINES[k]);
+      d.style.cssText = 'margin:8px 0;padding:9px 14px;border-left:3px solid #e2e8f0;background:#f8fafc;border-radius:0 12px 12px 0;font-size:14.5px;line-height:1.9;display:none;';
+      board.appendChild(d);
+      ROWS.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  render: function(stage, sn){
+    for(var k = 0; k < ROWS.length; k++){
+      var r = ROWS[k];
+      if(k >= sn.show){ r.style.display = 'none'; continue; }
+      r.style.display = 'block';
+      if(k === sn.show - 1 && !sn.done){
+        r.style.borderLeftColor = '#d97706';
+        r.style.background = '#fffbeb';
+      } else {
+        r.style.borderLeftColor = '#16a34a';
+        r.style.background = '#f8fafc';
+      }
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  snaps: [
+    { cls:'shift', tag:'审题',   log:'区域夹在 x 轴与曲线之间，横坐标从 0 到 a，先分别想两个转法', show:1, count:0 },
+    { cls:'step',  tag:'圆盘',   log:'绕 x 轴：竖条转成圆盘，半径是 x 的三分之一次幂，面积乘 π 再积分', show:2, count:1 },
+    { cls:'ok',    tag:'Vx',     log:'积分出 3π/5 乘 a 的 5/3 次幂', show:3, count:2, ribbon:{k:1, ok:true} },
+    { cls:'step',  tag:'柱壳',   log:'绕 y 轴用柱壳法最省事：2π 乘 x 乘高 y，避免反解曲线', show:4, count:3 },
+    { cls:'ok',    tag:'Vy',     log:'积分出 6π/7 乘 a 的 7/3 次幂', show:5, count:4, ribbon:{k:2, ok:true} },
+    { cls:'shift', tag:'列方程', log:'代入 Vy 等于 10 倍 Vx，右边 10 乘 3π/5 等于 6π', show:6, count:5 },
+    { cls:'ok',    tag:'约分',   log:'两边同除 6π 乘 a 的 5/3 次幂，剩 a 的 2/3 次幂等于 7', show:7, count:6 },
+    { cls:'ok',    tag:'求解',   log:'指数 2/3 倒过来是 3/2，a 等于 7 的 3/2 次幂即 7 倍根号 7', show:8, count:7 },
+    { cls:'done',  tag:'完成',   log:'验算：a 的 2/3 次幂回到 7，比值恰为 10', show:9, count:8, done:true },
+  ],
+
+  result: {
+    big: '$a=7\\sqrt7$',
+    html: '记忆锚点：<b>绕 $x$ 轴圆盘 $\\pi\\int y^2\\mathrm dx$，绕 $y$ 轴柱壳 $2\\pi\\int xy\\,\\mathrm dx$</b>；$y=x^{1/3}$ 代入后是 $x^{2/3}$ 与 $x^{4/3}$。解方程时约去 $6\\pi a^{5/3}$ 得 $a^{2/3}=7$，$a=7^{3/2}$。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

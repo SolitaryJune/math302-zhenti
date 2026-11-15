@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2019·17 一阶线性方程与旋转体体积</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [
+  "$$y'-xy=\\frac{1}{2\\sqrt{x}}\\,\\mathrm{e}^{x^2/2},\\qquad y(1)=\\sqrt{\\mathrm{e}}\\qquad\\text{一阶线性方程}\\ +\\ \\text{旋转体体积}$$",
+  "<b>① 定型：</b>$y'+P(x)y=Q(x)$，$P(x)=-x$；积分因子 $\\mathrm{e}^{\\int P\\,\\mathrm{d}x}=\\mathrm{e}^{-x^2/2}$",
+  "<b>② 乘积分因子：</b>$\\left(y\\,\\mathrm{e}^{-x^2/2}\\right)'=\\dfrac{1}{2\\sqrt{x}}\\,\\mathrm{e}^{x^2/2}\\cdot\\mathrm{e}^{-x^2/2}=\\dfrac{1}{2\\sqrt{x}}$——右端指数恰好抵消",
+  "<b>③ 积分：</b>$y\\,\\mathrm{e}^{-x^2/2}=\\displaystyle\\int\\frac{1}{2\\sqrt{x}}\\,\\mathrm{d}x=\\sqrt{x}+C\\ \\Rightarrow\\ y=\\mathrm{e}^{x^2/2}\\left(\\sqrt{x}+C\\right)$",
+  "<b>④ 定常数：</b>代入 $y(1)=\\sqrt{\\mathrm{e}}$：$\\mathrm{e}^{1/2}\\,(1+C)=\\mathrm{e}^{1/2}\\Rightarrow C=0$，得 (I) 的特解 $y=\\sqrt{x}\\,\\mathrm{e}^{x^2/2}$（回代验证成立）",
+  "<b>⑤ (II) 定方法：</b>$D$：$1\\le x\\le 2$，$0\\le y\\le y(x)$，绕 $x$ 轴旋转 → 圆盘法 $V=\\pi\\displaystyle\\int_1^2 y^2\\,\\mathrm{d}x$",
+  "<b>⑥ 代入：</b>$y^2=\\left(\\sqrt{x}\\,\\mathrm{e}^{x^2/2}\\right)^2=x\\,\\mathrm{e}^{x^2}$，故 $V=\\pi\\displaystyle\\int_1^2 x\\,\\mathrm{e}^{x^2}\\,\\mathrm{d}x$",
+  "<b>⑦ 凑微分收尾：</b>$x\\,\\mathrm{d}x=\\tfrac12\\,\\mathrm{d}\\left(x^2\\right)$：$$V=\\frac{\\pi}{2}\\,\\mathrm{e}^{x^2}\\Big|_1^2=\\frac{\\pi}{2}\\left(\\mathrm{e}^4-\\mathrm{e}\\right)$$"
+];
+
+AW.init({
+  title: '2019·17　一阶线性方程特解与旋转体体积',
+  subtitle: '考点：积分因子法 · 初值定常数 · 圆盘法 $V=\\pi\\int y^2\\,\\mathrm{d}x$',
+  counterLabel: '已完成',
+  ribbonTitle: '推导进度（✓ 完成）',
+  intro: '点击「▶ 播放」或「下一步」，先解方程再算体积，两问一气呵成。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var inner = AW.el('div', '');
+    inner.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>：当前行亮琥珀色，已完成的行变绿'));
+    this._rows = [];
+    for (var i = 0; i < ROWS.length; i++){
+      var r = AW.el('div', 'aw-stepcard', ROWS[i]);
+      inner.appendChild(r);
+      this._rows.push(r);
+    }
+    wrap.appendChild(inner);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step',  tag:'审题',     log:'两问结构：先解一阶线性方程，再把解代入旋转体体积', count:0, ribbon:{k:1, ok:true} },
+    { cls:'shift', tag:'定型',     log:'识别为一阶线性方程，P 等于负 x，写出积分因子', count:1, ribbon:{k:2, ok:true} },
+    { cls:'ok',    tag:'消指数',   log:'乘积分因子后右端指数恰好抵消，只剩二倍根号 x 分之一', count:2, ribbon:{k:3, ok:true} },
+    { cls:'ok',    tag:'积分',     log:'两边积分得根号 x 加 C，通解是 e 的指数乘根号 x 加 C', count:3, ribbon:{k:4, ok:true} },
+    { cls:'ok',    tag:'定常数',   log:'代入初值 y 一 等于根号 e，常数 C 为零，特解确定', count:4, ribbon:{k:5, ok:true} },
+    { cls:'ok',    tag:'圆盘法',   log:'区域绕 x 轴旋转，用圆盘法，体积是派 乘 y 平方 的定积分', count:5, ribbon:{k:6, ok:true} },
+    { cls:'ok',    tag:'代入',     log:'特解平方后等于 x 乘 e 的 x 平方，被积函数大幅化简', count:6, ribbon:{k:7, ok:true} },
+    { cls:'done',  tag:'完成',     log:'结论：凑微分收尾，体积等于二分之派 乘 e 四次方减 e', count:7, ribbon:{k:8, ok:true}, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    var rows = this._rows;
+    for (var j = 0; j < rows.length; j++){
+      rows[j].className = 'aw-stepcard' + (j < i ? ' good' : (j === i ? ' key' : ''));
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: "(I) $y=\\sqrt{x}\\,\\mathrm{e}^{x^2/2}$；　(II) $V=\\dfrac{\\pi}{2}\\left(\\mathrm{e}^4-\\mathrm{e}\\right)$",
+    html: "记忆锚点：<b>一阶线性方程先乘积分因子 $\\mathrm{e}^{\\int P\\mathrm{d}x}$ 再移项；绕 $x$ 轴旋转用圆盘法 $\\pi\\int y^2\\mathrm{d}x$</b>。易错：公式指数符号记反；体积漏 $\\pi$；凑微分丢 $\\tfrac12$。",
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

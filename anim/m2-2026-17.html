@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2026 数二第 17 题 · 二重积分换极坐标 + 分部积分（交互动画）</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+AW.init({
+  title: '2026·17　$I=\\int_{-1}^{1}dx\\int_{|x|}^{\\sqrt{2-x^2}}y\\,\\sin\\sqrt{x^2+y^2}\\,dy$',
+  subtitle: '考点：二重积分换极坐标 · 关键：<b>$y=|x|$ 是两条射线</b>；$\\int r^2\\sin r\\,dr$ 要分部两次',
+  counterLabel: '已完成',
+  ribbonTitle: '推导进度（✓ 完成）',
+  intro: '点击「▶ 播放」或「下一步」，先还原积分区域，再换极坐标分步计算。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var inner = AW.el('div', '');
+    inner.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>：当前行亮琥珀色，已完成的行变绿'));
+    var LINES = [
+      "<b>题目：</b>计算 $$I=\\int_{-1}^{1}dx\\int_{|x|}^{\\sqrt{2-x^2}}y\\,\\sin\\sqrt{x^2+y^2}\\,dy$$",
+      "<b>还原区域：</b>$x\\in[-1,1]$，$y$ 从 $|x|$ 到 $\\sqrt{2-x^2}$。下界 $y=|x|$ 是过原点的两条 $45^\\circ$ 射线：$\\theta=\\dfrac{\\pi}{4}$ 与 $\\dfrac{3\\pi}{4}$；上界是半径 $\\sqrt2$ 的上半圆 $r=\\sqrt2$",
+      "<b>极坐标下的区域：</b>$$D:\\ \\frac{\\pi}{4}\\le\\theta\\le\\frac{3\\pi}{4},\\qquad 0\\le r\\le\\sqrt2$$（自检：$|x|=r|\\cos\\theta|\\le\\sqrt2\\cdot\\dfrac{\\sqrt2}{2}=1$，与 $x\\in[-1,1]$ 吻合）",
+      "<b>换元：</b>$y=r\\sin\\theta$，$\\sqrt{x^2+y^2}=r$，$dxdy=r\\,dr\\,d\\theta$，被积函数变为 $r\\sin\\theta\\sin r\\cdot r$，可分离：$$I=\\int_{\\pi/4}^{3\\pi/4}\\sin\\theta\\,d\\theta\\cdot\\int_0^{\\sqrt2}r^2\\sin r\\,dr$$",
+      "<b>角向积分：</b>$$\\int_{\\pi/4}^{3\\pi/4}\\sin\\theta\\,d\\theta=\\Big[-\\cos\\theta\\Big]_{\\pi/4}^{3\\pi/4}=\\frac{\\sqrt2}{2}+\\frac{\\sqrt2}{2}=\\sqrt2$$",
+      "<b>径向分部积分（做两次）：</b>$$\\int r^2\\sin r\\,dr=-r^2\\cos r+2r\\sin r+2\\cos r+C$$",
+      "<b>代上下限：</b>上限 $r=\\sqrt2$：$-2\\cos\\sqrt2+2\\sqrt2\\sin\\sqrt2+2\\cos\\sqrt2=2\\sqrt2\\sin\\sqrt2$（两个 $\\cos$ 项相消）；下限 $r=0$：值为 $2$。故径向积分 $=2\\sqrt2\\sin\\sqrt2-2$",
+      "<b>相乘：</b>$$I=\\sqrt2\\,\\big(2\\sqrt2\\sin\\sqrt2-2\\big)=4\\sin\\sqrt2-2\\sqrt2$$"
+    ];
+    this._rows = [];
+    for (var i = 0; i < LINES.length; i++){
+      var r = AW.el('div', 'aw-stepcard', LINES[i]);
+      inner.appendChild(r);
+      this._rows.push(r);
+    }
+    wrap.appendChild(inner);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step',  tag:'审题',   log:'先看积分限：x 从 −1 到 1，y 从 |x| 到上半圆，把积分区域想清楚', count:0, ribbon:{k:1, ok:true} },
+    { cls:'step',  tag:'定界',   log:'下界 y=|x| 是两条 45° 射线，上界是半径 √2 的上半圆，区域是上半平面里的扇形', count:1, ribbon:{k:2, ok:true} },
+    { cls:'shift', tag:'极坐标', log:'极坐标下区域变成矩形：θ 从 π/4 到 3π/4，r 从 0 到 √2', count:2, ribbon:{k:3, ok:true} },
+    { cls:'step',  tag:'分离',   log:'y 变成 r·sinθ，面积元再出一个 r，被积函数成为 r²·sinθ·sinr，角度与半径可以拆开', count:3, ribbon:{k:4, ok:true} },
+    { cls:'ok',    tag:'角向',   log:'先算角向：sinθ 在 π/4 到 3π/4 上积分恰好等于 √2', count:4, ribbon:{k:5, ok:true} },
+    { cls:'step',  tag:'径向',   log:'再算径向：r²·sinr 用分部积分做两次，得到原函数', count:5, ribbon:{k:6, ok:true} },
+    { cls:'ok',    tag:'代限',   log:'代入上下限：√2 处两个 cos 项恰好相消，0 处剩 2，径向积分等于 2√2·sin√2 − 2', count:6, ribbon:{k:7, ok:true} },
+    { cls:'ok',    tag:'相乘',   log:'两块相乘：√2 × (2√2·sin√2 − 2) = 4·sin√2 − 2√2', count:7, ribbon:{k:8, ok:true} },
+    { cls:'done',  tag:'完成',   log:'结论：I = 4·sin√2 − 2√2；关键是认出扇形区域并坚持分部积分两次', count:8, ribbon:{k:9, ok:true}, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    var rows = this._rows;
+    for (var j = 0; j < rows.length; j++){
+      rows[j].className = 'aw-stepcard' + (j < i ? ' good' : (j === i ? ' key' : ''));
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '$I=4\\sin\\sqrt2-2\\sqrt2$',
+    html: '记忆锚点：<b>$y=|x|\\iff\\theta=\\dfrac{\\pi}{4},\\ \\dfrac{3\\pi}{4}$</b>（张角是 $\\dfrac{\\pi}{2}$）；圆 $x^2+y^2=2\\iff r=\\sqrt2$。被积函数含 $\\sqrt{x^2+y^2}$ 时优先极坐标；$\\int r^2\\sin r\\,dr$ 要分部两次，原函数 $-r^2\\cos r+2r\\sin r+2\\cos r$，代限时上下限处的 $\\cos$ 项恰好相消。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2015 数二第 17 题 · 还原二元函数并求极值（交互动画）</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  /* stage 同步渲染；结论卡/标题/副标题由引擎在 render 返回后才写入或只写一次，
+     用 setTimeout(0) 兜底渲染（后台标签页 setTimeout 仍会触发） */
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+AW.init({
+  title: '2015·17　由 $f\'\'_{xy}$ 还原 $f(x,y)$ 再求极值',
+  subtitle: '考点：偏导逐次积分还原 · <b>二元极值 $AC-B^2$ 判别</b>',
+  counterLabel: '已完成',
+  ribbonTitle: '推导进度（✓ 完成）',
+  intro: '点击「▶ 播放」或「下一步」，看 f 如何被逐次积分还原并找到极小值。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var inner = AW.el('div', '');
+    inner.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>：当前行亮琥珀色，已完成的行变绿'));
+    var LINES = [
+      '$$f\'\'_{xy}=2(y+1)\\mathrm e^{x},\\qquad f\'_x(x,0)=(x+1)\\mathrm e^{x},\\qquad f(0,y)=y^{2}+2y$$',
+      '<b>① 对 $y$ 积分（$x$ 视为常数，补待定函数）：</b>$f\'_x(x,y)=(y^2+2y)\\mathrm e^x+\\varphi(x)$',
+      '<b>② 用边界条件定 $\\varphi$：</b>$f\'_x(x,0)=0+\\varphi(x)=(x+1)\\mathrm e^x\\ \\Rightarrow\\ \\varphi(x)=(x+1)\\mathrm e^x$',
+      '<b>③ 对 $x$ 积分：</b>$\\int(x+1)\\mathrm e^x\\,\\mathrm dx=x\\,\\mathrm e^x\\ \\Rightarrow\\ f=(y^2+2y)\\mathrm e^x+x\\,\\mathrm e^x+\\psi(y)$',
+      '<b>④ 用 $f(0,y)$ 定 $\\psi$：</b>$y^2+2y+\\psi(y)=y^2+2y\\ \\Rightarrow\\ \\psi(y)=0$，故 $f(x,y)=(y^2+2y+x)\\,\\mathrm e^x$',
+      '<b>⑤ 求驻点：</b>$f\'_x=(y^2+2y+x+1)\\mathrm e^x,\\ f\'_y=(2y+2)\\mathrm e^x$；$f\'_y=0\\Rightarrow y=-1$，代回 $\\Rightarrow x=0$',
+      '<b>⑥ 二阶判别：</b>在 $(0,-1)$：$A=(y^2+2y+x+2)\\mathrm e^x=1,\\ B=(2y+2)\\mathrm e^x=0,\\ C=2$，$AC-B^2=2>0$，$A>0$',
+      '<b>⑦ 极小值：</b>$f(0,-1)=(1-2+0)\\,\\mathrm e^{0}=-1$'
+    ];
+    this._rows = [];
+    for (var i = 0; i < LINES.length; i++){
+      var r = AW.el('div', 'aw-stepcard', LINES[i]);
+      inner.appendChild(r);
+      this._rows.push(r);
+    }
+    wrap.appendChild(inner);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step',  tag:'审题',   log:'给出混合偏导和两条边界条件，思路是逐次积分把 f 还原出来', count:0, ribbon:{k:1, ok:true} },
+    { cls:'ok',    tag:'第一次积分', log:'对 y 积分求一阶偏导，别忘了补上一个只依赖 x 的待定函数', count:1, ribbon:{k:2, ok:true} },
+    { cls:'ok',    tag:'定 phi',  log:'代入 y 等于零的条件，待定函数就是 x 加一乘 e 的 x 次方', count:2, ribbon:{k:3, ok:true} },
+    { cls:'shift', tag:'第二次积分', log:'对 x 积分还原 f，x 加一乘 e 的 x 次方的原函数是 x 乘 e 的 x 次方，再补待定函数', count:3, ribbon:{k:4, ok:true} },
+    { cls:'ok',    tag:'定 psi',  log:'代入 x 等于零的条件，第二个待定函数为零，f 完全还原', count:4, ribbon:{k:5, ok:true} },
+    { cls:'ok',    tag:'驻点',   log:'两个一阶偏导同时为零：先由 y 的偏导得 y 等于负一，再代回得 x 等于零', count:5, ribbon:{k:6, ok:true} },
+    { cls:'ok',    tag:'判别',   log:'三个二阶系数在驻点处算出：判别式为正且 A 为正，是极小值点', count:6, ribbon:{k:7, ok:true} },
+    { cls:'done',  tag:'完成',   log:'代入驻点求值：极小值等于负一', count:7, ribbon:{k:8, ok:true}, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    var rows = this._rows;
+    for (var j = 0; j < rows.length; j++){
+      rows[j].className = 'aw-stepcard' + (j < i ? ' good' : (j === i ? ' key' : ''));
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '极小值 $f(0,-1)=-1$',
+    html: '记忆锚点：<b>逐次积分必补待定函数</b>：对 $y$ 积分补 $\\varphi(x)$、对 $x$ 积分补 $\\psi(y)$，各自靠边界条件定出。本题 $f=(y^2+2y+x)\\mathrm e^x$；易错：$\\int(x+1)\\mathrm e^x\\,\\mathrm dx=x\\,\\mathrm e^x$（用 $\\bigl(x\\mathrm e^x\\bigr)\'=(x+1)\\mathrm e^x$ 验证），驻点唯一故极小值就是全局最小趋势处的值 $-1$。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

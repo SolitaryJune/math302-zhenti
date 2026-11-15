@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学·概念/分析类动画</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+// 一张推理卡片（body 里可写 $..$ / $$..$$ 公式）
+function card(n, cls, title, body){
+  return '<div class="aw-stepcard ' + (cls || '') + '"><h4><span class="n">' + n +
+         '</span>' + title + '</h4>' + body + '</div>';
+}
+
+// 推理链：每一步的完整内容（引擎按步数截取显示）
+var STEPS = [
+  { title: '审题眼：什么叫「无穷间断点」',
+    cls: 'key',
+    ribbon: null,
+    body: '<p>无穷间断点 $=$ 该点极限为 $\\infty$ 的间断点。$f(x)=\\dfrac{x^2-x}{x^2-1}\\sqrt{1+\\dfrac{1}{x^2}}$ 的定义域挖掉 $x=0,\\ \\pm1$，候选点只有这三个，逐点判型即可。</p>' },
+  { title: '先化简，看清无穷从哪来',
+    cls: 'key',
+    ribbon: null,
+    body: '<p>$\\sqrt{1+\\dfrac{1}{x^2}}=\\dfrac{\\sqrt{x^2+1}}{\\lvert x\\rvert}$，并约去公因子 $(x-1)$（$x\\neq1$ 处合法）：</p><p>$$f(x)=\\frac{x}{x+1}\\cdot\\frac{\\sqrt{x^2+1}}{\\lvert x\\rvert}=\\pm\\frac{\\sqrt{x^2+1}}{x+1}.$$</p><p>分子 $\\sqrt{x^2+1}$ 恒为正且不为零——「趋于无穷」只能由 $\\lvert x\\rvert$ 或 $x+1\\to0$ 制造。</p>' },
+  { title: '检验 $x=1$：可去，不是无穷',
+    cls: 'bad',
+    ribbon: {k: 1, ok: false},
+    body: '<p>约去 $(x-1)$ 后 $\\lim_{x\\to1}f(x)=\\dfrac{\\sqrt{1^2+1}}{1+1}=\\dfrac{\\sqrt2}{2}$，极限存在。</p><p>$x=1$ 是<b>可去间断点</b>（第一类），不是无穷间断点——选项 D 把它计入就错了。</p>' },
+  { title: '检验 $x=0$：跳跃，不是无穷',
+    cls: 'bad',
+    ribbon: {k: 2, ok: false},
+    body: '<p>$x\\to0^+$ 时 $x/\\lvert x\\rvert=1$，$f\\to\\dfrac{\\sqrt{x^2+1}}{x+1}\\to1$；$x\\to0^-$ 时 $x/\\lvert x\\rvert=-1$，$f\\to-1$。</p><p>左右极限都<b>有限</b>但不相等 $\\Rightarrow$ <b>跳跃间断点</b>（第一类）。别被 $\\sqrt{1+1/x^2}\\to+\\infty$ 唬住：另一因子 $\\dfrac{x}{x+1}\\to0$，乘积极限有限。</p>' },
+  { title: '检验 $x=-1$：无穷间断点命中',
+    cls: 'good',
+    ribbon: {k: 3, ok: true},
+    body: '<p>$x\\lt0$ 附近 $f=-\\dfrac{\\sqrt{x^2+1}}{x+1}$，分母 $x+1\\to0$ 而分子 $\\to\\sqrt2\\neq0$：</p><p>$$\\lim_{x\\to-1}\\lvert f(x)\\rvert=+\\infty.$$</p><p><b>无穷间断点</b>（第二类）成立，且是唯一的一个。</p>' },
+  { title: '结论',
+    cls: 'good',
+    ribbon: {k: 4, ok: true},
+    body: '<p>三个候选点中：$x=1$ 可去、$x=0$ 跳跃、$x=-1$ 无穷。无穷间断点只有 <b>1 个</b>，答案选 <b>B</b>。</p>' },
+];
+
+var snaps = STEPS.map(function(s, i){
+  return {
+    cls: i === STEPS.length - 1 ? 'done' : 'step',
+    tag: '第 ' + (i + 1) + ' 步',
+    log: s.title,
+    html: STEPS.slice(0, i + 1).map(function(x, j){
+      return card(j + 1, x.cls, x.title, x.body);
+    }).join(''),
+    ribbon: s.ribbon || undefined,
+    done: i === STEPS.length - 1,
+  };
+});
+
+AW.init({
+  title: '2010 数学二 第1题 · $f(x)=\\dfrac{x^2-x}{x^2-1}\\sqrt{1+\\dfrac{1}{x^2}}$ 的无穷间断点个数',
+  subtitle: '考点：连续与间断点分类 · 方法：化简 + 逐点求极限判型',
+  intro: '点击「▶ 播放」逐步展开推理链：先化简，再逐点判型。',
+  /* 统一 render：复刻引擎默认的 sn.html 行为，再对舞台做公式渲染 */
+  render: function(stage, sn){
+    if(sn.html != null) stage.innerHTML = sn.html;
+    renderMathAfterSnap(stage);
+  },
+  ribbonTitle: '候选点判型（✓ 无穷 / ✗ 非无穷）',
+  snaps: snaps,
+  result: {
+    big: '答案 B（无穷间断点 1 个）',
+    html: '记忆锚点：<b>先约分再判型</b>。$x=1$ 极限 $\\dfrac{\\sqrt2}{2}$ 存在（可去）、$x=0$ 左右极限 $\\pm1$（跳跃）、$x=-1$ 极限为 $\\infty$。干扰项的共同误区：把「因子趋于 $\\infty$」当成「乘积极限为 $\\infty$」——$\\infty\\times0$ 型要拆开看。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

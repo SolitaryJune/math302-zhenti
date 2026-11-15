@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2018·13 隐函数求偏导并代值</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改 AW.init 区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [];
+
+var LINES = [
+  "<p><b>第一步：先求代入点处的 $z$ 值（不能跳过）</b>把 $x=2,\\ y=\\dfrac12$ 代入：右端 $xy=1$，$$\\ln z+e^{z-1}=1.$$ 左端关于 $z$ 严格单调递增；试 $z=1$：$\\ln1+e^0=0+1=1$ 成立，故 $z=1$ 是唯一解。</p>",
+  "<p><b>第二步：两边对 $x$ 求偏导（$z=z(x,y)$，$y$ 视为常数）</b>$$\\frac1z\\cdot\\frac{\\partial z}{\\partial x}+e^{z-1}\\cdot\\frac{\\partial z}{\\partial x}=y.$$ 左边两项都带链式因子 $z_x$；右端对 $x$ 求偏导是 $y$（$y$ 是常数，不是 $x$）。</p>",
+  "<p><b>第三步：提出公因式解出 $z_x$</b>$$\\left(\\frac1z+e^{z-1}\\right)\\frac{\\partial z}{\\partial x}=y\\ \\Longrightarrow\\ \\frac{\\partial z}{\\partial x}=\\frac{y}{\\dfrac1z+e^{z-1}}.$$</p>",
+  "<p><b>第四步：代值 $y=\\dfrac12,\\ z=1$</b>$$\\left.\\frac{\\partial z}{\\partial x}\\right|_{\\left(2,\\frac12\\right)}=\\frac{\\tfrac12}{\\dfrac11+e^0}=\\frac{\\tfrac12}{2}=\\frac14.$$</p>",
+  "<p><b>排错</b>：不解出 $z(2,\\tfrac12)=1$ 就停笔，答案里留着 $z$——必须代值；对 $xy$ 求导时把 $y$ 也求了——对 $x$ 求偏导时 $y$ 是常数；$\\ln z$ 的导数漏乘 $z_x$——链式因子不能丢。</p>",
+  "<p><b>结论</b>$$\\left.\\frac{\\partial z}{\\partial x}\\right|_{\\left(2,\\frac12\\right)}=\\frac14\\quad(\\text{填空答案})$$</p>"
+];
+
+AW.init({
+  title: '由 $\\ln z+e^{z-1}=xy$ 求 $\\left.\\dfrac{\\partial z}{\\partial x}\\right|_{\\left(2,\\frac12\\right)}$',
+  subtitle: '考点：隐函数求偏导 · 方法：先定 z → 求导 → 代值',
+  counterLabel: '推导步',
+  intro: '点击「▶ 播放」：定 z → 偏导 → 解出 z_x → 代值。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    ROWS.length = 0;
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    for(var k = 0; k < LINES.length; k++){
+      var d = AW.el('div', '', LINES[k]);
+      d.style.cssText = 'margin:8px 0;padding:9px 14px;border-left:3px solid #e2e8f0;background:#f8fafc;border-radius:0 12px 12px 0;font-size:14.5px;line-height:1.9;display:none;';
+      board.appendChild(d);
+      ROWS.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  render: function(stage, sn){
+    for(var k = 0; k < ROWS.length; k++){
+      var r = ROWS[k];
+      if(k >= sn.show){ r.style.display = 'none'; continue; }
+      r.style.display = 'block';
+      if(k === sn.show - 1 && !sn.done){
+        r.style.borderLeftColor = '#d97706';
+        r.style.background = '#fffbeb';
+      } else {
+        r.style.borderLeftColor = '#16a34a';
+        r.style.background = '#f8fafc';
+      }
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  snaps: [
+    { cls:'shift', tag:'定 z',   log:'xy=1 ⇒ ln z + e^(z−1) = 1，z=1 唯一解', show:1, count:0, ribbon:{k:1, ok:true} },
+    { cls:'step',  tag:'求偏导', log:'两边对 x 求导：z_x 的两项提出公因式，右边得 y', show:2, count:1, ribbon:{k:2, ok:true} },
+    { cls:'step',  tag:'解出',   log:'(1/z + e^(z−1))·z_x = y ⇒ z_x = y/(1/z+e^(z−1))', show:3, count:2, ribbon:{k:3, ok:true} },
+    { cls:'ok',    tag:'代值',   log:'y=1/2、z=1 ⇒ z_x = (1/2)/2 = 1/4', show:4, count:3, ribbon:{k:4, ok:true} },
+    { cls:'miss',  tag:'排错',   log:'z 不代值、y 被求导、链式漏乘都是常见错', show:5, count:4 },
+    { cls:'done',  tag:'完成',   log:'填空答案：1/4', show:6, count:5, done:true, ribbon:{k:5, ok:true} },
+  ],
+
+  result: {
+    big: '填空答案：$\\dfrac14$',
+    html: '记忆锚点：<b>隐函数代值三拍走</b>：先由方程解出 $z(2,\\tfrac12)=1$（$xy=1$ 是刻意设计，$z=1$ 一猜即中）→ 对 $x$ 求偏导时 $y$ 当常数、$z$ 带链式因子 → 最后代 $y=\\tfrac12,\\ z=1$ 得 $\\dfrac14$。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

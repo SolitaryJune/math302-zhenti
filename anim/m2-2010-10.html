@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学·算法/过程类动画</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+/* 推导板：所有推导行在 build 时建好（含公式），render 按 i 逐行点亮 */
+var rows = [];
+function drow(html, at, green){
+  var d = AW.el('div', '', html);
+  d.style.cssText = 'margin:10px 0;padding:10px 16px;border-left:4px solid #cbd5e1;' +
+    'background:#f8fafc;border-radius:8px;font-size:15.5px;line-height:1.9;' +
+    'opacity:0.15;transform:translateX(-10px);transition:all .4s;';
+  rows.push({el: d, at: at, green: !!green});
+  return d;
+}
+
+AW.init({
+  title: '2010 数学二 第10题 · 曲线 $y=\\dfrac{2x^3}{x^2+1}$ 的渐近线',
+  subtitle: '考点：渐近线三步排查 · 方法：竖直 → 水平 → 斜（先 $k$ 后 $b$）',
+  counterLabel: '已推导',
+  intro: '点击「▶ 播放」逐步演示三类渐近线的排查过程。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var inner = AW.el('div', '');
+    inner.appendChild(AW.el('div', 'aw-row-label',
+      '<b>推导板</b>：渐近线排查顺序——竖直、水平、斜，一类查完再查下一类'));
+    inner.appendChild(drow(
+      '<b>竖直渐近线</b>：分母 $x^2+1\\gt0$ 恒成立，定义域为 $\\mathbb R$，无竖直渐近线', 1));
+    inner.appendChild(drow(
+      '<b>水平渐近线</b>：分子比分母高一次，$x\\to\\pm\\infty$ 时 $y\\to\\pm\\infty$，无水平渐近线——转而找斜渐近线 $y=kx+b$', 2));
+    inner.appendChild(drow(
+      '<b>斜率</b>：$k=\\displaystyle\\lim_{x\\to\\infty}\\frac yx=\\lim_{x\\to\\infty}\\frac{2x^2}{x^2+1}=2$', 3));
+    inner.appendChild(drow(
+      '<b>截距</b>：$b=\\displaystyle\\lim_{x\\to\\infty}\\big(y-2x\\big)=\\lim_{x\\to\\infty}\\frac{2x^3-2x(x^2+1)}{x^2+1}=\\lim_{x\\to\\infty}\\frac{-2x}{x^2+1}=0$', 4));
+    inner.appendChild(drow(
+      '<b>结论</b>：唯一渐近线为 $y=2x$（$x\\to+\\infty$ 与 $x\\to-\\infty$ 两个方向都成立）', 5, true));
+    wrap.appendChild(inner);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls: 'step',  tag: '查竖直', log: '分母 x 平方加 1 永远是正的，定义域是全体实数，任何点都不会竖直发散', count: 1 },
+    { cls: 'step',  tag: '查水平', log: '分子比分母恰好高一次，x 趋于无穷时函数值也趋于无穷，没有水平渐近线，转向斜渐近线', count: 2 },
+    { cls: 'shift', tag: '求斜率', log: '斜渐近线先求 k：y 除以 x 取极限，得到 2', count: 3 },
+    { cls: 'shift', tag: '求截距', log: '再求 b：函数值减 2x 通分后只剩负的 2x 比 x 平方加 1，极限为 0', count: 4 },
+    { cls: 'done',  tag: '完成',   log: 'k 等于 2、b 等于 0，两个方向一致，唯一渐近线 y 等于 2x', count: 5, done: true },
+  ],
+
+  render: function(stage, sn, i){
+    for(var k = 0; k < rows.length; k++){
+      var r = rows[k];
+      var revealed = i >= r.at;
+      var active = revealed && r.at === i && !sn.done;
+      var green = sn.done && r.green;
+      r.el.style.opacity = revealed ? '1' : '0.15';
+      r.el.style.transform = revealed ? 'none' : 'translateX(-10px)';
+      r.el.style.background = green ? '#ecfdf3' : (active ? '#fff7e0' : '#f8fafc');
+      r.el.style.borderLeftColor = green ? '#16a34a' : (active ? '#f59e0b' : '#cbd5e1');
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '渐近线：$y=2x$',
+    html: '记忆锚点：<b>分子比分母恰高一次 $\\Rightarrow$ 有斜渐近线</b>；斜渐近线要 $k=\\lim\\frac yx$ 与 $b=\\lim(y-kx)$ 两者都求出。易错：只答斜率丢截距；跳过竖直检查（本题分母无实零点）。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

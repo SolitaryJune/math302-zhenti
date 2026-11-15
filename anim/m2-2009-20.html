@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2009 数二第 20 题 · 法线条件定左段 + 二阶方程定右段（交互动画）</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+AW.init({
+  title: "2009·20　法线过原点定左段，$y''+y+x=0$ 定右段，光滑拼接",
+  subtitle: "考点：法线条件 $\\Rightarrow$ 圆 · 常系数非齐次方程 · <b>光滑性传送初值</b>",
+  counterLabel: '已完成',
+  ribbonTitle: '推导进度（✓ 完成）',
+  intro: '点击「▶ 播放」或「下一步」，两段曲线分别求出后再拼成一条光滑曲线。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var inner = AW.el('div', '');
+    inner.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>：当前行亮琥珀色，已完成的行变绿'));
+    var LINES = [
+      "<b>① 左段几何条件：</b>法线斜率 $-\\dfrac1{y'}$，过原点 $\\iff -\\dfrac1{y'}=\\dfrac yx$，即 $x+yy'=0$",
+      "<b>② 凑微分：</b>$x+yy'=0\\iff\\dfrac{\\mathrm{d}}{\\mathrm{d}x}\\big(x^2+y^2\\big)=0\\iff x^2+y^2=C$（圆族）",
+      "<b>③ 定圆：</b>代入点 $\\Big(-\\dfrac{\\pi}{\\sqrt2},\\dfrac{\\pi}{\\sqrt2}\\Big)$ 得 $C=\\pi^2$；该处 $y>0$，取上半圆 $y=\\sqrt{\\pi^2-x^2}$",
+      "<b>④ 光滑衔接：</b>$y(0^-)=\\pi$，$y'(0^-)=0$ —— 光滑性要求右段在 $x=0$ 处接住这两个值",
+      "<b>⑤ 右段齐次解：</b>$y''+y=-x$ 的齐次通解为 $C_1\\cos x+C_2\\sin x$",
+      "<b>⑥ 特解：</b>右端是一次多项式，设 $y^*=ax+b$，代入比较得 $a=-1,\\ b=0$，即 $y^*=-x$",
+      "<b>⑦ 右段通解：</b>$y=C_1\\cos x+C_2\\sin x-x$",
+      "<b>⑧ 定常数：</b>$y(0)=\\pi\\Rightarrow C_1=\\pi$；$y'(0)=C_2-1=0\\Rightarrow C_2=1$",
+      "<b>⑨ 拼接：</b>$$y(x)=\\begin{cases}\\sqrt{\\pi^2-x^2},&-\\pi<x<0,\\\\[2pt]\\pi\\cos x+\\sin x-x,&0\\le x<\\pi.\\end{cases}$$"
+    ];
+    this._rows = [];
+    for (var i = 0; i < LINES.length; i++){
+      var r = AW.el('div', 'aw-stepcard', LINES[i]);
+      inner.appendChild(r);
+      this._rows.push(r);
+    }
+    wrap.appendChild(inner);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step',  tag:'审题',   log:'曲线分两段：左段靠法线过原点的几何条件，右段靠二阶微分方程', count:0, ribbon:{k:1, ok:true} },
+    { cls:'step',  tag:'法线',   log:'法线斜率是切线斜率的负倒数，它要等于原点连线的斜率 y 比 x', count:1, ribbon:{k:2, ok:true} },
+    { cls:'ok',    tag:'凑微',   log:'整理出 x 加 y 倍 y 导等于零，正是 x 平方加 y 平方的导数', count:2, ribbon:{k:3, ok:true} },
+    { cls:'ok',    tag:'定圆',   log:'代入已知点得 C 等于派的平方，纵坐标为正取上半圆', count:3, ribbon:{k:4, ok:true} },
+    { cls:'shift', tag:'衔接',   log:'左段在零处的函数值是派、导数是零，光滑性要求右段接住', count:4, ribbon:{k:5, ok:true} },
+    { cls:'step',  tag:'齐次',   log:'右段先解齐次方程：余弦与正弦的线性组合', count:5, ribbon:{k:6, ok:true} },
+    { cls:'step',  tag:'特解',   log:'右端是一次多项式，特解也设一次式，代入比对系数得负 x', count:6, ribbon:{k:7, ok:true} },
+    { cls:'ok',    tag:'通解',   log:'齐次加特解，还剩两个常数等初值来定', count:7, ribbon:{k:8, ok:true} },
+    { cls:'ok',    tag:'定数',   log:'零处函数值为派定出第一个常数，零处导数为零定出第二个等于一', count:8, ribbon:{k:9, ok:true} },
+    { cls:'done',  tag:'拼接',   log:'结论：两段在 x 等于零处函数值与导数都相等，曲线光滑', count:9, ribbon:{k:10, ok:true}, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    var rows = this._rows;
+    for (var j = 0; j < rows.length; j++){
+      rows[j].className = 'aw-stepcard' + (j < i ? ' good' : (j === i ? ' key' : ''));
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: "左段 $\\sqrt{\\pi^2-x^2}$；右段 $\\pi\\cos x+\\sin x-x$",
+    html: "解题链条：<b>法线过原点 $\\Rightarrow x+yy'=0\\Rightarrow$ 圆</b>；光滑性把 $y(0)=\\pi$、$y'(0)=0$ 传给右段；右段 $y''+y=-x$ 用待定特解 $-x$。易错：漏掉光滑条件则 $C_1,C_2$ 定不出；法线斜率是 $-\\frac1{y'}$，别与切线混淆。",
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

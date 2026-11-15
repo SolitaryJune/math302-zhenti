@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学·概念动画：切线交点落位证明（2015 年第 21 题）</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+function card(n, cls, title, body){
+  return '<div class="aw-stepcard ' + (cls || '') + '"><h4><span class="n">' + n +
+         '</span>' + title + '</h4>' + body + '</div>';
+}
+
+var STEPS = [
+  { title: '审题眼：先把 $x_0$ 写成显式',
+    cls: 'key', tag: '审题', log: '条件给足：f 增、下凸、f(a)=0，目标是交点落位 a 与 b 之间',
+    body: '<p>$f$ 二阶可导，$f(a)=0$，$f\'>0$（严格增），$f\'\'>0$（下凸）。切线 $y-f(b)=f\'(b)(x-b)$ 令 $y=0$，交点横坐标</p><p>$$x_0=b-\\frac{f(b)}{f\'(b)}.$$</p><p>要证 $a<x_0<b$，分左右两半。</p>' },
+  { title: '右半：$x_0<b$',
+    cls: 'good', tag: '右半', log: '分子分母都正，减项为正，交点必在 b 左侧',
+    ribbon: {k:1, ok:true},
+    body: '<p>$f\'>0$ 且 $f(b)>f(a)=0\\ \\Rightarrow\\ f(b)>0$；又 $f\'(b)>0$，故 $\\dfrac{f(b)}{f\'(b)}>0$，</p><p>$$x_0=b-\\frac{f(b)}{f\'(b)}<b.$$</p>' },
+  { title: '左半的目标转化',
+    cls: 'key', tag: '转化', log: '把 x0 大于 a 等价改写成 f(b) 小于 f\'(b) 乘区间长',
+    ribbon: {k:2, ok:true},
+    body: '<p>$x_0>a\\ \\Longleftrightarrow\\ b-\\dfrac{f(b)}{f\'(b)}>a\\ \\Longleftrightarrow\\ f(b)<f\'(b)(b-a).$</p><p>关键是把 $f(b)$ 与「$b$ 处的导数乘区间长」作比较——这正是中值定理的用武之地。</p>' },
+  { title: '拉格朗日中值定理接手',
+    cls: 'good', tag: '中值', log: '在 a 到 b 上用中值定理，f(b) 被 f\'(ξ) 表出',
+    ribbon: {k:3, ok:true},
+    body: '<p>存在 $\\xi\\in(a,b)$ 使 $f(b)-f(a)=f\'(\\xi)(b-a)$，即</p><p>$$f(b)=f\'(\\xi)(b-a).$$</p><p>$f(b)$ 从「函数值」变成「某中间点导数乘区间长」，可以和 $f\'(b)$ 直接比大小。</p>' },
+  { title: '$f\'\'>0\\Rightarrow f\'$ 严格增：完成左半',
+    cls: 'good', tag: '左半', log: '中间点的导数更小，f(b) 严格小于 f\'(b) 乘区间长',
+    ribbon: {k:4, ok:true},
+    body: '<p>$f\'\'(x)>0$ 说明 $f\'$ 在 $[a,+\\infty)$ 严格增；$\\xi<b$ 给出 $f\'(\\xi)<f\'(b)$。又 $b-a>0$，故</p><p>$$f(b)=f\'(\\xi)(b-a)<f\'(b)(b-a),$$</p><p>即 $\\dfrac{f(b)}{f\'(b)}<b-a$，于是 $x_0=b-\\dfrac{f(b)}{f\'(b)}>b-(b-a)=a$。</p>' },
+  { title: '结论',
+    cls: 'good', tag: '完成', log: '两半合起来：a 小于 x0 小于 b，证毕',
+    body: '<p>综合两半：<b>$a<x_0<b$</b>。几何直观：曲线下凸且上升，切线整条压在曲线下方，切线与 $x$ 轴的交点被压进 $\\bigl(a,b\\bigr)$ 内部。</p>' },
+];
+
+var snaps = STEPS.map(function(s, i){
+  return {
+    cls: i === STEPS.length - 1 ? 'done' : (s.cls === 'bad' ? 'miss' : 'step'),
+    tag: s.tag,
+    log: s.log,
+    html: STEPS.slice(0, i + 1).map(function(x, j){
+      return card(j + 1, x.cls, x.title, x.body);
+    }).join(''),
+    ribbon: s.ribbon,
+    done: i === STEPS.length - 1,
+  };
+});
+
+AW.init({
+  title: '【2015 数二·21】证明：切线与 $x$ 轴交点满足 $a<x_0<b$',
+  subtitle: '考点：切线方程 · 拉格朗日中值定理 · $f\'\'>0$ 与 $f\'$ 单调增',
+  counterLabel: '步数',
+  ribbonTitle: '证明进度（✓ 已完成环节）',
+  intro: '点击「▶ 播放」逐步展开证明链。',
+  render: function(stage, sn){
+    if(sn.html != null) stage.innerHTML = sn.html;
+    renderMathAfterSnap(stage);
+  },
+  snaps: snaps,
+  result: {
+    big: '$a<x_0=b-\\dfrac{f(b)}{f\'(b)}<b$',
+    html: '记忆锚点：<b>右半靠符号（$f(b)>0,f\'(b)>0$），左半靠中值定理</b>——$f(b)=f\'(\\xi)(b-a)$ 且 $f\'(\\xi)<f\'(b)$。易错：只证 $x_0<b$ 就收工；$f\'\'>0$ 给的是 $f\'$ 递<b>增</b>，方向反了整段证明作废。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

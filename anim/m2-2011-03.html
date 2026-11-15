@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2011 数二第 3 题 · 对数函数的驻点计数</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（与模板一致，勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+var LINES = [
+  '<p><b>题面：</b>求 $f(x)=\\ln\\lvert(x-1)(x-2)(x-3)\\rvert$ 的驻点个数（定义域 $x\\neq1,2,3$）。</p>',
+  '<p><b>拆对数求导：</b>$$f(x)=\\ln\\lvert x-1\\rvert+\\ln\\lvert x-2\\rvert+\\ln\\lvert x-3\\rvert,$$ $$f\'(x)=\\frac{1}{x-1}+\\frac{1}{x-2}+\\frac{1}{x-3}.$$</p>',
+  '<p><b>通分：</b>令 $f\'(x)=0$，分母 $(x-1)(x-2)(x-3)$ 恒非零，只需分子为零：$$(x-2)(x-3)+(x-1)(x-3)+(x-1)(x-2)=3x^2-12x+11=0.$$</p>',
+  '<p><b>解二次方程：</b>判别式 $\\Delta=144-132=12>0$，两根 $$x=2\\pm\\frac{\\sqrt3}{3}\\approx1.42,\\ 2.58.$$</p>',
+  '<p><b>检验定义域：</b>两根都不是 $1,2,3$，全部落在定义域内，都是有效驻点。</p>',
+  '<p><b>结论：</b>驻点共 <b>2 个</b>，<b>选 C</b>。</p>'
+];
+
+var lineEls = [];
+
+AW.init({
+  title: '第 3 题 · $\\ln\\lvert(x-1)(x-2)(x-3)\\rvert$ 的驻点个数',
+  subtitle: '考点：导数与驻点 · 方法：拆对数求导 + 解二次方程',
+  counterLabel: '推导步',
+  intro: '点击「▶ 播放」逐步演示：拆对数 → 通分 → 解方程 → 检验定义域。',
+  ribbonTitle: '推导进度（✓ 完成）',
+  build: function(stage){
+    stage.innerHTML = '';
+    lineEls = [];
+    var wrap = AW.el('div', 'aw-scroll');
+    wrap.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>（每步揭示一行，公式由 KaTeX 渲染）'));
+    LINES.forEach(function(h){
+      var d = AW.el('div', 'aw-stepcard', h);
+      d.style.display = 'none';
+      wrap.appendChild(d);
+      lineEls.push(d);
+    });
+    stage.appendChild(wrap);
+  },
+  snaps: [
+    { cls:'step',  tag:'审题', count:0, reveal:1 },
+    { cls:'shift', tag:'拆对数', log:'用 ln|uvw| = ln|u| + ln|v| + ln|w| 拆成三项再求导', count:1, reveal:2, hl:1, ribbon:{k:1, ok:true} },
+    { cls:'step',  tag:'通分', log:'令导数等于零，通分后分母不为零，只需分子为零，得到二次方程', count:2, reveal:3, hl:2, ribbon:{k:2, ok:true} },
+    { cls:'step',  tag:'解方程', log:'判别式 144 − 132 = 12 > 0，两个不同实根', count:3, reveal:4, hl:3, ribbon:{k:3, ok:true} },
+    { cls:'step',  tag:'检验', log:'两根约 1.42 与 2.58，都不等于 1、2、3，均在定义域内', count:4, reveal:5, hl:4, ribbon:{k:4, ok:true} },
+    { cls:'done',  tag:'结论', log:'结论：驻点共 2 个，选 C', count:5, reveal:6, hl:5, good:true, done:true, ribbon:{k:5, ok:true} },
+  ],
+  render: function(stage, sn){
+    for(var j = 0; j < lineEls.length; j++){
+      lineEls[j].style.display = (j < (sn.reveal || 0)) ? '' : 'none';
+      lineEls[j].className = 'aw-stepcard' + (sn.hl === j ? (sn.good ? ' good' : ' key') : '');
+    }
+    renderMathAfterSnap(stage);
+  },
+  result: {
+    big: '选 C：2 个驻点',
+    html: '关键链条：<b>拆对数 → $f\'=\\frac1{x-1}+\\frac1{x-2}+\\frac1{x-3}$ → 分子 $3x^2-12x+11=0$ → $\\Delta=12>0$ 两根</b>，且都落在定义域内。易错：$x=1,2,3$ 处 $f\\to-\\infty$，函数无定义，不是驻点候选。',
+  },
+});
+</script>
+</body>
+</html>

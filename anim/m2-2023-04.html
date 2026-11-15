@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学·概念类动画：全部解有界的二阶常系数方程</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+function card(n, cls, title, body){
+  return '<div class="aw-stepcard ' + (cls || '') + '"><h4><span class="n">' + n +
+         '</span>' + title + '</h4>' + body + '</div>';
+}
+
+var STEPS = [
+  { title: '审题眼：通解形态由特征根决定',
+    cls: 'key',
+    log: '所有解在整条数轴上有界，逐类筛查特征根：不等实根、重根、复根',
+    body: '<p>$y\'\'+ay\'+by=0$ 的特征方程 $r^2+ar+b=0$。「<b>所有</b>解在 $(-\\infty,+\\infty)$ 上有界」要求每个基本解两头都不炸，逐类筛查。</p>' },
+  { title: '筛查① 两相异实根：出局',
+    cls: 'bad',
+    log: '只要有一个非零实根，指数函数必在一端爆掉',
+    ribbon: {k:1, ok:false},
+    body: '<p>通解含 $\\mathrm e^{r_1x},\\ \\mathrm e^{r_2x}$：只要某根 $r\\neq0$，$x\\to\\operatorname{sign}(r)\\infty$ 时 $\\mathrm e^{rx}\\to\\infty$（两根全零与「相异」矛盾）。<b>出局</b>。</p>' },
+  { title: '筛查② 二重实根：出局',
+    cls: 'bad',
+    log: '解里带幂因子 x·e^(rx)，连 r=0 都救不了',
+    ribbon: {k:2, ok:false},
+    body: '<p>通解含 $\\mathrm e^{rx},\\ x\\mathrm e^{rx}$：即使 $r=0$，幂因子 $x$ 在 $\\mathbb R$ 上照样无界。<b>出局</b>。结论：特征根<b>不能是实数</b>。</p>' },
+  { title: '筛查③ 复根：有界 ⟺ 实部为零',
+    cls: 'good',
+    log: 'e^(αx)·cosβx 的振幅因子全轴有界当且仅当 α=0，纯虚根',
+    ribbon: {k:3, ok:true},
+    body: '<p>复根 $\\alpha\\pm\\beta\\mathrm i\\ (\\beta\\neq0)$：基本解 $\\mathrm e^{\\alpha x}\\cos\\beta x,\\ \\mathrm e^{\\alpha x}\\sin\\beta x$。振幅因子 $\\mathrm e^{\\alpha x}$ 全轴有界 $\\iff\\alpha=0$，即<b>纯虚根</b> $\\pm\\beta\\mathrm i$，此时 $y=C_1\\cos\\beta x+C_2\\sin\\beta x$ 有界。</p>' },
+  { title: '纯虚根翻译回 a、b',
+    cls: 'key',
+    log: '韦达定理：两根之和 −a=0，两根之积 b=β²>0',
+    body: '<p>由韦达定理：$r_1+r_2=-a=0\\Rightarrow a=0$；$r_1r_2=b=\\beta^2>0\\Rightarrow b>0$。</p>' },
+  { title: '排 A（a<0, b>0）',
+    cls: 'bad',
+    log: 'a<0 时根实部 −a/2>0，x→+∞ 爆掉',
+    ribbon: {k:4, ok:false},
+    body: '<p>$a<0$：复根实部 $-\\frac a2>0$（或出现正实根），$x\\to+\\infty$ 时解无界。<b>A 错</b>。</p>' },
+  { title: '排 B（a>0, b>0）',
+    cls: 'bad',
+    log: 'a>0 时 x→+∞ 衰减没问题，但 x→−∞ 爆掉——要两头都有界',
+    ribbon: {k:5, ok:false},
+    body: '<p>$a>0$：根实部 $-\\frac a2<0$，$x\\to+\\infty$ 衰减到 0 没问题，但 $x\\to-\\infty$ 时 $\\mathrm e^{-\\frac a2x}\\to\\infty$。<b>B 错</b>。</p>' },
+  { title: '排 D（a=0, b<0）',
+    cls: 'bad',
+    log: 'b<0 给出非零实根 ±√(−b)，回到实根情形',
+    ribbon: {k:6, ok:false},
+    body: '<p>$a=0,b<0$：特征方程 $r^2=-b>0$ 有非零实根 $\\pm\\sqrt{-b}$，$\\mathrm e^{\\sqrt{-b}\\,x}$ 一端爆。<b>D 错</b>。结论：$a=0,\\ b>0$，选 <b>C</b>。</p>' },
+];
+
+var snaps = STEPS.map(function(s, i){
+  var cls;
+  if(i === STEPS.length - 1){ cls = 'done'; }
+  else if(s.ribbon){ cls = s.ribbon.ok ? 'ok' : 'miss'; }
+  else { cls = 'step'; }
+  return {
+    cls: cls,
+    tag: '第 ' + (i + 1) + ' 步',
+    log: s.log,
+    count: i + 1,
+    ribbon: s.ribbon,
+    html: STEPS.slice(0, i + 1).map(function(x, j){
+      return card(j + 1, x.cls, x.title, x.body);
+    }).join(''),
+    done: i === STEPS.length - 1,
+  };
+});
+
+AW.init({
+  title: '$y\'\'+ay\'+by=0$ 全部解有界：特征根逐类筛查',
+  subtitle: '考点：二阶常系数齐次方程 · 方法：实根/重根/复根分类 + 韦达定理',
+  counterLabel: '筛查步',
+  ribbonTitle: '根型筛查与选项排除（✓ 留 / ✗ 弃）',
+  intro: '点击「▶ 播放」逐步展开推理链。',
+  render: function(stage, sn){
+    if(sn.html != null) stage.innerHTML = sn.html;
+    renderMathAfterSnap(stage);
+  },
+  snaps: snaps,
+  result: {
+    big: '答案 C（$a=0,\\ b>0$）',
+    html: '记忆锚点：<b>全轴有界 $\\iff$ 纯虚根 $\\iff a=0$ 且 $b>0$，解为 $C_1\\cos\\sqrt b\\,x+C_2\\sin\\sqrt b\\,x$</b>。易错：$a>0$ 只保一头（B）；$b<0$ 出实根（D）；重根的幂因子 $x$ 也会炸。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

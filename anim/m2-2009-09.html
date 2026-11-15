@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2009·09 参数曲线的切线</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改 AW.init 区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [];
+
+var LINES = [
+  "<p><b>先定参数</b>：$x=\\displaystyle\\int_0^{1-t}\\mathrm e^{-u^2}\\,\\mathrm du=0$，被积函数恒正，故上限 $1-t=0\\ \\Longrightarrow\\ t=1$；回代 $y=1^2\\ln(2-1)=0$，切点 $(0,0)$ 确实对应 $t=1$。</p>",
+  "<p><b>求 $\\dfrac{\\mathrm dx}{\\mathrm dt}$</b>（变限积分，上限 $1-t$ 带链式因子 $-1$）：$$\\frac{\\mathrm dx}{\\mathrm dt}=\\mathrm e^{-(1-t)^2}\\cdot(-1)\\qquad\\Longrightarrow\\qquad\\Big|_{t=1}=-1$$</p>",
+  "<p><b>求 $\\dfrac{\\mathrm dy}{\\mathrm dt}$</b>（乘积 + 链式）：$$\\frac{\\mathrm dy}{\\mathrm dt}=2t\\ln(2-t^2)+t^2\\cdot\\frac{-2t}{2-t^2}\\qquad\\Longrightarrow\\qquad\\Big|_{t=1}=0-2=-2$$</p>",
+  "<p><b>合成斜率</b>：$$\\frac{\\mathrm dy}{\\mathrm dx}=\\frac{\\mathrm dy/\\mathrm dt}{\\mathrm dx/\\mathrm dt}=\\frac{-2}{-1}=2$$</p>",
+  "<p><b>写切线</b>（过 $(0,0)$、斜率 $2$）：$$y=2x$$</p>",
+  "<p><b>验算</b>：$\\dfrac{\\mathrm dx}{\\mathrm dt}\\Big|_{t=1}=-1\\neq0$，切线不竖直；方程 $y=2x$ 代入 $(0,0)$ 成立，等价写法 $2x-y=0$。</p>"
+];
+
+AW.init({
+  title: '参数曲线 $\\left\\{\\begin{array}{l}x=\\int_0^{1-t}\\mathrm e^{-u^2}\\mathrm du\\\\ y=t^2\\ln(2-t^2)\\end{array}\\right.$ 在 $(0,0)$ 处的切线',
+  subtitle: '考点：参数方程求导 + 变限积分 · 方法：定参数 → 两个对 t 的导数 → 相除',
+  counterLabel: '步数',
+  intro: '点击「▶ 播放」逐步演示每一步推导。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    ROWS.length = 0;
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    for(var k = 0; k < LINES.length; k++){
+      var d = AW.el('div', '', LINES[k]);
+      d.style.cssText = 'margin:8px 0;padding:9px 14px;border-left:3px solid #e2e8f0;background:#f8fafc;border-radius:0 12px 12px 0;font-size:14.5px;line-height:1.9;display:none;';
+      board.appendChild(d);
+      ROWS.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  render: function(stage, sn){
+    for(var k = 0; k < ROWS.length; k++){
+      var r = ROWS[k];
+      if(k >= sn.show){ r.style.display = 'none'; continue; }
+      r.style.display = 'block';
+      if(k === sn.show - 1 && !sn.done){
+        r.style.borderLeftColor = '#d97706';
+        r.style.background = '#fffbeb';
+      } else {
+        r.style.borderLeftColor = '#16a34a';
+        r.style.background = '#f8fafc';
+      }
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  snaps: [
+    { cls:'shift', tag:'定参数',  log:'x = 0 说明积分区间长度为 0，上限 1−t = 0 得 t = 1，回代 y = 0 吻合', show:1, count:0 },
+    { cls:'step',  tag:'dx/dt',   log:'变限积分求导，上限是 1−t，别丢链式因子 −1', show:2, count:1 },
+    { cls:'step',  tag:'dy/dt',   log:'乘积法则加链式，代入 t = 1 得 −2', show:3, count:2 },
+    { cls:'ok',    tag:'合成',    log:'两个对 t 的导数相除，得斜率 2', show:4, count:3 },
+    { cls:'ok',    tag:'写切线',  log:'过原点、斜率 2，切线 y = 2x', show:5, count:4 },
+    { cls:'done',  tag:'完成',    log:'验算通过：dx/dt 不为零，答案 y = 2x', show:6, count:5, done:true },
+  ],
+
+  result: {
+    big: '$y = 2x$',
+    html: '记忆锚点：<b>定参数 → 分别求导 → 相除</b>。两个易丢分点：上限 $1-t$ 的链式因子 $-1$；$\\ln(2-t^2)$ 的导数是 $\\dfrac{-2t}{2-t^2}$。等价写法 $2x-y=0$。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

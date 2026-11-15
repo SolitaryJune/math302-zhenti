@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2016·10 和式极限凑定积分（黎曼和）</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改题目专属区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+// 推导板各行：与 snaps 一一对应（build 建立、render 按 i 点亮）
+var ROWS = [
+  { label: '第 0 步 · 审题',
+    h: '<p>$\\displaystyle\\lim_{n\\to\\infty}\\frac{1}{n^2}\\Big(\\sin\\frac1n+2\\sin\\frac2n+\\cdots+n\\sin\\frac nn\\Big)$。通项 $\\frac{k}{n^2}\\sin\\frac kn$——看到 $\\sum$ 就找「步长 + 分点 + 函数」三件套。</p>' },
+  { label: '第 1 步 · 拆因子，露出黎曼和',
+    h: '<p>$\\dfrac{k}{n^2}=\\dfrac1n\\cdot\\dfrac kn$：$$\\frac{1}{n^2}\\sum_{k=1}^n k\\sin\\frac kn=\\frac1n\\sum_{k=1}^n\\underbrace{\\frac kn\\sin\\frac kn}_{f\\left(\\frac kn\\right)}.$$</p>' },
+  { label: '第 2 步 · 认三件套',
+    h: '<table style="border-collapse:collapse;margin:6px 0;font-size:14px"><tr><th style="border:1px solid #cbd5e1;padding:4px 12px">角色</th><th style="border:1px solid #cbd5e1;padding:4px 12px">本式</th></tr>' +
+       '<tr><td style="border:1px solid #cbd5e1;padding:4px 12px">分点 $x_k$</td><td style="border:1px solid #cbd5e1;padding:4px 12px">$\\frac kn\\in[0,1]$</td></tr>' +
+       '<tr><td style="border:1px solid #cbd5e1;padding:4px 12px">步长 $\\Delta x$</td><td style="border:1px solid #cbd5e1;padding:4px 12px">$\\frac1n$</td></tr>' +
+       '<tr><td style="border:1px solid #cbd5e1;padding:4px 12px">被积函数 $f$</td><td style="border:1px solid #cbd5e1;padding:4px 12px">$f(x)=x\\sin x$</td></tr></table>' },
+  { label: '第 3 步 · 写成定积分',
+    h: '<p>$f$ 在 $[0,1]$ 连续、必可积：$$\\lim_{n\\to\\infty}\\frac1n\\sum_{k=1}^n\\frac kn\\sin\\frac kn=\\int_0^1 x\\sin x\\,\\mathrm dx.$$</p>' },
+  { label: '第 4 步 · 分部积分',
+    h: '<p>取 $u=x$、$\\mathrm dv=\\sin x\\,\\mathrm dx$：$$\\int_0^1 x\\sin x\\,\\mathrm dx=\\big[-x\\cos x\\big]_0^1+\\int_0^1\\cos x\\,\\mathrm dx=-\\cos 1+\\sin 1.$$</p>' },
+  { label: '第 5 步 · 结论',
+    h: '<p>原极限 $=\\sin 1-\\cos 1\\approx0.30>0$，与 $x\\sin x\\ge0$ 相容，<b>合理</b>。</p>' },
+];
+
+var rowEls = [];
+
+AW.init({
+  title: '$\\lim\\limits_{n\\to\\infty}\\frac{1}{n^2}\\sum\\limits_{k=1}^n k\\sin\\frac kn$',
+  subtitle: '考点：定积分定义（黎曼和） · 方法：拆因子 → 认分点/步长/函数 → 分部积分',
+  counterLabel: '步骤',
+  intro: '点击「▶ 播放」逐步演示推导板上的六步计算。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    rowEls = [];
+    var wrap = AW.el('div', 'aw-scroll');
+    ROWS.forEach(function(r){
+      var d = AW.el('div', '');
+      d.style.cssText = 'padding:9px 14px;margin:8px 0;border-left:4px solid transparent;border-radius:10px;opacity:.15;transition:opacity .35s,background .35s,border-color .35s;';
+      d.innerHTML = '<div style="font-size:12.5px;color:#64748b;font-weight:700;margin-bottom:2px">' + r.label + '</div>' + r.h;
+      wrap.appendChild(d);
+      rowEls.push(d);
+    });
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step', tag:'审题',   log:'通项 k/n² · sin(k/n)，先把它拆成步长与分点的乘积', count:0 },
+    { cls:'step', tag:'拆因子', log:'k/n² = (1/n)·(k/n)，黎曼和形状露出来', count:1 },
+    { cls:'ok',   tag:'三件套', log:'分点 k/n ∈ [0,1]、步长 1/n、函数 x·sin x', count:2 },
+    { cls:'ok',   tag:'写积分', log:'连续必可积，极限等于 [0,1] 上 x·sin x 的积分', count:3 },
+    { cls:'step', tag:'分部',   log:'u = x，dv = sin x dx，得 sin 1 − cos 1', count:4 },
+    { cls:'done', tag:'完成',   log:'极限 = sin 1 − cos 1 ≈ 0.30，与被积函数非负相容', count:5, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    rowEls.forEach(function(d, j){
+      d.style.opacity = j <= i ? '1' : '.15';
+      d.style.borderLeftColor = j < i ? '#16a34a' : (j === i ? '#d97706' : 'transparent');
+      d.style.background = j === i ? '#fffbeb' : (j < i ? '#f6fef9' : 'transparent');
+    });
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: 'sin 1 − cos 1',
+    html: '记忆锚点：<b>和式极限三件套</b>——把系数拆成「步长 $\\frac1n$ × 分点 $\\frac kn$」，函数自动现形 $f(x)=x\\sin x$，极限即 $\\int_0^1 x\\sin x\\,\\mathrm dx$。分部积分首项是 $-x\\cos x$（负号别丢）。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

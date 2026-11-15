@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2009·08 合同变换 Q^T A Q</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改 AW.init 区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [];
+
+var LINES = [
+  "<p><b>目标</b>：$\\boldsymbol Q=(\\boldsymbol\\alpha_1+\\boldsymbol\\alpha_2,\\ \\boldsymbol\\alpha_2,\\ \\boldsymbol\\alpha_3)$，把它写成 $\\boldsymbol P\\boldsymbol M$ 的形式。</p>",
+  "<p><b>过渡矩阵</b>：每列 = $\\boldsymbol P$ 乘一个坐标向量，故 $$\\boldsymbol Q=\\boldsymbol P\\boldsymbol M,\\qquad \\boldsymbol M=\\begin{pmatrix}1&0&0\\\\1&1&0\\\\0&0&1\\end{pmatrix}$$</p>",
+  "<p><b>代入已知</b>（$\\boldsymbol P^{\\mathrm T}\\boldsymbol A\\boldsymbol P=D=\\mathrm{diag}(1,1,2)$）：$$\\boldsymbol Q^{\\mathrm T}\\boldsymbol A\\boldsymbol Q=\\boldsymbol M^{\\mathrm T}\\boldsymbol D\\boldsymbol M$$注意：左乘 $\\boldsymbol M^{\\mathrm T}$、右乘 $\\boldsymbol M$。</p>",
+  "<p><b>先右乘</b>：$$\\boldsymbol D\\boldsymbol M=\\begin{pmatrix}1&0&0\\\\1&1&0\\\\0&0&2\\end{pmatrix}$$</p>",
+  "<p><b>再左乘</b> $\\boldsymbol M^{\\mathrm T}=\\begin{pmatrix}1&1&0\\\\0&1&0\\\\0&0&1\\end{pmatrix}$：$$\\boldsymbol M^{\\mathrm T}\\boldsymbol D\\boldsymbol M=\\begin{pmatrix}2&1&0\\\\1&1&0\\\\0&0&2\\end{pmatrix}$$</p>",
+  "<p><b>结论</b>：左上 $2\\times2$ 块变为 $\\begin{pmatrix}2&1\\\\1&1\\end{pmatrix}$，右下仍是 $2$，与选项 <b>A</b> 一致。</p>"
+];
+
+AW.init({
+  title: '列组合下的合同变换：求 $\\boldsymbol Q^{\\mathrm T}\\boldsymbol A\\boldsymbol Q$',
+  subtitle: '考点：矩阵运算 / 合同 · 方法：$\\boldsymbol Q=\\boldsymbol P\\boldsymbol M \\Rightarrow \\boldsymbol Q^{\\mathrm T}\\boldsymbol A\\boldsymbol Q=\\boldsymbol M^{\\mathrm T}\\boldsymbol D\\boldsymbol M$',
+  counterLabel: '步数',
+  intro: '点击「▶ 播放」逐步演示每一步推导。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    ROWS.length = 0;
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    for(var k = 0; k < LINES.length; k++){
+      var d = AW.el('div', '', LINES[k]);
+      d.style.cssText = 'margin:8px 0;padding:9px 14px;border-left:3px solid #e2e8f0;background:#f8fafc;border-radius:0 12px 12px 0;font-size:14.5px;line-height:1.9;display:none;';
+      board.appendChild(d);
+      ROWS.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  render: function(stage, sn){
+    for(var k = 0; k < ROWS.length; k++){
+      var r = ROWS[k];
+      if(k >= sn.show){ r.style.display = 'none'; continue; }
+      r.style.display = 'block';
+      if(k === sn.show - 1 && !sn.done){
+        r.style.borderLeftColor = '#d97706';
+        r.style.background = '#fffbeb';
+      } else {
+        r.style.borderLeftColor = '#16a34a';
+        r.style.background = '#f8fafc';
+      }
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  snaps: [
+    { cls:'shift', tag:'审题',     log:'Q 的列是 P 的列的线性组合，找过渡矩阵 M', show:1, count:0 },
+    { cls:'step',  tag:'过渡矩阵', log:'第一列是 α1+α2，M 的第 (1,1)、(2,1) 处为 1', show:2, count:1 },
+    { cls:'step',  tag:'代入',     log:'合同变换：左乘 M 转置、右乘 M，方向别反', show:3, count:2 },
+    { cls:'step',  tag:'先右乘',   log:'D 右乘 M：把 M 的行乘进对角元', show:4, count:3 },
+    { cls:'ok',    tag:'再左乘',   log:'左乘 M 转置，第一行加到第二行上，出现非对角元 1', show:5, count:4 },
+    { cls:'done',  tag:'完成',     log:'结果左上块是 (2,1;1,1)，右下 2，选 A', show:6, count:5, done:true },
+  ],
+
+  result: {
+    big: '选 A',
+    html: '记忆锚点：<b>左 $\\boldsymbol M^{\\mathrm T}$、右 $\\boldsymbol M$</b>，方向反了会得到选项 B 的矩阵；$\\boldsymbol M$ 非对角，乘完必然出现非对角元 $1$，C、D 的「仍是对角阵」都是错觉。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

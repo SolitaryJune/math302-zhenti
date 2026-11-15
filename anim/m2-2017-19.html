@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2017·19 零点定理 + 辅助函数两次罗尔</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+// 一张推理卡片（body 里可写 $..$ / $$..$$ 公式）
+function card(n, cls, title, body){
+  return '<div class="aw-stepcard ' + (cls || '') + '"><h4><span class="n">' + n +
+         '</span>' + title + '</h4>' + body + '</div>';
+}
+
+// 推理链：每一步的完整内容（引擎按步数截取显示）
+var STEPS = [
+  { title: '审题：条件能榨出什么',
+    cls: 'key',
+    body: '<p>已知 $f$ 在 $[0,1]$ 二阶可导，$f(1)>0$，且 $\\lim\\limits_{x\\to0^{+}}\\dfrac{f(x)}{x}<0$。要证：$f(x)=0$ 在 $(0,1)$ 内有根；$f f\'\'+f\'^{2}=0$ 有两个不同根。极限条件分母趋于零——先逼出 $f(0)$ 的值。</p>' },
+  { title: '(1)① 逼出 f(0)=0',
+    cls: 'good',
+    body: '<p>若 $f(0)\\ne0$，由 $f$ 连续，$x\\to0^{+}$ 时分子趋于非零常数、分母趋于 $0$，则 $\\dfrac{f(x)}{x}\\to\\infty$，与极限为<b>有限负数</b>矛盾。故 $f(0)=0$。</p>' },
+  { title: '(1)② 保号性给负值点',
+    cls: 'good',
+    body: '<p>由极限为负与保号性：存在 $\\delta\\in(0,1)$，$x\\in(0,\\delta)$ 时 $\\dfrac{f(x)}{x}<0$；此时 $x>0$，故 $f(x)<0$。取定 $x_{0}\\in(0,\\delta)$，得 $f(x_{0})<0$。</p>' },
+  { title: '(1)③ 零点定理收尾',
+    cls: 'good',
+    body: '<p>$f$ 连续，且 $f(x_{0})<0<f(1)$。在 $[x_{0},1]$ 上用<b>零点定理</b>：存在 $\\xi\\in(x_{0},1)\\subset(0,1)$ 使 $f(\\xi)=0$。<b>(1) 得证</b>。</p>' },
+  { title: '(2)① 认出求导结构',
+    cls: 'key',
+    body: '<p>$\\big(f f\'\\big)\'=f\'^{2}+f f\'\'$——正好是方程左端！令 $g(x)=f(x)f\'(x)$，则原方程即 $g\'(x)=0$。要 $g\'$ 有两个零点，按罗尔定理需 $g$ 有<b>三个</b>零点。</p>' },
+  { title: '(2)② 第一枚：g(0)=0',
+    cls: 'good',
+    body: '<p>$g(0)=f(0)f\'(0)=0$，用的是第 2 步逼出的 $f(0)=0$。</p>' },
+  { title: '(2)③ 第二枚：g(ξ)=0',
+    cls: 'good',
+    body: '<p>$g(\\xi)=f(\\xi)f\'(\\xi)=0$，用的是第 4 步零点定理给出的 $\\xi$。</p>' },
+  { title: '(2)④ 中间枚：对 f 用罗尔得 η',
+    cls: 'good',
+    body: '<p>$f(0)=f(\\xi)=0$ 且 $f$ 可导，对 $f$ 在 $[0,\\xi]$ 用<b>罗尔定理</b>：存在 $\\eta\\in(0,\\xi)$ 使 $f\'(\\eta)=0$，从而 $g(\\eta)=f(\\eta)f\'(\\eta)=0$。</p>' },
+  { title: '(2)⑤ 对 g 连用两次罗尔',
+    cls: 'good',
+    body: '<p>$g$ 可导且 $g(0)=g(\\eta)=g(\\xi)=0$，$0<\\eta<\\xi$。在 $[0,\\eta]$、$[\\eta,\\xi]$ 上分别用罗尔定理：存在 $\\zeta_{1}\\in(0,\\eta)$、$\\zeta_{2}\\in(\\eta,\\xi)$ 使 $g\'(\\zeta_{1})=g\'(\\zeta_{2})=0$。</p>' },
+  { title: '结论',
+    cls: 'good',
+    body: '<p>两区间不重叠 $\\Rightarrow\\zeta_{1}\\ne\\zeta_{2}$，且都在 $(0,\\xi)\\subset(0,1)$ 内。<b>(2) 得证</b>：$f f\'\'+f\'^{2}=0$ 在 $(0,1)$ 内至少有两个不同实根。</p>' },
+];
+
+var snaps = STEPS.map(function(s, i){
+  return {
+    cls: i === STEPS.length - 1 ? 'done' : 'step',
+    tag: '第 ' + (i + 1) + ' 步',
+    log: s.title,
+    html: STEPS.slice(0, i + 1).map(function(x, j){
+      return card(j + 1, x.cls, x.title, x.body);
+    }).join(''),
+    done: i === STEPS.length - 1,
+  };
+});
+
+AW.init({
+  title: '2017·19　$f(1)>0$，$\\lim\\limits_{x\\to0^{+}}\\dfrac{f(x)}{x}<0$：证根的存在性与「两个不同根」',
+  subtitle: '考点：极限保号性 · 零点定理 · 罗尔定理与辅助函数 $g=f f\'$',
+  ribbonTitle: '推理进度（✓ 完成）',
+  intro: '点击「▶ 播放」或「下一步」，按推理链逐张展开证明卡片。',
+  /* 统一 render：复刻引擎默认的 sn.html 行为，再对舞台做公式渲染 */
+  render: function(stage, sn){
+    if(sn.html != null) stage.innerHTML = sn.html;
+    renderMathAfterSnap(stage);
+  },
+  snaps: snaps,
+  result: {
+    big: '(1) 有根；(2) 至少两个不同根',
+    html: '主线记忆：<b>极限条件（分母 $\\to0$）= 「$f(0)=0$ + 保号性」两件套</b>；见到 $f f\'\'+f\'^{2}$ 立刻认出 $\\big(f f\'\\big)\'$，<b>要 $g\'$ 两个零点，先凑 $g$ 三个零点</b>：$f(0)=0$、$f(\\xi)=0$、罗尔给的 $f\'(\\eta)=0$。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学·概念类动画：非齐次解的线性组合——系数和定归属</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+// 一张推理卡片（body 里可写 $..$ / $$..$$ 公式）
+function card(n, cls, title, body){
+  return '<div class="aw-stepcard ' + (cls || '') + '"><h4><span class="n">' + n +
+         '</span>' + title + '</h4>' + body + '</div>';
+}
+
+// 推理链：每一步的完整内容（引擎按步数截取显示）
+var STEPS = [
+  { title: '审题眼：系数和定归属',
+    cls: 'key',
+    body: '<p>$y_1,y_2$ 都是非齐次方程 $Ly=f$ 的特解（$L$ 为二阶线性算子）。由线性性，$$L(c_1y_1+c_2y_2)=(c_1+c_2)f.$$ <b>系数和 $=1$ 仍是非齐次解；系数和 $=0$ 是齐次解</b>——两个条件各给一个方程。</p>' },
+  { title: '条件一：仍是非齐次解',
+    cls: 'key',
+    body: '<p>$2\\lambda y_1+\\mu y_2$ 代入方程，右端为 $(2\\lambda+\\mu)f(x)$，要仍等于 $f(x)$：$$2\\lambda+\\mu=1.$$</p>' },
+  { title: '条件二：落入齐次',
+    cls: 'key',
+    body: '<p>$\\lambda y_1-2\\mu y_2$ 代入方程，右端为 $(\\lambda-2\\mu)f(x)$，齐次解要求它为 $0$：$$\\lambda-2\\mu=0\\ \\Longrightarrow\\ \\lambda=2\\mu.$$</p>' },
+  { title: '解方程组',
+    cls: 'good',
+    body: '<p>代入第一式：$2(2\\mu)+\\mu=5\\mu=1$，故 $$\\mu=\\dfrac15,\\qquad \\lambda=2\\mu=\\dfrac25.$$</p>' },
+  { title: '验算两个条件',
+    cls: 'good',
+    body: '<p>$2\\lambda+\\mu=\\dfrac45+\\dfrac15=1$ ✓；$\\lambda-2\\mu=\\dfrac25-\\dfrac25=0$ ✓。两条同时成立。</p>' },
+  { title: '结论',
+    cls: 'good',
+    body: '<p>答案选 <b>B</b>：$\\lambda=\\dfrac25,\\ \\mu=\\dfrac15$。干扰项 C 满足第一条却 $\\lambda-2\\mu=-\\dfrac34$；D 第一条就不成立。</p>' },
+];
+
+var snaps = STEPS.map(function(s, i){
+  return {
+    cls: i === STEPS.length - 1 ? 'done' : 'step',
+    tag: '第 ' + (i + 1) + ' 步',
+    log: s.title,
+    html: STEPS.slice(0, i + 1).map(function(x, j){
+      return card(j + 1, x.cls, x.title, x.body);
+    }).join(''),
+    done: i === STEPS.length - 1,
+  };
+});
+
+AW.init({
+  title: '解的结构：$2\\lambda y_1+\\mu y_2$ 是非齐次解、$\\lambda y_1-2\\mu y_2$ 是齐次解',
+  subtitle: '考点：二阶非齐次线性方程解的结构 · 组合系数和定归属',
+  counterLabel: '推理步',
+  intro: '点击「▶ 播放」逐步展开推理链。',
+  /* 统一 render：复刻引擎默认的 sn.html 行为，再对舞台做公式渲染 */
+  render: function(stage, sn){
+    if(sn.html != null) stage.innerHTML = sn.html;
+    renderMathAfterSnap(stage);
+  },
+  snaps: snaps,
+  result: {
+    big: '$\\lambda=\\dfrac25,\\quad \\mu=\\dfrac15$（选 B）',
+    html: '记忆锚点：<b>非齐次特解的组合，系数和 $=1$ 留在非齐次、$=0$ 落入齐次</b>。本题即 $2\\lambda+\\mu=1$ 与 $\\lambda-2\\mu=0$ 联立。易错：只验一个条件（C 就是只对了一半）。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

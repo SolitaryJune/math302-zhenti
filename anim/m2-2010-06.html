@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学·算法/过程类动画</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+/* 推导板：所有推导行在 build 时建好（含公式），render 按 i 逐行点亮 */
+var rows = [];
+function drow(html, at, green){
+  var d = AW.el('div', '', html);
+  d.style.cssText = 'margin:10px 0;padding:10px 16px;border-left:4px solid #cbd5e1;' +
+    'background:#f8fafc;border-radius:8px;font-size:15.5px;line-height:1.9;' +
+    'opacity:0.15;transform:translateX(-10px);transition:all .4s;';
+  rows.push({el: d, at: at, green: !!green});
+  return d;
+}
+
+AW.init({
+  title: '2010 数学二 第6题 · $\\displaystyle\\lim_{n\\to\\infty}\\sum_{i=1}^{n}\\sum_{j=1}^{n}\\frac{n}{(n+i)(n^2+j^2)}$ 化二重积分',
+  subtitle: '考点：定积分定义（二重和式） · 方法：通项凑 $\\Delta x\\,\\Delta y\\,f\\big(\\tfrac in,\\tfrac jn\\big)$',
+  counterLabel: '已推导',
+  intro: '点击「▶ 播放」逐步把和式极限识别成二重积分。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var inner = AW.el('div', '');
+    inner.appendChild(AW.el('div', 'aw-row-label',
+      '<b>推导板</b>：二重和式极限 $=$ 被积函数 $+$ 积分区域，两个都要读准'));
+    inner.appendChild(drow(
+      '<b>看通项</b>：$\\dfrac{n}{(n+i)(n^2+j^2)}$，目标形态是 $\\dfrac{1}{n^2}\\cdot f\\Big(\\dfrac in,\\dfrac jn\\Big)$', 1));
+    inner.appendChild(drow(
+      '<b>因式分解</b>：$(n+i)=n\\Big(1+\\dfrac in\\Big)$，$\\quad n^2+j^2=n^2\\Big(1+\\Big(\\dfrac jn\\Big)^2\\Big)$', 2));
+    inner.appendChild(drow(
+      '<b>通项成型</b>：$\\dfrac{n}{(n+i)(n^2+j^2)}=\\dfrac{1}{n^2}\\cdot\\dfrac{1}{\\Big(1+\\dfrac in\\Big)\\Big(1+\\big(\\dfrac jn\\big)^2\\Big)}$，' +
+      '其中 $\\dfrac{1}{n^2}=\\Delta x\\,\\Delta y$，被积函数 $f(x,y)=\\dfrac{1}{(1+x)(1+y^2)}$', 3));
+    inner.appendChild(drow(
+      '<b>读区域</b>：$i$ 与 $j$ 各自独立从 1 到 $n$，$x$ 与 $y$ 独立跑遍 $[0,1]$ —— 区域是正方形 $[0,1]\\times[0,1]$，没有 $y\\le x$ 的耦合', 4));
+    inner.appendChild(drow(
+      '<b>写结果</b>：极限 $=\\displaystyle\\int_0^1\\mathrm dx\\int_0^1\\frac{1}{(1+x)(1+y^2)}\\,\\mathrm dy$，选 D', 5, true));
+    wrap.appendChild(inner);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls: 'step',  tag: '审题',   log: '双重和式每一项由 i 和 j 两个指标决定，先把通项朝标准形态 1 比 n 平方乘 f( i/n, j/n ) 的方向凑', count: 1 },
+    { cls: 'shift', tag: '提因子', log: '两个分母分别提出 n 和 n 的平方，制造出 1 加 i/n 与 1 加 j/n 的平方这两个因子', count: 2 },
+    { cls: 'step',  tag: '认函数', log: '通项正好等于 1 比 n 平方乘上一个二元函数，1 比 n 平方就是每个小格子的面积', count: 3 },
+    { cls: 'shift', tag: '定区域', log: 'i 和 j 完全独立地取遍 1 到 n，没有 y 不超过 x 这种耦合，积分区域是整个单位正方形', count: 4 },
+    { cls: 'done',  tag: '完成',   log: '和式极限等于被积函数在正方形上的二重积分，答案选 D', count: 5, done: true },
+  ],
+
+  render: function(stage, sn, i){
+    for(var k = 0; k < rows.length; k++){
+      var r = rows[k];
+      var revealed = i >= r.at;
+      var active = revealed && r.at === i && !sn.done;
+      var green = sn.done && r.green;
+      r.el.style.opacity = revealed ? '1' : '0.15';
+      r.el.style.transform = revealed ? 'none' : 'translateX(-10px)';
+      r.el.style.background = green ? '#ecfdf3' : (active ? '#fff7e0' : '#f8fafc');
+      r.el.style.borderLeftColor = green ? '#16a34a' : (active ? '#f59e0b' : '#cbd5e1');
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '答案 D：$\\displaystyle\\int_0^1\\mathrm dx\\int_0^1\\frac{\\mathrm dy}{(1+x)(1+y^2)}$',
+    html: '记忆锚点：<b>三步读图法——通项凑成 $\\Delta x\\Delta y\\cdot f\\big(\\tfrac in,\\tfrac jn\\big)$、读被积函数、读区域</b>。两个陷阱：把独立求和误当成 $y\\le x$ 的三角形区域；把 $n^2+j^2$ 配成 $1+y$ 而不是 $1+y^2$。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2022·19 拆区域与极坐标二重积分</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [
+  "$$I=\\iint_D\\frac{(x-y)^2}{x^2+y^2}\\,\\mathrm{d}x\\mathrm{d}y,\\qquad D=\\{\\,y-2\\le x\\le\\sqrt{4-y^2},\\ 0\\le y\\le2\\,\\}$$",
+  "<b>① 拆区域：</b>$D=D_1\\cup D_2$——$D_1$：第一象限四分之一圆盘（半径 $2$）；$D_2$：三角形，顶点 $(0,0),(-2,0),(0,2)$，即 $-2\\le x\\le0,\\ 0\\le y\\le x+2$",
+  "<b>② 化简被积函数：</b>$\\dfrac{(x-y)^2}{x^2+y^2}=1-\\dfrac{2xy}{x^2+y^2}$，故 $I=\\text{面积}-2J$，其中 $J=\\iint_D\\dfrac{xy}{x^2+y^2}\\,\\mathrm{d}\\sigma$",
+  "<b>③ 面积：</b>$\\dfrac14\\pi\\cdot2^2+\\dfrac12\\cdot2\\cdot2=\\pi+2$",
+  "<b>④ 极坐标准备：</b>$\\dfrac{xy}{x^2+y^2}=\\sin\\theta\\cos\\theta$，$\\mathrm{d}\\sigma=r\\,\\mathrm{d}r\\,\\mathrm{d}\\theta$",
+  "<b>⑤ $D_1$ 段：</b>$\\theta\\in\\left[0,\\frac\\pi2\\right]$，$r\\in[0,2]$：$J_1=\\displaystyle\\int_0^{\\pi/2}\\sin\\theta\\cos\\theta\\cdot\\frac{2^2}{2}\\,\\mathrm{d}\\theta=2\\int_0^{\\pi/2}\\sin\\theta\\cos\\theta\\,\\mathrm{d}\\theta=1$",
+  "<b>⑥ $D_2$ 段：</b>$\\theta\\in\\left[\\frac\\pi2,\\pi\\right]$，射线与 $y=x+2$ 交于 $r=\\dfrac{2}{\\sin\\theta-\\cos\\theta}$：$J_2=\\displaystyle\\int_{\\pi/2}^{\\pi}\\dfrac{2\\sin\\theta\\cos\\theta}{(\\sin\\theta-\\cos\\theta)^2}\\,\\mathrm{d}\\theta$",
+  "<b>⑦ 换元 $\\theta=\\frac\\pi2+s$：</b>分子分母变成 $-\\sin2s$ 与 $1+\\sin2s$：$J_2=\\displaystyle\\int_0^{\\pi/2}\\left(-1+\\dfrac{1}{1+\\sin2s}\\right)\\mathrm{d}s$",
+  "<b>⑧ 算完 $D_2$ 段：</b>$\\dfrac{\\mathrm{d}}{\\mathrm{d}s}\\dfrac{-\\cos2s}{1+\\sin2s}=\\dfrac{2}{1+\\sin2s}$，故 $J_2=-\\dfrac\\pi2+\\dfrac12\\Big[\\dfrac{-\\cos2s}{1+\\sin2s}\\Big]_0^{\\pi/2}=1-\\dfrac\\pi2$（$D_2$ 上 $xy<0$，负号合理）",
+  "<b>⑨ 合计：</b>$J=J_1+J_2=1+1-\\dfrac\\pi2=2-\\dfrac\\pi2$",
+  "<b>⑩ 合成：</b>$I=(\\pi+2)-2\\left(2-\\dfrac\\pi2\\right)=\\pi+2-4+\\pi=2\\pi-2$"
+];
+
+AW.init({
+  title: '2022·19　二重积分：拆区域 + 化简 + 极坐标',
+  subtitle: '考点：区域不等式 → 几何拼块 · $\\frac{(x-y)^2}{x^2+y^2}=1-\\frac{2xy}{x^2+y^2}$ · 极坐标分段积分',
+  counterLabel: '已推进',
+  ribbonTitle: '推导进度（✓ 完成）',
+  intro: '点击「▶ 播放」或「下一步」，先把区域拆成圆盘与三角形，再用「面积减修正项」收网。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var inner = AW.el('div', '');
+    inner.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>（区域用不等式描述）：当前行亮琥珀色，已完成的行变绿'));
+    this._rows = [];
+    for (var i = 0; i < ROWS.length; i++){
+      var r = AW.el('div', 'aw-stepcard', ROWS[i]);
+      inner.appendChild(r);
+      this._rows.push(r);
+    }
+    wrap.appendChild(inner);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step',  tag:'审题',   log:'区域由左右两条边界给出，先看清它由哪两块几何图形拼成', count:0, ribbon:{k:1, ok:true} },
+    { cls:'ok',    tag:'拆区域', log:'右边界是四分之一圆弧，左边界是直线，D 拼成圆盘加三角形两块', count:1, ribbon:{k:2, ok:true} },
+    { cls:'ok',    tag:'化简',   log:'分子展开后整体拆成 1 减修正项，积分变成面积减两倍 J', count:2, ribbon:{k:3, ok:true} },
+    { cls:'ok',    tag:'面积',   log:'四分之一圆面积加三角形面积，得到派加 2', count:3, ribbon:{k:4, ok:true} },
+    { cls:'ok',    tag:'极坐标', log:'换极坐标后分式只剩角度部分，面积元多一个 r', count:4, ribbon:{k:5, ok:true} },
+    { cls:'ok',    tag:'圆盘段', log:'第一象限那段角度从零到二分之派，r 到 2，积出一个 1', count:5, ribbon:{k:6, ok:true} },
+    { cls:'ok',    tag:'三角段', log:'第二段角度延伸到派，r 上界由直线方程给出', count:6, ribbon:{k:7, ok:true} },
+    { cls:'ok',    tag:'换元',   log:'角度平移半个派后，被积式化成负 1 加一个简单分式', count:7, ribbon:{k:8, ok:true} },
+    { cls:'ok',    tag:'算完',   log:'用现成原函数收尾，三角段积分是 1 减二分之派，负号合理', count:8, ribbon:{k:9, ok:true} },
+    { cls:'ok',    tag:'合计',   log:'两段相加，J 等于 2 减二分之派', count:9, ribbon:{k:10, ok:true} },
+    { cls:'done',  tag:'完成',   log:'结论：I 等于派加 2 减去 2 乘 2 减二分之派，得 2 派减 2', count:10, ribbon:{k:11, ok:true}, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    var rows = this._rows;
+    for (var j = 0; j < rows.length; j++){
+      rows[j].className = 'aw-stepcard' + (j < i ? ' good' : (j === i ? ' key' : ''));
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: "$I=2\\pi-2$",
+    html: "记忆锚点：<b>先拆区域再动笔：圆盘块用「面积 − 修正项」，$\\frac{xy}{x^2+y^2}$ 极坐标下只剩 $\\sin\\theta\\cos\\theta$</b>。易错：三角形块极角要到 $\\pi$ 而不是 $\\frac{3\\pi}4$；$D_2$ 上 $xy<0$，该段积分必为负。",
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

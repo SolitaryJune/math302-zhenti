@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2018·18 证明 (x−1)(x−ln²x+2klnx−1) ≥ 0</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+// 一张推理卡片（body 里可写 $..$ / $$..$$ 公式）
+function card(n, cls, title, body){
+  return '<div class="aw-stepcard ' + (cls || '') + '"><h4><span class="n">' + n +
+         '</span>' + title + '</h4>' + body + '</div>';
+}
+
+// 推理链：每一步的完整内容（引擎按步数截取显示）
+var STEPS = [
+  { title: '审题：把乘积不等式读成「同号」',
+    cls: 'key',
+    body: '<p>记 $g(x)=x-\\ln^{2}x+2k\\ln x-1$（$x>0$）。要证 $(x-1)\\,g(x)\\ge0$，等价于<b>两因子同号或其一为零</b>。$x-1$ 以 $x=1$ 为变号点，故只需证 $g(x)$ 也以 $x=1$ 分界、符号与 $x-1$ 始终一致。</p>' },
+  { title: '换元 u = ln x：化成指数多项式',
+    cls: 'key',
+    body: '<p>令 $u=\\ln x$（$x=\\mathrm{e}^{u}$），$g(x)=\\mathrm{e}^{u}-1-u^{2}+2ku=:\\varphi(u)$。关键观察：$x-1=\\mathrm{e}^{u}-1$ 与 $u$ <b>同号</b>（$u>0\\iff x>1$）。于是只需证 $$u\\cdot\\varphi(u)\\ge0\\quad(\\forall u\\in\\mathbb{R}).$$</p>' },
+  { title: '基准点：φ(0) = 0',
+    cls: '',
+    body: '<p>$\\varphi(0)=\\mathrm{e}^{0}-1-0+0=0$。这意味着「与 $u$ 同号」只需由单调性从原点两侧分别推出。</p>' },
+  { title: '二阶导定位 φ′ 的最小值',
+    cls: '',
+    body: '<p>$\\varphi\'(u)=\\mathrm{e}^{u}-2u+2k$，$\\varphi\'\'(u)=\\mathrm{e}^{u}-2$。$\\varphi\'\'$ 仅在 $u=\\ln 2$ 变号（先负后正），故 $\\varphi\'$ 在 $u=\\ln2$ 取<b>最小值</b>。</p>' },
+  { title: '条件 k ≥ ln2−1 恰好在此入场',
+    cls: 'good',
+    body: '<p>$\\varphi\'(\\ln2)=2-2\\ln2+2k=2\\left[k-(\\ln2-1)\\right]\\ge0$。由最小值性，对一切 $u$ 有 $\\varphi\'(u)\\ge0$：$\\varphi$ 在 $\\mathbb{R}$ 上<b>单调不减</b>。</p>' },
+  { title: '定号：φ 与 u 同号',
+    cls: 'good',
+    body: '<p>由 $\\varphi$ 单调不减、$\\varphi(0)=0$：$u\\ge0\\Rightarrow\\varphi(u)\\ge0$；$u\\le0\\Rightarrow\\varphi(u)\\le0$。故 $u\\cdot\\varphi(u)\\ge0$ 恒成立。</p>' },
+  { title: '结论',
+    cls: 'good',
+    body: '<p>回到原变量：$(x-1)\\left(x-\\ln^{2}x+2k\\ln x-1\\right)\\ge0$ 对一切 $x>0$ 成立，<b>等号当且仅当 $x=1$</b>。证毕。</p>' },
+];
+
+var snaps = STEPS.map(function(s, i){
+  return {
+    cls: i === STEPS.length - 1 ? 'done' : 'step',
+    tag: '第 ' + (i + 1) + ' 步',
+    log: s.title.replace(/[:：].*$/, ''),
+    html: STEPS.slice(0, i + 1).map(function(x, j){
+      return card(j + 1, x.cls, x.title, x.body);
+    }).join(''),
+    count: i,
+    done: i === STEPS.length - 1,
+  };
+});
+
+AW.init({
+  title: '2018·18　证明 $(x-1)\\left(x-\\ln^{2}x+2k\\ln x-1\\right)\\ge0$（$k\\ge\\ln2-1$）',
+  subtitle: '考点：不等式证明 · 方法：换元 $u=\\ln x$ → 同号化 → 单调性定号',
+  intro: '点击「▶ 播放」或「下一步」，逐步展开证明推理链。',
+  /* 统一 render：复刻引擎默认的 sn.html 行为，再对舞台做公式渲染 */
+  render: function(stage, sn){
+    if(sn.html != null) stage.innerHTML = sn.html;
+    renderMathAfterSnap(stage);
+  },
+  snaps: snaps,
+  result: {
+    big: '不等式成立，等号仅 $x=1$',
+    html: '记忆锚点：<b>乘积 $\\ge0$ = 两因子同号</b>；含 $\\ln^{2}x$ 时换元 $u=\\ln x$ 化成 $\\varphi(u)=\\mathrm{e}^{u}-1-u^{2}+2ku$，再证 $\\varphi$ 与 $u$ 同号。条件 $k\\ge\\ln2-1$ 的来源：$\\varphi\'$ 的最小值 $\\varphi\'(\\ln2)=2[k-(\\ln2-1)]\\ge0$。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学·算法/过程类动画：参数方程求二阶导数</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+AW.init({
+  title: '$x=\\sqrt{t^2+1},\\ y=\\ln\\left(t+\\sqrt{t^2+1}\\right)$：求 $\\dfrac{\\mathrm{d}^2y}{\\mathrm{d}x^2}\\Big|_{t=1}$',
+  subtitle: '考点：参数方程求导 · 方法：两次链式法则，第二次分母仍是 $x^\\prime(t)$',
+  counterLabel: '推导步',
+  intro: '点击「▶ 播放」逐步演示求导链条。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    var lines = [
+      '<b>公式链</b>：$$\\frac{\\mathrm{d}y}{\\mathrm{d}x}=\\frac{y^\\prime(t)}{x^\\prime(t)},\\qquad \\frac{\\mathrm{d}^2y}{\\mathrm{d}x^2}=\\frac{\\dfrac{\\mathrm{d}}{\\mathrm{d}t}\\left(\\dfrac{y^\\prime(t)}{x^\\prime(t)}\\right)}{x^\\prime(t)}$$ 第二个分母<b>仍是 $x^\\prime(t)$</b>，不是它的平方',
+      '<b>求 $x^\\prime(t)$</b>：$x=\\sqrt{t^2+1}\\Rightarrow x^\\prime=\\dfrac{t}{\\sqrt{t^2+1}}$',
+      '<b>求 $y^\\prime(t)$</b>（反双曲正弦）：$$y^\\prime=\\frac{1+\\frac{t}{\\sqrt{t^2+1}}}{t+\\sqrt{t^2+1}}=\\frac{\\frac{\\sqrt{t^2+1}+t}{\\sqrt{t^2+1}}}{t+\\sqrt{t^2+1}}=\\frac{1}{\\sqrt{t^2+1}}$$',
+      '<b>一阶导</b>：$\\dfrac{\\mathrm{d}y}{\\mathrm{d}x}=\\dfrac{1/\\sqrt{t^2+1}}{t/\\sqrt{t^2+1}}=\\dfrac{1}{t}$',
+      '<b>对 $t$ 再求导</b>：$\\left(\\dfrac{1}{t}\\right)^\\prime=-\\dfrac{1}{t^2}$',
+      '<b>除以 $x^\\prime(t)$</b>：$\\dfrac{\\mathrm{d}^2y}{\\mathrm{d}x^2}=\\dfrac{-1/t^2}{t/\\sqrt{t^2+1}}=-\\dfrac{\\sqrt{t^2+1}}{t^3}$',
+      '<b>代 $t=1$</b>：$\\dfrac{\\mathrm{d}^2y}{\\mathrm{d}x^2}\\Big|_{t=1}=-\\dfrac{\\sqrt{2}}{1}=-\\sqrt{2}$',
+      '<b>答案：$-\\sqrt{2}$</b>',
+    ];
+    this._lines = [];
+    for(var i=0;i<lines.length;i++){
+      var d = AW.el('div', '', lines[i]);
+      d.style.cssText = 'padding:9px 14px;margin:7px 0;border-left:3px solid transparent;border-radius:10px;transition:all .35s;opacity:.28;font-size:15px;line-height:1.9;';
+      board.appendChild(d);
+      this._lines.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step',  tag:'审题',   log:'参数方程求二阶导：先一阶 dy/dx，再对 t 求导后除以 x 导', count:0 },
+    { cls:'step',  tag:'求 x 导', log:'x 的导数：根号里求导得 t 除以根号(t²+1)', count:1 },
+    { cls:'shift', tag:'求 y 导', log:'y 是反双曲正弦，繁分式上下同乘根号(t²+1) 后化简为 1 除以根号(t²+1)', count:2 },
+    { cls:'ok',    tag:'一阶导', log:'两个导数一比，根号抵消，dy/dx 就是 1/t', count:3 },
+    { cls:'step',  tag:'再求导', log:'1/t 对 t 求导得负的 1/t²', count:4 },
+    { cls:'step',  tag:'除 x 导', log:'再除一次 x 导（不是平方！），得负的 根号(t²+1)/t³', count:5 },
+    { cls:'step',  tag:'代值',   log:'代入 t=1，得负根号 2', count:6 },
+    { cls:'done',  tag:'完成',   log:'结论：二阶导在 t=1 处等于 −√2', count:7, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    for(var j=0;j<this._lines.length;j++){
+      var L = this._lines[j];
+      L.style.opacity = j<=i ? '1' : '0.28';
+      L.style.borderLeftColor = (j===i) ? '#d97706' : (j<i ? '#16a34a' : 'transparent');
+      L.style.background = (j===i) ? '#fef3c7' : 'transparent';
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '$-\\sqrt{2}$',
+    html: '记忆锚点：<b>二阶导公式 $\\dfrac{\\mathrm{d}^2y}{\\mathrm{d}x^2}=\\dfrac{\\left(\\frac{\\mathrm{d}y}{\\mathrm{d}x}\\right)^\\prime_t}{x^\\prime(t)}$ 的分母是 $x^\\prime(t)$ 本身</b>，不是 $[x^\\prime(t)]^2$。本题 $\\frac{\\mathrm{d}y}{\\mathrm{d}x}=\\frac{1}{t}$ 特别干净，因为 $y=\\ln\\left(t+\\sqrt{t^2+1}\\right)$ 的导数恰是 $\\frac{1}{\\sqrt{t^2+1}}$。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

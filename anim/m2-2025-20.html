@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>m2-2025-20 · 两圆公共区域的极坐标二重积分</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+AW.init({
+  title: '$\\iint_D(x-y)^2\\,\\mathrm{d}x\\mathrm{d}y$ · 两圆公共区域极坐标计算',
+  subtitle: '考点：二重积分换极坐标 · 区域：$x^2+y^2\\le4x$ 且 $x^2+y^2\\le4y$（透镜形）',
+  counterLabel: '已完成',
+  intro: '点击「▶ 播放」逐步演示：认区域 → 极坐标 → 对称减半 → 内层积分 → 两个三角积分 → 合并。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var head = AW.el('div', '',
+      '<p>$$D=\\{(x,y)\\mid x^2+y^2\\le 4x,\\ x^2+y^2\\le 4y\\}$$</p>');
+    stage.appendChild(head);
+    this._board = AW.el('div', '');
+    stage.appendChild(this._board);
+  },
+
+  snaps: [
+    { cls:'shift', tag:'审题', log:'两个圆盘配方：圆心分别在 2,0 和 0,2，半径都是 2，公共部分是透镜形', count:1,
+      board: '<div class="aw-row-label"><b>第 1 步 · 认区域</b></div>'
+        + '<p>$$x^2+y^2\\le4x:\\ (x-2)^2+y^2\\le4\\qquad x^2+y^2\\le4y:\\ x^2+(y-2)^2\\le4$$</p>'
+        + '<p>两圆都过原点，另一交点 $(2,2)$；$D$ 是第一象限内的透镜形，关于直线 $y=x$ 对称。</p>' },
+    { cls:'step', tag:'极坐标', log:'两个圆换成极坐标：r 不超过 4 倍余弦、也不超过 4 倍正弦', count:2,
+      ribbon:{k:1, ok:true},
+      board: '<div class="aw-row-label"><b>第 2 步 · 极坐标描述</b></div>'
+        + '<p>$$r\\le 4\\cos\\theta\\quad\\text{且}\\quad r\\le 4\\sin\\theta,\\qquad \\theta\\in\\Big[0,\\frac\\pi2\\Big]$$</p>'
+        + '<p>$$D:\\ 0\\le r\\le\\min(4\\cos\\theta,\\,4\\sin\\theta)$$</p>' },
+    { cls:'step', tag:'对称减半', log:'四分之 π 是分界：两半关于对角线对称，被积函数也对称，算一半乘 2', count:3,
+      ribbon:{k:2, ok:true},
+      board: '<div class="aw-row-label"><b>第 3 步 · 分段与对称性</b></div>'
+        + '<p>$\\theta\\in[0,\\frac\\pi4]$ 时上限取 $4\\sin\\theta$；$\\theta\\in[\\frac\\pi4,\\frac\\pi2]$ 时取 $4\\cos\\theta$。$D$ 与 $(x-y)^2$ 在 $x\\leftrightarrow y$ 下都不变，取后一半乘 $2$：</p>'
+        + '<p>$$I=2\\int_{\\pi/4}^{\\pi/2}\\!\\!\\int_0^{4\\cos\\theta}r^2(\\cos\\theta-\\sin\\theta)^2\\cdot r\\,\\mathrm{d}r\\,\\mathrm{d}\\theta$$</p>' },
+    { cls:'step', tag:'内层', log:'r 的三次方从 0 积到 4 倍余弦，得出 64 倍余弦四次方', count:4,
+      board: '<div class="aw-row-label"><b>第 4 步 · 内层 $r$ 积分</b></div>'
+        + '<p>$$\\int_0^{4\\cos\\theta}r^3\\,\\mathrm{d}r=\\frac{(4\\cos\\theta)^4}{4}=64\\cos^4\\theta$$</p>'
+        + '<p>$$I=128\\int_{\\pi/4}^{\\pi/2}\\cos^4\\theta\\,(\\cos\\theta-\\sin\\theta)^2\\,\\mathrm{d}\\theta$$</p>' },
+    { cls:'shift', tag:'展开', log:'差的平方写成 1 减二倍角正弦，拆成两个积分 I1 和 I2', count:5,
+      board: '<div class="aw-row-label"><b>第 5 步 · 拆成 $I_1-I_2$</b></div>'
+        + '<p>$$(\\cos\\theta-\\sin\\theta)^2=1-\\sin2\\theta$$</p>'
+        + '<p>$$I=128\\Big(\\underbrace{\\int_{\\pi/4}^{\\pi/2}\\cos^4\\theta\\,\\mathrm{d}\\theta}_{I_1}-\\underbrace{\\int_{\\pi/4}^{\\pi/2}\\cos^4\\theta\\sin2\\theta\\,\\mathrm{d}\\theta}_{I_2}\\Big)$$</p>' },
+    { cls:'ok', tag:'算 I1', log:'余弦四次方降幂展开成三项，代限得到 32 分之 3π 减四分之一', count:6,
+      ribbon:{k:3, ok:true},
+      board: '<div class="aw-row-label"><b>第 6 步 · $I_1$：降幂公式</b></div>'
+        + '<p>$$\\cos^4\\theta=\\frac38+\\frac12\\cos2\\theta+\\frac18\\cos4\\theta$$</p>'
+        + '<p>$$I_1=\\Big[\\frac38\\theta+\\frac14\\sin2\\theta+\\frac1{32}\\sin4\\theta\\Big]_{\\pi/4}^{\\pi/2}=\\frac{3\\pi}{32}-\\frac14$$</p>' },
+    { cls:'ok', tag:'算 I2', log:'二倍角正弦拆成两个乘积，凑成余弦六次方的微分，代限得 24 分之一', count:7,
+      ribbon:{k:4, ok:true},
+      board: '<div class="aw-row-label"><b>第 7 步 · $I_2$：凑微分</b></div>'
+        + '<p>$$\\cos^4\\theta\\sin2\\theta=2\\cos^5\\theta\\sin\\theta=\\Big(-\\frac13\\cos^6\\theta\\Big)^\\prime$$</p>'
+        + '<p>$$I_2=\\Big[-\\frac13\\cos^6\\theta\\Big]_{\\pi/4}^{\\pi/2}=0+\\frac13\\cdot\\frac18=\\frac1{24}$$</p>' },
+    { cls:'step', tag:'合并', log:'128 乘进去：π 项剩 12π，常数项合并成负的三分之 112', count:8,
+      board: '<div class="aw-row-label"><b>第 8 步 · 合并</b></div>'
+        + '<p>$$I=128\\Big(\\frac{3\\pi}{32}-\\frac14-\\frac1{24}\\Big)=12\\pi-32-\\frac{16}{3}=12\\pi-\\frac{112}{3}$$</p>' },
+    { cls:'done', tag:'完成', log:'数值约 0.366，与透镜很小、函数在对称区域上取值偏小的直觉一致', count:9, done:true,
+      ribbon:{k:5, ok:true},
+      board: '<div class="aw-row-label"><b>第 9 步 · 数值自查</b></div>'
+        + '<p>$$\\iint_D(x-y)^2\\,\\mathrm{d}x\\mathrm{d}y=12\\pi-\\frac{112}{3}\\approx0.366$$</p>'
+        + '<p>$D$ 的面积只有约 $2.28$，且 $(x-y)^2$ 在对称线附近取值很小，结果的量级合理。</p>' },
+  ],
+
+  render: function(stage, sn, i){
+    this._board.innerHTML = sn.board || '';
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '12π − 112/3 ≈ 0.366',
+    html: '结论：$$\\iint_D(x-y)^2\\,\\mathrm{d}x\\mathrm{d}y=12\\pi-\\frac{112}{3}$$'
+      + '记忆点：<b>两圆公共区域 $\\Rightarrow$ 极坐标 $r\\le\\min(4\\cos\\theta,4\\sin\\theta)$，以 $\\theta=\\frac\\pi4$ 分段</b>；'
+      + '区域与被积函数同时关于 $y=x$ 对称 $\\Rightarrow$ 算一半乘 2；'
+      + '易错：面积元素漏 $r$、$\\sin2\\theta$ 凑微分时系数 2 丢失。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

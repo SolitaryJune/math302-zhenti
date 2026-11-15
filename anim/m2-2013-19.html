@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2013·19 隐式曲线上的距离最值</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改 AW.init 区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [];
+
+var LINES = [
+  "<p><b>审题</b>：曲线 $x^3-xy+y^3=1$ 在第一象限的一段（$x\\ge0,y\\ge0$）。点到原点距离 $d=\\sqrt{x^2+y^2}$，比较 $d$ 等价于比较 $d^2=x^2+y^2$——目标函数免开方。</p>",
+  "<p><b>先抓端点</b>：令 $y=0$ 得 $x^3=1$，端点 $(1,0)$；令 $x=0$ 得 $y^3=1$，端点 $(0,1)$。$$d^2(1,0)=d^2(0,1)=1$$</p>",
+  "<p><b>拉格朗日乘数法</b>：记 $g=x^3-xy+y^3-1$，$$L=x^2+y^2-\\lambda\\,(x^3-xy+y^3-1)$$ 驻点条件：$$2x=\\lambda(3x^2-y),\\qquad 2y=\\lambda(3y^2-x)$$</p>",
+  "<p><b>消去 $\\lambda$（交叉相乘）</b>：$$x(3y^2-x)=y(3x^2-y)\\ \\Longrightarrow\\ 3xy^2-x^2=3x^2y-y^2$$ 整理：$$3xy(y-x)+(y-x)(x+y)=0\\ \\Longrightarrow\\ (y-x)(3xy+x+y)=0$$</p>",
+  "<p><b>取舍</b>：第一象限内 $x\\ge0,y\\ge0$，$3xy+x+y>0$ 不可能为零，只能 $$x=y$$</p>",
+  "<p><b>代入约束</b>：$2x^3-x^2=1$，即 $2x^3-x^2-1=0$。分解：$$(x-1)(2x^2+x+1)=0$$ 二次因子判别式 $1-8<0$ 无实根，唯一解 $x=1$。</p>",
+  "<p><b>内部驻点 $(1,1)$</b>：验证 $1-1+1=1$ 在曲线上，$$d^2=1^2+1^2=2\\quad\\Rightarrow\\quad d=\\sqrt2$$</p>",
+  "<p><b>候选比较</b>：端点 $(1,0),(0,1)$ 距离 $1$；驻点 $(1,1)$ 距离 $\\sqrt2$。曲线是连续有界闭弧，最值必在端点或驻点取得：$\\sqrt2>1$。</p>",
+  "<p><b>结论</b>：$$\\boxed{\\;d_{\\max}=\\sqrt2\\ (\\text{点 }(1,1)),\\qquad d_{\\min}=1\\ (\\text{点 }(1,0),(0,1))\\;}$$</p>"
+];
+
+AW.init({
+  title: '曲线 $x^3-xy+y^3=1$ 上的最长与最短距离',
+  subtitle: '考点：条件极值（拉格朗日乘数法） · 方法：目标取 $d^2$，端点与驻点比较',
+  counterLabel: '推理步',
+  intro: '点击「▶ 播放」逐步演示端点、驻点与比较。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    ROWS.length = 0;
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    for(var k = 0; k < LINES.length; k++){
+      var d = AW.el('div', '', LINES[k]);
+      d.style.cssText = 'margin:8px 0;padding:9px 14px;border-left:3px solid #e2e8f0;background:#f8fafc;border-radius:0 12px 12px 0;font-size:14.5px;line-height:1.9;display:none;';
+      board.appendChild(d);
+      ROWS.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  render: function(stage, sn){
+    for(var k = 0; k < ROWS.length; k++){
+      var r = ROWS[k];
+      if(k >= sn.show){ r.style.display = 'none'; continue; }
+      r.style.display = 'block';
+      if(k === sn.show - 1 && !sn.done){
+        r.style.borderLeftColor = '#d97706';
+        r.style.background = '#fffbeb';
+      } else {
+        r.style.borderLeftColor = '#16a34a';
+        r.style.background = '#f8fafc';
+      }
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  snaps: [
+    { cls:'shift', tag:'审题',   log:'比距离等于比距离平方，目标函数不用开根号', show:1, count:0 },
+    { cls:'ok',    tag:'端点',   log:'第一象限弧的两个端点落在坐标轴上：距离都是 1', show:2, count:1, ribbon:{k:1, ok:true} },
+    { cls:'step',  tag:'列条件', log:'拉格朗日乘数法：两个偏导方程，目标梯度等于 λ 乘约束梯度', show:3, count:2 },
+    { cls:'step',  tag:'消 λ',   log:'交叉相乘消掉 λ，整理出因式乘积等于零', show:4, count:3 },
+    { cls:'ok',    tag:'取舍',   log:'第一象限里第二个因子恒正，只剩 x=y', show:5, count:4 },
+    { cls:'step',  tag:'解方程', log:'代入约束得三次方程，分解出 x=1，二次因子判别式为负无实根', show:6, count:5 },
+    { cls:'ok',    tag:'驻点',   log:'对称驻点 (1,1)，距离是根号 2', show:7, count:6, ribbon:{k:2, ok:true} },
+    { cls:'ok',    tag:'比较',   log:'候选只有三个：两端点距离 1，驻点距离根号 2，取最大最小', show:8, count:7 },
+    { cls:'done',  tag:'完成',   log:'最长 √2 在 (1,1)，最短 1 在两个端点', show:9, count:8, done:true },
+  ],
+
+  result: {
+    big: '$d_{\\max}=\\sqrt2,\\quad d_{\\min}=1$',
+    html: '记忆锚点：<b>有界闭弧上最值 = 内部驻点 + 端点，一起比较</b>；约束曲线关于 $y=x$ 对称，优先试 $x=y$。易错：只算驻点忘端点；消 $\\lambda$ 用交叉相乘回避分母为零的讨论。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学·概念类动画：r(AB)=r(BA)+1 的四个推论排查</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+function card(n, cls, title, body){
+  return '<div class="aw-stepcard ' + (cls || '') + '"><h4><span class="n">' + n +
+         '</span>' + title + '</h4>' + body + '</div>';
+}
+
+var STEPS = [
+  { title: '审题眼：先把秩信息榨干',
+    cls: 'key',
+    log: 'A、B 都不可逆；r(AB)≤2，r(BA)≤1——钥匙到手',
+    body: '<p>若 $A$ 可逆则 $r(AB)=r(B)=r(BA)$，与差 $1$ 矛盾；$B$ 可逆同理，故 <b>$A,B$ 都不可逆</b>。又若 $r(AB)=3$ 则 $AB$ 可逆，也逼出 $A,B$ 可逆，矛盾。于是 $$r(AB)\\le2,\\qquad r(BA)=r(AB)-1\\le1.$$</p>' },
+  { title: '选项 B：与题设正面冲突，永假',
+    cls: 'bad',
+    log: 'Ax=0、Bx=0 只有零解 ⟺ A,B 都可逆，题设下永不成立',
+    ribbon: {k:1, ok:true},
+    body: '<p>「$A\\boldsymbol x=\\boldsymbol0$ 与 $B\\boldsymbol x=\\boldsymbol0$ 均只有零解」等价于 $A,B$ 都可逆——但第一步已证题设下 $A,B$ <b>必不可逆</b>，此选项永假 ✗。</p>' },
+  { title: '选项 A：反例否决',
+    cls: 'bad',
+    log: 'A=E11, B=E12：r(AB)=1=r(BA)+1 成立，但 A+B 奇异',
+    ribbon: {k:2, ok:true},
+    body: '<p>取 $A=\\begin{pmatrix}1&0&0\\\\0&0&0\\\\0&0&0\\end{pmatrix}$，$B=\\begin{pmatrix}0&1&0\\\\0&0&0\\\\0&0&0\\end{pmatrix}$：$AB=E_{12}$ 秩 $1$，$BA=0$ 秩 $0$，满足 $r(AB)=r(BA)+1$；但 $A+B$ 明显奇异，$(A+B)\\boldsymbol x=\\boldsymbol0$ 有非零解，A 不恒成立 ✗。</p>' },
+  { title: '选项 C：同一个反例否决',
+    cls: 'bad',
+    log: '反例中 x=(0,0,1)ᵀ 同时满足 Ax=0 与 Bx=0，「无公共非零解」不恒成立',
+    ribbon: {k:3, ok:true},
+    body: '<p>上面的反例中 $\\boldsymbol x=(0,0,1)^{\\mathrm T}$ 同时满足 $A\\boldsymbol x=\\boldsymbol0$ 与 $B\\boldsymbol x=\\boldsymbol0$。「没有公共非零解」要求 $r\\binom{A}{B}=3$，题设保证不了，C 不恒成立 ✗。</p>' },
+  { title: '选项 D：维数公式证恒成立',
+    cls: 'good',
+    log: 'r(ABA)≤1、r(BAB)≤1 ⇒ 两个解空间维数 ≥2+2=4>3，公共非零解必存在',
+    ribbon: {k:4, ok:true},
+    body: '<p>$ABA=A(BA)$，由 $r(MN)\\le r(N)$：$r(ABA)\\le r(BA)\\le1$，同理 $r(BAB)\\le1$。于是 $$\\dim N(ABA)\\ge3-1=2,\\qquad \\dim N(BAB)\\ge2.$$ 两解空间维数之和 $\\ge4>3$，交空间维数 $\\ge4-3=1>0$：<b>必有公共非零解</b> ✓。</p>' },
+  { title: '结论',
+    cls: 'good',
+    log: '只有 D 是恒成立结论，选 D',
+    body: '<p>A、C 不恒成立，B 永假，只有 D 恒成立，答案选 <b>D</b>。</p>' },
+];
+
+var snaps = STEPS.map(function(s, i){
+  var cls;
+  if(i === STEPS.length - 1){ cls = 'done'; }
+  else if(s.ribbon){ cls = s.ribbon.ok ? 'ok' : 'miss'; }
+  else { cls = 'step'; }
+  return {
+    cls: cls,
+    tag: '第 ' + (i + 1) + ' 步',
+    log: s.log,
+    count: i + 1,
+    ribbon: s.ribbon,
+    html: STEPS.slice(0, i + 1).map(function(x, j){
+      return card(j + 1, x.cls, x.title, x.body);
+    }).join(''),
+    done: i === STEPS.length - 1,
+  };
+});
+
+AW.init({
+  title: '$r(AB)=r(BA)+1$ 时，四个结论哪个恒成立',
+  subtitle: '考点：秩的不等式 · 解空间维数公式 · 恒成立与反例',
+  counterLabel: '排查步',
+  ribbonTitle: '选项裁决（✓ 已裁决 / ✗ 待复核）',
+  intro: '点击「▶ 播放」逐项排查 A–D。',
+  render: function(stage, sn){
+    if(sn.html != null) stage.innerHTML = sn.html;
+    renderMathAfterSnap(stage);
+  },
+  snaps: snaps,
+  result: {
+    big: '答案 D',
+    html: '记忆锚点：<b>题设逼出 $r(BA)\\le1$；$r(MN)\\le r(N)$ 把它传给 $ABA$ 与 $BAB$，两个解空间维数相加超过 $3$，公共非零解必然存在</b>。$A$（或 $B$）可逆会抹平 $r(AB)$ 与 $r(BA)$ 的差——所以 B 永假、A 与 C 找反例即可否决。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

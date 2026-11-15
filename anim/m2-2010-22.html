@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>m2-2010-22 由「两个不同解」定参数并求通解</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+var PAGES = [
+  "<p>$\\boldsymbol A=\\begin{pmatrix}\\lambda&1&1\\\\0&\\lambda-1&0\\\\1&1&\\lambda\\end{pmatrix}$，$\\boldsymbol b=(a,1,1)^T$，已知 $\\boldsymbol{Ax}=\\boldsymbol b$ 存在<b>两个不同解</b>。</p><p>两个不同解 $\\Rightarrow$ 解不唯一 $\\Rightarrow$ 无穷多解 $\\Rightarrow$ $|\\boldsymbol A|=0$。</p>",
+  "<p>按第二行展开（只有 $\\lambda-1$ 非零）：</p>$$|\\boldsymbol A|=(\\lambda-1)\\begin{vmatrix}\\lambda&1\\\\1&\\lambda\\end{vmatrix}=(\\lambda-1)(\\lambda^2-1)=(\\lambda-1)^2(\\lambda+1)=0$$<p>得 $\\lambda=1$ 或 $\\lambda=-1$。</p>",
+  "<p>检验 $\\lambda=1$：第二行变成 $0x_1+0x_2+0x_3=1$，矛盾——<b>无解，舍去</b>。</p>",
+  "<p>$\\lambda=-1$ 时的增广矩阵：</p>$$\\left(\\begin{array}{ccc|c}-1&1&1&a\\\\0&-2&0&1\\\\1&1&-1&1\\end{array}\\right)$$",
+  "<p>行变换（$r_3+r_1$，再 $r_3+r_2$）：</p>$$\\left(\\begin{array}{ccc|c}-1&1&1&a\\\\0&-2&0&1\\\\0&0&0&2+a\\end{array}\\right)$$",
+  "<p>相容条件：末行 $0=2+a$ 必须成立，故 $a=-2$。</p><p>(1) 的答案：$\\lambda=-1,\\ a=-2$。</p>",
+  "<p>(2) 回代 $a=-2$ 解阶梯形：$-2x_2=1\\Rightarrow x_2=-\\dfrac12$；第一行 $-x_1+x_2+x_3=-2\\Rightarrow x_1=x_3+\\dfrac32$。取 $x_3=k$。</p>",
+  "<p>验算：特解 $(\\tfrac32,-\\tfrac12,0)^T$ 代入三行全成立；$(1,0,1)^T$ 满足 $\\boldsymbol A(1,0,1)^T=\\boldsymbol0$ ✓</p>$$\\boldsymbol x=k\\begin{pmatrix}1\\\\0\\\\1\\end{pmatrix}+\\begin{pmatrix}\\tfrac32\\\\[2pt]-\\tfrac12\\\\[2pt]0\\end{pmatrix}$$"
+];
+
+AW.init({
+  title: "2010·22　$\\boldsymbol{Ax}=\\boldsymbol b$ 有两个不同解：求 $\\lambda,a$ 与通解",
+  subtitle: "考点：解的结构与秩 · 行列式展开 · 相容性检验 · 高斯消元求通解",
+  counterLabel: "步数",
+  intro: "点击「▶ 播放」逐步演示：行列式 → 逐个 λ 检验 → 行变换 → 通解。",
+
+  build: function(stage){
+    stage.innerHTML = "";
+    var wrap = AW.el("div", "aw-scroll");
+    wrap.appendChild(AW.el("div", "aw-row-label", "<b>推导板</b>：$\\boldsymbol{Ax}=\\boldsymbol b$ 有两个不同解"));
+    this._board = AW.el("div", "", "");
+    wrap.appendChild(this._board);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:"shift", tag:"审题", log:"方程组有两个不同解 = 解不唯一 = 无穷多解，系数矩阵必不满秩", count:0 },
+    { cls:"step", tag:"算行列式", log:"按第二行展开得 (λ−1)²(λ+1)=0，候选 λ=1 或 λ=−1", count:1 },
+    { cls:"miss", tag:"λ=1 舍", log:"λ=1 时第二行是 0=1，方程组无解，舍去——行列式为零不代表有解", count:2 },
+    { cls:"step", tag:"λ=−1", log:"λ=−1 时写出增广矩阵，其中含待定的 a", count:3 },
+    { cls:"step", tag:"行变换", log:"r₃+r₁ 再 r₃+r₂，第三行化成 0 0 0 | 2+a", count:4 },
+    { cls:"ok", tag:"定 a", log:"相容要求 2+a=0，即 a=−2；此时秩相等，有无穷多解", count:5 },
+    { cls:"step", tag:"回代", log:"−2x₂=1 给 x₂=−1/2；第一行给 x₁=x₃+3/2；自由未知量取 x₃=k", count:6 },
+    { cls:"done", tag:"通解", log:"齐次解 k(1,0,1)ᵀ 加特解 (3/2,−1/2,0)ᵀ，验算无误", count:7, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    this._board.innerHTML = PAGES[i];
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: "(1) λ=−1, a=−2　(2) x = k(1,0,1)ᵀ + (3/2,−1/2,0)ᵀ",
+    html: "最终答案：(1) $\\lambda=-1,\\ a=-2$；(2) $\\boldsymbol x=k\\begin{pmatrix}1\\\\0\\\\1\\end{pmatrix}+\\begin{pmatrix}\\tfrac32\\\\[2pt]-\\tfrac12\\\\[2pt]0\\end{pmatrix}$（$k$ 为任意常数）。<br>" +
+          "记忆点：<b>「两个不同解」$=$「无穷多解」$=$「$|\\boldsymbol A|=0$ 且增广与系数矩阵同秩」</b>；$\\lambda=1$ 虽使行列式为零但无解，必须检验。",
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

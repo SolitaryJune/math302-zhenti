@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2026 数二第 21 题 · 可降阶微分方程 + 伯努利方程（交互动画）</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+AW.init({
+  title: '2026·21　解 $x^2y\'\'-2xy\'-(y\')^2=0$（$x>2$），$y|_{x=3}=\\dfrac12$，$y\'|_{x=3}=-9$',
+  subtitle: '考点：不显含 $y$ 的可降阶方程 · <b>伯努利方程 $z=p^{-1}$</b> · 两次定常数',
+  counterLabel: '已完成',
+  ribbonTitle: '推导进度（✓ 完成）',
+  intro: '点击「▶ 播放」或「下一步」，从降阶开始一步步解。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var inner = AW.el('div', '');
+    inner.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>：当前行亮琥珀色，已完成的行变绿'));
+    var LINES = [
+      "<b>题目：</b>解 $$x^2y''-2xy'-(y')^2=0\\quad(x>2),$$　$y\\big|_{x=3}=\\dfrac12$，$y'\\big|_{x=3}=-9$",
+      "<b>识别类型：</b>方程不显含 $y$（只含 $x,y',y''$）—— 可降阶：令 $p=y'$，$y''=\\dfrac{dp}{dx}$",
+      "<b>降阶后：</b>$$x^2\\frac{dp}{dx}-2xp-p^2=0\\ \\Longrightarrow\\ \\frac{dp}{dx}-\\frac{2}{x}p=\\frac{1}{x^2}p^2$$　这是 $n=2$ 的<b>伯努利方程</b>",
+      "<b>伯努利换元：</b>由 $y'(3)=-9\\ne0$ 可除以 $p^2$；令 $z=p^{-1}$（$z'=-p^{-2}p'$）：$$z'+\\frac{2}{x}z=-\\frac{1}{x^2}$$　一阶线性方程",
+      "<b>解线性方程：</b>积分因子 $\\mu=e^{\\int\\frac{2}{x}dx}=x^2$：$$(x^2z)'=-1\\ \\Longrightarrow\\ z=\\frac{C_1-x}{x^2},\\qquad p=\\frac{1}{z}=\\frac{x^2}{C_1-x}$$",
+      "<b>定 $C_1$：</b>$p(3)=\\dfrac{9}{C_1-3}=-9\\Rightarrow C_1=2$，故 $$y'=\\frac{x^2}{2-x}=-\\frac{x^2}{x-2}$$　（$p<0$，与初值 $y'(3)=-9$ 方向一致）",
+      "<b>多项式除法：</b>$x^2=(x-2)(x+2)+4$，故 $$y'=-\\Big(x+2+\\frac{4}{x-2}\\Big)$$",
+      "<b>积分并定 $C_2$：</b>$y=-\\dfrac{x^2}{2}-2x-4\\ln(x-2)+C_2$（$x>2$ 故 $\\ln|x-2|=\\ln(x-2)$）；代 $y(3)=\\dfrac12$：$-\\dfrac92-6-4\\ln 1+C_2=\\dfrac12\\Rightarrow C_2=11$",
+      "<b>最终解：</b>$$y=-\\frac{x^2}{2}-2x-4\\ln(x-2)+11\\quad(x>2)$$　验证：$y'(3)=-3-2-4=-9$ ✓，$y(3)=-\\dfrac92-6+11=\\dfrac12$ ✓"
+    ];
+    this._rows = [];
+    for (var i = 0; i < LINES.length; i++){
+      var r = AW.el('div', 'aw-stepcard', LINES[i]);
+      inner.appendChild(r);
+      this._rows.push(r);
+    }
+    wrap.appendChild(inner);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step',  tag:'审题',   log:'方程里不含 y，只含 x、y′、y″，这是可降阶方程的信号', count:0, ribbon:{k:1, ok:true} },
+    { cls:'shift', tag:'降阶',   log:'令 p = y′，方程降为关于 p 的一阶方程', count:1, ribbon:{k:2, ok:true} },
+    { cls:'step',  tag:'辨型',   log:'整理成伯努利方程的标准形状：p′ 减 2/x·p 等于 1/x²·p²，n = 2', count:2, ribbon:{k:3, ok:true} },
+    { cls:'shift', tag:'换元',   log:'两边除以 p²，令 z = 1/p 化成一阶线性方程；注意 z′ 带负号，两边同变号', count:3, ribbon:{k:4, ok:true} },
+    { cls:'ok',    tag:'解线性', log:'积分因子是 x²，一次积分就出 z 的通解，p 是它的倒数', count:4, ribbon:{k:5, ok:true} },
+    { cls:'ok',    tag:'定C₁',  log:'把 y′(3) = −9 代进 p 的表达式，解出 C₁ = 2，y′ 确定为负值，与初值一致', count:5, ribbon:{k:6, ok:true} },
+    { cls:'step',  tag:'除法',   log:'x²/(x−2) 是假分式，先做多项式除法 x² = (x−2)(x+2) + 4 再谈积分', count:6, ribbon:{k:7, ok:true} },
+    { cls:'ok',    tag:'定C₂',  log:'逐项积分得到 y，再用 y(3) = 1/2 定出 C₂ = 11', count:7, ribbon:{k:8, ok:true} },
+    { cls:'done',  tag:'完成',   log:'结论：最终解已写出，回代验证两个初始条件全部满足', count:8, ribbon:{k:9, ok:true}, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    var rows = this._rows;
+    for (var j = 0; j < rows.length; j++){
+      rows[j].className = 'aw-stepcard' + (j < i ? ' good' : (j === i ? ' key' : ''));
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '$y=-\\dfrac{x^2}{2}-2x-4\\ln(x-2)+11\\quad(x>2)$',
+    html: '解题链：<b>不显含 $y$ → 令 $p=y\'$ 降阶</b> → 伯努利 $z=p^{-1}$ → 线性方程（积分因子 $x^2$）→ $p=\\dfrac{x^2}{2-x}$ → 多项式除法后积分 → 两个初值分别定 $C_1=2$、$C_2=11$。易错：$z\'=-p^{-2}p\'$ 的负号别丢。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

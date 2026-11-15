@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2024·11 曲线 y²=x 在原点的曲率圆</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改题目专属区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+/* 推导行工具：acc 取 key/ok/bad/blue 决定高亮色；未揭示时隐去 */
+var ACC = { key:'#f59e0b', ok:'#22c55e', bad:'#ef4444', blue:'#3b82f6' };
+var BGS = { key:'#fffbeb', ok:'#f6fef9', bad:'#fff8f8', blue:'#eff6ff' };
+function row(accent, html){
+  var d = AW.el('div', '', html);
+  d.style.cssText = 'border-left:4px solid #cbd5e1;padding:7px 14px;margin:9px 0;border-radius:10px;'
+    + 'opacity:0;transform:translateX(-12px);transition:all .45s ease;font-size:15px;line-height:2;';
+  d.dataset.acc = accent;
+  return d;
+}
+
+// 每行推导内容（html 里可写 $..$ / $$..$$ 公式）
+var ROWS = [
+  { acc: 'key', html: '<p><b>换自变量</b>：$y^2=x$ 在 $(0,0)$ 处切线是竖直的 $y$ 轴，按 $y=y(x)$ 求导会在 $y=0$ 处除零。改写 $x=y^2$ 把 $y$ 当自变量：$$\\frac{\\mathrm dx}{\\mathrm dy}=2y,\\qquad\\frac{\\mathrm d^2x}{\\mathrm dy^2}=2.$$</p>' },
+  { acc: 'blue', html: '<p><b>曲率公式（对 $y$ 求导版）</b>：$$\\kappa=\\frac{\\lvert x\'\'\\rvert}{\\big(1+(x\')^2\\big)^{3/2}}.$$</p>' },
+  { acc: 'ok', html: '<p><b>代原点</b>（$y=0$）：$x\'=0$、$x\'\'=2$，$$\\kappa=\\frac{2}{(1+0)^{3/2}}=2,\\qquad R=\\frac1\\kappa=\\frac12.$$</p>' },
+  { acc: 'blue', html: '<p><b>定曲率中心</b>：原点处法线沿 $x$ 轴；曲线 $x=y^2$ 开口朝 $x$ 轴<b>正方向</b>（图形向右弯），曲率中心取凹侧法线上距曲线点 $R$ 处：$$\\Big(0+\\tfrac12,\\ 0\\Big)=\\Big(\\tfrac12,\\ 0\\Big).$$</p>' },
+  { acc: 'ok', html: '<p><b>写曲率圆</b>：$$\\Big(x-\\dfrac12\\Big)^2+y^2=\\dfrac14.$$</p>' },
+  { acc: 'blue', html: '<p><b>验算</b>：过原点 $\\big(0-\\tfrac12\\big)^2+0=\\tfrac14$ ✓；半径 $\\tfrac12=R$ ✓；圆心在凹侧 ✓（曲率圆与曲线在原点共用切线与曲率，二阶接触）。</p>' },
+  { acc: 'bad', html: '<p><b>易错对照</b>：写成 $\\big(x+\\tfrac12\\big)^2+y^2=\\tfrac14$ 是把凹向搞反；硬用 $y\'=\\dfrac1{2y}$ 在 $y=0$ 处分母为零——切线竖直时必须换 $x=x(y)$。</p>' },
+];
+
+AW.init({
+  title: '曲线 $y^2=x$ 在点 $(0,0)$ 处的曲率圆',
+  subtitle: '考点：曲率 · 方法：切线竖直换 $x=x(y)$ → 曲率半径 → 凹侧定心',
+  counterLabel: '计算步',
+  intro: '点击「▶ 播放」逐步演示推导。',
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    wrap.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>（每步揭示一行，最新一行高亮）'));
+    var board = AW.el('div', '');
+    this.rows = [];
+    ROWS.forEach(function(r){
+      var d = row(r.acc, r.html);
+      board.appendChild(d);
+      this.rows.push(d);
+    }, this);
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+  render: function(stage, sn, i){
+    (this.rows || []).forEach(function(d, j){
+      var on = j < i;
+      d.style.opacity = on ? '1' : '0';
+      d.style.transform = on ? 'none' : 'translateX(-12px)';
+      d.style.borderLeftColor = on ? (ACC[d.dataset.acc] || ACC.blue) : '#cbd5e1';
+      d.style.background = on ? (BGS[d.dataset.acc] || BGS.blue) : '#f8fafc';
+    });
+    renderMathAfterSnap(stage);
+  },
+  snaps: [
+    { cls: 'key',   tag: '审题', log: '原点切线竖直（y 轴），改对 y 求导：x = y²', count: 0 },
+    { cls: 'shift', tag: '求导', log: 'dx/dy = 2y，d²x/dy² = 2', count: 1 },
+    { cls: 'shift', tag: '公式', log: '曲率 = |x″| / (1+(x\')²)^(3/2)', count: 2 },
+    { cls: 'ok',    tag: '半径', log: '原点处 κ=2，R=1/2', count: 3 },
+    { cls: 'shift', tag: '定心', log: '曲线向 +x 侧弯，中心取 (1/2, 0)', count: 4 },
+    { cls: 'ok',    tag: '写圆', log: '曲率圆：(x−1/2)² + y² = 1/4', count: 5 },
+    { cls: 'step',  tag: '验证', log: '过原点、半径 1/2、圆心在凹侧，全对上', count: 6 },
+    { cls: 'done',  tag: '完成', log: '结论：(x−1/2)² + y² = 1/4', count: 7, done: true },
+  ],
+  result: {
+    big: '答案：(x − 1/2)² + y² = 1/4',
+    html: '记忆锚点：<b>切线竖直 ⟹ 换 $x=x(y)$</b>，曲率 $\\kappa=\\dfrac{\\lvert x\'\'\\rvert}{(1+(x\')^2)^{3/2}}$。本题 $\\kappa=2$、$R=\\tfrac12$，圆心在凹侧（$+x$ 方向）$\\big(\\tfrac12,0\\big)$。易错：凹向反了会写成 $\\big(x+\\tfrac12\\big)^2+y^2=\\tfrac14$。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

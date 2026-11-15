@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2019·15 分段函数求导与极值</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [
+  "$$f(x)=\\begin{cases}x^{2x}, & x>0\\\\ x\\,\\mathrm{e}^{x}+1, & x\\le 0\\end{cases}\\qquad\\text{两段各自求导，分段点单独考}$$",
+  "<b>① 幂指函数改写：</b>$x^{2x}=\\mathrm{e}^{2x\\ln x}$——底、指数都含 $x$，不能套幂函数或指数函数的求导公式",
+  "<b>② 对数求导（右段）：</b>$\\ln f=2x\\ln x\\ \\Rightarrow\\ \\dfrac{f'(x)}{f(x)}=2\\ln x+2\\ \\Rightarrow\\ f'(x)=2x^{2x}(\\ln x+1)$（$x>0$）",
+  "<b>③ 左段求导：</b>$(x\\,\\mathrm{e}^x+1)'=\\mathrm{e}^x+x\\,\\mathrm{e}^x=(1+x)\\,\\mathrm{e}^x$（$x<0$）",
+  "<b>④ 分段点 $x=0$：</b>$f(0)=1$；$x\\to0^+$ 时 $2x\\ln x\\to0$，$f\\to1$，连续。右导数 $\\lim_{x\\to0^+}2x^{2x}(\\ln x+1)=-\\infty$，而左导数为 $1$，故 $x=0$ 处不可导",
+  "<b>⑤ 左段驻点：</b>$(1+x)\\,\\mathrm{e}^x=0\\Rightarrow x=-1$；$f'$ 在 $(-\\infty,-1)$ 为负、$(-1,0)$ 为正，由负变正 → 极小值 $f(-1)=1-\\dfrac1{\\mathrm{e}}$",
+  "<b>⑥ 右段驻点：</b>$\\ln x+1=0\\Rightarrow x=\\dfrac1{\\mathrm{e}}$；$f'$ 在 $\\left(0,\\tfrac1{\\mathrm{e}}\\right)$ 为负、$\\left(\\tfrac1{\\mathrm{e}},+\\infty\\right)$ 为正 → 极小值 $f\\!\\left(\\dfrac1{\\mathrm{e}}\\right)=\\mathrm{e}^{-2/\\mathrm{e}}$",
+  "<b>⑦ 不可导点 $x=0$：</b>左侧 $(-1,0)$ 上 $f'>0$（递增），右侧 $\\left(0,\\tfrac1{\\mathrm{e}}\\right)$ 上 $f'<0$（递减）→ 虽不可导，仍是极大值点，$f(0)=1$",
+  "<b>⑧ 结论：</b>$$f'(x)=\\begin{cases}2x^{2x}(\\ln x+1), & x>0\\\\ (1+x)\\,\\mathrm{e}^x, & x<0\\end{cases}\\quad(x=0\\ \\text{处不存在})$$"
+];
+
+AW.init({
+  title: '2019·15　分段函数 $f(x)$ 的导数与极值',
+  subtitle: '考点：幂指函数对数求导 · 分段点可导性 · 一阶导数变号判极值',
+  counterLabel: '已完成',
+  ribbonTitle: '推导进度（✓ 完成）',
+  intro: '点击「▶ 播放」或「下一步」，逐行完成分段求导与极值判别。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var inner = AW.el('div', '');
+    inner.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>：当前行亮琥珀色，已完成的行变绿'));
+    this._rows = [];
+    for (var i = 0; i < ROWS.length; i++){
+      var r = AW.el('div', 'aw-stepcard', ROWS[i]);
+      inner.appendChild(r);
+      this._rows.push(r);
+    }
+    wrap.appendChild(inner);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step',  tag:'审题',     log:'两段函数分段处理，幂指函数与分段点各有各的坑', count:0, ribbon:{k:1, ok:true} },
+    { cls:'shift', tag:'改写',     log:'幂指函数化成 e 的指数形式，这是唯一稳妥的路', count:1, ribbon:{k:2, ok:true} },
+    { cls:'ok',    tag:'右段导数', log:'取对数再求导，右段导数等于二倍幂指函数乘以 ln x 加一', count:2, ribbon:{k:3, ok:true} },
+    { cls:'ok',    tag:'左段导数', log:'左段是乘积函数，导数为 e 的 x 次方乘以 x 加一', count:3, ribbon:{k:4, ok:true} },
+    { cls:'miss',  tag:'分段点',   log:'右导数趋于负无穷，左导数为一，x 等于零处不可导', count:4, ribbon:{k:5, ok:true} },
+    { cls:'ok',    tag:'驻点一',   log:'左段驻点 x 等于负一，一阶导数由负变正，是极小值点', count:5, ribbon:{k:6, ok:true} },
+    { cls:'ok',    tag:'驻点二',   log:'右段驻点 x 等于 e 分之一，导数同样由负变正，也是极小值点', count:6, ribbon:{k:7, ok:true} },
+    { cls:'ok',    tag:'极大值',   log:'x 等于零处虽不可导，但左侧增右侧减，是极大值点', count:7, ribbon:{k:8, ok:true} },
+    { cls:'done',  tag:'完成',     log:'结论：写出分段导数与三个极值', count:8, ribbon:{k:9, ok:true}, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    var rows = this._rows;
+    for (var j = 0; j < rows.length; j++){
+      rows[j].className = 'aw-stepcard' + (j < i ? ' good' : (j === i ? ' key' : ''));
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: "极小 $f(-1)=1-\\dfrac1{\\mathrm{e}}$、$f\\!\\left(\\dfrac1{\\mathrm{e}}\\right)=\\mathrm{e}^{-2/\\mathrm{e}}$；极大 $f(0)=1$",
+    html: "记忆锚点：<b>幂指函数先化 $\\mathrm{e}^{\\,\\square}$ 再求导；不可导点两侧 $f'$ 变号同样是极值点</b>。易错：对 $x^{2x}$ 套幂函数公式；只盯着 $f'=0$ 漏掉 $x=0$；分段点忘验可导性。",
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

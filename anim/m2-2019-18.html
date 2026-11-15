@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2019·18 极坐标二重积分</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [
+  "$$\\iint_D\\frac{x+y}{\\sqrt{x^2+y^2}}\\,\\mathrm{d}x\\,\\mathrm{d}y,\\quad D=\\{\\lvert x\\rvert\\le y,\\ (x^2+y^2)^3\\le y^4\\}\\qquad\\text{极坐标信号}$$",
+  "<b>① 边界化极坐标：</b>$(x^2+y^2)^3\\le y^4\\Rightarrow r^6\\le r^4\\sin^4\\theta\\Rightarrow 0\\le r\\le\\sin^2\\theta$（顶点在原点的叶形区域）",
+  "<b>② 角度范围：</b>$\\lvert x\\rvert\\le y\\Rightarrow y\\ge0$ 且 $\\lvert\\cos\\theta\\rvert\\le\\sin\\theta\\Rightarrow\\theta\\in\\left[\\dfrac{\\pi}{4},\\dfrac{3\\pi}{4}\\right]$",
+  "<b>③ 化被积函数并先积 $r$：</b>$\\dfrac{x+y}{\\sqrt{x^2+y^2}}=\\cos\\theta+\\sin\\theta$，面积元补进一个 $r$：$\\displaystyle\\int_0^{\\sin^2\\theta}r\\,\\mathrm{d}r=\\dfrac{\\sin^4\\theta}{2}$",
+  "<b>④ 对称性去掉一项：</b>区域关于 $\\theta=\\tfrac{\\pi}{2}$ 对称，$\\cos\\theta\\,\\sin^4\\theta$ 在 $\\theta\\mapsto\\pi-\\theta$ 下变号 → 该项积分为 $0$",
+  "<b>⑤ 剩余部分加倍：</b>$\\sin^5\\theta$ 在该对称下不变号：$$\\text{原式}=\\frac12\\int_{\\pi/4}^{3\\pi/4}\\sin^5\\theta\\,\\mathrm{d}\\theta=\\int_{\\pi/4}^{\\pi/2}\\sin^5\\theta\\,\\mathrm{d}\\theta$$",
+  "<b>⑥ 换元 $t=\\cos\\theta$：</b>$\\sin^5\\theta\\,\\mathrm{d}\\theta=-(1-t^2)^2\\,\\mathrm{d}t$，$\\theta:\\tfrac{\\pi}{4}\\to\\tfrac{\\pi}{2}$ 对应 $t:\\tfrac{\\sqrt2}{2}\\to0$：$$\\int_0^{\\sqrt2/2}\\left(1-t^2\\right)^2\\mathrm{d}t=\\left[t-\\frac{2t^3}{3}+\\frac{t^5}{5}\\right]_0^{\\sqrt2/2}$$",
+  "<b>⑦ 代值收尾：</b>$t^3=\\tfrac{\\sqrt2}{4},\\ t^5=\\tfrac{\\sqrt2}{8}$：$$\\frac{\\sqrt2}{2}-\\frac{\\sqrt2}{6}+\\frac{\\sqrt2}{40}=\\frac{60-20+3}{120}\\sqrt2=\\frac{43\\sqrt2}{120}$$"
+];
+
+AW.init({
+  title: '2019·18　$\\displaystyle\\iint_D\\frac{x+y}{\\sqrt{x^2+y^2}}\\,\\mathrm{d}x\\,\\mathrm{d}y$',
+  subtitle: '考点：极坐标变换 · 不等式定角 · 对称性削减 · 幂函数换元',
+  counterLabel: '已完成',
+  ribbonTitle: '推导进度（✓ 完成）',
+  intro: '点击「▶ 播放」或「下一步」，先定 r 与 θ 的范围，再用对称性瘦身。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var inner = AW.el('div', '');
+    inner.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>：当前行亮琥珀色，已完成的行变绿'));
+    this._rows = [];
+    for (var i = 0; i < ROWS.length; i++){
+      var r = AW.el('div', 'aw-stepcard', ROWS[i]);
+      inner.appendChild(r);
+      this._rows.push(r);
+    }
+    wrap.appendChild(inner);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step',  tag:'审题',   log:'被积函数与边界都含平方和，切换到极坐标处理', count:0, ribbon:{k:1, ok:true} },
+    { cls:'shift', tag:'定 r',   log:'边界不等式两边约掉 r 的四次方，半径上限是 sin 平方', count:1, ribbon:{k:2, ok:true} },
+    { cls:'ok',    tag:'定角',   log:'绝对值条件化成角度范围，四分之派到四分之三派', count:2, ribbon:{k:3, ok:true} },
+    { cls:'ok',    tag:'先积 r', log:'分子分母约掉一个 r，面积元补回一个 r，先积得 sin 四次方的一半', count:3, ribbon:{k:4, ok:true} },
+    { cls:'ok',    tag:'去奇项', log:'余弦项关于中线奇对称，整项积分为零', count:4, ribbon:{k:5, ok:true} },
+    { cls:'ok',    tag:'加倍',   log:'正弦五次方偶对称，区间减半后值不变', count:5, ribbon:{k:6, ok:true} },
+    { cls:'shift', tag:'换元',   log:'令 t 等于余弦，化成一减 t 平方的平方，限从二分之根号二到零', count:6, ribbon:{k:7, ok:true} },
+    { cls:'done',  tag:'完成',   log:'结论：代值通分，结果为一百二十分之四十三倍根号二', count:7, ribbon:{k:8, ok:true}, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    var rows = this._rows;
+    for (var j = 0; j < rows.length; j++){
+      rows[j].className = 'aw-stepcard' + (j < i ? ' good' : (j === i ? ' key' : ''));
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: "$\\displaystyle\\iint_D\\frac{x+y}{\\sqrt{x^2+y^2}}\\,\\mathrm{d}x\\,\\mathrm{d}y=\\frac{43\\sqrt2}{120}$",
+    html: "记忆锚点：<b>见 $\\sqrt{x^2+y^2}$ 与齐次边界就换极坐标；先定 $r$、后定 $\\theta$，再查对称性</b>。易错：忘乘雅可比 $r$；$\\lvert x\\rvert\\le y$ 忘化成角度范围；对称区间上的奇项没砍掉白算一遍。",
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

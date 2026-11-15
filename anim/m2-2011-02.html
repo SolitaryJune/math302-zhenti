@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2011 数二第 2 题 · 凑导数定义求极限</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（与模板一致，勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+var LINES = [
+  '<p><b>题面：</b>$f(x)$ 在 $x=0$ 处可导，$f(0)=0$，求 $$\\lim_{x\\to0}\\frac{x^2f(x)-2f(x^3)}{x^3}.$$</p>',
+  '<p><b>盘点工具：</b>条件只给「一点可导」，没有邻域内可导，<b>洛必达与泰勒都不可用</b>。由 $f(0)=0$，导数定义可改写为 $$f\'(0)=\\lim_{u\\to0}\\frac{f(u)-f(0)}{u}=\\lim_{u\\to0}\\frac{f(u)}{u}.$$</p>',
+  '<p><b>拆分：</b>$$\\frac{x^2f(x)-2f(x^3)}{x^3}=\\frac{f(x)}{x}-2\\cdot\\frac{f(x^3)}{x^3}.$$</p>',
+  '<p><b>第一项：</b>$\\dfrac{f(x)}{x}=\\dfrac{f(x)-f(0)}{x-0}\\to f\'(0)$，就是定义式取 $u=x$。</p>',
+  '<p><b>第二项：</b>令 $u=x^3$，$x\\to0\\Rightarrow u\\to0$，于是 $\\dfrac{f(x^3)}{x^3}=\\dfrac{f(u)}{u}\\to f\'(0)$。</p>',
+  '<p><b>合并：</b>$$f\'(0)-2f\'(0)=-f\'(0),$$ <b>选 B</b>。</p>'
+];
+
+var lineEls = [];
+
+AW.init({
+  title: '第 2 题 · $\\lim\\limits_{x\\to0}\\dfrac{x^2f(x)-2f(x^3)}{x^3}$',
+  subtitle: '考点：导数定义 · 方法：拆项凑差商（洛必达不可用）',
+  counterLabel: '推导步',
+  intro: '点击「▶ 播放」逐步演示：先盘点工具，再拆项凑导数定义。',
+  ribbonTitle: '推导进度（✓ 完成）',
+  build: function(stage){
+    stage.innerHTML = '';
+    lineEls = [];
+    var wrap = AW.el('div', 'aw-scroll');
+    wrap.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>（每步揭示一行，公式由 KaTeX 渲染）'));
+    LINES.forEach(function(h){
+      var d = AW.el('div', 'aw-stepcard', h);
+      d.style.display = 'none';
+      wrap.appendChild(d);
+      lineEls.push(d);
+    });
+    stage.appendChild(wrap);
+  },
+  snaps: [
+    { cls:'step',  tag:'审题', count:0, reveal:1 },
+    { cls:'shift', tag:'工具盘点', log:'只在一点可导：洛必达与泰勒都不可用，回到导数定义', count:1, reveal:2, hl:1, ribbon:{k:1, ok:true} },
+    { cls:'step',  tag:'拆分', log:'把分子拆成两项，各自凑成 f(·)/· 的形状', count:2, reveal:3, hl:2, ribbon:{k:2, ok:true} },
+    { cls:'step',  tag:'第一项', log:'f(x)/x 就是 x 处的差商，极限为 f′(0)', count:3, reveal:4, hl:3, ribbon:{k:3, ok:true} },
+    { cls:'step',  tag:'第二项', log:'换元 u=x³ 后仍是同一定义式，极限也是 f′(0)', count:4, reveal:5, hl:4, ribbon:{k:4, ok:true} },
+    { cls:'done',  tag:'结论', log:'合并：f′(0) − 2f′(0) = −f′(0)，选 B', count:5, reveal:6, hl:5, good:true, done:true, ribbon:{k:5, ok:true} },
+  ],
+  render: function(stage, sn){
+    for(var j = 0; j < lineEls.length; j++){
+      lineEls[j].style.display = (j < (sn.reveal || 0)) ? '' : 'none';
+      lineEls[j].className = 'aw-stepcard' + (sn.hl === j ? (sn.good ? ' good' : ' key') : '');
+    }
+    renderMathAfterSnap(stage);
+  },
+  result: {
+    big: '选 B：−f′(0)',
+    html: '核心式：$\\lim_{u\\to0}\\dfrac{f(u)}{u}=f\'(0)$（用 $f(0)=0$ 凑差商）。记忆锚点：<b>只知一点可导 ⇒ 只能凑定义</b>。易错：没有「邻域内可导」的条件，洛必达的逻辑不成立；两项系数是 $1$ 与 $-2$，合并为 $-f\'(0)$。',
+  },
+});
+</script>
+</body>
+</html>

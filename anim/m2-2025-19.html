@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>m2-2025-19 · 全微分还原原函数并求极值</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+AW.init({
+  title: '由 $\\mathrm{d}f$ 还原 $f(x,y)$ 并求极值',
+  subtitle: '考点：全微分 / 偏积分 + 二元极值 $AC-B^2$ 判别法 · 初值 $f(0,0)=2$',
+  counterLabel: '已完成',
+  intro: '点击「▶ 播放」逐步演示：偏积分 → 定 φ(y) → 定常数 → 驻点 → 二阶判别。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var head = AW.el('div', '',
+      '<p>$$\\mathrm{d}f=-2x\\mathrm{e}^{-y}\\,\\mathrm{d}x+\\mathrm{e}^{-y}(x^2-y-1)\\,\\mathrm{d}y,\\qquad f(0,0)=2$$</p>');
+    stage.appendChild(head);
+    this._board = AW.el('div', '');
+    stage.appendChild(this._board);
+  },
+
+  snaps: [
+    { cls:'shift', tag:'审题', log:'全微分展开后两个系数就是两个偏导数，从 f 对 x 的偏导数入手', count:1,
+      board: '<div class="aw-row-label"><b>第 1 步 · 读出偏导数</b></div>'
+        + '<p>$$f_x=-2x\\mathrm{e}^{-y},\\qquad f_y=\\mathrm{e}^{-y}(x^2-y-1)$$</p>'
+        + '<p>（可自查恰当性：$P_y=2x\\mathrm{e}^{-y}=Q_x$，全微分确实可还原。）</p>' },
+    { cls:'step', tag:'偏积分', log:'对 x 偏积分：积分常数换成待定函数 φ(y)', count:2,
+      ribbon:{k:1, ok:true},
+      board: '<div class="aw-row-label"><b>第 2 步 · 对 $x$ 偏积分</b></div>'
+        + '<p>$$f(x,y)=-x^2\\mathrm{e}^{-y}+\\varphi(y)$$</p>'
+        + '<p>与 $x$ 无关的部分全藏在 $\\varphi(y)$ 里，不能当常数 0。</p>' },
+    { cls:'step', tag:'定 φ′', log:'对 y 求偏导再和题设系数比对，解出 φ 的一元导数', count:3,
+      board: '<div class="aw-row-label"><b>第 3 步 · 比较 $f_y$ 定 $\\varphi\\prime(y)$</b></div>'
+        + '<p>$$f_y=x^2\\mathrm{e}^{-y}+\\varphi\\prime(y)=x^2\\mathrm{e}^{-y}-(y+1)\\mathrm{e}^{-y}$$</p>'
+        + '<p>$$\\varphi\\prime(y)=-(y+1)\\mathrm{e}^{-y}$$</p>' },
+    { cls:'step', tag:'分部积分', log:'对 y 加 1 乘 e 的负 y 次方做一次分部积分，两个负号相消', count:4,
+      board: '<div class="aw-row-label"><b>第 4 步 · 积出 $\\varphi$</b></div>'
+        + '<p>$$\\int (y+1)\\mathrm{e}^{-y}\\,\\mathrm{d}y=-(y+1)\\mathrm{e}^{-y}-\\mathrm{e}^{-y}=-(y+2)\\mathrm{e}^{-y}$$</p>'
+        + '<p>$$\\varphi(y)=(y+2)\\mathrm{e}^{-y}+C$$</p>' },
+    { cls:'ok', tag:'定常数', log:'代初值：x、y 全取零，2 加 C 等于 2，C 归零', count:5,
+      ribbon:{k:2, ok:true},
+      board: '<div class="aw-row-label"><b>第 5 步 · 初值 $f(0,0)=2$ 定 $C$</b></div>'
+        + '<p>$$f(0,0)=0+(0+2)\\cdot1+C=2\\ \\Longrightarrow\\ C=0$$</p>'
+        + '<p>$$f(x,y)=(y+2-x^2)\\mathrm{e}^{-y}$$</p>' },
+    { cls:'step', tag:'驻点', log:'两个一阶偏导同时为零：x 必为零，进而 y 是负 1', count:6,
+      ribbon:{k:3, ok:true},
+      board: '<div class="aw-row-label"><b>第 6 步 · 解驻点</b></div>'
+        + '<p>$$f_x=-2x\\mathrm{e}^{-y}=0\\ \\Rightarrow\\ x=0;\\qquad f_y=\\mathrm{e}^{-y}(x^2-y-1)=0\\ \\Rightarrow\\ y=x^2-1=-1$$</p>'
+        + '<p>唯一驻点 $(0,-1)$。</p>' },
+    { cls:'step', tag:'二阶判别', log:'算三个二阶偏导，在驻点处 A 是负的、B 是零、C 也是负的', count:7,
+      board: '<div class="aw-row-label"><b>第 7 步 · 二阶偏导在 $(0,-1)$</b></div>'
+        + '<p>$$A=f_{xx}=-2\\mathrm{e}^{-y}=-2\\mathrm{e}<0,\\quad B=f_{xy}=2x\\mathrm{e}^{-y}=0,\\quad C=f_{yy}=\\mathrm{e}^{-y}(y-x^2)=-\\mathrm{e}$$</p>'
+        + '<p>$$AC-B^2=(-2\\mathrm{e})(-\\mathrm{e})-0=2\\mathrm{e}^2>0$$</p>' },
+    { cls:'done', tag:'完成', log:'判别式为正且 A 小于零：唯一驻点是极大值点，函数没有极小值', count:8, done:true,
+      ribbon:{k:4, ok:true},
+      board: '<div class="aw-row-label"><b>第 8 步 · 结论</b></div>'
+        + '<p>$$f(0,-1)=(-1+2-0)\\,\\mathrm{e}^{1}=\\mathrm{e}$$</p>'
+        + '<p>$AC-B^2>0$ 且 $A<0$：极大值点；驻点唯一 $\\Rightarrow$ <b>无极小值</b>。</p>' },
+  ],
+
+  render: function(stage, sn, i){
+    this._board.innerHTML = sn.board || '';
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '极大值 f(0,−1) = e，无极小值',
+    html: '结论：$$f(x,y)=-x^2\\mathrm{e}^{-y}+(y+2)\\mathrm{e}^{-y},\\qquad \\text{极大值 } f(0,-1)=\\mathrm{e},\\ \\text{无极小值}$$'
+      + '记忆点：<b>偏积分的「常数」是 $\\varphi(y)$</b>；还原后必代初值定 $C$；'
+      + '极值判定永远是「驻点 + $AC-B^2$ 与 $A$ 的符号」，驻点唯一且判为极大 $\\Rightarrow$ 无极小值。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

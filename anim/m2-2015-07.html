@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2015·07 范德蒙德型方程组何时有无穷多解</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_concept_template.html，只改题目专属区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+// 一张推理卡片（body 里可写 $..$ / $$..$$ 公式）
+function card(n, cls, title, body){
+  return '<div class="aw-stepcard ' + (cls || '') + '"><h4><span class="n">' + n +
+         '</span>' + title + '</h4>' + body + '</div>';
+}
+
+// 推理链：每一步的完整内容（引擎按步数截取显示）
+var STEPS = [
+  { title: '审题：认出范德蒙德结构',
+    cls: 'key',
+    body: '<p>$A$ 的三列是节点 $1,2,a$ 对应的 $(1,t,t^2)^{\\mathrm T}$ 型向量，$b=(1,d,d^2)^{\\mathrm T}$ 是节点 $d$ 的同型向量。目标：$Ax=b$ 无穷多解 $\\iff r(A)=r(A\\mid b)<3$。</p>',
+    log: '目标：r(A)=r(A|b)<3' },
+  { title: '算行列式：先要降秩',
+    cls: 'key',
+    body: '<p>范德蒙德：$\\det A=(2-1)(a-1)(a-2)=(a-1)(a-2)$。要 $r(A)<3$ 必须 $\\det A=0\\iff a\\in\\{1,2\\}=\\Omega$。</p>',
+    log: 'det A=(a−1)(a−2)，必须 a∈Ω' },
+  { title: 'a∈Ω 时 A 的秩与列空间',
+    cls: 'step',
+    body: '<p>$a\\in\\{1,2\\}$ 时 $A$ 只有两个不同节点，$r(A)=2$，列空间由 $u_1=(1,1,1)^{\\mathrm T},\\ u_2=(1,2,4)^{\\mathrm T}$ 张成。</p>',
+    log: 'r(A)=2，列空间由节点 1、2 张成' },
+  { title: 'b 何时落入列空间',
+    cls: 'good',
+    body: '<p>$b=(1,d,d^2)^{\\mathrm T}$ 落入 $\\mathrm{span}\\{u_1,u_2\\}\\iff$ 它与 $u_1,u_2$ 线性相关 $\\iff$ 节点 $1,2,d$ 的范德蒙德行列式 $(d-1)(d-2)=0\\iff d\\in\\{1,2\\}=\\Omega$。</p>',
+    log: 'b 落入列空间 ⟺ d∈Ω' },
+  { title: '两种情形收尾',
+    cls: 'good',
+    body: '<p>$d\\in\\Omega$：$r(A\\mid b)=2=r(A)<3$，<b>无穷多解</b>；$d\\notin\\Omega$：三列无关，$r(A\\mid b)=3>r(A)$，<b>无解</b>。</p>',
+    ribbon: {k:1, ok:true},
+    log: 'd∈Ω → 无穷多解；d∉Ω → 无解' },
+  { title: '排除干扰项',
+    cls: 'bad',
+    body: '<p><b>A、B</b>：$a\\notin\\Omega$ 时 $\\det A\\neq0$，$A$ 满秩，只能<b>唯一解</b>，与无穷多解矛盾。<b>C</b>：$a\\in\\Omega$ 只保证降秩，$d\\notin\\Omega$ 时是无解而非无穷多解。</p>',
+    ribbon: {k:2, ok:false},
+    log: 'A/B 唯一解，C 无解，均不符' },
+  { title: '结论',
+    cls: 'good',
+    body: '<p>充要条件为 $a\\in\\Omega$ 且 $d\\in\\Omega$，答案选 <b>D</b>。记忆锚点：范德蒙德<b>节点重合才线性相关</b>——$a$ 重合使 $A$ 降秩，$d$ 重合使 $b$ 进列空间，缺一不可。</p>',
+    log: '选 D：a∈Ω 且 d∈Ω' },
+];
+
+var snaps = STEPS.map(function(s, i){
+  return {
+    cls: i === STEPS.length - 1 ? 'done' : 'step',
+    tag: '第 ' + (i + 1) + ' 步',
+    log: s.log || s.title,
+    count: i + 1,
+    ribbon: s.ribbon,
+    html: STEPS.slice(0, i + 1).map(function(x, j){
+      return card(j + 1, x.cls, x.title, x.body);
+    }).join(''),
+    done: i === STEPS.length - 1,
+  };
+});
+
+AW.init({
+  title: '$Ax=b$ 有无穷多解的充要条件（范德蒙德型）',
+  subtitle: '考点：线性方程组解的判定 · 方法：降秩 + b 落入列空间，两关缺一不可',
+  counterLabel: '推理步',
+  ribbonTitle: '条件核查（✓ 充要成立 / ✗ 干扰项）',
+  intro: '点击「▶ 播放」逐步展开推理链。',
+  render: function(stage, sn){
+    if(sn.html != null) stage.innerHTML = sn.html;
+    renderMathAfterSnap(stage);
+  },
+  snaps: snaps,
+  result: {
+    big: '答案 D（a∈Ω 且 d∈Ω）',
+    html: '记忆锚点：<b>节点重合才相关</b>。$\\det A=(a-1)(a-2)$：$a\\notin\\Omega$ 满秩唯一解（排除 A/B）；$a\\in\\Omega$ 但 $d\\notin\\Omega$ 时 $b=(1,d,d^2)^{\\mathrm T}$ 冲出列空间，$r(A\\mid b)=3>r(A)=2$，无解（排除 C）。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

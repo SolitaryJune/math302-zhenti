@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2015·10 用幂级数系数求高阶导数</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改题目专属区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+// 推导板各行：与 snaps 一一对应（build 建立、render 按 i 点亮）
+var ROWS = [
+  { label: '第 0 步 · 审题与策略',
+    h: '<p>$f(x)=x^2 2^x$，求 $f^{(n)}(0)$。策略：展成幂级数 $\\sum_k c_k x^k$ 后，<b>$f^{(n)}(0)=n!\\,c_n$</b>——导数值就是系数乘 $n!$。</p>' },
+  { label: '第 1 步 · 指数化展开 2^x',
+    h: '<p>$2^x=\\mathrm{e}^{x\\ln2}=\\sum_{k=0}^{\\infty}\\dfrac{(\\ln2)^k}{k!}\\,x^k.$</p>' },
+  { label: '第 2 步 · 乘 x²，幂次整体平移',
+    h: '<p>$f(x)=x^2\\,2^x=\\sum_{k=0}^{\\infty}\\dfrac{(\\ln2)^k}{k!}\\,x^{k+2}.$</p>' },
+  { label: '第 3 步 · 定位 x^n 的系数',
+    h: '<p>令 $k+2=n$（即 $k=n-2$，$n\\ge2$）：$c_n=\\dfrac{(\\ln2)^{n-2}}{(n-2)!}.$</p>' },
+  { label: '第 4 步 · 乘 n! 得导数值',
+    h: '<p>$f^{(n)}(0)=n!\\cdot\\dfrac{(\\ln2)^{n-2}}{(n-2)!}=n(n-1)(\\ln2)^{n-2}.$</p>' },
+  { label: '第 5 步 · 验证 n=2',
+    h: '<p>公式给 $f^{\\prime\\prime}(0)=2\\cdot1\\cdot(\\ln2)^0=2$；直接求导 $f^{\\prime\\prime}(x)=\\big(2+4x\\ln2+x^2(\\ln2)^2\\big)2^x$ 在 $x=0$ 处 $=2$，吻合 ✓。</p>' },
+];
+
+var rowEls = [];
+
+AW.init({
+  title: '$f(x)=x^2 2^x$ 在 $x=0$ 处的 $n$ 阶导数',
+  subtitle: '考点：高阶导数 · 幂级数展开 · 方法：f⁽ⁿ⁾(0) = n! × xⁿ 系数',
+  counterLabel: '步骤',
+  intro: '点击「▶ 播放」逐步演示展开与系数定位。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    rowEls = [];
+    var wrap = AW.el('div', 'aw-scroll');
+    ROWS.forEach(function(r){
+      var d = AW.el('div', '');
+      d.style.cssText = 'padding:9px 14px;margin:8px 0;border-left:4px solid transparent;border-radius:10px;opacity:.15;transition:opacity .35s,background .35s,border-color .35s;';
+      d.innerHTML = '<div style="font-size:12.5px;color:#64748b;font-weight:700;margin-bottom:2px">' + r.label + '</div>' + r.h;
+      wrap.appendChild(d);
+      rowEls.push(d);
+    });
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step',  tag:'审题',   log:'求 n 阶导在 0 的值：展开成幂级数，抓 xⁿ 系数', count:0 },
+    { cls:'shift', tag:'指数化', log:'2^x = e^(x ln2)，套指数级数展开', count:1 },
+    { cls:'ok',    tag:'乘 x²',  log:'乘 x² 让所有幂次加 2，级数整体平移', count:2 },
+    { cls:'ok',    tag:'定位',   log:'xⁿ 对应 k=n−2，系数 (ln2)^(n−2)/(n−2)!', count:3 },
+    { cls:'ok',    tag:'乘 n!',  log:'n! 抵掉 (n−2)!，得 n(n−1)(ln2)^(n−2)', count:4 },
+    { cls:'done',  tag:'完成',   log:'n=2 验证得 2，与直接求导一致，答案成立', count:5, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    rowEls.forEach(function(d, j){
+      d.style.opacity = j <= i ? '1' : '.15';
+      d.style.borderLeftColor = j < i ? '#16a34a' : (j === i ? '#d97706' : 'transparent');
+      d.style.background = j === i ? '#fffbeb' : (j < i ? '#f6fef9' : 'transparent');
+    });
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '$n(n-1)(\\ln 2)^{n-2}$',
+    html: '记忆锚点：<b>$f^{(n)}(0)=n!\\times x^n$ 系数</b>。三件套：$2^x=\\mathrm{e}^{x\\ln2}$ 展开指数级数 → 乘 $x^2$ 幂次平移（$k=n-2$）→ 乘 $n!$。只抄系数不乘 $n!$ 是最高频错误。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

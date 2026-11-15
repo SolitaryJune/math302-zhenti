@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学·算法/过程类动画：初等变换求 tr(A⁻¹)</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+AW.init({
+  title: '行换位 + 列倍加后得 $B$：求 $\\operatorname{tr}(A^{-1})$',
+  subtitle: '考点：初等矩阵与迹 · 方法：$PAQ=B$ → $A^{-1}=QB^{-1}P$ → 循环性质取迹',
+  counterLabel: '推演步',
+  intro: '点击「▶ 播放」逐步演示矩阵翻译与取迹流程。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    var lines = [
+      '<b>审题</b>：行变换<b>左乘</b>、列变换<b>右乘</b> —— 记 $P$ 为交换 2、3 行的初等矩阵，$Q$ 为「第 1 列加第 2 列的 $-1$ 倍」的初等矩阵：$$PAQ=B=\\begin{pmatrix}-2&1&-1\\\\1&-1&0\\\\-1&0&0\\end{pmatrix}$$',
+      '<b>写出 $P,Q$</b>（列操作写在 $Q$ 的第 1 列）：$$P=\\begin{pmatrix}1&0&0\\\\0&0&1\\\\0&1&0\\end{pmatrix},\\quad Q=\\begin{pmatrix}1&0&0\\\\-1&1&0\\\\0&0&1\\end{pmatrix}$$',
+      '<b>表示 $A^{-1}$</b>：$A=P^{-1}BQ^{-1}\\Rightarrow A^{-1}=QB^{-1}P$；由循环性质 $$\\operatorname{tr}(A^{-1})=\\operatorname{tr}(QB^{-1}P)=\\operatorname{tr}\\bigl(B^{-1}PQ\\bigr)$$',
+      '<b>求 $B^{-1}$</b>：$\\det B=1$（按第 3 行展开），$$B^{-1}=\\begin{pmatrix}0&0&-1\\\\0&-1&-1\\\\-1&-1&1\\end{pmatrix}$$',
+      '<b>算 $PQ$</b>：$$PQ=\\begin{pmatrix}1&0&0\\\\0&0&1\\\\-1&1&0\\end{pmatrix}$$',
+      '<b>取对角元</b>：$B^{-1}(PQ)$ 的 $(1,1),(2,2),(3,3)$ 元为 $$(0,0,-1)\\cdot(1,0,-1)^{\\mathrm T}=1,\\quad (0,-1,-1)\\cdot(0,0,1)^{\\mathrm T}=-1,\\quad (-1,-1,1)\\cdot(0,1,0)^{\\mathrm T}=-1$$',
+      '<b>结论</b>：$\\operatorname{tr}(A^{-1})=1-1-1=-1$（交叉验证：直接还原 $A$ 求逆，迹同为 $-1$）',
+    ];
+    this._lines = [];
+    for(var i=0;i<lines.length;i++){
+      var d = AW.el('div', '', lines[i]);
+      d.style.cssText = 'padding:9px 14px;margin:7px 0;border-left:3px solid transparent;border-radius:10px;transition:all .35s;opacity:.28;font-size:15px;line-height:1.9;';
+      board.appendChild(d);
+      this._lines.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step',  tag:'翻译',     log:'行变换左乘 P、列变换右乘 Q，写成 PAQ=B', count:0 },
+    { cls:'shift', tag:'写P和Q',  log:'P 交换二三行；Q 的第 1 列放 −1（列操作右乘）', count:1 },
+    { cls:'shift', tag:'表示逆',   log:'A⁻¹ = Q B⁻¹ P，循环性质把迹化成 tr(B⁻¹PQ)', count:2 },
+    { cls:'step',  tag:'求B⁻¹',   log:'det B = 1，算出 B 的逆矩阵', count:3 },
+    { cls:'step',  tag:'算PQ',    log:'P 左乘 Q 只是把 Q 的二三行对调', count:4 },
+    { cls:'ok',    tag:'取迹',    log:'B⁻¹(PQ) 对角元为 1、−1、−1', count:5 },
+    { cls:'done',  tag:'完成',    log:'结论：tr(A⁻¹) = 1 − 1 − 1 = −1', count:6, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    for(var j=0;j<this._lines.length;j++){
+      var L = this._lines[j];
+      L.style.opacity = j<=i ? '1' : '0.28';
+      L.style.borderLeftColor = (j===i) ? '#d97706' : (j<i ? '#16a34a' : 'transparent');
+      L.style.background = (j===i) ? '#fef3c7' : 'transparent';
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '$\\operatorname{tr}(A^{-1})=-1$',
+    html: '记忆锚点：<b>「左乘行、右乘列」+ 迹的循环性质 $\\operatorname{tr}(QB^{-1}P)=\\operatorname{tr}(B^{-1}PQ)$</b>，把求逆问题压到算 $PQ$ 与对角元。易错：$Q$ 的 $-1$ 要写在第 1 列（$Q_{21}=-1$）；取逆时三个因子顺序反排。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学·算法/过程类动画</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+/* 推导板：所有推导行在 build 时建好（含公式），render 按 i 逐行点亮 */
+var rows = [];
+function drow(html, at, green){
+  var d = AW.el('div', '', html);
+  d.style.cssText = 'margin:10px 0;padding:10px 16px;border-left:4px solid #cbd5e1;' +
+    'background:#f8fafc;border-radius:8px;font-size:15.5px;line-height:1.9;' +
+    'opacity:0.15;transform:translateX(-10px);transition:all .4s;';
+  rows.push({el: d, at: at, green: !!green});
+  return d;
+}
+
+AW.init({
+  title: '2010 数学二 第13题 · 长方形两边增速 $2$ 与 $3\\ \\mathrm{cm/s}$，对角线的增速',
+  subtitle: '考点：相关变化率 · 方法：隐函数关系两边对 $t$ 求导',
+  counterLabel: '已推导',
+  intro: '点击「▶ 播放」逐步演示相关变化率的标准流程。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var inner = AW.el('div', '');
+    inner.appendChild(AW.el('div', 'aw-row-label',
+      '<b>推导板</b>：流程——建关系式、两边对 $t$ 求导、代入当下数值'));
+    inner.appendChild(drow(
+      '<b>建关系</b>：对角线 $d=\\sqrt{l^2+w^2}$，即 $d^2=l^2+w^2$，$l,w,d$ 都随 $t$ 变化', 1));
+    inner.appendChild(drow(
+      '<b>对 $t$ 求导</b>：$2d\\,\\dfrac{\\mathrm dd}{\\mathrm dt}=2l\\,\\dfrac{\\mathrm dl}{\\mathrm dt}+2w\\,\\dfrac{\\mathrm dw}{\\mathrm dt}$' +
+      '$\\ \\Longrightarrow\\ \\dfrac{\\mathrm dd}{\\mathrm dt}=\\dfrac{l\\,\\dfrac{\\mathrm dl}{\\mathrm dt}+w\\,\\dfrac{\\mathrm dw}{\\mathrm dt}}{d}$', 2));
+    inner.appendChild(drow(
+      '<b>先算当下的 $d$</b>：$d=\\sqrt{12^2+5^2}=\\sqrt{169}=13$（勾股数 5, 12, 13）', 3));
+    inner.appendChild(drow(
+      '<b>代入数值</b>：$\\dfrac{\\mathrm dd}{\\mathrm dt}=\\dfrac{12\\times2+5\\times3}{13}=\\dfrac{24+15}{13}=\\dfrac{39}{13}$', 4));
+    inner.appendChild(drow(
+      '<b>结论</b>：$\\dfrac{\\mathrm dd}{\\mathrm dt}=3\\ \\mathrm{cm/s}$（注意答案带单位）', 5, true));
+    wrap.appendChild(inner);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls: 'step',  tag: '审题',   log: '长、宽、对角线都随时间变，先用勾股定理写出对角线与两边的平方关系', count: 1 },
+    { cls: 'shift', tag: '求导',   log: '两边对时间 t 求导，链式法则给出每项一个变化率因子，解出对角线变化率的表达式', count: 2 },
+    { cls: 'step',  tag: '算当下', log: '代入时刻数值前先算当前对角线：12 和 5 正好是勾股数，斜边是 13', count: 3 },
+    { cls: 'shift', tag: '代入',   log: '分子是 12 乘 2 加 5 乘 3，等于 39，除以当前对角线 13', count: 4 },
+    { cls: 'done',  tag: '完成',   log: '对角线每秒增加 3 厘米，答案 3 cm/s', count: 5, done: true },
+  ],
+
+  render: function(stage, sn, i){
+    for(var k = 0; k < rows.length; k++){
+      var r = rows[k];
+      var revealed = i >= r.at;
+      var active = revealed && r.at === i && !sn.done;
+      var green = sn.done && r.green;
+      r.el.style.opacity = revealed ? '1' : '0.15';
+      r.el.style.transform = revealed ? 'none' : 'translateX(-10px)';
+      r.el.style.background = green ? '#ecfdf3' : (active ? '#fff7e0' : '#f8fafc');
+      r.el.style.borderLeftColor = green ? '#16a34a' : (active ? '#f59e0b' : '#cbd5e1');
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '$\\dfrac{\\mathrm dd}{\\mathrm dt}=3\\ \\mathrm{cm/s}$',
+    html: '记忆锚点：<b>相关变化率三步——建关系、对 $t$ 求导、代入当下数值</b>。易错：对 $\\sqrt{l^2+w^2}$ 求导丢分母因子 $d$；忘记先算当下的 $d=13$（勾股数 5, 12, 13）。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

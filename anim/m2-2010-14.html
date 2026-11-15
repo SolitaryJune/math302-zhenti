@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学·算法/过程类动画</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+/* 推导板：所有推导行在 build 时建好（含公式），render 按 i 逐行点亮 */
+var rows = [];
+function drow(html, at, green){
+  var d = AW.el('div', '', html);
+  d.style.cssText = 'margin:10px 0;padding:10px 16px;border-left:4px solid #cbd5e1;' +
+    'background:#f8fafc;border-radius:8px;font-size:15.5px;line-height:1.9;' +
+    'opacity:0.15;transform:translateX(-10px);transition:all .4s;';
+  rows.push({el: d, at: at, green: !!green});
+  return d;
+}
+
+AW.init({
+  title: '2010 数学二 第14题 · 已知 $|\\boldsymbol A|=3$、$|\\boldsymbol B|=2$、$\\big|\\boldsymbol A^{-1}+\\boldsymbol B\\big|=2$，求 $\\big|\\boldsymbol A+\\boldsymbol B^{-1}\\big|$',
+  subtitle: '考点：行列式乘法性质 · 方法：插入单位阵 $I$ 凑公因子 $I+\\boldsymbol A\\boldsymbol B$',
+  counterLabel: '已推导',
+  intro: '点击「▶ 播放」逐步演示因式分解串联两个行列式。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var inner = AW.el('div', '');
+    inner.appendChild(AW.el('div', 'aw-row-label',
+      '<b>推导板</b>：两个和式矩阵共享同一个「桥墩」$I+\\boldsymbol A\\boldsymbol B$'));
+    inner.appendChild(drow(
+      '<b>盘点已知</b>：$|\\boldsymbol A|=3,\\ |\\boldsymbol B|=2,\\ \\big|\\boldsymbol A^{-1}+\\boldsymbol B\\big|=2$；目标 $\\big|\\boldsymbol A+\\boldsymbol B^{-1}\\big|$', 1));
+    inner.appendChild(drow(
+      '<b>恒等式一</b>：$\\boldsymbol A^{-1}+\\boldsymbol B=\\boldsymbol A^{-1}\\big(I+\\boldsymbol A\\boldsymbol B\\big)$' +
+      '（展开：$\\boldsymbol A^{-1}\\cdot I+\\boldsymbol A^{-1}\\boldsymbol A\\boldsymbol B=\\boldsymbol A^{-1}+\\boldsymbol B$ ✓）', 2));
+    inner.appendChild(drow(
+      '<b>恒等式二</b>：$\\boldsymbol A+\\boldsymbol B^{-1}=\\big(I+\\boldsymbol A\\boldsymbol B\\big)\\boldsymbol B^{-1}$' +
+      '（展开：$I\\cdot\\boldsymbol B^{-1}+\\boldsymbol A\\boldsymbol B\\boldsymbol B^{-1}=\\boldsymbol B^{-1}+\\boldsymbol A$ ✓）', 3));
+    inner.appendChild(drow(
+      '<b>取行列式串联</b>：$2=\\big|\\boldsymbol A^{-1}+\\boldsymbol B\\big|=\\dfrac{\\big|I+\\boldsymbol A\\boldsymbol B\\big|}{|\\boldsymbol A|}$' +
+      '$\\ \\Longrightarrow\\ \\big|I+\\boldsymbol A\\boldsymbol B\\big|=2\\times3=6$', 4));
+    inner.appendChild(drow(
+      '<b>收尾</b>：$\\big|\\boldsymbol A+\\boldsymbol B^{-1}\\big|=\\big|I+\\boldsymbol A\\boldsymbol B\\big|\\cdot\\dfrac{1}{|\\boldsymbol B|}=\\dfrac{6}{2}=3$', 5, true));
+    wrap.appendChild(inner);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls: 'step',  tag: '审题',   log: '已知条件里都是逆矩阵与和式的行列式，目标是另一对和式的行列式，需要找共同因子把两边串起来', count: 1 },
+    { cls: 'shift', tag: '拆式一', log: '给和式 A 逆加 B 提出左因子 A 逆，括号里剩下单位阵加 A 乘 B，展开验证成立', count: 2 },
+    { cls: 'step',  tag: '拆式二', log: '目标式 A 加 B 逆从右边提出 B 逆，括号里同样是单位阵加 A 乘 B，展开验证成立', count: 3 },
+    { cls: 'shift', tag: '串联',   log: '对恒等式一取行列式：2 等于 3 分之 A 乘 B 加单位阵的行列式，解出这个中间量等于 6', count: 4 },
+    { cls: 'done',  tag: '完成',   log: '对恒等式二取行列式：6 除以 B 的行列式 2，得到 3', count: 5, done: true },
+  ],
+
+  render: function(stage, sn, i){
+    for(var k = 0; k < rows.length; k++){
+      var r = rows[k];
+      var revealed = i >= r.at;
+      var active = revealed && r.at === i && !sn.done;
+      var green = sn.done && r.green;
+      r.el.style.opacity = revealed ? '1' : '0.15';
+      r.el.style.transform = revealed ? 'none' : 'translateX(-10px)';
+      r.el.style.background = green ? '#ecfdf3' : (active ? '#fff7e0' : '#f8fafc');
+      r.el.style.borderLeftColor = green ? '#16a34a' : (active ? '#f59e0b' : '#cbd5e1');
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '$\\big|\\boldsymbol A+\\boldsymbol B^{-1}\\big|=3$',
+    html: '记忆锚点：<b>拆不出因子时插入 $I=\\boldsymbol A\\boldsymbol A^{-1}$（或 $I=\\boldsymbol B\\boldsymbol B^{-1}$）凑公因子</b>，再用 $|\\boldsymbol X\\boldsymbol Y|=|\\boldsymbol X||\\boldsymbol Y|$ 与 $|\\boldsymbol A^{-1}|=\\frac1{|\\boldsymbol A|}$ 串联。易错：硬凑 $(\\boldsymbol A+\\boldsymbol B)$ 是死路，正确桥梁是 $I+\\boldsymbol A\\boldsymbol B$。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

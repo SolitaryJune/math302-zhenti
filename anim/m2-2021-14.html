@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2021·14 二元变限积分先换序再求导</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改题目专属区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [
+  "<b>① 审题：</b>$f(t)=\\displaystyle\\int_1^{t^2}\\mathrm{d}x\\int_{\\sqrt x}^{t}\\sin\\frac{x}{y}\\,\\mathrm{d}y$——内层对 $y$ 积 $\\sin\\frac xy$ 没有初等原函数，<b>必须换序</b>",
+  "<b>② 写出区域：</b>$D:\\ 1\\le x\\le t^2,\\ \\sqrt x\\le y\\le t$（要求 $t\\ge1$）",
+  "<b>③ 换序：</b>$\\sqrt x\\le y\\iff x\\le y^2$，故 $y:1\\to t$、$x:1\\to y^2$：$$f(t)=\\int_1^{t}\\mathrm{d}y\\int_1^{y^2}\\sin\\frac{x}{y}\\,\\mathrm{d}x$$",
+  "<b>④ 内层积 $x$：</b>$y$ 当常数，$\\displaystyle\\int_1^{y^2}\\sin\\frac xy\\,\\mathrm{d}x=\\left[-y\\cos\\frac xy\\right]_1^{y^2}=y\\left(\\cos\\frac1y-\\cos y\\right)$",
+  "<b>⑤ 化成一元变限积分：</b>$f(t)=\\displaystyle\\int_1^{t}y\\left(\\cos\\frac1y-\\cos y\\right)\\mathrm{d}y$——被积函数不含 $t$，上限恰是 $t$",
+  "<b>⑥ 变限求导：</b>$f\'(t)=t\\left(\\cos\\dfrac1t-\\cos t\\right)$（变限积分求导公式直接套用）",
+  "<b>⑦ 代 $t=\\dfrac\\pi2$：</b>$\\cos\\dfrac\\pi2=0$，第二项消失：$f\'\\left(\\dfrac\\pi2\\right)=\\dfrac\\pi2\\cos\\dfrac2\\pi$",
+  "<b>⑧ 结论：</b>$f\'\\left(\\dfrac\\pi2\\right)=\\dfrac\\pi2\\cos\\dfrac2\\pi$"
+];
+
+AW.init({
+  title: '2021·14　$f(t)=\\displaystyle\\int_1^{t^2}\\mathrm{d}x\\int_{\\sqrt x}^{t}\\sin\\frac{x}{y}\\,\\mathrm{d}y$，求 $f\'\\!\\left(\\frac\\pi2\\right)$',
+  subtitle: '考点：交换积分次序 · 谁积得动积谁 · 变限积分求导',
+  counterLabel: '已推导',
+  ribbonTitle: '推导进度（✓ 完成）',
+  intro: '点击「▶ 播放」或「下一步」，换序 → 内层积 x → 变限求导 → 代值。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var inner = AW.el('div', '');
+    inner.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>：当前行亮琥珀色，已完成的行变绿'));
+    this._rows = [];
+    for (var i = 0; i < ROWS.length; i++){
+      var r = AW.el('div', 'aw-stepcard', ROWS[i]);
+      inner.appendChild(r);
+      this._rows.push(r);
+    }
+    wrap.appendChild(inner);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step',  tag:'审题',   log:'内层那个对 y 的积分原函数不是初等的，硬算是死路', count:0, ribbon:{k:1, ok:true} },
+    { cls:'shift', tag:'画区域', log:'用不等式把积分区域写清楚：x 在一到 t 方之间，y 夹在根号 x 与 t 之间', count:1, ribbon:{k:2, ok:true} },
+    { cls:'ok',    tag:'换序',   log:'根号 x 小于等于 y 等价于 x 不超过 y 方，交换后内层换成对 x 积', count:2, ribbon:{k:3, ok:true} },
+    { cls:'ok',    tag:'积 x',   log:'对 x 秫正弦得负 y 倍余弦，代上下限整理成 y 乘括号差', count:3, ribbon:{k:4, ok:true} },
+    { cls:'ok',    tag:'化简',   log:'被积函数与 t 无关、上限恰好是 t，标准的变限积分', count:4, ribbon:{k:5, ok:true} },
+    { cls:'ok',    tag:'求导',   log:'变限求导公式直接给出一阶导数', count:5, ribbon:{k:6, ok:true} },
+    { cls:'ok',    tag:'代值',   log:'二分之派处余弦为零，第二项归零，只剩干净的单项', count:6, ribbon:{k:7, ok:true} },
+    { cls:'done',  tag:'完成',   log:'结论：导数值为二分之派乘余弦二比派', count:7, ribbon:{k:8, ok:true}, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    var rows = this._rows;
+    for (var j = 0; j < rows.length; j++){
+      rows[j].className = 'aw-stepcard' + (j < i ? ' good' : (j === i ? ' key' : ''));
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '$f\'\\!\\left(\\dfrac\\pi2\\right)=\\dfrac\\pi2\\cos\\dfrac2\\pi$',
+    html: '记忆锚点：<b>$\\sin\\frac xy$ 对 $y$ 积不出、对 $x$ 积得动 → 换序；变限求导 $f\'(t)=t\\left(\\cos\\frac1t-\\cos t\\right)$</b>。易错：换序后 $x$ 下限是 1 不是 0；代值时漏掉 $\\cos\\frac\\pi2=0$ 这个消项。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

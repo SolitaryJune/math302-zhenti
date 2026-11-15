@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学·概念/分析类动画：间断点逐点判型</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+function card(n, cls, title, body){
+  return '<div class="aw-stepcard ' + (cls || '') + '"><h4><span class="n">' + n +
+         '</span>' + title + '</h4>' + body + '</div>';
+}
+
+var STEPS = [
+  { title: '审题眼：先找全无定义点',
+    cls: 'key',
+    log: '四个嫌疑点：x = -1, 0, 1, 2',
+    body: '<p>$f(x)=\\dfrac{e^{\\frac{1}{x-1}}\\ln|1+x|}{(e^x-1)(x-2)}$ 的无定义点共四个：$x=1$（$e^{\\frac{1}{x-1}}$ 指数发炸）、$x=-1$（$\\ln|1+x|$ 真数归零）、$x=0$（$e^x-1=0$）、$x=2$（$x-2=0$）。判型标准：<b>有一个单侧极限为 $\\infty$ 或不存在 → 第二类</b>；两个单侧极限都存在 → 第一类。</p>' },
+  { title: '$x=0$：两个 $x$ 因子相消，可去（第一类）',
+    cls: 'bad',
+    log: 'x=0：极限 -1/(2e) 有限，可去，不计数',
+    ribbon: {k:1, ok:false},
+    body: '<p>$e^{\\frac{1}{x-1}}\\to e^{-1}$，$x-2\\to-2$，且 $\\ln|1+x|\\sim x$、$e^x-1\\sim x$：$$\\lim_{x\\to0}f(x)=\\frac{e^{-1}\\cdot x}{x\\cdot(-2)}=-\\frac{1}{2e}\\quad(有限).$$ 是<b>可去间断点（第一类）</b>，不计入第二类。</p>' },
+  { title: '$x=1$：右侧爆到无穷，第二类',
+    cls: 'good',
+    log: 'x=1：右侧 e^(1/(x-1)) 趋于 +∞，第二类',
+    ribbon: {k:2, ok:true},
+    body: '<p>其余因子的极限 $\\dfrac{\\ln 2}{(e-1)(-1)}$ 有限非零，只看 $e^{\\frac{1}{x-1}}$：$x\\to1^-$ 时 $\\frac{1}{x-1}\\to-\\infty$，因子 $\\to0$；$x\\to1^+$ 时 $\\to+\\infty$，因子 $\\to+\\infty$。右极限为无穷 → <b>第二类（无穷型）</b>。</p>' },
+  { title: '$x=2$：分母因子归零，第二类',
+    cls: 'good',
+    log: 'x=2：分子非零、分母因子 x-2 归零，无穷',
+    ribbon: {k:3, ok:true},
+    body: '<p>分子 $e^{\\frac{1}{2-1}}\\ln3=e\\ln3\\ne0$，$e^x-1\\to e^2-1\\ne0$，而分母因子 $x-2\\to0$，故 $|f(x)|\\to+\\infty$ → <b>第二类（无穷型）</b>。</p>' },
+  { title: '$x=-1$：对数爆炸，最易漏，第二类',
+    cls: 'good',
+    log: 'x=-1：ln|1+x| 趋于 -∞，别漏',
+    ribbon: {k:4, ok:true},
+    body: '<p>$\\ln|1+x|\\to-\\infty$，其余因子 $e^{-1/2}\\cdot(e^{-1}-1)\\cdot(-3)$ 都有限非零，故 $|f(x)|\\to+\\infty$ → <b>第二类（无穷型）</b>。这一条最容易被漏掉。</p>' },
+  { title: '统计：第二类共 3 个',
+    cls: 'good',
+    log: '第二类：x = -1, 1, 2，共 3 个 → 选 C',
+    body: '<p>第二类间断点：$x=-1,\\,1,\\,2$，共 $3$ 个；$x=0$ 是第一类可去。答案选 <b>C</b>。</p>' },
+  { title: '结论',
+    cls: 'good',
+    log: '选 C：3 个第二类间断点',
+    body: '<p>答案 <b>C</b>。记忆锚点：<b>先列全无定义点，再逐点判型</b>——$e^{\\frac{1}{x-1}}$ 要分左右、$\\ln|1+x|$ 在 $x=-1$ 爆炸、$x=0$ 处两个 $x$ 因子恰好相消。</p>' },
+];
+
+var snaps = STEPS.map(function(s, i){
+  var cls;
+  if(i === STEPS.length - 1){ cls = 'done'; }
+  else if(s.ribbon){ cls = s.ribbon.ok ? 'ok' : 'miss'; }
+  else { cls = 'step'; }
+  return {
+    cls: cls,
+    tag: '第 ' + (i + 1) + ' 步',
+    log: s.log,
+    count: i + 1,
+    ribbon: s.ribbon,
+    html: STEPS.slice(0, i + 1).map(function(x, j){
+      return card(j + 1, x.cls, x.title, x.body);
+    }).join(''),
+    done: i === STEPS.length - 1,
+  };
+});
+
+AW.init({
+  title: '$f(x)=\\dfrac{e^{\\frac{1}{x-1}}\\ln|1+x|}{(e^x-1)(x-2)}$ 的第二类间断点个数',
+  subtitle: '考点：连续与间断 · 方法：找全无定义点，逐点判单侧极限',
+  counterLabel: '推理步',
+  ribbonTitle: '各点判型（✓ 第二类 / ✗ 非第二类）',
+  intro: '点击「▶ 播放」逐点排查四个间断点。',
+  render: function(stage, sn){
+    if(sn.html != null) stage.innerHTML = sn.html;
+    renderMathAfterSnap(stage);
+  },
+  snaps: snaps,
+  result: {
+    big: '答案 C（3 个第二类间断点）',
+    html: '记忆锚点：<b>无定义点 $-1,0,1,2$ 共四个；除 $x=0$ 可去外全是无穷型第二类</b>。$x=0$ 处分子分母的 $x$ 因子相消出有限极限 $-\\frac{1}{2e}$；$x=-1$ 的对数爆炸最易漏。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

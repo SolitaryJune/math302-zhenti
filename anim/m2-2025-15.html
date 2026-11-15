@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学·算法类动画：全微分方程 (2y−3x)dx+(2x−5y)dy=0 求特解</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+AW.init({
+  title: '$(2y-3x)\\,\\mathrm dx+(2x-5y)\\,\\mathrm dy=0$，$y(1)=1$：求特解',
+  subtitle: '考点：全微分方程（恰当方程） · 方法：验恰当 → 偏积分求势函数 → 代初值',
+  counterLabel: '推导步',
+  intro: '点击「▶ 播放」逐步演示势函数的构造与常数确定。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    var lines = [
+      '<b>验恰当</b>：$M=2y-3x$，$N=2x-5y$ $$\\frac{\\partial M}{\\partial y}=2,\\qquad \\frac{\\partial N}{\\partial x}=2$$ 二者相等，是<b>全微分方程</b>，存在 $u(x,y)$ 使 $\\mathrm du=M\\,\\mathrm dx+N\\,\\mathrm dy$，通解 $u=C$。',
+      '<b>偏积分</b>：由 $\\dfrac{\\partial u}{\\partial x}=2y-3x$ 对 $x$ 积分（$y$ 视为常数，补待定函数 $g(y)$） $$u=\\int(2y-3x)\\,\\mathrm dx=2xy-\\frac32x^2+g(y)$$',
+      '<b>定 $g(y)$</b>：令 $\\dfrac{\\partial u}{\\partial y}=2x+g\'(y)$ 等于 $N=2x-5y$ $$g\'(y)=-5y\\ \\Longrightarrow\\ g(y)=-\\frac52y^2$$ 故 $u=2xy-\\dfrac32x^2-\\dfrac52y^2$。',
+      '<b>凑微分核验</b>：$\\mathrm d(2xy)=2y\\,\\mathrm dx+2x\\,\\mathrm dy$，$\\mathrm d\\bigl(-\\tfrac32x^2\\bigr)=-3x\\,\\mathrm dx$，$\\mathrm d\\bigl(-\\tfrac52y^2\\bigr)=-5y\\,\\mathrm dy$，相加恰为原方程左边 ✓，通解 $u=C$。',
+      '<b>代初值</b>：$y(1)=1$ 即 $x=1,\\,y=1$ $$C=2\\cdot1\\cdot1-\\frac32-\\frac52=2-\\frac32-\\frac52=-2$$',
+      '<b>结论</b>：$u=-2$ 移项整理 $$2xy-\\frac32x^2-\\frac52y^2+2=0$$',
+    ];
+    this._lines = [];
+    for(var i=0;i<lines.length;i++){
+      var d = AW.el('div', '', lines[i]);
+      d.style.cssText = 'padding:9px 14px;margin:7px 0;border-left:3px solid transparent;border-radius:10px;transition:all .35s;opacity:.28;font-size:15px;line-height:1.9;';
+      board.appendChild(d);
+      this._lines.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step',  tag:'验恰当', log:'∂M/∂y = ∂N/∂x = 2，恰当方程，通解 u = C', count:0 },
+    { cls:'step',  tag:'偏积分', log:'对 x 积分得 2xy − 3x²/2，补上待定函数 g(y)', count:1 },
+    { cls:'ok',    tag:'定 g(y)', log:'u 对 y 求导比 N，得 g′(y) = −5y，g = −5y²/2', count:2 },
+    { cls:'step',  tag:'核验', log:'三个全微分相加正好还原方程左边', count:3 },
+    { cls:'shift', tag:'代初值', log:'x=1, y=1 代入：C = 2 − 3/2 − 5/2 = −2', count:4 },
+    { cls:'done',  tag:'完成', log:'结论：2xy − (3/2)x² − (5/2)y² + 2 = 0', count:5, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    for(var j=0;j<this._lines.length;j++){
+      var L = this._lines[j];
+      L.style.opacity = j<=i ? '1' : '0.28';
+      L.style.borderLeftColor = (j===i) ? '#d97706' : (j<i ? '#16a34a' : 'transparent');
+      L.style.background = (j===i) ? '#fef3c7' : 'transparent';
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '$2xy-\\dfrac32x^2-\\dfrac52y^2+2=0$',
+    html: '记忆锚点：<b>先验 $M_y=N_x$，再偏积分（对 $x$ 积分补 $g(y)$），最后代初值定 $C=-2$</b>。易错：漏 $g(y)$ 凑不出 $-\\tfrac52y^2$；移项后常数是 $+2$ 不是 $-2$。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

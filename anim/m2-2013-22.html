@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2013·22 矩阵方程 AC−CA=B 的存在性与通解</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改 AW.init 区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [];
+
+var LINES = [
+  "<p><b>审题</b>：$\\boldsymbol A=\\begin{pmatrix}1&a\\\\1&0\\end{pmatrix}$，$\\boldsymbol B=\\begin{pmatrix}0&1\\\\1&b\\end{pmatrix}$。设 $\\boldsymbol C=\\begin{pmatrix}x_1&x_2\\\\x_3&x_4\\end{pmatrix}$，问 $a,b$ 取何值时 $\\boldsymbol{AC}-\\boldsymbol{CA}=\\boldsymbol B$ 有解。</p>",
+  "<p><b>展开 $\\boldsymbol{AC}$</b>：$$\\boldsymbol{AC}=\\begin{pmatrix}1&a\\\\1&0\\end{pmatrix}\\begin{pmatrix}x_1&x_2\\\\x_3&x_4\\end{pmatrix}=\\begin{pmatrix}x_1+ax_3&x_2+ax_4\\\\ x_1&x_2\\end{pmatrix}$$</p>",
+  "<p><b>展开 $\\boldsymbol{CA}$</b>：$$\\boldsymbol{CA}=\\begin{pmatrix}x_1&x_2\\\\x_3&x_4\\end{pmatrix}\\begin{pmatrix}1&a\\\\1&0\\end{pmatrix}=\\begin{pmatrix}x_1+x_2&ax_1\\\\ x_3+x_4&ax_3\\end{pmatrix}$$（注意 $(1,2)$ 元是 $ax_1$）</p>",
+  "<p><b>相减对比 $\\boldsymbol B$，得四个方程</b>：$$\\begin{cases}ax_3-x_2=0,\\\\ x_2+ax_4-ax_1=1,\\\\ x_1-x_3-x_4=1,\\\\ x_2-ax_3=b.\\end{cases}$$ 先手检验：$\\operatorname{tr}(\\boldsymbol{AC}-\\boldsymbol{CA})\\equiv0$，而 $\\operatorname{tr}\\boldsymbol B=b$，暗示 $b=0$。</p>",
+  "<p><b>定 $b$</b>：第 1 式给 $x_2=ax_3$，代入第 4 式：$$ax_3-ax_3=b\\quad\\Longrightarrow\\quad b=0$$ 与迹的检验一致。</p>",
+  "<p><b>定 $a$ 的准备</b>：第 3 式给 $$x_1-x_3-x_4=1$$ 第 2 式用 $x_2=ax_3$ 化简：$$a(x_3+x_4-x_1)=1\\ \\Longleftrightarrow\\ -a\\,(x_1-x_3-x_4)=1$$</p>",
+  "<p><b>定 $a$</b>：把 $x_1-x_3-x_4=1$ 代入：$$-a\\cdot1=1\\quad\\Longrightarrow\\quad a=-1$$</p>",
+  "<p><b>写通解</b>：$a=-1$ 时只剩两个约束 $x_2=-x_3$，$x_1=x_3+x_4+1$。令 $x_3=k_1$，$x_4=k_2$：$$\\boldsymbol C=\\begin{pmatrix}k_1+k_2+1&-k_1\\\\ k_1&k_2\\end{pmatrix}$$</p>",
+  "<p><b>验算</b>（$a=-1$）：$(1,1)$ 元 $-k_1-(-k_1)=0$；$(1,2)$ 元 $-k_1-k_2+(k_1+k_2+1)=1$；$(2,1)$ 元 $(k_1+k_2+1)-k_1-k_2=1$；$(2,2)$ 元 $-k_1+k_1=0=b$。与 $\\boldsymbol B$ 吻合。</p>",
+  "<p><b>结论</b>：$$\\boxed{\\;a=-1,\\ b=0;\\quad \\boldsymbol C=\\begin{pmatrix}k_1+k_2+1&-k_1\\\\ k_1&k_2\\end{pmatrix}\\;}$$</p>"
+];
+
+AW.init({
+  title: '$\\boldsymbol{AC}-\\boldsymbol{CA}=\\boldsymbol B$ 何时有解：摊平成方程组',
+  subtitle: '考点：矩阵方程（线性方程组） · 方法：设元展开 + 迹检验 + 逐式消元',
+  counterLabel: '推理步',
+  ribbonTitle: '关键关口（✓ 通过）',
+  intro: '点击「▶ 播放」逐步演示展开、定参与通解。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    ROWS.length = 0;
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    for(var k = 0; k < LINES.length; k++){
+      var d = AW.el('div', '', LINES[k]);
+      d.style.cssText = 'margin:8px 0;padding:9px 14px;border-left:3px solid #e2e8f0;background:#f8fafc;border-radius:0 12px 12px 0;font-size:14.5px;line-height:1.9;display:none;';
+      board.appendChild(d);
+      ROWS.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  render: function(stage, sn){
+    for(var k = 0; k < ROWS.length; k++){
+      var r = ROWS[k];
+      if(k >= sn.show){ r.style.display = 'none'; continue; }
+      r.style.display = 'block';
+      if(k === sn.show - 1 && !sn.done){
+        r.style.borderLeftColor = '#d97706';
+        r.style.background = '#fffbeb';
+      } else {
+        r.style.borderLeftColor = '#16a34a';
+        r.style.background = '#f8fafc';
+      }
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  snaps: [
+    { cls:'shift', tag:'审题',     log:'两个参数 a、b 是未知，矩阵 C 的四个元素也是未知，直接摊平', show:1, count:0 },
+    { cls:'step',  tag:'左乘',     log:'A 在左边乘 C：第二行不添 a，第一行混入 a 的项', show:2, count:1 },
+    { cls:'step',  tag:'右乘',     log:'C 乘 A 在右边：这回第二列带 a，(1,2) 元是 a 乘 x₁，最易写错', show:3, count:2 },
+    { cls:'key',   tag:'列方程',   log:'相减后与 B 逐元素对比，得四个方程；迹恒为零暗示 b 必须是 0', show:4, count:3 },
+    { cls:'ok',    tag:'定b',      log:'第 1 式代入第 4 式，左边自相抵消，b=0', show:5, count:4, ribbon:{k:1, ok:true} },
+    { cls:'step',  tag:'化简',     log:'第 2 式整理成 −a 乘（第 3 式的左端），而第 3 式左端恰好等于 1', show:6, count:5 },
+    { cls:'ok',    tag:'定a',      log:'−a × 1 = 1，得 a = −1', show:7, count:6, ribbon:{k:2, ok:true} },
+    { cls:'ok',    tag:'通解',     log:'只剩两个约束，x₃、x₄ 自由，C 写成含两个任意常数的矩阵', show:8, count:7, ribbon:{k:3, ok:true} },
+    { cls:'ok',    tag:'验算',     log:'四个元素逐一回代，与 B 完全吻合', show:9, count:8 },
+    { cls:'done',  tag:'完成',     log:'仅当 a=−1、b=0 有解，通解双参数', show:10, count:9, done:true },
+  ],
+
+  result: {
+    big: '$a=-1,\\ b=0$；$\\boldsymbol C=\\begin{pmatrix}k_1+k_2+1&-k_1\\\\ k_1&k_2\\end{pmatrix}$',
+    html: '记忆锚点：<b>$\\operatorname{tr}(\\boldsymbol{AC}-\\boldsymbol{CA})\\equiv0$ 是先手检验</b>，直接锁定 $\\operatorname{tr}\\boldsymbol B=b=0$。易错：$\\boldsymbol{CA}$ 的 $(1,2)$ 元是 $ax_1$；通解必须含两个任意常数（$x_3,x_4$ 自由）。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

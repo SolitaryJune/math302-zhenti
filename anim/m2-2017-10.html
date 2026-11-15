@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2017·10 参数方程的二阶导数</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改 AW.init 区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [];
+
+var LINES = [
+  "<p><b>第一步：一阶导（两个对 $t$ 的导数相除）</b>。$x=t+\\mathrm{e}^t\\Rightarrow x'_t=1+\\mathrm{e}^t$，$y=\\sin t\\Rightarrow y'_t=\\cos t$：$$\\frac{\\mathrm{d}y}{\\mathrm{d}x}=\\frac{y'_t}{x'_t}=\\frac{\\cos t}{1+\\mathrm{e}^t}.$$</p>",
+  "<p><b>第二步：写准二阶导公式</b>。一阶导仍是 $t$ 的函数，对 $x$ 求导要经 $t$ 转一道、<b>再除一次 $x'_t$</b>：$$\\frac{\\mathrm{d}^2y}{\\mathrm{d}x^2}=\\frac{\\dfrac{\\mathrm{d}}{\\mathrm{d}t}\\left(\\dfrac{\\mathrm{d}y}{\\mathrm{d}x}\\right)}{x'_t}.$$</p>",
+  "<p><b>第三步：分子对 $t$ 求导（商法则）</b>$$\\frac{\\mathrm{d}}{\\mathrm{d}t}\\left(\\frac{\\cos t}{1+\\mathrm{e}^t}\\right)=\\frac{-\\sin t\\,(1+\\mathrm{e}^t)-\\cos t\\cdot\\mathrm{e}^t}{(1+\\mathrm{e}^t)^2}.$$ 分子第二项是<b>负</b>的 $\\mathrm{e}^t\\cos t$。</p>",
+  "<p><b>第四步：除以 $x'_t$，合成二阶导</b>$$\\frac{\\mathrm{d}^2y}{\\mathrm{d}x^2}=\\frac{-\\sin t\\,(1+\\mathrm{e}^t)-\\mathrm{e}^t\\cos t}{(1+\\mathrm{e}^t)^3}.$$ 分母是 $x'_t$ 的<b>立方</b>。</p>",
+  "<p><b>第五步：代入 $t=0$</b>。$\\sin 0=0$，$\\cos 0=1$，$\\mathrm{e}^0=1$，$1+\\mathrm{e}^0=2$：$$\\left.\\frac{\\mathrm{d}^2y}{\\mathrm{d}x^2}\\right|_{t=0}=\\frac{0-1}{2^3}=-\\frac{1}{8}.$$</p>",
+  "<p><b>易错对照</b>：漏除 $x'_t$ 会错成 $-\\dfrac{1}{4}$；商法则第二项写成加号会错成 $+\\dfrac{1}{8}$；分母 $2^3=8$ 别当 $2$。</p>"
+];
+
+AW.init({
+  title: '$\\begin{cases}x=t+\\mathrm{e}^t\\\\ y=\\sin t\\end{cases}$，求 $\\left.\\dfrac{\\mathrm{d}^2y}{\\mathrm{d}x^2}\\right|_{t=0}$',
+  subtitle: '考点：参数方程求导 · 方法：一阶导相除 → 对 t 求导再除一次 x′t → 代值',
+  counterLabel: '已执行',
+  intro: '点击「▶ 播放」逐步演示每一步推导。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    ROWS.length = 0;
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    for(var k = 0; k < LINES.length; k++){
+      var d = AW.el('div', '', LINES[k]);
+      d.style.cssText = 'margin:8px 0;padding:9px 14px;border-left:3px solid #e2e8f0;background:#f8fafc;border-radius:0 12px 12px 0;font-size:14.5px;line-height:1.9;display:none;';
+      board.appendChild(d);
+      ROWS.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  render: function(stage, sn){
+    for(var k = 0; k < ROWS.length; k++){
+      var r = ROWS[k];
+      if(k >= sn.show){ r.style.display = 'none'; continue; }
+      r.style.display = 'block';
+      if(k === sn.show - 1 && !sn.done){
+        r.style.borderLeftColor = '#d97706';
+        r.style.background = '#fffbeb';
+      } else {
+        r.style.borderLeftColor = '#16a34a';
+        r.style.background = '#f8fafc';
+      }
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  snaps: [
+    { cls:'shift', tag:'一阶导', log:'两个对 t 的导数相除：dy/dx = cos t/(1+e^t)', show:1, count:0 },
+    { cls:'step',  tag:'公式',   log:'二阶导 = [d/dt(dy/dx)] ÷ x′t，别漏最后一次相除', show:2, count:1 },
+    { cls:'step',  tag:'商法则', log:'对 t 求导：分子含 −sin t(1+e^t) − e^t·cos t', show:3, count:2 },
+    { cls:'ok',    tag:'合成',   log:'再除以 1+e^t，分母变 (1+e^t)³', show:4, count:3 },
+    { cls:'done',  tag:'完成',   log:'t=0：分子 0−1，分母 2³=8，结果 −1/8', show:5, count:4, done:true },
+    { cls:'step',  tag:'易错',   log:'漏除 x′t 得 −1/4；符号错得 +1/8', show:6, count:5, done:true },
+  ],
+
+  result: {
+    big: '$\\left.\\dfrac{\\mathrm{d}^2y}{\\mathrm{d}x^2}\\right|_{t=0}=-\\dfrac{1}{8}$',
+    html: '记忆锚点：<b>参数式二阶导 = "对 t 求导后再除一次 $x\'_t$"</b>，分母是 $(1+\\mathrm{e}^t)^3$。易丢分：商法则第二项 $-\\mathrm{e}^t\\cos t$ 的负号；$1+\\mathrm{e}^0=2$、立方得 $8$。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

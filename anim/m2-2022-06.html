@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学·概念/分析类动画：复合数列极限能否反推</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+function card(n, cls, title, body){
+  return '<div class="aw-stepcard ' + (cls || '') + '"><h4><span class="n">' + n +
+         '</span>' + title + '</h4>' + body + '</div>';
+}
+
+var STEPS = [
+  { title: '审题眼：外层单调才能「往回推」',
+    cls: 'key',
+    log: 'xₙ∈[−π/2,π/2] ⟹ cos xₙ∈[0,1]，sin xₙ∈[−1,1]',
+    body: '<p>由 $x_n\\in\\left[-\\frac{\\pi}{2},\\frac{\\pi}{2}\\right]$ 得 $\\cos x_n\\in[0,1]$、$\\sin x_n\\in[-1,1]$。能否由外层复合后的极限反推内层，看<b>外层函数在取值区间上是否严格单调</b>（单调连续才有连续反函数）。</p>' },
+  { title: 'sin(cos xₙ)：外层单调，可反推 cos xₙ',
+    cls: 'good',
+    log: 'sin 在 [0,1] 严格增，反函数 arcsin 连续 ⟹ cos xₙ 必收敛',
+    body: '<p>$\\sin$ 在 $[0,1]\\subset[0,\\frac{\\pi}{2}]$ 上<b>严格增</b>。设 $\\sin(\\cos x_n)\\to A$，则 $$\\cos x_n=\\arcsin\\bigl(\\sin(\\cos x_n)\\bigr)\\to\\arcsin A,$$ 即 $\\lim\\cos x_n$ 一定存在。</p>' },
+  { title: '但 xₙ 未必收敛（反例）',
+    cls: 'bad',
+    log: '反例 xₙ=(−1)ⁿ：cos xₙ≡cos 1 收敛，xₙ 振荡发散',
+    body: '<p>取 $x_n=(-1)^n$：满足 $\\left|x_n\\right|\\le\\frac{\\pi}{2}$，$\\cos x_n\\equiv\\cos1$、$\\sin(\\cos x_n)\\equiv\\sin(\\cos1)$ 都收敛，但 $x_n$ 在 $\\pm1$ 间振荡不收敛。<b>$\\lim x_n$ 不一定存在</b>。</p>' },
+  { title: 'cos(sin xₙ)：外层是偶函数，推不动',
+    cls: 'bad',
+    log: 'cos 在 [−1,1] 偶函数不单调：反例 xₙ=(−1)ⁿ·π/6',
+    body: '<p>$\\cos$ 在 $[-1,1]$ 上是<b>偶函数、不单调</b>。反例 $x_n=(-1)^n\\cdot\\frac{\\pi}{6}$：$\\sin x_n=\\pm\\frac12$ 交替，但 $\\cos(\\sin x_n)\\equiv\\cos\\frac12$ 收敛。连 $\\sin x_n$ 收敛都推不出，更推不出 $x_n$。</p>' },
+  { title: '逐项核对 A/B/C/D',
+    cls: 'step',
+    log: 'A 错（反例 4）、B 错（反例 3）、C 前半句即错、D 两句都对',
+    body: '<p>A：由 $\\cos(\\sin x_n)$ 收敛推 $x_n$ 收敛——被第 4 步反例否定。B：推 $x_n$ 收敛——被第 3 步反例否定。C：前半句「$\\sin x_n$ 收敛」就推不出。D：$\\cos x_n$ 必收敛 + $x_n$ 不一定收敛，<b>两句都对</b>。</p>' },
+  { title: '结论：选 D',
+    cls: 'good',
+    log: '单调外层可反推内层；偶函数外层推不动；xₙ 本身可振荡',
+    body: '<p>答案 <b>D</b>：若 $\\sin(\\cos x_n)$ 收敛，则 $\\lim\\cos x_n=\\arcsin A$ 存在，而 $\\lim x_n$ 不一定存在。</p>' },
+];
+
+var snaps = STEPS.map(function(s, i){
+  var cls;
+  if(i === STEPS.length - 1){ cls = 'done'; }
+  else { cls = 'step'; }
+  return {
+    cls: cls,
+    tag: '第 ' + (i + 1) + ' 步',
+    log: s.log,
+    count: i + 1,
+    html: STEPS.slice(0, i + 1).map(function(x, j){
+      return card(j + 1, x.cls, x.title, x.body);
+    }).join(''),
+    done: i === STEPS.length - 1,
+  };
+});
+
+AW.init({
+  title: '$\\sin(\\cos x_n)$ 或 $\\cos(\\sin x_n)$ 收敛，能反推 $x_n$ 收敛吗',
+  subtitle: '考点：复合数列极限 · 方法：外层单调性决定能否反推 + 反例',
+  counterLabel: '推理步',
+  intro: '点击「▶ 播放」逐步展开推理链。',
+  render: function(stage, sn){
+    if(sn.html != null) stage.innerHTML = sn.html;
+    renderMathAfterSnap(stage);
+  },
+  snaps: snaps,
+  result: {
+    big: '答案 D',
+    html: '记忆锚点：<b>外层单调（$\\sin$ 在 $[0,1]$）⟹ 可用反函数往回推；外层是偶函数（$\\cos$ 在 $[-1,1]$）⟹ 推不动</b>。即便内层 $\\cos x_n$ 收敛，$x_n$ 仍可整体变号振荡（$x_n=(-1)^n$）。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

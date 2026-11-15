@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2015·12 二阶常系数齐次方程 + 极值条件定解</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改题目专属区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+// 推导板各行：与 snaps 一一对应（build 建立、render 按 i 点亮）
+var ROWS = [
+  { label: '第 0 步 · 审题',
+    h: '<p>$y^{\\prime\\prime}+y^{\\prime}-2y=0$，且 $y(x)$ 在 $x=0$ 处取得极值 $3$。常系数齐次 → 特征方程；「极值 3」一句话里藏着<b>两个</b>定解条件。</p>' },
+  { label: '第 1 步 · 写特征方程并求根',
+    h: '<p>$r^2+r-2=0\\Rightarrow(r+2)(r-1)=0\\Rightarrow r_1=1,\\ r_2=-2.$</p>' },
+  { label: '第 2 步 · 写通解与导函数',
+    h: '<p>$y=C_1\\mathrm{e}^{x}+C_2\\mathrm{e}^{-2x},\\qquad y^{\\prime}=C_1\\mathrm{e}^{x}-2C_2\\mathrm{e}^{-2x}.$</p>' },
+  { label: '第 3 步 · 翻译「极值 3」',
+    h: '<p>极值点 $\\Rightarrow y^{\\prime}(0)=0$；极值为 $3\\Rightarrow y(0)=3$。两个条件缺一不可。</p>' },
+  { label: '第 4 步 · 联立解出常数',
+    h: '<p>$y^{\\prime}(0)=C_1-2C_2=0,\\quad y(0)=C_1+C_2=3$，解得 $C_1=2,\\ C_2=1$。</p>' },
+  { label: '第 5 步 · 结论与验证',
+    h: '<p>$y=2\\mathrm{e}^{x}+\\mathrm{e}^{-2x}$。验证：$y^{\\prime}(0)=0$ ✓；$y^{\\prime\\prime}(0)=2+4=6>0$（极小值）✓；$y(0)=3$ ✓。</p>' },
+];
+
+var rowEls = [];
+
+AW.init({
+  title: '$y^{\\prime\\prime}+y^{\\prime}-2y=0$，$x=0$ 处取得极值 3',
+  subtitle: '考点：二阶常系数齐次方程 · 方法：特征根 → 通解 → 极值条件翻译成定解条件',
+  counterLabel: '步骤',
+  intro: '点击「▶ 播放」逐步演示求解流程。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    rowEls = [];
+    var wrap = AW.el('div', 'aw-scroll');
+    ROWS.forEach(function(r){
+      var d = AW.el('div', '');
+      d.style.cssText = 'padding:9px 14px;margin:8px 0;border-left:4px solid transparent;border-radius:10px;opacity:.15;transition:opacity .35s,background .35s,border-color .35s;';
+      d.innerHTML = '<div style="font-size:12.5px;color:#64748b;font-weight:700;margin-bottom:2px">' + r.label + '</div>' + r.h;
+      wrap.appendChild(d);
+      rowEls.push(d);
+    });
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step',  tag:'审题',   log:'先通解后定解；「极值 3」= 两个条件', count:0 },
+    { cls:'ok',    tag:'特征根', log:'r²+r−2=0 因式分解得 r=1 与 r=−2', count:1 },
+    { cls:'ok',    tag:'通解',   log:'y=C₁eˣ+C₂e⁻²ˣ，导函数同步写好', count:2 },
+    { cls:'shift', tag:'译条件', log:'y′(0)=0（驻点）+ y(0)=3（极值大小）', count:3 },
+    { cls:'ok',    tag:'解常数', log:'C₁=2C₂ 与 C₁+C₂=3 联立：C₁=2, C₂=1', count:4 },
+    { cls:'done',  tag:'完成',   log:'y=2eˣ+e⁻²ˣ，三项验证全部吻合', count:5, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    rowEls.forEach(function(d, j){
+      d.style.opacity = j <= i ? '1' : '.15';
+      d.style.borderLeftColor = j < i ? '#16a34a' : (j === i ? '#d97706' : 'transparent');
+      d.style.background = j === i ? '#fffbeb' : (j < i ? '#f6fef9' : 'transparent');
+    });
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: 'y = e⁻²ˣ + 2eˣ',
+    html: '记忆锚点：<b>「取得极值」= $y^{\\prime}(x_0)=0$ 与 $y(x_0)=$ 极值两条件打包</b>。特征根 $1,-2$ 各配指数 $\\mathrm{e}^x,\\ \\mathrm{e}^{-2x}$，最后用 $y^{\\prime\\prime}(0)=6>0$ 验证确为极小值兜底。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

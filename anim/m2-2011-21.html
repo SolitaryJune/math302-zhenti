@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2011·21 两次分部积分降阶求二重积分</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改 AW.init 区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [];
+
+var LINES = [
+  "<p><b>审题</b>：$I=\\displaystyle\\iint_D xy\\,f_{xy}''(x,y)\\,\\mathrm dx\\,\\mathrm dy$，$D=[0,1]\\times[0,1]$。手上有三个条件：$f(1,y)=0$、$f(x,1)=0$、$\\displaystyle\\iint_D f=a$。思路：<b>分部降阶</b>，让边界项撞上条件。</p>",
+  "<p><b>化累次、对 $y$ 分部</b>（$f_{xy}''=\\dfrac{\\partial f_x'}{\\partial y}$）：$$\\int_0^1 y\\,f_{xy}''\\,\\mathrm dy=\\Big[y\\,f_x\'(x,y)\\Big]_{y=0}^{y=1}-\\int_0^1 f_x\'\\,\\mathrm dy=f_x\'(x,1)-\\int_0^1 f_x\'\\,\\mathrm dy.$$</p>",
+  "<p><b>条件一接管</b>：$f(x,1)\\equiv0$ 是恒等式，对 $x$ 求导得 $f_x\'(x,1)=0$，边界项消失：$$I=-\\int_0^1\\!\\!\\int_0^1 x\\,f_x\'(x,y)\\,\\mathrm dx\\,\\mathrm dy.$$</p>",
+  "<p><b>换序、对 $x$ 分部</b>（$f_x\'=\\dfrac{\\partial f}{\\partial x}$，$f$ 二阶连续偏导故换序合法）：$$\\int_0^1 x\\,f_x\'\\,\\mathrm dx=\\Big[x\\,f(x,y)\\Big]_{x=0}^{x=1}-\\int_0^1 f\\,\\mathrm dx=f(1,y)-\\int_0^1 f\\,\\mathrm dx.$$</p>",
+  "<p><b>条件二接力</b>：$f(1,y)=0$，上式成为 $-\\displaystyle\\int_0^1 f\\,\\mathrm dx$。</p>",
+  "<p><b>合拢</b>：两个负号负负得正，$$I=-\\int_0^1\\Big(-\\int_0^1 f\\,\\mathrm dx\\Big)\\mathrm dy=\\iint_D f(x,y)\\,\\mathrm dx\\,\\mathrm dy=a.$$</p>"
+];
+
+AW.init({
+  title: '$\\displaystyle\\iint_D xy\\,f_{xy}\'\'\\,\\mathrm dx\\,\\mathrm dy$ 的抽象计算：$I=?$',
+  subtitle: '考点：二重积分 + 分部积分 · 方法：降阶 $f_{xy}\'\'\\to f_x\'\\to f$，边界条件逐个化零',
+  counterLabel: '步数',
+  intro: '点击「▶ 播放」逐步演示两次分部积分如何吃掉三个条件。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    ROWS.length = 0;
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    for(var k = 0; k < LINES.length; k++){
+      var d = AW.el('div', '', LINES[k]);
+      d.style.cssText = 'margin:8px 0;padding:9px 14px;border-left:3px solid #e2e8f0;background:#f8fafc;border-radius:0 12px 12px 0;font-size:14.5px;line-height:1.9;display:none;';
+      board.appendChild(d);
+      ROWS.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  render: function(stage, sn){
+    for(var k = 0; k < ROWS.length; k++){
+      var r = ROWS[k];
+      if(k >= sn.show){ r.style.display = 'none'; continue; }
+      r.style.display = 'block';
+      if(k === sn.show - 1 && !sn.done){
+        r.style.borderLeftColor = '#d97706';
+        r.style.background = '#fffbeb';
+      } else {
+        r.style.borderLeftColor = '#16a34a';
+        r.style.background = '#f8fafc';
+      }
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  snaps: [
+    { cls:'shift', tag:'审题',   log:'f 是抽象函数，只有三个条件；正路是分部降阶，不是求 f', show:1, count:0 },
+    { cls:'step',  tag:'一分部', log:'先对 y 分部：y 挪到边界上，剩 f 对 x 的偏导', show:2, count:1 },
+    { cls:'ok',    tag:'条件一', log:'f(x,1)=0 对 x 求导得边界项为零，积分号前多出一个负号', show:3, count:2 },
+    { cls:'step',  tag:'换序',   log:'交换积分次序，改对 x 分部：x 挪到边界上', show:4, count:3 },
+    { cls:'ok',    tag:'条件二', log:'f(1,y)=0 直接让边界项消失', show:5, count:4 },
+    { cls:'done',  tag:'合拢',   log:'负负得正，剩下正是已知的三重条件：等于 a', show:6, count:5, done:true },
+  ],
+
+  result: {
+    big: '$I=a$',
+    html: '记忆锚点：<b>抽象函数积分 = 分部降阶 + 边界条件化零</b>。$f\'_x(x,1)=0$ 来自对恒等式 $f(x,1)\\equiv0$ 整体求导；两次分部各带一个负号，最后负负得正。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

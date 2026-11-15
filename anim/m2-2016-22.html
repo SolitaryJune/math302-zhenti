@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2016 数二第 22 题 · 无解定参数与正规方程通解（交互动画）</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  /* stage 同步渲染；结论卡/标题/副标题由引擎在 render 返回后才写入或只写一次，
+     用 setTimeout(0) 兜底渲染（后台标签页 setTimeout 仍会触发） */
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+AW.init({
+  title: '2016·22　$AX=\\beta$ 无解求 $a$，再解 $A^{\\mathrm{T}}AX=A^{\\mathrm{T}}\\beta$',
+  subtitle: '考点：线性方程组 · 方法：<b>秩的比较 + 正规方程行变换</b>',
+  counterLabel: '已完成',
+  ribbonTitle: '推导进度（✓ 完成）',
+  intro: '点击「▶ 播放」或「下一步」，看「无解」如何逼出 $a$，通解如何从行变换里长出来。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var inner = AW.el('div', '');
+    inner.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>：当前行亮琥珀色，已完成的行变绿'));
+    var LINES = [
+      '<b>题设：</b>$A=\\begin{pmatrix}1&1&1-a\\\\1&0&a\\\\a+1&1&a+1\\end{pmatrix}$，$\\beta=\\begin{pmatrix}0\\\\1\\\\2a-2\\end{pmatrix}$，$AX=\\beta$ <b>无解</b>',
+      '<b>① 定候选：</b>无解 $\\Rightarrow$ $A$ 不满秩（满秩时任意右端都有唯一解）；$|A|=a(a-2)$，候选 $a=0$ 或 $a=2$',
+      '<b>② 检验 $a=2$：</b>增广矩阵行变换得 $r(A)=r(A,\\beta)=2$，有无穷多解，与「无解」矛盾，排除',
+      '<b>③ 检验 $a=0$：</b>$A$ 的第一、三行相同而右端 $0\\ne-2$，矛盾方程，$r(A)=2<r(A,\\beta)=3$，无解成立，定 $a=0$',
+      '<b>④ 组装正规方程：</b>$A^{\\mathrm{T}}A=\\begin{pmatrix}3&2&2\\\\2&2&2\\\\2&2&2\\end{pmatrix}$，$A^{\\mathrm{T}}\\beta=\\begin{pmatrix}-1\\\\-2\\\\-2\\end{pmatrix}$',
+      '<b>⑤ 行变换化简：</b>$(A^{\\mathrm{T}}A\\mid A^{\\mathrm{T}}\\beta)\\longrightarrow\\begin{pmatrix}1&0&0&1\\\\0&1&1&-2\\\\0&0&0&0\\end{pmatrix}$（第 4 列为右端项），秩 $2$，$x_{3}$ 自由',
+      '<b>⑥ 通解：</b>$x_{3}=k$：$x_{1}=1,\\ x_{2}=-2-k$，故 $X=\\begin{pmatrix}1\\\\-2\\\\0\\end{pmatrix}+k\\begin{pmatrix}0\\\\-1\\\\1\\end{pmatrix}$，$k\\in\\mathbb{R}$'
+    ];
+    this._rows = [];
+    for (var i = 0; i < LINES.length; i++){
+      var r = AW.el('div', 'aw-stepcard', LINES[i]);
+      inner.appendChild(r);
+      this._rows.push(r);
+    }
+    wrap.appendChild(inner);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step',  tag:'审题',   log:'无解说明系数矩阵不满秩，行列式必须为零，先锁定候选值再验秩', count:0, ribbon:{k:1, ok:true} },
+    { cls:'ok',    tag:'行列式', log:'行列式算出来是 a 乘 a 减二，候选只有零和二', count:1, ribbon:{k:2, ok:true} },
+    { cls:'ok',    tag:'验 a=2', log:'a 取二时系数与增广的秩相等，方程组有无穷多解，与无解矛盾，排除', count:2, ribbon:{k:3, ok:true} },
+    { cls:'ok',    tag:'验 a=0', log:'a 取零时第一行第三行系数一样但右端一个是零一个是负二，矛盾方程，正是无解', count:3, ribbon:{k:4, ok:true} },
+    { cls:'shift', tag:'组装',   log:'第二问先算正规方程的系数矩阵与右端向量，别把负号带错', count:4, ribbon:{k:5, ok:true} },
+    { cls:'ok',    tag:'化简',   log:'增广矩阵行变换化成最简形：秩为二，第三个变量自由', count:5, ribbon:{k:6, ok:true} },
+    { cls:'done',  tag:'完成',  log:'特解加齐次通解：x 等于 (1,-2,0) 加 k 倍 (0,-1,1)', count:6, ribbon:{k:7, ok:true}, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    var rows = this._rows;
+    for (var j = 0; j < rows.length; j++){
+      rows[j].className = 'aw-stepcard' + (j < i ? ' good' : (j === i ? ' key' : ''));
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '$a=0$；$X=\\begin{pmatrix}1\\\\-2\\\\0\\end{pmatrix}+k\\begin{pmatrix}0\\\\-1\\\\1\\end{pmatrix}$',
+    html: '记忆锚点：<b>无解 $\\Leftrightarrow$ $r(A)<r(A,\\beta)$</b>；$|A|=0$ 只给候选，必须逐个验秩。正规方程 $A^{\\mathrm T}AX=A^{\\mathrm T}\\beta$ 恒有解，行变换直接出通解。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

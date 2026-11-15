@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2013·15 三个余弦连乘的无穷小定阶</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改 AW.init 区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [];
+
+var LINES = [
+  "<p><b>审题</b>：$x\\to0$ 时 $\\cos x\\to\\cos2x\\to\\cos3x\\to1$，于是 $1-\\cos x\\cos2x\\cos3x\\to0$，属于「一减趋于一的量」型。目标：展成 $ax^n+o(x^n)$，最低次幂给 $n$、系数给 $a$。</p>",
+  "<p><b>展开工具</b>：$$\\cos kx=1-\\frac{k^2x^2}{2}+o(x^2)\\qquad(x\\to0)$$ 每个因子只需保留到 $x^2$，更高次并入 $o(x^2)$。</p>",
+  "<p><b>因子一（$k=1$）</b>：$$\\cos x=1-\\frac{x^2}{2}+o(x^2)$$</p>",
+  "<p><b>因子二（$k=2$）</b>：$$\\cos2x=1-\\frac{(2x)^2}{2}+o(x^2)=1-2x^2+o(x^2)$$</p>",
+  "<p><b>因子三（$k=3$）</b>：$$\\cos3x=1-\\frac{(3x)^2}{2}+o(x^2)=1-\\frac{9x^2}{2}+o(x^2)$$</p>",
+  "<p><b>相乘规则</b>：想凑出 $x^2$，只能「某因子的 $x^2$ 项 × 其余因子的常数项」，其余组合至少 $x^4$ 阶、并入 $o(x^2)$——所以 $x^2$ 的系数是<b>三个二阶系数相加</b>。</p>",
+  "<p><b>系数求和</b>：$$\\frac{1}{2}+2+\\frac{9}{2}=\\frac{1+4+9}{2}=7$$</p>",
+  "<p><b>对照 $ax^n$</b>：$$1-\\cos x\\cos2x\\cos3x=7x^2+o(x^2)$$ 最低次幂相同给 $n=2$，系数相等给 $a=7$。</p>",
+  "<p><b>验算</b>：$\\dfrac{1^2+2^2+3^2}{2}=\\dfrac{14}{2}=7$，与系数一致。$$\\boxed{\\;1-\\cos x\\cos2x\\cos3x\\sim7x^2\\quad(x\\to0)\\;}$$</p>"
+];
+
+AW.init({
+  title: '三个余弦连乘定阶：$1-\\cos x\\cos2x\\cos3x\\sim ax^n$',
+  subtitle: '考点：无穷小比较 · 方法：泰勒展开保留到 $x^2$，二阶系数相加',
+  counterLabel: '推导步',
+  ribbonTitle: '余弦因子（✓ 已展开）',
+  intro: '点击「▶ 播放」逐步演示三个因子的展开与系数合并。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    ROWS.length = 0;
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    for(var k = 0; k < LINES.length; k++){
+      var d = AW.el('div', '', LINES[k]);
+      d.style.cssText = 'margin:8px 0;padding:9px 14px;border-left:3px solid #e2e8f0;background:#f8fafc;border-radius:0 12px 12px 0;font-size:14.5px;line-height:1.9;display:none;';
+      board.appendChild(d);
+      ROWS.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  render: function(stage, sn){
+    for(var k = 0; k < ROWS.length; k++){
+      var r = ROWS[k];
+      if(k >= sn.show){ r.style.display = 'none'; continue; }
+      r.style.display = 'block';
+      if(k === sn.show - 1 && !sn.done){
+        r.style.borderLeftColor = '#d97706';
+        r.style.background = '#fffbeb';
+      } else {
+        r.style.borderLeftColor = '#16a34a';
+        r.style.background = '#f8fafc';
+      }
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  snaps: [
+    { cls:'shift', tag:'审题',   log:'三个余弦都趋于 1，被 1 减后是无穷小，目标是找出最低次幂和系数', show:1, count:0 },
+    { cls:'step',  tag:'备工具', log:'泰勒公式：cos kx 展开只留到二阶，kx 整体平方除以 2', show:2, count:1 },
+    { cls:'ok',    tag:'k=1',    log:'第一个因子：1 减 x²/2，系数 1/2', show:3, count:2, ribbon:{k:1, ok:true} },
+    { cls:'ok',    tag:'k=2',    log:'第二个因子：2x 整体平方除 2 是 2x²，注意别只平方 x', show:4, count:3, ribbon:{k:2, ok:true} },
+    { cls:'ok',    tag:'k=3',    log:'第三个因子：3x 平方除 2 是 9x²/2', show:5, count:4, ribbon:{k:3, ok:true} },
+    { cls:'step',  tag:'合并',   log:'相乘想出 x²，只能拿一个因子的二阶项乘其余的常数项，所以二阶系数直接相加', show:6, count:5 },
+    { cls:'ok',    tag:'求和',   log:'1/2 加 2 加 9/2，通分得 (1+4+9)/2 = 7', show:7, count:6 },
+    { cls:'ok',    tag:'对照',   log:'一减乘积等于 7x² 加高阶，幂给 n=2，系数给 a=7', show:8, count:7 },
+    { cls:'done',  tag:'完成',   log:'验算：(1+4+9)/2 = 7，结论 n=2、a=7', show:9, count:8, done:true },
+  ],
+
+  result: {
+    big: '$n=2,\\ a=7$',
+    html: '记忆锚点：<b>$1-\\prod\\cos(kx)\\sim\\dfrac{\\sum k^2}{2}\\,x^2$</b>（有限个趋 1 的因子连乘被 1 减，二阶系数相加）。易错：$\\cos2x$ 的系数是 $2$ 不是 $\\frac12$；加减结构里禁用单项等价无穷小替换。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

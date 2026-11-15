@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2017·21 切法线截距条件建立并求解微分方程</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+AW.init({
+  title: '2017·21　由 $X_{P}=Y_{P}$ 求 $L$ 上点的坐标满足的方程',
+  subtitle: '考点：切线/法线截距 → 微分方程 → 齐次方程 $y=ux$ 求解',
+  counterLabel: '已完成',
+  ribbonTitle: '推导进度（✓ 完成）',
+  intro: '点击「▶ 播放」或「下一步」，从几何条件一路算到隐式曲线方程。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var inner = AW.el('div', '');
+    inner.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>：当前行亮琥珀色，已完成的行变绿'));
+    var LINES = [
+      "$$P(x,y)\\in L,\\quad \\text{切线}:\\ Y-y=y\'(X-x)$$",
+      "<b>① 切线截 $y$ 轴：</b>令 $X=0\\ \\Rightarrow\\ Y_{P}=y-xy\'$",
+      "<b>② 法线：</b>斜率 $-\\dfrac1{y\'}$，$Y-y=-\\dfrac1{y\'}(X-x)$；令 $Y=0\\ \\Rightarrow\\ X_{P}=x+yy\'$",
+      "<b>③ 条件 $X_{P}=Y_{P}$：</b>$x+yy\'=y-xy\'\\ \\Longrightarrow\\ (x+y)\\,y\'=y-x$",
+      "<b>④ 认型：</b>$y\'=\\dfrac{y-x}{x+y}$ 是<b>齐次方程</b>，令 $y=ux$",
+      "<b>⑤ 代入：</b>$u+xu\'=\\dfrac{u-1}{u+1}\\ \\Rightarrow\\ xu\'=-\\dfrac{u^{2}+1}{u+1}$",
+      "<b>⑥ 分离：</b>$\\dfrac{u+1}{u^{2}+1}\\,\\mathrm{d}u=-\\dfrac{\\mathrm{d}x}{x}$",
+      "<b>⑦ 积分：</b>$\\dfrac12\\ln(u^{2}+1)+\\arctan u=-\\ln|x|+C$",
+      "<b>⑧ 回代 $u=\\dfrac yx$：</b>$-\\ln|x|$ 恰好抵消 $\\Rightarrow\\ \\arctan\\dfrac{y}{x}+\\dfrac12\\ln(x^{2}+y^{2})=C$",
+      "<b>⑨ 定常数：</b>$y(1)=0\\Rightarrow C=0$：$$\\arctan\\dfrac{y}{x}+\\dfrac12\\ln(x^{2}+y^{2})=0$$"
+    ];
+    this._rows = [];
+    for (var i = 0; i < LINES.length; i++){
+      var r = AW.el('div', 'aw-stepcard', LINES[i]);
+      inner.appendChild(r);
+      this._rows.push(r);
+    }
+    wrap.appendChild(inner);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step',  tag:'设点', log:'曲线上任取一点，先写切线方程', count:0, ribbon:{k:1, ok:true} },
+    { cls:'ok',    tag:'切截', log:'横坐标取零，得切线在纵轴上的截距', count:1, ribbon:{k:2, ok:true} },
+    { cls:'ok',    tag:'法截', log:'法线斜率是负的倒数，纵坐标取零，得横轴截距', count:2, ribbon:{k:3, ok:true} },
+    { cls:'shift', tag:'翻译', log:'两个截距相等，整理成一个含 y 撇的微分方程', count:3, ribbon:{k:4, ok:true} },
+    { cls:'ok',    tag:'认型', log:'右边是 y 比 x 的函数，齐次方程，令 y 等于 u x', count:4, ribbon:{k:5, ok:true} },
+    { cls:'ok',    tag:'代入', log:'代入整理，得到 u 对 x 的可分离方程', count:5, ribbon:{k:6, ok:true} },
+    { cls:'ok',    tag:'分离', log:'u 的归 u，x 的归 x，两边各自积分', count:6, ribbon:{k:7, ok:true} },
+    { cls:'ok',    tag:'积分', log:'一半是对数，一半是反正切，右边是负 ln x', count:7, ribbon:{k:8, ok:true} },
+    { cls:'ok',    tag:'回代', log:'u 换回 y 比 x，负 ln x 恰好被对数项吸收，式子很干净', count:8, ribbon:{k:9, ok:true} },
+    { cls:'ok',    tag:'定值', log:'用初始条件 y(1)=0 算出常数为零', count:9, ribbon:{k:10, ok:true} },
+    { cls:'done',  tag:'完成', log:'结论：arctan(y/x) + 半倍 ln(x²+y²) = 0', count:10, ribbon:{k:11, ok:true}, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    var rows = this._rows;
+    for (var j = 0; j < rows.length; j++){
+      rows[j].className = 'aw-stepcard' + (j < i ? ' good' : (j === i ? ' key' : ''));
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '$\\arctan\\dfrac{y}{x}+\\dfrac12\\ln(x^{2}+y^{2})=0$',
+    html: '两条截距要背牢：<b>$Y_{P}=y-xy\'$（切线交 $y$ 轴），$X_{P}=x+yy\'$（法线交 $x$ 轴）</b>。方程 $(x+y)y\'=y-x$ 是齐次型，$y=ux$ 化为可分离；$\\dfrac12\\ln(u^{2}+1)$ 里藏着的 $-\\ln|x|$ 与右端恰好相消，才得到简洁隐式。易错：法线斜率漏负号、不用初值 $y(1)=0$ 定 $C$。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

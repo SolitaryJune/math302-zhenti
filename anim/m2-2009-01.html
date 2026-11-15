@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2009·01 可去间断点的个数</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_concept_template.html，只改题目专属区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+// 一张推理卡片（body 里可写 $..$ / $$..$$ 公式）
+function card(n, cls, title, body){
+  return '<div class="aw-stepcard ' + (cls || '') + '"><h4><span class="n">' + n +
+         '</span>' + title + '</h4>' + body + '</div>';
+}
+
+// 推理链：每一步的完整内容（引擎按步数截取显示）
+var STEPS = [
+  { title: '审题：先找全部间断点',
+    cls: 'key',
+    body: '<p>分母 $\\sin\\pi x$ 在<b>所有整数</b> $x=n$ 处为零，$f$ 在这些点无定义——间断点候选是全体整数。候选多不等于都可去，必须逐个验极限。</p>',
+    log: '分母零点是全体整数，先圈出候选' },
+  { title: '分子因式分解：谁能救回极限',
+    cls: 'key',
+    body: '<p>$x-x^3=x(1-x)(1+x)$，零点只有 $x=0,\\ 1,\\ -1$。只有分子分母<b>同时</b>为零的点，才可能把极限约成有限值。</p>',
+    log: '分子只在 0、±1 为零，其余整数救不回来' },
+  { title: '其余整数：极限为无穷',
+    cls: 'bad',
+    body: '<p>$n\\neq0,\\pm1$ 时分子 $\\to n-n^3\\neq0$、分母 $\\to0$，$\\lim_{x\\to n}f(x)=\\infty$——无穷间断点（第二类），<b>不可去</b>。</p>',
+    ribbon: {k:1, ok:false},
+    log: '其余整数：分子非零分母趋零，极限无穷' },
+  { title: '逐个验 $x=0$',
+    cls: 'good',
+    body: '<p>$\\sin\\pi x\\sim\\pi x$，故 $\\lim_{x\\to0}\\dfrac{x-x^3}{\\sin\\pi x}=\\lim_{x\\to0}\\dfrac{x(1-x^2)}{\\pi x}=\\dfrac{1}{\\pi}$，极限有限，<b>可去</b>。</p>',
+    ribbon: {k:2, ok:true},
+    log: 'x=0：约掉 x，极限 1/π，可去' },
+  { title: '逐个验 $x=1$',
+    cls: 'good',
+    body: '<p>洛必达：$\\lim_{x\\to1}\\dfrac{1-3x^2}{\\pi\\cos\\pi x}=\\dfrac{-2}{-\\pi}=\\dfrac{2}{\\pi}$，有限，<b>可去</b>。</p>',
+    ribbon: {k:3, ok:true},
+    log: 'x=1：洛必达得 2/π，可去' },
+  { title: '逐个验 $x=-1$',
+    cls: 'good',
+    body: '<p>同式：$\\lim_{x\\to-1}\\dfrac{1-3x^2}{\\pi\\cos\\pi x}=\\dfrac{-2}{-\\pi}=\\dfrac{2}{\\pi}$，有限，<b>可去</b>。</p>',
+    ribbon: {k:4, ok:true},
+    log: 'x=−1：同样得 2/π，可去' },
+  { title: '结论',
+    cls: 'good',
+    body: '<p>可去间断点恰为 $x=0,\\ \\pm1$，共 <b>3</b> 个——答案选 <b>C</b>。</p>',
+    log: '三个可去间断点，选 C' },
+];
+
+var snaps = STEPS.map(function(s, i){
+  return {
+    cls: i === STEPS.length - 1 ? 'done' : 'step',
+    tag: '第 ' + (i + 1) + ' 步',
+    log: s.log || s.title,
+    count: i + 1,
+    ribbon: s.ribbon,
+    html: STEPS.slice(0, i + 1).map(function(x, j){
+      return card(j + 1, x.cls, x.title, x.body);
+    }).join(''),
+    done: i === STEPS.length - 1,
+  };
+});
+
+AW.init({
+  title: '可去间断点个数：$f(x)=\\dfrac{x-x^3}{\\sin\\pi x}$',
+  subtitle: '考点：连续与间断 · 方法：找分母零点 → 逐个验极限是否有限',
+  counterLabel: '推理步',
+  ribbonTitle: '候选点检查（✓ 可去 / ✗ 不可去）',
+  intro: '点击「▶ 播放」逐步展开推理链。',
+  render: function(stage, sn){
+    if(sn.html != null) stage.innerHTML = sn.html;
+    renderMathAfterSnap(stage);
+  },
+  snaps: snaps,
+  result: {
+    big: '答案 C（3 个）',
+    html: '记忆锚点：<b>间断点 = 分母零点；可去 = 极限存在且有限</b>。分子零点 $0,\\pm1$ 把三处极限约成有限值，其余整数处极限为 $\\infty$（无穷间断点）——别被「无穷多个间断点」带偏去选 D。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2018·04 积分条件下的中点函数值符号</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_concept_template.html，只改题目专属区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+// 一张推理卡片（body 里可写 $..$ / $$..$$ 公式）
+function card(n, cls, title, body){
+  return '<div class="aw-stepcard ' + (cls || '') + '"><h4><span class="n">' + n +
+         '</span>' + title + '</h4>' + body + '</div>';
+}
+
+// 推理链：每一步的完整内容（引擎按步数截取显示）
+var STEPS = [
+  { title: '审题眼：整体条件 → 一点符号，用中点泰勒',
+    cls: 'key',
+    body: '<p>手里只有 $\\int_0^1f(x)\\,dx=0$ 这一个整体条件，要判断一点处 $f\\left(\\tfrac12\\right)$ 的符号——桥梁是<b>在 $x=\\tfrac12$ 处带拉格朗日余项的泰勒公式</b>：积分会把一次项自动消掉。</p>',
+    log: '整体积分条件 + 一点值 ⇒ 中点泰勒展开' },
+  { title: '在 $x=\\tfrac12$ 处展开（带二阶拉格朗日余项）',
+    cls: 'step',
+    body: '<p>$$f(x)=f\\left(\\tfrac12\\right)+f\'\\left(\\tfrac12\\right)\\left(x-\\tfrac12\\right)+\\frac12f\'\'(\\xi)\\left(x-\\tfrac12\\right)^2$$ 其中 $\\xi$ 介于 $x$ 与 $\\tfrac12$ 之间。用佩亚诺余项就定不了号，必须用拉格朗日余项。</p>',
+    log: '余项必须带二阶导，符号才有来源' },
+  { title: '两边在 $[0,1]$ 上积分：一次项消失',
+    cls: 'step',
+    body: '<p>$$\\int_0^1\\left(x-\\tfrac12\\right)dx=0\\quad(\\text{关于中点对称}),\\qquad \\int_0^1f(x)\\,dx=0\\quad(\\text{已知})$$ 两个 $0$ 一消，剩下：$$f\\left(\\tfrac12\\right)=-\\frac12\\int_0^1f\'\'(\\xi)\\left(x-\\tfrac12\\right)^2dx$$ 被 $\\left(x-\\tfrac12\\right)^2\\ge0$ 恒正且不恒为零，符号全交给 $f\'\'$。</p>',
+    log: '一次项积分为 0，f(1/2) 与二阶导反号' },
+  { title: '判定 D：$f\'\'>0 \\Rightarrow f\\left(\\tfrac12\\right)<0$',
+    cls: 'good',
+    body: '<p>$f\'\'(x)>0$（下凸）时被积函数 $\\ge0$ 且不恒为 $0$，积分<b>严格</b>为正：$$f\\left(\\tfrac12\\right)=-\\frac12\\times(\\text{正数})<0\\quad\\checkmark$$ 验证例：$f(x)=\\left(x-\\tfrac12\\right)^2-\\dfrac1{12}$，$f\'\'=2$，$\\int_0^1f=0$，$f\\left(\\tfrac12\\right)=-\\dfrac1{12}<0$。</p>',
+    ribbon: {k:1, ok:true},
+    log: '下凸时 f(1/2)<0，D 成立' },
+  { title: '排除 B：恰好说反',
+    cls: 'bad',
+    body: '<p>$f\'\'(x)<0$（上凸）时积分为负，于是 $f\\left(\\tfrac12\\right)>0$——B 说 $f\\left(\\tfrac12\\right)<0$，方向恰好相反。</p>',
+    ribbon: {k:2, ok:false},
+    log: '上凸时 f(1/2)>0，B 排除' },
+  { title: '排除 A、C：单调性定不了符号',
+    cls: 'bad',
+    body: '<p>$f\'$ 定号只保证单调。反例 A：$f(x)=\\tfrac12-x$，$f\'<0$、$\\int_0^1f=0$，但 $f\\left(\\tfrac12\\right)=0$ 并不小于 $0$。反例 C：$f(x)=x-\\tfrac12$，$f\'>0$，同样 $f\\left(\\tfrac12\\right)=0$。单调性与中点值符号没有必然联系。</p>',
+    ribbon: {k:3, ok:false},
+    log: 'A、C 找反例排除' },
+  { title: '结论',
+    cls: 'good',
+    body: '<p>答案选 <b>D</b>。核心记忆点：$\\int_0^1f=0$ + 中点展开 ⇒ $$f\\left(\\tfrac12\\right)=-\\frac12\\int_0^1f\'\'(\\xi)\\left(x-\\tfrac12\\right)^2dx$$ $f\\left(\\tfrac12\\right)$ 与 $f\'\'$ <b>反号</b>：下凸（$f\'\'>0$）时中点在 $x$ 轴下方。</p>',
+    log: 'f(1/2) 与二阶导反号，选 D' },
+];
+
+var snaps = STEPS.map(function(s, i){
+  return {
+    cls: i === STEPS.length - 1 ? 'done' : 'step',
+    tag: '第 ' + (i + 1) + ' 步',
+    log: s.log || s.title,
+    count: i + 1,
+    ribbon: s.ribbon,
+    html: STEPS.slice(0, i + 1).map(function(x, j){
+      return card(j + 1, x.cls, x.title, x.body);
+    }).join(''),
+    done: i === STEPS.length - 1,
+  };
+});
+
+AW.init({
+  title: '$\\int_0^1f=0$ 时 $f\\left(\\tfrac12\\right)$ 的符号：中点泰勒定号',
+  subtitle: '考点：泰勒公式（拉格朗日余项）· 定积分 · 凹凸性',
+  counterLabel: '推理步',
+  ribbonTitle: '推理判定（✓ 成立 / ✗ 排除）',
+  intro: '点击「▶ 播放」逐步展开：展开 → 积分 → 定号 → 排错。',
+  render: function(stage, sn){
+    if(sn.html != null) stage.innerHTML = sn.html;
+    renderMathAfterSnap(stage);
+  },
+  snaps: snaps,
+  result: {
+    big: '答案 D：$f\'\'(x)>0$ 时 $f\\left(\\tfrac12\\right)<0$',
+    html: '记忆锚点：<b>中点展开 + 积分 = 一次项自动消失</b>，$f\\left(\\tfrac12\\right)$ 与 $\\int_0^1f\'\'(\\xi)\\left(x-\\tfrac12\\right)^2dx$ 反号——被积的 $\\left(x-\\tfrac12\\right)^2$ 恒正，符号全由 $f\'\'$ 决定。单调性（A、C）与反凹向（B）都是干扰。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

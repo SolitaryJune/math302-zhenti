@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2018·17 摆线一拱区域的二重积分</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+AW.init({
+  title: '2018·17　$\\iint_D (x+2y)\\,\\mathrm{d}x\\mathrm{d}y$，$D$ 为摆线一拱与 $x$ 轴围成',
+  subtitle: '考点：二重积分 · 方法：先 $y$ 后 $x$ 化累次积分 → 外层参数换元 → 三角幂定积分',
+  counterLabel: '已完成',
+  ribbonTitle: '推导进度（✓ 完成）',
+  intro: '区域边界：摆线 $x=t-\\sin t,\\ y=1-\\cos t\\ (0\\le t\\le2\\pi)$，下边界是 $x$ 轴。点击「▶ 播放」逐步计算。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var inner = AW.el('div', '');
+    inner.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>：当前行亮琥珀色，已完成的行变绿'));
+    var LINES = [
+      "$$\\iint_D(x+2y)\\,\\mathrm{d}x\\mathrm{d}y,\\qquad D:\\ x=t-\\sin t,\\ y=1-\\cos t\\ (0\\le t\\le2\\pi)\\ \\text{与}\\ x\\ \\text{轴}$$",
+      "<b>① 认区域：</b>$\\dfrac{\\mathrm{d}x}{\\mathrm{d}t}=1-\\cos t\\ge0$，$x$ 从 $0$ 单调增到 $2\\pi$，$y\\ge0$：$D=\\{0\\le x\\le2\\pi,\\ 0\\le y\\le Y(x)\\}$",
+      "<b>② 先 $y$ 后 $x$：</b>$\\displaystyle\\int_0^{2\\pi}\\left[\\int_0^{Y(x)}(x+2y)\\,\\mathrm{d}y\\right]\\mathrm{d}x=\\int_0^{2\\pi}\\left[xY(x)+Y^{2}(x)\\right]\\mathrm{d}x$",
+      "<b>③ 参数换元：</b>$x=t-\\sin t,\\ Y=1-\\cos t,\\ \\mathrm{d}x=(1-\\cos t)\\,\\mathrm{d}t$，拆成 $$I_{1}=\\int_0^{2\\pi}(t-\\sin t)(1-\\cos t)^{2}\\,\\mathrm{d}t,\\qquad I_{2}=\\int_0^{2\\pi}(1-\\cos t)^{3}\\,\\mathrm{d}t$$",
+      "<b>④ 算 $I_{2}$：</b>展开 $1-3\\cos t+3\\cos^{2}t-\\cos^{3}t$；$[0,2\\pi]$ 上 $\\int\\cos=\\int\\cos^{3}=0$，$\\int\\cos^{2}=\\pi$：$I_{2}=2\\pi+3\\pi=5\\pi$",
+      "<b>⑤ $I_{1}$ 的 $\\sin$ 项：</b>$\\displaystyle\\int_0^{2\\pi}\\sin t\\,(1-\\cos t)^{2}\\mathrm{d}t$ 有原函数 $\\tfrac13(1-\\cos t)^{3}$，两端点值相同 $\\Rightarrow$ 为 $0$",
+      "<b>⑥ 降幂：</b>$(1-\\cos t)^{2}=\\dfrac{3}{2}-2\\cos t+\\dfrac{1}{2}\\cos 2t$",
+      "<b>⑦ 逐项分部：</b>$\\displaystyle\\int_0^{2\\pi}\\tfrac32 t\\,\\mathrm{d}t=3\\pi^{2}$；$\\int_0^{2\\pi}t\\cos t\\,\\mathrm{d}t=[t\\sin t+\\cos t]_0^{2\\pi}=0$；$\\int_0^{2\\pi}t\\cos 2t\\,\\mathrm{d}t=0\\ \\Rightarrow\\ I_{1}=3\\pi^{2}$",
+      "<b>⑧ 合并：</b>$$I=I_{1}+I_{2}=3\\pi^{2}+5\\pi$$"
+    ];
+    this._rows = [];
+    for (var i = 0; i < LINES.length; i++){
+      var r = AW.el('div', 'aw-stepcard', LINES[i]);
+      inner.appendChild(r);
+      this._rows.push(r);
+    }
+    wrap.appendChild(inner);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step',  tag:'审题', log:'区域由一拱摆线和 x 轴围成，上边界是摆线，下边界是横轴', count:0, ribbon:{k:1, ok:true} },
+    { cls:'ok',    tag:'认区域', log:'横坐标随参数单调增加，纵坐标非负，区域是典型的上下型', count:1, ribbon:{k:2, ok:true} },
+    { cls:'ok',    tag:'化累次', log:'先对 y 积分，内层积出 x 倍上边界加上边界的平方', count:2, ribbon:{k:3, ok:true} },
+    { cls:'shift', tag:'换元', log:'外层换成参数 t，微分一并替换，拆成两块定积分', count:3, ribbon:{k:4, ok:true} },
+    { cls:'ok',    tag:'算二项', log:'立方展开成四项，奇数次余弦积分为零，平方项积出半个圆周率，合计五个圆周率', count:4, ribbon:{k:5, ok:true} },
+    { cls:'ok',    tag:'消正弦', log:'第一块里的正弦项有现成原函数，两个端点函数值相同，积分归零', count:5, ribbon:{k:6, ok:true} },
+    { cls:'ok',    tag:'降幂', log:'一减余弦的平方用降幂公式展开成常数加两个余弦', count:6, ribbon:{k:7, ok:true} },
+    { cls:'ok',    tag:'分部', log:'常数项积出三个圆周率平方，带 t 的余弦项分部后边界相消为零', count:7, ribbon:{k:8, ok:true} },
+    { cls:'done',  tag:'完成', log:'结论：两块相加，二重积分等于五倍圆周率加三倍圆周率平方', count:8, ribbon:{k:9, ok:true}, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    var rows = this._rows;
+    for (var j = 0; j < rows.length; j++){
+      rows[j].className = 'aw-stepcard' + (j < i ? ' good' : (j === i ? ' key' : ''));
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '$\\iint_D(x+2y)\\,\\mathrm{d}x\\mathrm{d}y=5\\pi+3\\pi^{2}$',
+    html: '记忆锚点：<b>参数曲线围域 = 直角坐标累次 + 外层参数换元</b>。三个好用的零：$\\int_0^{2\\pi}\\cos t\\,\\mathrm{d}t$、$\\int_0^{2\\pi}\\cos^{3}t\\,\\mathrm{d}t$、带 $t$ 因子的 $\\int_0^{2\\pi}t\\cos kt\\,\\mathrm{d}t$（分部后边界相消）。易错：忘乘 $\\mathrm{d}x=(1-\\cos t)\\mathrm{d}t$；内层丢 $xY$ 或 $Y^{2}$ 项。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

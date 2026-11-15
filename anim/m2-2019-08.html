@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2019·08 由矩阵多项式与行列式求二次型规范形</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_concept_template.html，只改题目专属区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+// 一张推理卡片（body 里可写 $..$ / $$..$$ 公式）
+function card(n, cls, title, body){
+  return '<div class="aw-stepcard ' + (cls || '') + '"><h4><span class="n">' + n +
+         '</span>' + title + '</h4>' + body + '</div>';
+}
+
+// 推理链：每一步的完整内容（引擎按步数截取显示）
+var STEPS = [
+  { title: '审题：两件武器',
+    cls: 'key',
+    body: '<p>条件一：$\\boldsymbol{A}^2+\\boldsymbol{A}=2\\boldsymbol{E}$——矩阵多项式把每个特征值锁进同一个数量方程；条件二：$|\\boldsymbol{A}|=4$——行列式等于全体特征值之积，负责数出各值重数。目标：正负惯性指数 $p,q$ → 规范形。</p>',
+    log: '多项式锁取值，行列式数个数' },
+  { title: '武器一：逼出特征值候选',
+    cls: 'step',
+    body: '<p>设 $\\lambda$ 是 $\\boldsymbol{A}$ 的特征值，$\\boldsymbol{\\xi}\\neq\\boldsymbol{0}$ 对应特征向量，则 $$(\\boldsymbol{A}^2+\\boldsymbol{A}-2\\boldsymbol{E})\\,\\boldsymbol{\\xi}=(\\lambda^2+\\lambda-2)\\,\\boldsymbol{\\xi}=\\boldsymbol{0},$$ 故 $(\\lambda-1)(\\lambda+2)=0$：每个特征值只能是 $1$ 或 $-2$。</p>',
+    log: '特征值只可能是 1 或 −2' },
+  { title: '武器二：用行列式数重数',
+    cls: 'step',
+    body: '<p>设 $1$ 出现 $k$ 次、$-2$ 出现 $3-k$ 次：$$|\\boldsymbol{A}|=1^k(-2)^{3-k}=(-2)^{3-k}=4=(-2)^2\\ \\Longrightarrow\\ 3-k=2,\\ k=1.$$ 特征值为 $1,\\,-2,\\,-2$。</p>',
+    log: '行列式等于 4 逼出 1 一个、−2 两个', ribbon: {k:1, ok:true} },
+  { title: '惯性指数 → 规范形',
+    cls: 'good',
+    body: '<p>$\\boldsymbol{A}$ 实对称，可正交规范化；规范形由正负惯性指数决定：$p=1$（一个正特征值）、$q=2$（两个负特征值），故 $$\\boldsymbol{x}^{\\mathrm{T}}\\boldsymbol{A}\\boldsymbol{x}\\ \\xrightarrow{\\text{规范}}\\ y_1^2-y_2^2-y_3^2.$$</p>',
+    log: '正惯性指数 1、负惯性指数 2' },
+  { title: '逐项排错 A / B / D',
+    cls: 'bad',
+    body: '<p>A（全正）：要求三个特征值都是 $1$，则 $|\\boldsymbol{A}|=1\\neq4$。B（两正一负）：$p=2,q=1$ 与实际恰好颠倒。D（全负）：$|\\boldsymbol{A}|=(-2)^3=-8\\neq4$，与条件矛盾。</p>',
+    log: 'A、D 行列式对不上，B 正负个数反了' },
+  { title: '结论',
+    cls: 'good',
+    body: '<p>规范形为 $y_1^2-y_2^2-y_3^2$——答案选 <b>C</b>。</p>',
+    log: '选 C：y1² − y2² − y3²' },
+];
+
+var snaps = STEPS.map(function(s, i){
+  return {
+    cls: i === STEPS.length - 1 ? 'done' : (s.cls === 'bad' ? 'miss' : 'step'),
+    tag: '第 ' + (i + 1) + ' 步',
+    log: s.log || s.title,
+    count: i + 1,
+    ribbon: s.ribbon,
+    html: STEPS.slice(0, i + 1).map(function(x, j){
+      return card(j + 1, x.cls, x.title, x.body);
+    }).join(''),
+    done: i === STEPS.length - 1,
+  };
+});
+
+AW.init({
+  title: '$\\boldsymbol{A}^2+\\boldsymbol{A}=2\\boldsymbol{E}$ 且 $|\\boldsymbol{A}|=4$，求规范形',
+  subtitle: '考点：特征值性质与二次型规范形 · 方法：多项式锁值 + 行列式数个数',
+  counterLabel: '推理步',
+  ribbonTitle: '关键结论（✓ 达成）',
+  intro: '点击「▶ 播放」逐步展开推理链。',
+  render: function(stage, sn){
+    if(sn.html != null) stage.innerHTML = sn.html;
+    renderMathAfterSnap(stage);
+  },
+  snaps: snaps,
+  result: {
+    big: '答案 C：$y_1^2-y_2^2-y_3^2$',
+    html: '记忆锚点：<b>$\\boldsymbol{A}^2+\\boldsymbol{A}=2\\boldsymbol{E}\\Rightarrow\\lambda\\in\\{1,-2\\}$；$|\\boldsymbol{A}|=4$ 强制特征值为 $1,-2,-2$，$p=1,q=2$</b>。全负时行列式为 $-8$、全正时为 $1$，都对不上 4——行列式是排除干扰项的快刀。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

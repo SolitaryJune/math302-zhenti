@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2023·22 由线性变换写矩阵与相似对角化</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [
+  "<b>① (1) 读变换：</b>$\\boldsymbol{Ax}$ 第 $i$ 个分量的组合系数就是 $A$ 的第 $i$ 行",
+  "<b>② (1) 完成：</b>按行抄出 $A=\\begin{pmatrix}1&1&1\\\\2&-1&1\\\\0&1&-1\\end{pmatrix}$",
+  "<b>③ 特征多项式：</b>$\\lvert A-\\lambda E\\rvert=\\begin{vmatrix}1-\\lambda&1&1\\\\2&-1-\\lambda&1\\\\0&1&-1-\\lambda\\end{vmatrix}=-(\\lambda-2)(\\lambda+1)(\\lambda+2)$",
+  "<b>④ 特征值：</b>$\\lambda_1=-2,\\ \\lambda_2=-1,\\ \\lambda_3=2$（三个互异 $\\Rightarrow$ 必可对角化）",
+  "<b>⑤ $\\lambda=-2$：</b>解 $(A+2E)\\boldsymbol x=\\boldsymbol 0$，$x_1=0,\\ x_2=-x_3$，取 $\\xi_1=(0,-1,1)^{\\mathrm T}$（代回 $3\\cdot0+(-1)+1=0$ ✓）",
+  "<b>⑥ $\\lambda=-1$：</b>解 $(A+E)\\boldsymbol x=\\boldsymbol 0$，$x_2=0,\\ x_3=-2x_1$，取 $\\xi_2=(-1,0,2)^{\\mathrm T}$（代回 $2\\cdot(-1)+0+2=0$ ✓）",
+  "<b>⑦ $\\lambda=2$：</b>解 $(A-2E)\\boldsymbol x=\\boldsymbol 0$，$x_2=3x_3,\\ x_1=4x_3$，取 $\\xi_3=(4,3,1)^{\\mathrm T}$（代回 $2\\cdot4-3\\cdot3+1=0$ ✓）",
+  "<b>⑧ 拼 $P$：</b>$P=(\\xi_1,\\xi_2,\\xi_3)=\\begin{pmatrix}0&-1&4\\\\-1&0&3\\\\1&2&1\\end{pmatrix}$，$\\det P=-12\\neq0$（可逆）",
+  "<b>⑨ 写 $\\Lambda$：</b>对角元按列的顺序排：$\\Lambda=\\mathrm{diag}(-2,-1,2)$",
+  "<b>⑩ 验算：</b>$A\\xi_1=-2\\xi_1,\\ A\\xi_2=-\\xi_2,\\ A\\xi_3=2\\xi_3$，按列合并即 $AP=P\\Lambda\\ \\Rightarrow\\ P^{-1}AP=\\Lambda$ —— (2) 完成",
+  "<b>⑪ 补充：</b>$P$ 不唯一：特征向量可乘非零常数、各列可重排，$\\Lambda$ 对角元顺序随之对应"
+];
+var rowEls = [];
+
+AW.init({
+  title: '2023·22　由线性变换写矩阵 + 相似对角化',
+  subtitle: '考点：线性变换与矩阵 · 特征值特征向量 · $P^{-1}AP=\\Lambda$',
+  counterLabel: '已推进',
+  ribbonTitle: '推导进度（✓ 完成）',
+  intro: '点击「▶ 播放」或「下一步」：(1) 按行抄系数得 A，(2) 特征值→特征向量→拼 P 与 Λ。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var inner = AW.el('div', '');
+    inner.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>：当前行亮琥珀色，已完成的行变绿'));
+    rowEls = [];
+    for (var i = 0; i < ROWS.length; i++){
+      var r = AW.el('div', 'aw-stepcard', ROWS[i]);
+      inner.appendChild(r);
+      rowEls.push(r);
+    }
+    wrap.appendChild(inner);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step', tag:'读变换', log:'第①步：矩阵乘向量的第 i 个分量是线性组合，组合系数就是矩阵的第 i 行', count:0,  ribbon:{k:1,  ok:true} },
+    { cls:'ok',   tag:'写矩阵', log:'第②步：三个分量的系数逐行抄下来，第一问的矩阵就出来了', count:1,  ribbon:{k:2,  ok:true} },
+    { cls:'ok',   tag:'特征式', log:'第③步：写特征多项式，按含零的行展开整理成三个一次因式', count:2,  ribbon:{k:3,  ok:true} },
+    { cls:'ok',   tag:'特征值', log:'第④步：三个特征值负 2、负 1、2 互不相同，必然可以对角化', count:3,  ribbon:{k:4,  ok:true} },
+    { cls:'ok',   tag:'向量一', log:'第⑤步：特征值负 2 的齐次方程组解出第一列，代回验证通过', count:4,  ribbon:{k:5,  ok:true} },
+    { cls:'ok',   tag:'向量二', log:'第⑥步：特征值负 1 的齐次方程组解出第二列，代回验证通过', count:5,  ribbon:{k:6,  ok:true} },
+    { cls:'ok',   tag:'向量三', log:'第⑦步：特征值 2 的齐次方程组解出第三列，代回验证通过', count:6,  ribbon:{k:7,  ok:true} },
+    { cls:'ok',   tag:'拼 P',  log:'第⑧步：三个特征向量按列拼成 P，行列式负 12 不为零，确实可逆', count:7,  ribbon:{k:8,  ok:true} },
+    { cls:'ok',   tag:'写 Λ',  log:'第⑨步：对角矩阵按列的顺序填特征值，负 2、负 1、2', count:8,  ribbon:{k:9,  ok:true} },
+    { cls:'ok',   tag:'验算',  log:'第⑩步：矩阵乘每一列都等于对应特征值乘该列，第二问完成', count:9,  ribbon:{k:10, ok:true} },
+    { cls:'done', tag:'完成',  log:'第⑪步：补充——答案不唯一，特征向量缩放或换序都行，对角阵跟着对应', count:10, ribbon:{k:11, ok:true}, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    for (var j = 0; j < rowEls.length; j++){
+      rowEls[j].className = 'aw-stepcard' + (j < i ? ' good' : (j === i ? ' key' : ''));
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: "$A=\\begin{pmatrix}1&1&1\\\\2&-1&1\\\\0&1&-1\\end{pmatrix},\\qquad P^{-1}AP=\\mathrm{diag}(-2,-1,2)$",
+    html: "按问结论：<b>(1) $A=\\begin{pmatrix}1&1&1\\\\2&-1&1\\\\0&1&-1\\end{pmatrix}$；(2) $P=(\\xi_1,\\xi_2,\\xi_3)=\\begin{pmatrix}0&-1&4\\\\-1&0&3\\\\1&2&1\\end{pmatrix}$（$\\xi_1=(0,-1,1)^{\\mathrm T},\\ \\xi_2=(-1,0,2)^{\\mathrm T},\\ \\xi_3=(4,3,1)^{\\mathrm T}$），$\\Lambda=\\mathrm{diag}(-2,-1,2)$，$\\det P=-12\\neq0$</b>。记忆锚点：变换矩阵<b>按行抄系数</b>；$\\Lambda$ 对角元顺序与 $P$ 的列一一对应；$P$ 不唯一（缩放、换序均可）。易错：按列抄矩阵；解完不回验 $A\\boldsymbol x=\\lambda\\boldsymbol x$；不验 $\\det P$。",
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

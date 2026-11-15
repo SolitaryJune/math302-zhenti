@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2024·17 二重积分：对称性消元 + 积商换元</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+<style>
+.mb-line{border:1px solid #e2e8f0;border-radius:12px;padding:10px 14px;margin:8px 0;background:#fff;font-size:14.5px;line-height:1.9;transition:all .25s}
+.mb-line.act{border-color:#d97706;background:#fffbeb;box-shadow:0 2px 8px rgba(217,119,6,.14)}
+.mb-line.past{opacity:.7}
+.mb-title{font-size:12.5px;color:#64748b;font-weight:700;margin-bottom:2px}
+.mb-chips{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 2px}
+.mb-chip{border:2px solid #cbd5e1;border-radius:10px;padding:5px 10px;font-size:13.5px;background:#f8fafc}
+.mb-chip.hyper{border-color:#2563eb;background:#eff6ff}
+.mb-chip.line{border-color:#8b5cf6;background:#faf5ff}
+.mb-chip.swap{border-color:#d97706;background:#fffbeb}
+</style>
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+/* 每一步一块推导板内容，按步数揭示，当前步高亮 */
+var SECS = [
+  { t: '第一步 · 看清边界',
+    h: '<div class="mb-chips">' +
+       '<span class="mb-chip hyper">$xy=\\tfrac13$</span><span class="mb-chip hyper">$xy=3$</span>' +
+       '<span class="mb-chip line">$y=\\tfrac13 x$</span><span class="mb-chip line">$y=3x$</span></div>' +
+       '<p>第一象限（$x>0,y>0$）内两条双曲线夹两条过原点直线：$D=\\{\\tfrac13\\le xy\\le3,\\ \\tfrac13\\le \\frac yx\\le3\\}$。</p>' },
+  { t: '第二步 · 找对称性',
+    h: '<p>交换 $x\\leftrightarrow y$：双曲线 $xy=c$ <b>不变</b>；直线 $y=\\tfrac13x \\leftrightarrow y=3x$ <b>互换</b>（斜率互为倒数）。</p>' +
+       '<p>所以 $D$ 关于直线 $y=x$ 对称。</p>' },
+  { t: '第三步 · 对称性消元',
+    h: '$$\\iint_D x\\,\\mathrm d\\sigma=\\iint_D y\\,\\mathrm d\\sigma\\ \\Longrightarrow\\ \\iint_D(x-y)\\,\\mathrm d\\sigma=0$$' +
+       '<p>于是 $\\displaystyle\\iint_D(1+x-y)\\,\\mathrm d\\sigma=\\iint_D 1\\,\\mathrm d\\sigma= $ <b>面积$(D)$</b>。</p>' },
+  { t: '第四步 · 换元变矩形',
+    h: '<p>边界全是「积」与「商」，令 $u=xy,\\ v=\\dfrac yx$，四条边界变成 $u=\\tfrac13,\\ u=3,\\ v=\\tfrac13,\\ v=3$：</p>' +
+       '$$D\\longrightarrow\\Big[\\tfrac13,3\\Big]\\times\\Big[\\tfrac13,3\\Big]\\ (\\text{矩形})$$' },
+  { t: '第五步 · 反解中间变量',
+    h: '<p>由 $uv=y^2,\\ u/v=x^2$ 反解：</p>' +
+       '$$x=\\sqrt{\\frac uv},\\qquad y=\\sqrt{uv}$$' },
+  { t: '第六步 · 雅可比行列式',
+    h: '$$\\frac{\\partial(u,v)}{\\partial(x,y)}=\\begin{vmatrix} y & x \\\\ -\\frac{y}{x^2} & \\frac1x \\end{vmatrix}=\\frac yx+\\frac yx=2v$$' +
+       '<p>面积元素取倒数：$\\mathrm dx\\,\\mathrm dy=\\dfrac{\\mathrm du\\,\\mathrm dv}{2v}$（第一象限 $v>0$）。</p>' },
+  { t: '第七步 · 矩形上积分',
+    h: '$$\\text{面积}(D)=\\int_{1/3}^{3}\\!\\!\\int_{1/3}^{3}\\frac{\\mathrm du\\,\\mathrm dv}{2v}=\\frac12\\Big(\\int_{1/3}^{3}\\mathrm du\\Big)\\Big(\\int_{1/3}^{3}\\frac{\\mathrm dv}{v}\\Big)$$' +
+       '<p>$=\\dfrac12\\cdot\\Big(3-\\tfrac13\\Big)\\cdot\\Big(\\ln3-\\ln\\tfrac13\\Big)=\\dfrac12\\cdot\\dfrac83\\cdot 2\\ln3$。</p>' },
+  { t: '结论',
+    h: '<p>对称性砍掉 $x-y$，换元把曲边区域变矩形：</p>' +
+       '$$\\iint_D(1+x-y)\\,\\mathrm dx\\,\\mathrm dy=\\frac83\\ln 3$$' },
+];
+
+var snaps = [
+  { cls:'step',  tag:'审题',   log:'第一象限内，两条双曲线夹两条过原点直线，围出曲边区域', count:0 },
+  { cls:'step',  tag:'对称',   log:'交换 x 和 y，双曲线不动、两条直线互换，区域关于对角线对称', count:1, ribbon:{k:1, ok:true} },
+  { cls:'ok',    tag:'消元',   log:'x 的积分等于 y 的积分，相减为零，被积函数只剩常数 1', count:2, ribbon:{k:2, ok:true} },
+  { cls:'shift', tag:'换元',   log:'令 u 等于横纵坐标之积、v 等于二者之商，曲边区域变成矩形', count:3, ribbon:{k:3, ok:true} },
+  { cls:'step',  tag:'反解',   log:'由乘积与商反解出 x 和 y，为算雅可比做准备', count:4 },
+  { cls:'shift', tag:'雅可比', log:'先算正向雅可比得 2v，面积元素取其倒数', count:5, ribbon:{k:4, ok:true} },
+  { cls:'step',  tag:'积分',   log:'矩形上二重积分拆成两个一元积分相乘', count:6 },
+  { cls:'done',  tag:'完成',   log:'原积分等于区域面积：八分之三倍 ln3', count:7, done:true, ribbon:{k:5, ok:true} },
+];
+
+AW.init({
+  title: '【2024·17】$\\iint_D(1+x-y)\\,\\mathrm dx\\,\\mathrm dy$：对称性 + 换元',
+  subtitle: '考点：二重积分 · 区域由 $xy=\\tfrac13,\\ xy=3$ 与 $y=\\tfrac13x,\\ y=3x$ 围成（第一象限）',
+  counterLabel: '已完成',
+  intro: '点击「▶ 播放」逐步演示：先对称性消元，再换元算面积。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    this._board = AW.el('div', '');
+    wrap.appendChild(this._board);
+    stage.appendChild(wrap);
+  },
+
+  render: function(stage, sn, i){
+    var b = this._board;
+    b.innerHTML = '';
+    for(var k = 0; k <= i && k < SECS.length; k++){
+      var cur = (k === Math.min(i, SECS.length - 1));
+      b.appendChild(AW.el('div', 'mb-line' + (cur ? ' act' : ' past'),
+        '<div class="mb-title">' + SECS[k].t + '</div>' + SECS[k].h));
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  snaps: snaps,
+
+  result: {
+    big: '$\\dfrac{8}{3}\\ln 3$',
+    html: '<p>记忆锚点：边界含 $xy=c$ 与 $y=kx$ → 换元 <b>$u=xy,\\ v=\\dfrac yx$</b> 直接变矩形；$\\dfrac{\\partial(u,v)}{\\partial(x,y)}=2v$，面积元素 $\\dfrac{\\mathrm du\\,\\mathrm dv}{2v}$。</p>' +
+          '<p>易错：对称性是关于 $y=x$（不是坐标轴），只有 $x-y$ 这种互换变号的组合消零；$\\int_{1/3}^{3}\\frac{\\mathrm dv}{v}=2\\ln3$ 别写成 $\\ln3$。</p>',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

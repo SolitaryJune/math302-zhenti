@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2012·16 二元函数极值：驻点与 AC−B² 判别</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改 AW.init 区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [];
+
+var LINES = [
+  '<p><b>审题</b>：无条件极值标准三步——一阶偏导找驻点，二阶偏导算 $AC-B^2$ 判别。记恒正因子 $g=\\mathrm e^{-\\frac{x^2+y^2}{2}}>0$，求导后统一提出来。</p>',
+  '<p><b>一阶偏导</b>：$$f_x=(1-x^2)\\,g,\\qquad f_y=-xy\\,g.$$</p>',
+  '<p><b>解驻点</b>：$g$ 恒正不出零，故 $1-x^2=0$ 且 $xy=0$，得 $x=\\pm1$、$y=0$：驻点 $(1,0)$ 与 $(-1,0)$。</p>',
+  '<p><b>二阶偏导</b>：$$f_{xx}=(x^3-3x)g,\\qquad f_{xy}=-y(1-x^2)g,\\qquad f_{yy}=x(y^2-1)g.$$</p>',
+  '<p><b>判 $(1,0)$</b>：$A=f_{xx}=-2\\mathrm e^{-1/2}$，$B=f_{xy}=0$，$C=f_{yy}=-\\mathrm e^{-1/2}$。$$AC-B^2=2\\mathrm e^{-1}>0,\\quad A<0\\ \\Rightarrow\\ \\text{极大值点}.$$</p>',
+  '<p><b>极大值</b>：$$f(1,0)=1\\cdot\\mathrm e^{-1/2}=\\mathrm e^{-1/2}.$$</p>',
+  '<p><b>判 $(-1,0)$</b>：$A=2\\mathrm e^{-1/2}$，$B=0$，$C=\\mathrm e^{-1/2}$。$$AC-B^2=2\\mathrm e^{-1}>0,\\quad A>0\\ \\Rightarrow\\ \\text{极小值点}.$$</p>',
+  '<p><b>极小值</b>：$$f(-1,0)=-\\mathrm e^{-1/2}.$$</p>',
+  '<p><b>结论</b>：$(1,0)$ 处取极大值 $\\mathrm e^{-1/2}$；$(-1,0)$ 处取极小值 $-\\mathrm e^{-1/2}$。</p>',
+];
+
+AW.init({
+  title: '$f(x,y)=x\\,\\mathrm e^{-\\frac{x^2+y^2}{2}}$ 的极值',
+  subtitle: '考点：无条件极值 · 驻点联立 · $AC-B^2$ 判别法',
+  counterLabel: '步数',
+  intro: '点击「▶ 播放」逐步演示驻点求解与判别全过程。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    ROWS.length = 0;
+    var wrap = AW.el('div', 'aw-scroll');
+    var pts = AW.el('div', '');
+    pts.style.cssText = 'display:flex;gap:12px;margin:2px 0 12px;flex-wrap:wrap;';
+    var c1 = AW.el('div', '', '驻点 $(1,0)$：待判别');
+    var c2 = AW.el('div', '', '驻点 $(-1,0)$：待判别');
+    c1.style.cssText = 'padding:8px 14px;border:2px solid #e2e8f0;border-radius:12px;font-size:14px;background:#f8fafc;';
+    c2.style.cssText = 'padding:8px 14px;border:2px solid #e2e8f0;border-radius:12px;font-size:14px;background:#f8fafc;';
+    pts.appendChild(c1); pts.appendChild(c2);
+    var board = AW.el('div', '');
+    for(var k = 0; k < LINES.length; k++){
+      var d = AW.el('div', '', LINES[k]);
+      d.style.cssText = 'margin:8px 0;padding:9px 14px;border-left:3px solid #e2e8f0;background:#f8fafc;border-radius:0 12px 12px 0;font-size:14.5px;line-height:1.9;display:none;';
+      board.appendChild(d);
+      ROWS.push(d);
+    }
+    wrap.appendChild(pts);
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+    this._c1 = c1; this._c2 = c2;
+  },
+
+  render: function(stage, sn){
+    var c1 = this._c1, c2 = this._c2;
+    c1.style.border = '2px solid #e2e8f0'; c1.style.background = '#f8fafc';
+    c1.innerHTML = '驻点 $(1,0)$：待判别';
+    c2.style.border = '2px solid #e2e8f0'; c2.style.background = '#f8fafc';
+    c2.innerHTML = '驻点 $(-1,0)$：待判别';
+    if(sn.show >= 5){
+      c1.style.border = '2px solid #16a34a'; c1.style.background = '#f6fef9';
+      c1.innerHTML = '<b>$(1,0)$：极大值点</b>，$f=\\mathrm e^{-1/2}$';
+    }
+    if(sn.show >= 7){
+      c2.style.border = '2px solid #16a34a'; c2.style.background = '#f6fef9';
+      c2.innerHTML = '<b>$(-1,0)$：极小值点</b>，$f=-\\mathrm e^{-1/2}$';
+    }
+    for(var k = 0; k < ROWS.length; k++){
+      var r = ROWS[k];
+      if(k >= sn.show){ r.style.display = 'none'; continue; }
+      r.style.display = 'block';
+      if(k === sn.show - 1 && !sn.done){
+        r.style.borderLeftColor = '#d97706';
+        r.style.background = '#fffbeb';
+      } else {
+        r.style.borderLeftColor = '#16a34a';
+        r.style.background = '#f8fafc';
+      }
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  snaps: [
+    { cls:'shift', tag:'审题',     log:'无条件极值三步走：求偏导、找驻点、判别式定夺', show:1, count:0 },
+    { cls:'step',  tag:'偏导',     log:'指数因子恒正提出来，两个一阶偏导都很好看', show:2, count:1 },
+    { cls:'ok',    tag:'驻点',     log:'恒正因子不出零，两方程联立解出 x 等于正负 1、y 等于 0', show:3, count:2 },
+    { cls:'step',  tag:'二阶导',   log:'再求一次导，三个二阶偏导备齐', show:4, count:3 },
+    { cls:'ok',    tag:'判 1,0',   log:'判别式 2/e 大于零，A 为负，是极大值点', show:5, count:4 },
+    { cls:'ok',    tag:'极大值',   log:'代回函数：极大值是 1/√e', show:6, count:5 },
+    { cls:'ok',    tag:'判 −1,0',  log:'判别式同样为正，A 为正，是极小值点', show:7, count:6 },
+    { cls:'ok',    tag:'极小值',   log:'代回函数：极小值是负的 1/√e', show:8, count:7 },
+    { cls:'done',  tag:'完成',     log:'结论：(1,0) 极大 e^(−1/2)，(−1,0) 极小 −e^(−1/2)', show:9, count:8, done:true },
+  ],
+
+  result: {
+    big: '极大值 $\\mathrm e^{-1/2}$ 于 $(1,0)$；极小值 $-\\mathrm e^{-1/2}$ 于 $(-1,0)$',
+    html: '记忆锚点：<b>$AC-B^2>0$ 才有极值，$A<0$ 极大、$A>0$ 极小</b>。易错：两个一阶偏导方程必须联立（$x^2=1$ 与 $xy=0$ 缺一不可）；判别式小于零的点一律不是极值点。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

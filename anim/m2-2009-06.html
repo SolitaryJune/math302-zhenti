@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2009·06 变限积分的图形识别</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_concept_template.html，只改题目专属区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+function card(n, cls, title, body){
+  return '<div class="aw-stepcard ' + (cls || '') + '"><h4><span class="n">' + n +
+         '</span>' + title + '</h4>' + body + '</div>';
+}
+
+// 题面给的是 f 的图形（图片），这里按题意把 f 的分段信息用文字复述
+var STEPS = [
+  { title: '审题：把图形读成文字',
+    cls: 'key',
+    body: '<p>题面图形的信息：$[-1,0)$ 上 $f\\equiv1$；$(0,1)$ 上 $f<0$；$(1,2)$ 上 $f>0$；$[2,3]$ 上 $f\\equiv0$；且 $f$ 在 $x=0$、$x=2$ 处<b>跳跃</b>。要识别 $F(x)=\\int_0^x f(t)\\,\\mathrm dt$ 的图形。</p>',
+    log: 'f 分四段：正、负、正、零，在 0 和 2 跳跃' },
+  { title: '三把筛子',
+    cls: 'key',
+    body: "<p>1. $F(0)=0$，图形必过原点；2. $f$ 的连续点处 $F'=f$：$f>0$ 增、$f<0$ 减、变号处取极值；3. $f$ 有界可积 $\\Rightarrow$ $F$ <b>处处连续</b>。</p>",
+    log: '过原点、随 f 增减、处处连续' },
+  { title: '筛子 1：排除 C',
+    cls: 'bad',
+    body: '<p>$F(0)=\\int_0^0 f\\,\\mathrm dt=0$ 恒成立，图形必过原点；C 在 $x=0$ 处取值 $1$，排除。</p>',
+    ribbon: {k:1, ok:false},
+    log: 'C 不过原点，排除' },
+  { title: '筛子 2：排除 A',
+    cls: 'bad',
+    body: "<p>$[-1,0)$ 上 $f\\equiv1>0\\Rightarrow F(x)=x$ 上升（$F(-1)=-1$）；A 在这一段却下降，与 $F'=f>0$ 矛盾，排除。</p>",
+    ribbon: {k:2, ok:false},
+    log: 'A 在 [−1,0) 下降，矛盾，排除' },
+  { title: '筛子 2 续：正确的增减轮廓',
+    cls: 'step',
+    body: '<p>$(0,1)$ 上 $f<0\\Rightarrow F$ 下降；$(1,2)$ 上 $f>0\\Rightarrow F$ 上升，$x=1$ 处取极小；$[2,3]$ 上 $f\\equiv0\\Rightarrow F$ 水平。</p>',
+    log: '先降后升再水平，x=1 处极小' },
+  { title: '筛子 3：排除 B',
+    cls: 'bad',
+    body: '<p>$f$ 有界可积，变上限积分 $F$ <b>处处连续</b>；B 在 $x=2$ 处跳断（空心点加竖直虚线），不可能，排除。</p>',
+    ribbon: {k:3, ok:false},
+    log: 'F 不能跳断，排除 B' },
+  { title: '核对 D',
+    cls: 'good',
+    body: '<p>D：上升直线 → 下降 → 上升 → 水平，且在 $x=0,\\ 2$ 处是<b>折点</b>——左右导数各等于 $f$ 的左右极限，恰不相等。与三把筛子全部相容。</p>',
+    log: 'D 的折点与 f 的跳跃点一致' },
+  { title: '结论',
+    cls: 'good',
+    body: '<p>答案选 <b>D</b>。注意不能用「光滑」当筛子：$f$ 的跳跃点恰是 $F$ 的折点，用光滑筛会把正确答案一起删掉。</p>',
+    ribbon: {k:4, ok:true},
+    log: '选 D' },
+];
+
+var snaps = STEPS.map(function(s, i){
+  return {
+    cls: i === STEPS.length - 1 ? 'done' : 'step',
+    tag: '第 ' + (i + 1) + ' 步',
+    log: s.log || s.title,
+    count: i + 1,
+    ribbon: s.ribbon,
+    html: STEPS.slice(0, i + 1).map(function(x, j){
+      return card(j + 1, x.cls, x.title, x.body);
+    }).join(''),
+    done: i === STEPS.length - 1,
+  };
+});
+
+AW.init({
+  title: '$F(x)=\\int_0^x f(t)\\,\\mathrm dt$ 的图形识别（$f$ 图形给定）',
+  subtitle: '考点：变限积分性质 · 方法：过原点 / 随 f 增减 / 处处连续，三把筛子',
+  counterLabel: '推理步',
+  ribbonTitle: '选项筛选（✗ 排除 / ✓ 选中）',
+  intro: '点击「▶ 播放」逐步展开推理链。',
+  render: function(stage, sn){
+    if(sn.html != null) stage.innerHTML = sn.html;
+    renderMathAfterSnap(stage);
+  },
+  snaps: snaps,
+  result: {
+    big: '答案 D',
+    html: '记忆锚点：<b>过原点 · 随 $f$ 增减 · 处处连续</b>；折点落在 $f$ 的跳跃点（$x=0,\\ 2$）。C 的尖角、D 的折点都不是毛病——千万别拿「光滑」筛选项。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

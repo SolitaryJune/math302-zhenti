@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2026 数二第 22 题 · 极大无关组 + 满秩分解求 A¹⁰（交互动画）</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+AW.init({
+  title: '2026·22　极大无关组与满秩分解：$A=GH$，求 $H$ 与 $A^{10}$',
+  subtitle: '考点：向量组的秩 · 满秩分解 · <b>$A^{10}=G(HG)^9H$ 把幂压到 $2\\times2$</b>',
+  counterLabel: '已完成',
+  ribbonTitle: '推导进度（✓ 完成）',
+  intro: '点击「▶ 播放」或「下一步」，先找表示关系，再用小矩阵算高次幂。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var inner = AW.el('div', '');
+    inner.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>：当前行亮琥珀色，已完成的行变绿'));
+    var LINES = [
+      "<b>题目：</b>$\\alpha_1=\\begin{pmatrix}1\\\\0\\\\-1\\\\-1\\end{pmatrix}$，$\\alpha_2=\\begin{pmatrix}1\\\\-1\\\\0\\\\-2\\end{pmatrix}$，$\\alpha_3=\\begin{pmatrix}0\\\\-1\\\\1\\\\-1\\end{pmatrix}$，$\\alpha_4=\\begin{pmatrix}0\\\\1\\\\-1\\\\1\\end{pmatrix}$；$A=(\\alpha_1,\\alpha_2,\\alpha_3,\\alpha_4)$，$G=(\\alpha_1,\\alpha_2)$",
+      "<b>观察表示关系：</b>逐分量相减：$$\\alpha_2-\\alpha_1=\\begin{pmatrix}0\\\\-1\\\\1\\\\-1\\end{pmatrix}=\\alpha_3,\\qquad \\alpha_1-\\alpha_2=\\begin{pmatrix}0\\\\1\\\\-1\\\\1\\end{pmatrix}=\\alpha_4$$　即 $\\alpha_3=-\\alpha_1+\\alpha_2$，$\\alpha_4=\\alpha_1-\\alpha_2$",
+      "<b>问(1)得证：</b>$\\alpha_1,\\alpha_2$ 对应分量不成比例，线性无关；$\\alpha_3,\\alpha_4$ 均可由其表示，向量组秩为 $2$ —— 故 $\\alpha_1,\\alpha_2$ 是极大线性无关组",
+      "<b>问(2)之 $H$：</b>$H$ 的第 $j$ 列 = $\\alpha_j$ 用 $\\alpha_1,\\alpha_2$ 表示的系数：$$H=\\begin{pmatrix}1&0&-1&1\\\\0&1&1&-1\\end{pmatrix},\\qquad A=GH$$（验证：$G(-1,1)^T=-\\alpha_1+\\alpha_2=\\alpha_3$ ✓）",
+      "<b>算 $2\\times2$ 的 $HG$：</b>$H\\alpha_1=\\begin{pmatrix}1\\\\0\\end{pmatrix}$，$H\\alpha_2=\\begin{pmatrix}-1\\\\1\\end{pmatrix}$：$$HG=\\begin{pmatrix}1&-1\\\\0&1\\end{pmatrix}$$",
+      "<b>幂零技巧：</b>$HG=E+N$，$N=\\begin{pmatrix}0&-1\\\\0&0\\end{pmatrix}$，$N^2=O$，二项式截断：$$(HG)^9=E+9N=\\begin{pmatrix}1&-9\\\\0&1\\end{pmatrix}$$",
+      "<b>先合成小矩阵：</b>$$(HG)^9H=\\begin{pmatrix}1&-9\\\\0&1\\end{pmatrix}\\begin{pmatrix}1&0&-1&1\\\\0&1&1&-1\\end{pmatrix}=\\begin{pmatrix}1&-9&-10&10\\\\0&1&1&-1\\end{pmatrix}$$",
+      "<b>左乘 $G$ 得 $A^{10}$：</b>第 $j$ 列 = $(HG)^9H$ 第 $j$ 列对 $\\alpha_1,\\alpha_2$ 的组合（如第 2 列 $=-9\\alpha_1+\\alpha_2=(-8,-1,9,7)^T$）：$$A^{10}=\\begin{pmatrix}1&-8&-9&9\\\\0&-1&-1&1\\\\-1&9&10&-10\\\\-1&7&8&-8\\end{pmatrix}$$",
+      "<b>结论：</b>$\\alpha_1,\\alpha_2$ 是极大无关组；$H=\\begin{pmatrix}1&0&-1&1\\\\0&1&1&-1\\end{pmatrix}$；$A^{10}$ 如上 —— 核心是 $A^{10}=G(HG)^9H$"
+    ];
+    this._rows = [];
+    for (var i = 0; i < LINES.length; i++){
+      var r = AW.el('div', 'aw-stepcard', LINES[i]);
+      inner.appendChild(r);
+      this._rows.push(r);
+    }
+    wrap.appendChild(inner);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step',  tag:'审题',   log:'先把四个向量的分量摆在眼前，找它们之间的加减关系', count:0, ribbon:{k:1, ok:true} },
+    { cls:'ok',    tag:'找关系', log:'α₃ 恰好等于 α₂ − α₁，α₄ 恰好等于 α₁ − α₂，两个都能被 α₁、α₂ 表出', count:1, ribbon:{k:2, ok:true} },
+    { cls:'ok',    tag:'证秩2', log:'α₁、α₂ 分量不成比例所以线性无关，秩为 2，问 (1) 得证', count:2, ribbon:{k:3, ok:true} },
+    { cls:'shift', tag:'写 H',   log:'把表示系数按列排成 2×4 矩阵 H，就得到满秩分解 A = GH', count:3, ribbon:{k:4, ok:true} },
+    { cls:'step',  tag:'算 HG',  log:'算 2×2 的小矩阵 HG，两个列向量各乘一次 H 就够了', count:4, ribbon:{k:5, ok:true} },
+    { cls:'ok',    tag:'幂零',   log:'HG 是单位阵加幂零阵，N 的平方是零矩阵，九次幂只剩 E + 9N', count:5, ribbon:{k:6, ok:true} },
+    { cls:'step',  tag:'合成',   log:'先用小矩阵的九次幂右乘 H，得到 2×4 矩阵', count:6, ribbon:{k:7, ok:true} },
+    { cls:'ok',    tag:'左乘G',  log:'最后左乘 G，逐列组合出 4×4 的 A¹⁰，抽一列验算无误', count:7, ribbon:{k:8, ok:true} },
+    { cls:'done',  tag:'完成',   log:'结论：H 与 A¹⁰ 全部求出，核心技巧是把高次幂集中到 2×2 小矩阵上', count:8, ribbon:{k:9, ok:true}, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    var rows = this._rows;
+    for (var j = 0; j < rows.length; j++){
+      rows[j].className = 'aw-stepcard' + (j < i ? ' good' : (j === i ? ' key' : ''));
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '$H=\\begin{pmatrix}1&0&-1&1\\\\0&1&1&-1\\end{pmatrix}$',
+    html: '$$A^{10}=\\begin{pmatrix}1&-8&-9&9\\\\0&-1&-1&1\\\\-1&9&10&-10\\\\-1&7&8&-8\\end{pmatrix}$$记忆锚点：<b>低秩分解求高次幂：$A^{10}=(GH)^{10}=G(HG)^9H$</b>，$HG$ 只有 $2\\times2$；若 $HG=E+N$ 且 $N^2=O$，则 $(HG)^m=E+mN$。易错：$G$、$H$ 不能合并成 $(HG)^{10}$。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

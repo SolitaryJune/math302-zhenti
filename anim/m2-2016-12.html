@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2016·12 变限积分方程与高阶导数规律</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改题目专属区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+// 推导板各行：与 snaps 一一对应（build 建立、render 按 i 点亮）
+var ROWS = [
+  { label: '第 0 步 · 审题',
+    h: '<p>$f(x)=(x+1)^2+2\\displaystyle\\int_0^x f(t)\\,\\mathrm dt$，$f$ 处处连续。求 $n\\ge2$ 时的 $f^{(n)}(0)$。思路：变限积分可导，两边求导制造递推，再逐阶代 $x=0$ 找节奏。</p>' },
+  { label: '第 1 步 · 取 x=0 得初值',
+    h: '<p>积分项 $\\int_0^0=0$：$$f(0)=1.$$ 递推的起点必须有它。</p>' },
+  { label: '第 2 步 · 一阶：两边求导',
+    h: '<p>$$f\'(x)=2(x+1)+2f(x)\\ \\Longrightarrow\\ f\'(0)=2\\cdot1+2\\cdot1=4.$$</p>' },
+  { label: '第 3 步 · 二阶：多项式还在场',
+    h: '<p>$$f\'\'(x)=2+2f\'(x)\\ \\Longrightarrow\\ f\'\'(0)=2+2\\cdot4=10.$$</p>' },
+  { label: '第 4 步 · 三阶起：纯倍增递推',
+    h: '<p>$2(x+1)$ 求二阶导已归零，$$f^{(k)}(x)=2f^{(k-1)}(x)\\quad(k\\ge3).$$</p>' },
+  { label: '第 5 步 · 列数列找通项',
+    h: '<p>$$f\'\'(0)=10=5\\cdot2,\\quad f\'\'\'(0)=20=5\\cdot2^2,\\quad f^{(4)}(0)=40=5\\cdot2^3,\\ \\cdots$$ 每加一阶乘 2，基数是 5。</p>' },
+  { label: '第 6 步 · 结论',
+    h: '<p>$$f^{(n)}(0)=5\\cdot 2^{\\,n-1}\\qquad(n\\ge2).$$ 验算：$n=2$ 得 $10$，$n=3$ 得 $20$，与逐阶求导一致。</p>' },
+];
+
+var rowEls = [];
+
+AW.init({
+  title: '$f(x)=(x+1)^2+2\\int_0^x f(t)\\,\\mathrm dt$，求 $f^{(n)}(0)$',
+  subtitle: '考点：变限积分求导 · 高阶导数递推 · 方法：定初值 → 求导造递推 → 找通项',
+  counterLabel: '步骤',
+  intro: '点击「▶ 播放」逐步演示推导板上的七步计算。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    rowEls = [];
+    var wrap = AW.el('div', 'aw-scroll');
+    ROWS.forEach(function(r){
+      var d = AW.el('div', '');
+      d.style.cssText = 'padding:9px 14px;margin:8px 0;border-left:4px solid transparent;border-radius:10px;opacity:.15;transition:opacity .35s,background .35s,border-color .35s;';
+      d.innerHTML = '<div style="font-size:12.5px;color:#64748b;font-weight:700;margin-bottom:2px">' + r.label + '</div>' + r.h;
+      wrap.appendChild(d);
+      rowEls.push(d);
+    });
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step', tag:'审题',   log:'变限积分可导：两边求导把积分方程变成导数递推', count:0 },
+    { cls:'ok',   tag:'初值',   log:'x=0 时积分为零，f(0) = 1', count:1 },
+    { cls:'step', tag:'一阶',   log:'f′ = 2(x+1) + 2f，代 x=0 得 f′(0) = 4', count:2 },
+    { cls:'step', tag:'二阶',   log:'f″ = 2 + 2f′，f″(0) = 10', count:3 },
+    { cls:'ok',   tag:'纯倍增', log:'三阶起 2(x+1) 求没，f⁽ᵏ⁾ = 2f⁽ᵏ⁻¹⁾', count:4 },
+    { cls:'ok',   tag:'找通项', log:'10, 20, 40, … 每阶乘 2，基数 5', count:5 },
+    { cls:'done', tag:'完成',   log:'f⁽ⁿ⁾(0) = 5·2ⁿ⁻¹（n ≥ 2）', count:6, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    rowEls.forEach(function(d, j){
+      d.style.opacity = j <= i ? '1' : '.15';
+      d.style.borderLeftColor = j < i ? '#16a34a' : (j === i ? '#d97706' : 'transparent');
+      d.style.background = j === i ? '#fffbeb' : (j < i ? '#f6fef9' : 'transparent');
+    });
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: 'f⁽ⁿ⁾(0) = 5·2ⁿ⁻¹（n ≥ 2）',
+    html: '记忆锚点：<b>变限积分方程 = 求导造递推</b>——先 $f(0)=1$ 定起点，$f\'(0)=4$、$f\'\'(0)=10$ 后多项式项退场，剩下 $\\times 2$ 的等比节奏：$f^{(n)}(0)=5\\cdot2^{\\,n-1}$。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

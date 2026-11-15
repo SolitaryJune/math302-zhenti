@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2024·20 抽象复合函数二阶偏导 + 偏积分还原</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+<style>
+.mb-line{border:1px solid #e2e8f0;border-radius:12px;padding:10px 14px;margin:8px 0;background:#fff;font-size:14.5px;line-height:1.9;transition:all .25s}
+.mb-line.act{border-color:#d97706;background:#fffbeb;box-shadow:0 2px 8px rgba(217,119,6,.14)}
+.mb-line.past{opacity:.7}
+.mb-title{font-size:12.5px;color:#64748b;font-weight:700;margin-bottom:2px}
+.mb-part{display:inline-block;font-size:11.5px;font-weight:700;color:#fff;border-radius:999px;padding:1px 9px;margin-left:6px;background:#64748b;vertical-align:2px}
+.mb-part.q1{background:#2563eb}
+.mb-part.q2{background:#059669}
+.mb-coef{display:inline-block;border-radius:8px;padding:2px 9px;margin:0 3px;font-size:13px;border:1.5px solid #cbd5e1;background:#f8fafc}
+.mb-coef.zero{border-color:#dc2626;background:#fff8f8}
+.mb-coef.key{border-color:#16a34a;background:#f6fef9}
+</style>
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+var SECS = [
+  { t: '第(1)问 · 记中间变量',
+    h: '<p>$g(x,y)=f(\\underbrace{2x+y}_{u},\\ \\underbrace{3x-y}_{v})$，一阶偏导常数：</p>' +
+       '<div class="mb-coef">$u_x=2$</div><div class="mb-coef">$u_y=1$</div><div class="mb-coef">$v_x=3$</div><div class="mb-coef">$v_y=-1$</div>' },
+  { t: '第(1)问 · 一阶链式法则',
+    h: '$$g_x=2f_u+3f_v,\\qquad g_y=f_u-f_v$$' +
+       '<p>$f_u,\\ f_v$ 仍是 $u,v$ 的函数，二阶时要<b>继续走链</b>。</p>' },
+  { t: '第(1)问 · 求 $g_{xx}$',
+    h: '$$g_{xx}=2(2f_{uu}+3f_{uv})+3(2f_{uv}+3f_{vv})=4f_{uu}+12f_{uv}+9f_{vv}$$' },
+  { t: '第(1)问 · 求 $g_{xy}$',
+    h: '$$g_{xy}=2(f_{uu}-f_{uv})+3(f_{uv}-f_{vv})=2f_{uu}+f_{uv}-3f_{vv}$$' +
+       '<p>（对 $y$ 求导走 $u_y=1,\\ v_y=-1$ 两条链。）</p>' },
+  { t: '第(1)问 · 求 $g_{yy}$',
+    h: '$$g_{yy}=(f_{uu}-f_{uv})-(f_{uv}-f_{vv})=f_{uu}-2f_{uv}+f_{vv}$$' },
+  { t: '第(1)问 · 代入恒等式消元',
+    h: '$$g_{xx}+g_{xy}-6g_{yy}=\\textcolor{#dc2626}{(4+2-6)}f_{uu}+\\textcolor{#16a34a}{(12+1+12)}f_{uv}+\\textcolor{#dc2626}{(9-3-6)}f_{vv}$$' +
+       '<p>$f_{uu}$ 与 $f_{vv}$ 的系数<b>恰好为零</b>，只剩 $25f_{uv}=1$：</p>' +
+       '$$f_{uv}=\\frac1{25}$$' },
+  { t: '第(2)问 · 对 $v$ 偏积分',
+    h: '<p>$f_{uv}=\\dfrac1{25}$ 对 $v$ 积分，「常数」是 $u$ 的任意函数：</p>' +
+       '$$f_u(u,v)=\\frac v{25}+\\varphi(u)$$' },
+  { t: '第(2)问 · 用 $f_u(u,0)=u\\,\\mathrm e^{-u}$ 定 $\\varphi$',
+    h: '<p>令 $v=0$：$\\varphi(u)=f_u(u,0)=u\\,\\mathrm e^{-u}$，故</p>' +
+       '$$f_u=\\frac v{25}+u\\,\\mathrm e^{-u}$$' },
+  { t: '第(2)问 · 对 $u$ 偏积分',
+    h: '<p>$\\displaystyle\\int u\\,\\mathrm e^{-u}\\,\\mathrm du=-(u+1)\\,\\mathrm e^{-u}$（分部积分一次），「常数」换成 $v$ 的任意函数：</p>' +
+       '$$f(u,v)=\\frac{uv}{25}-(u+1)\\,\\mathrm e^{-u}+\\psi(v)$$' },
+  { t: '第(2)问 · 用 $f(0,v)=\\frac{v^2}{50}-1$ 定 $\\psi$',
+    h: '<p>令 $u=0$：$f(0,v)=-1+\\psi(v)=\\dfrac{v^2}{50}-1$，得 $\\psi(v)=\\dfrac{v^2}{50}$。</p>' },
+  { t: '结论',
+    h: '$$f(u,v)=\\frac{uv}{25}-(u+1)\\,\\mathrm e^{-u}+\\frac{v^2}{50}$$' +
+       '<p>回验：$f_u=\\frac v{25}+u\\mathrm e^{-u}$ ✓，$f_{uv}=\\frac1{25}$ ✓，$f(0,v)=-1+\\frac{v^2}{50}$ ✓</p>' },
+];
+
+var snaps = [
+  { cls:'step',  tag:'设元', log:'记 u 等于 2x 加 y、v 等于 3x 减 y，四个一阶偏导都是常数', count:0 },
+  { cls:'step',  tag:'一阶', log:'链式法则写出 g 对 x、对 y 的一阶偏导', count:1 },
+  { cls:'step',  tag:'二阶', log:'g 对 x 求两次：得到 f_uu 4 倍、f_uv 12 倍、f_vv 9 倍', count:2 },
+  { cls:'step',  tag:'二阶', log:'混合偏导：f_uu 2 倍、f_uv 1 倍、f_vv 负 3 倍', count:3 },
+  { cls:'step',  tag:'二阶', log:'g 对 y 求两次：f_uu 1 倍、f_uv 负 2 倍、f_vv 1 倍', count:4 },
+  { cls:'ok',    tag:'消元', log:'按组合系数代入：f_uu 与 f_vv 的系数恰好为零，25 倍 f_uv 等于 1', count:5, done:false, ribbon:{k:1, ok:true} },
+  { cls:'shift', tag:'偏积分', log:'第(2)问先对 v 积分，积分常数是含 u 的待定函数', count:6 },
+  { cls:'ok',    tag:'定函数', log:'令 v 等于 0，用边界条件定出 phi(u) 等于 u 乘 e 的负 u', count:7 },
+  { cls:'step',  tag:'偏积分', log:'再对 u 积分：u 倍 e 负 u 的原函数是负的 u 加 1 乘 e 负 u，又出现待定函数 psi(v)', count:8, ribbon:{k:2, ok:true} },
+  { cls:'ok',    tag:'定函数', log:'令 u 等于 0，用 f(0,v) 的条件定出 psi 是 v 平方除以 50', count:9 },
+  { cls:'done',  tag:'完成', log:'两问结果：f_uv 等于 1/25，f 的表达式全部求出', count:10, done:true, ribbon:{k:3, ok:true} },
+];
+
+AW.init({
+  title: '【2024·20】$g_{xx}+g_{xy}-6g_{yy}=1$ 反解 $f(u,v)$',
+  subtitle: '考点：抽象复合函数二阶偏导 · 偏积分还原（$u=2x+y,\\ v=3x-y$）',
+  counterLabel: '已完成',
+  intro: '点击「▶ 播放」逐步演示：链式求导 → 消元定 $f_{uv}$ → 两次偏积分还原 $f$。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    this._board = AW.el('div', '');
+    wrap.appendChild(this._board);
+    stage.appendChild(wrap);
+  },
+
+  render: function(stage, sn, i){
+    var b = this._board;
+    b.innerHTML = '';
+    for(var k = 0; k <= i && k < SECS.length; k++){
+      var cur = (k === Math.min(i, SECS.length - 1));
+      var part = (k <= 5) ? '<span class="mb-part q1">问 (1)</span>' : '<span class="mb-part q2">问 (2)</span>';
+      b.appendChild(AW.el('div', 'mb-line' + (cur ? ' act' : ' past'),
+        '<div class="mb-title">' + SECS[k].t + part + '</div>' + SECS[k].h));
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  snaps: snaps,
+
+  result: {
+    big: '$f_{uv}=\\dfrac1{25}$；$f(u,v)=\\dfrac{uv}{25}-(u+1)\\mathrm e^{-u}+\\dfrac{v^2}{50}$',
+    html: '<p>记忆锚点：二阶链式<b>每项走两条链</b>（如 $g_{xx}$ 里 $2f_u$ 再求导得 $4f_{uu}+12f_{uv}+9f_{vv}$ 的来源）；系数组合 $4+2-6=0$、$9-3-6=0$ 让 $f_{uu},f_{vv}$ 自动消光。</p>' +
+          '<p>易错：偏积分的「常数」是 $\\varphi(u)$、$\\psi(v)$ 这样的任意函数，各需一个边界条件；$\\int u\\mathrm e^{-u}\\mathrm du=-(u+1)\\mathrm e^{-u}$ 别丢负号。</p>',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

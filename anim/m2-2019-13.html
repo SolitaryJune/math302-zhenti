@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2019·13 变限积分参与的分部积分</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改 AW.init 区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [];
+
+var LINES = [
+  "<p><b>审题</b>：$f(x)=x\\displaystyle\\int_1^x\\frac{\\sin t^2}{t}\\,\\mathrm{d}t$。记 $g(x)=\\int_1^x\\frac{\\sin t^2}{t}\\,\\mathrm{d}t$，则 $f(x)=x\\,g(x)$。<b>注意</b>：$\\frac{\\sin t^2}{t}$ 没有初等原函数，不能硬积——出路是分部积分，让 $g$ 在分部中求导。</p>",
+  "<p><b>备好弹药</b>：变限积分求导白送两条：$$g(1)=0\\ (\\text{上下限重合}),\\qquad g\'(x)=\\frac{\\sin x^2}{x}.$$</p>",
+  "<p><b>分部积分</b>：把 $x$ 收进微分 $\\mathrm{d}\\left(\\frac{x^2}{2}\\right)$：$$\\int_0^1 f\\,\\mathrm{d}x=\\int_0^1 g\\,\\mathrm{d}\\Big(\\frac{x^2}{2}\\Big)=\\Big[\\frac{x^2}{2}\\,g\\Big]_0^1-\\int_0^1\\frac{x^2}{2}\\,g\'\\,\\mathrm{d}x.$$</p>",
+  "<p><b>边界项清零</b>：$x=1$ 处 $g(1)=0$；$x\\to0^+$ 处 $\\frac{x^2}{2}g(x)\\to0$（$g$ 有界）。两项全归零。</p>",
+  "<p><b>剩余积分</b>：$$-\\frac12\\int_0^1 x\\sin x^2\\,\\mathrm{d}x,$$ 凑微分 $x\\,\\mathrm{d}x=\\frac12\\,\\mathrm{d}(x^2)$，原函数 $-\\frac12\\cos x^2$。</p>",
+  "<p><b>算完</b>：$$-\\frac12\\Big[-\\frac{\\cos x^2}{2}\\Big]_0^1=-\\frac12\\cdot\\frac{1-\\cos1}{2}=\\frac{\\cos1-1}{4}.$$</p>",
+  "<p><b>符号自检 + 结论</b>：$(0,1)$ 上 $g(x)=-\\int_x^1\\frac{\\sin t^2}{t}\\mathrm{d}t<0$（往回积分、被积函数为正），故 $f<0$，积分应为负——$\\frac{\\cos1-1}{4}\\approx-0.115$，吻合。答案 $\\boldsymbol{\\dfrac{\\cos1-1}{4}}$。</p>"
+];
+
+AW.init({
+  title: '$f(x)=x\\int_1^x\\dfrac{\\sin t^2}{t}\\,\\mathrm{d}t$，求 $\\int_0^1 f(x)\\,\\mathrm{d}x$',
+  subtitle: '考点：变限积分 + 分部积分 · 方法：让变限积分求导脱身',
+  counterLabel: '已执行',
+  intro: '点击「▶ 播放」逐步演示分部积分流程。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    ROWS.length = 0;
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    for(var k = 0; k < LINES.length; k++){
+      var d = AW.el('div', '', LINES[k]);
+      d.style.cssText = 'margin:8px 0;padding:9px 14px;border-left:3px solid #e2e8f0;background:#f8fafc;border-radius:0 12px 12px 0;font-size:14.5px;line-height:1.9;display:none;';
+      board.appendChild(d);
+      ROWS.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  render: function(stage, sn){
+    for(var k = 0; k < ROWS.length; k++){
+      var r = ROWS[k];
+      if(k >= sn.show){ r.style.display = 'none'; continue; }
+      r.style.display = 'block';
+      if(k === sn.show - 1 && !sn.done){
+        r.style.borderLeftColor = '#d97706';
+        r.style.background = '#fffbeb';
+      } else {
+        r.style.borderLeftColor = '#16a34a';
+        r.style.background = '#f8fafc';
+      }
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  snaps: [
+    { cls:'shift', tag:'审题',   log:'sin t²/t 没有初等原函数，不能硬算，让变限积分靠分部求导', show:1, count:0 },
+    { cls:'step',  tag:'备弹药', log:'g(1)=0 且 g′(x)=sin x²/x，两条白送的信息', show:2, count:1 },
+    { cls:'step',  tag:'分部',   log:'x 收进 d(x²/2)，分部后 g 变 g′', show:3, count:2, ribbon:{k:1, ok:true} },
+    { cls:'ok',    tag:'清边界', log:'g(1)=0、零点处因子 x² 归零，边界项全消', show:4, count:3 },
+    { cls:'step',  tag:'凑微分', log:'剩 −½∫x·sin x² dx，凑 d(x²)/2', show:5, count:4 },
+    { cls:'ok',    tag:'算完',   log:'得 (cos1 − 1)/4，约 −0.115', show:6, count:5, ribbon:{k:2, ok:true} },
+    { cls:'done',  tag:'完成',   log:'符号自检通过：答案 (cos1−1)/4', show:7, count:6, done:true },
+  ],
+
+  result: {
+    big: '答案：$\\dfrac{\\cos1-1}{4}$',
+    html: '记忆锚点：<b>被积函数里藏着变限积分 → 分部积分逼它求导</b>：$g\'(x)=\\frac{\\sin x^2}{x}$ 由变限求导白送，$g(1)=0$ 把边界项清零。剩下 $-\\frac12\\int_0^1x\\sin x^2\\,\\mathrm{d}x=\\frac{\\cos1-1}{4}$（负值，与 $f<0$ 一致）。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2016 数二第 16 题 · 含参绝对值积分求导与最小值（交互动画）</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  /* stage 同步渲染；结论卡/标题/副标题由引擎在 render 返回后才写入或只写一次，
+     用 setTimeout(0) 兜底渲染（后台标签页 setTimeout 仍会触发） */
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+AW.init({
+  title: '2016·16　$f(x)=\\int_{0}^{1}\\lvert t^{2}-x^{2}\\rvert\\,\\mathrm{d}t$：求 $f^{\\prime}(x)$ 与最小值',
+  subtitle: '考点：含参变限积分 · 方法：<b>按分界点 $t=x$ 分类去绝对值</b>',
+  counterLabel: '已完成',
+  ribbonTitle: '推导进度（✓ 完成）',
+  intro: '点击「▶ 播放」或「下一步」，看绝对值如何被分类拆掉、最小值如何被逼出来。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var inner = AW.el('div', '');
+    inner.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>：当前行亮琥珀色，已完成的行变绿'));
+    var LINES = [
+      '<b>题式：</b>$f(x)=\\int_{0}^{1}\\lvert t^{2}-x^{2}\\rvert\\,\\mathrm{d}t\\ (x>0)$，积分区间 $[0,1]$，分界点 $t=x$',
+      '<b>① 分类：</b>$0<x<1$ 时分界点在区间内，拆成 $\\int_{0}^{x}(x^{2}-t^{2})\\mathrm{d}t+\\int_{x}^{1}(t^{2}-x^{2})\\mathrm{d}t$；$x\\ge1$ 时区间内恒有 $t^{2}\\le x^{2}$',
+      '<b>② 算出（$0<x<1$）：</b>$f(x)=\\frac{2x^{3}}{3}+\\Bigl(\\frac{1}{3}-x^{2}+\\frac{2x^{3}}{3}\\Bigr)=\\frac{4x^{3}}{3}-x^{2}+\\frac{1}{3}$',
+      '<b>③ 算出（$x\\ge1$）：</b>$f(x)=\\int_{0}^{1}(x^{2}-t^{2})\\,\\mathrm{d}t=x^{2}-\\frac{1}{3}$',
+      '<b>④ 求导：</b>$f^{\\prime}(x)=4x^{2}-2x=2x(2x-1)\\ (0<x<1)$；$f^{\\prime}(x)=2x\\ (x\\ge1)$；$x=1$ 两侧均为 $2$，衔接光滑',
+      '<b>⑤ 找最小：</b>$2x(2x-1)=0$ 得 $x=\\frac{1}{2}$，左负右正为极小点；$x\\ge1$ 段恒增且 $f(1)=\\frac{2}{3}>\\frac{1}{4}$',
+      '<b>⑥ 结论：</b>$f\\Bigl(\\frac{1}{2}\\Bigr)=\\frac{4}{3}\\cdot\\frac{1}{8}-\\frac{1}{4}+\\frac{1}{3}=\\frac{1}{6}-\\frac{1}{4}+\\frac{1}{3}=\\frac{1}{4}$ 为最小值'
+    ];
+    this._rows = [];
+    for (var i = 0; i < LINES.length; i++){
+      var r = AW.el('div', 'aw-stepcard', LINES[i]);
+      inner.appendChild(r);
+      this._rows.push(r);
+    }
+    wrap.appendChild(inner);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step',  tag:'审题',   log:'绝对值里是 t 平方与 x 平方比大小，分界点 t 等于 x 落不落在零到一之间决定分几段', count:0, ribbon:{k:1, ok:true} },
+    { cls:'ok',    tag:'分类',   log:'x 小于 1 时从 t 等于 x 处拆两段：前段 x 平方减 t 平方，后段 t 平方减 x 平方', count:1, ribbon:{k:2, ok:true} },
+    { cls:'ok',    tag:'积分',   log:'两段分别积完再相加：三分之四 x 三次方减 x 平方加三分之一', count:2, ribbon:{k:3, ok:true} },
+    { cls:'ok',    tag:'另一段', log:'x 不小于 1 时整段都是 x 平方减 t 平方，积出来是 x 平方减三分之一', count:3, ribbon:{k:4, ok:true} },
+    { cls:'ok',    tag:'求导',   log:'分别求导：内段是二 x 乘括号二 x 减一，外段是二 x，接口处左右都等于 2', count:4, ribbon:{k:5, ok:true} },
+    { cls:'shift', tag:'驻点',   log:'内段驻点 x 等于二分之一，导数左负右正是极小点；外段一直增不会更小', count:5, ribbon:{k:6, ok:true} },
+    { cls:'done',  tag:'完成',   log:'代入二分之一算出最小值四分之一', count:6, ribbon:{k:7, ok:true}, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    var rows = this._rows;
+    for (var j = 0; j < rows.length; j++){
+      rows[j].className = 'aw-stepcard' + (j < i ? ' good' : (j === i ? ' key' : ''));
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '$f^{\\prime}(x)=2x(2x-1)\\ (0<x<1)$，$\\ f^{\\prime}(x)=2x\\ (x\\ge1)$；最小值 $f\\bigl(\\frac{1}{2}\\bigr)=\\frac{1}{4}$',
+    html: '记忆锚点：<b>绝对值积分先按分界点 $t=x$ 分类</b>，算出分段 $f$ 再求导找驻点，最后与另一段比较。易错：漏掉 $x\\ge1$ 的情形，或忘了验证 $x=1$ 处导数衔接。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

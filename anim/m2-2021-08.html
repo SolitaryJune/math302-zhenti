@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2021·08 二次型的正负惯性指数</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改题目专属区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [
+  "<b>① 审题：</b>$f=(x_1+x_2)^2+(x_2+x_3)^2-(x_3-x_1)^2$——<b>不能</b>直接数「两正一负」",
+  "<b>② 识破假三平方：</b>三个线性式相关：$(x_1+x_2)-(x_2+x_3)+(x_3-x_1)=0$，平方项不独立，必须先展开",
+  "<b>③ 展开合并：</b>$$f=2x_2^2+2x_1x_2+2x_2x_3+2x_1x_3$$（$x_1^2$ 与 $x_3^2$ 恰好抵消）",
+  "<b>④ 写矩阵：</b>$A=\\begin{pmatrix}0&1&1\\\\1&2&1\\\\1&1&0\\end{pmatrix}$——对角元放平方项系数，非对角元放交叉项系数的一半",
+  "<b>⑤ 特征多项式：</b>迹 $=2$；二阶主子式之和 $=(-1)+(-1)+(-1)=-3$；$|A|=0$，故 $\\lambda^3-2\\lambda^2-3\\lambda=0$",
+  "<b>⑥ 因式分解：</b>$\\lambda(\\lambda-3)(\\lambda+1)=0$，特征值 $\\lambda_1=3,\\ \\lambda_2=0,\\ \\lambda_3=-1$",
+  "<b>⑦ 数符号：</b>正的 1 个（$3$）、负的 1 个（$-1$）、零的 1 个（不计入）——$p=q=1$，选 B",
+  "<b>⑧ 配方法复核：</b>$f=2\\left(x_2+\\frac{x_1+x_3}{2}\\right)^2-\\frac12(x_1-x_3)^2$——一正一负两个独立平方项，与特征值法一致"
+];
+
+AW.init({
+  title: '2021·08　二次型的正惯性指数与负惯性指数',
+  subtitle: '考点：惯性定理 · 平方项不独立须先展开 · 特征值符号个数',
+  counterLabel: '已推导',
+  ribbonTitle: '推导进度（✓ 完成）',
+  intro: '点击「▶ 播放」或「下一步」，展开 → 矩阵 → 特征值 → 数符号。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var inner = AW.el('div', '');
+    inner.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>：当前行亮琥珀色，已完成的行变绿'));
+    this._rows = [];
+    for (var i = 0; i < ROWS.length; i++){
+      var r = AW.el('div', 'aw-stepcard', ROWS[i]);
+      inner.appendChild(r);
+      this._rows.push(r);
+    }
+    wrap.appendChild(inner);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step',  tag:'审题',   log:'表面看是两个正平方加一个负平方，但这样的直觉恰恰是陷阱', count:0, ribbon:{k:1, ok:true} },
+    { cls:'shift', tag:'验相关', log:'三个线性式相加为零，彼此线性相关，平方项并不独立', count:1, ribbon:{k:2, ok:true} },
+    { cls:'ok',    tag:'展开',   log:'三个平方展开后平方项互相抵消，只剩四个交叉相关项', count:2, ribbon:{k:3, ok:true} },
+    { cls:'ok',    tag:'写矩阵', log:'按系数规则写出三阶实对称矩阵', count:3, ribbon:{k:4, ok:true} },
+    { cls:'ok',    tag:'特征式', log:'用迹、主子式和、行列式三个不变量拼出特征多项式', count:4, ribbon:{k:5, ok:true} },
+    { cls:'ok',    tag:'分解',   log:'因式分解得特征值三、零、负一', count:5, ribbon:{k:6, ok:true} },
+    { cls:'ok',    tag:'数符号', log:'正负特征值各一个，零特征值两边都不计入', count:6, ribbon:{k:7, ok:true} },
+    { cls:'done',  tag:'完成',   log:'结论：正负惯性指数都是一，配方法复核一致，选 B', count:7, ribbon:{k:8, ok:true}, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    var rows = this._rows;
+    for (var j = 0; j < rows.length; j++){
+      rows[j].className = 'aw-stepcard' + (j < i ? ' good' : (j === i ? ' key' : ''));
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '选 B　正惯性指数 $p=1$，负惯性指数 $q=1$（特征值 $3,0,-1$）',
+    html: '记忆锚点：<b>平方项线性相关时惯性指数不由表面符号决定——先展开成标准形再判断</b>；$|A|=0$ 的零特征值不进 $p,q$。易错：直接数「两正一负」错选 C/D。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

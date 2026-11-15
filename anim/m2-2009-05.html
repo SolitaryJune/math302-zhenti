@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2009·05 曲率圆反推极值与零点</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_concept_template.html，只改题目专属区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+function card(n, cls, title, body){
+  return '<div class="aw-stepcard ' + (cls || '') + '"><h4><span class="n">' + n +
+         '</span>' + title + '</h4>' + body + '</div>';
+}
+
+var STEPS = [
+  { title: '审题：曲率圆共享什么',
+    cls: 'key',
+    body: "<p>曲线与曲率圆在切点处<b>共用切点、共用切线、曲率中心落在凹侧</b>。圆 $x^2+y^2=2$ 过 $(1,1)$、圆心 $(0,0)$，由此可反推 $f'(1)$ 与凹向。</p>",
+    log: '曲率圆三共享：切点、切线、凹侧' },
+  { title: '读出切线斜率',
+    cls: 'good',
+    body: "<p>圆在 $(1,1)$ 处的切线为 $x+y=2$，斜率 $-1$；曲线与圆相切，故 $f'(1)=-1\\neq0$，且 $f(1)=1$。</p>",
+    log: '切线斜率 −1，切点不是驻点' },
+  { title: '读出凹向',
+    cls: 'key',
+    body: "<p>曲率中心 $(0,0)$ 在切点 $(1,1)$ 的下方——圆心总在曲线<b>凹的一侧</b>，故 $f''(1)<0$；$f''$ 不变号，整个 $(1,2)$ 内 $f''<0$（凸弧）。</p>",
+    log: '圆心在凹侧：f″<0 且不变号' },
+  { title: '判极值',
+    cls: 'bad',
+    body: "<p>$f''<0\\Rightarrow f'$ 单调递减，而 $f'(1)=-1<0$，故 $(1,2)$ 内 $f'(x)<0$ 恒成立：$f$ 严格递减，<b>无驻点、无极值点</b>。</p>",
+    log: 'f′ 恒负：无极值点' },
+  { title: '找零点',
+    cls: 'good',
+    body: "<p>凸弧位于切线下方：$f(2)<f(1)+f'(1)\\cdot(2-1)=1-1=0$；而 $f(1)=1>0$，连续函数由正变负，<b>介值定理保证 $(1,2)$ 内有零点</b>。</p>",
+    log: '切线估计 f(2)<0，介值定理给零点' },
+  { title: '结论',
+    cls: 'good',
+    body: '<p>答案选 <b>B</b>：$(1,2)$ 内无极值点、有零点。</p>',
+    log: '选 B' },
+];
+
+var snaps = STEPS.map(function(s, i){
+  return {
+    cls: i === STEPS.length - 1 ? 'done' : 'step',
+    tag: '第 ' + (i + 1) + ' 步',
+    log: s.log || s.title,
+    count: i + 1,
+    ribbon: s.ribbon,
+    html: STEPS.slice(0, i + 1).map(function(x, j){
+      return card(j + 1, x.cls, x.title, x.body);
+    }).join(''),
+    done: i === STEPS.length - 1,
+  };
+});
+
+AW.init({
+  title: '曲率圆 $x^2+y^2=2$ 在 $(1,1)$：判极值与零点',
+  subtitle: "考点：曲率 + 单调性 + 介值定理 · 方法：从曲率圆读出 $f'(1)$ 与凹向",
+  counterLabel: '推理步',
+  intro: '点击「▶ 播放」逐步展开推理链。',
+  render: function(stage, sn){
+    if(sn.html != null) stage.innerHTML = sn.html;
+    renderMathAfterSnap(stage);
+  },
+  snaps: snaps,
+  result: {
+    big: '答案 B',
+    html: "记忆锚点：<b>曲率圆三件套：切线斜率、凹向、曲率</b>。$f'(1)=-1$ 排除一切「有极值」的选项；凸性 + 切线估计 $f(2)<0$，再由介值定理得到零点。",
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

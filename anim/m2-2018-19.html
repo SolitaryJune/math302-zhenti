@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2018·19 三段铁丝的最小面积和（拉格朗日乘数法）</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+AW.init({
+  title: '2018·19　2 m 铁丝分三段围圆、正方形、正三角形，面积和的最小值',
+  subtitle: '考点：条件极值 · 方法：建模 → 拉格朗日乘数法 → 正定二次型定最小',
+  counterLabel: '已完成',
+  ribbonTitle: '推导进度（✓ 完成）',
+  intro: '约束 $x+y+z=2$（$x$ 围圆、$y$ 围正方形、$z$ 围正三角形）。点击「▶ 播放」逐步求解。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var inner = AW.el('div', '');
+    inner.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>：当前行亮琥珀色，已完成的行变绿'));
+    var LINES = [
+      "<p><b>建模：</b>围圆、正方形、正三角形的三段长记 $x,\\ y,\\ z\\ (>0)$，约束 $x+y+z=2$。$$f=\\frac{x^{2}}{4\\pi}+\\frac{y^{2}}{16}+\\frac{\\sqrt3\\,z^{2}}{36}\\ \\ \\text{求最小}$$</p>",
+      "<b>① 面积公式：</b>圆（半径 $\\frac{x}{2\\pi}$）$\\to\\dfrac{x^{2}}{4\\pi}$；正方形（边 $\\frac{y}{4}$）$\\to\\dfrac{y^{2}}{16}$；正三角形（边 $\\frac{z}{3}$）$\\to\\dfrac{\\sqrt3}{4}\\left(\\dfrac z3\\right)^{2}=\\dfrac{\\sqrt3\\,z^{2}}{36}$",
+      "<b>② 构造：</b>$L=f+\\lambda\\,(x+y+z-2)$",
+      "<b>③ 一阶条件：</b>$\\dfrac{x}{2\\pi}+\\lambda=0,\\quad\\dfrac{y}{8}+\\lambda=0,\\quad\\dfrac{\\sqrt3\\,z}{18}+\\lambda=0$",
+      "<b>④ 解出：</b>记 $k=-\\lambda$：$x=2\\pi k,\\quad y=8k,\\quad z=6\\sqrt3\\,k$",
+      "<b>⑤ 代入约束：</b>$k\\,(2\\pi+8+6\\sqrt3)=2\\ \\Longrightarrow\\ k=\\dfrac{1}{\\pi+4+3\\sqrt3}$（三分量皆正，驻点在内部）",
+      "<b>⑥ 巧算 $f$：</b>由 $\\dfrac{x}{2\\pi}=\\dfrac{y}{8}=\\dfrac{\\sqrt3 z}{18}=k$，每块面积 $=$ 段长 $\\times\\dfrac{k}{2}$：$$f=\\dfrac{k}{2}(x+y+z)=\\dfrac{k}{2}\\cdot2=k$$",
+      "<b>⑦ 定最小：</b>$f$ 为正定二次型，在有界闭集 $\\{x,y,z\\ge0,\\ x+y+z=2\\}$ 上连续必有最小值；边界（某段取 $0$）分母缺项、面积和更大 $\\Rightarrow$ 内部唯一驻点即最小值点",
+      "<b>⑧ 结论：</b>$$f_{\\min}=\\dfrac{1}{\\pi+4+3\\sqrt3}\\ (\\mathrm{m}^{2})\\approx0.081\\ \\mathrm{m}^{2}$$"
+    ];
+    this._rows = [];
+    for (var i = 0; i < LINES.length; i++){
+      var r = AW.el('div', 'aw-stepcard', LINES[i]);
+      inner.appendChild(r);
+      this._rows.push(r);
+    }
+    wrap.appendChild(inner);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step',  tag:'建模', log:'设三段长为 x、y、z，总和为二，目标函数是三个面积之和', count:0, ribbon:{k:1, ok:true} },
+    { cls:'ok',    tag:'面积表', log:'圆的面积是段长平方除四倍圆周率，正方形是除十六，正三角形别丢根号三', count:1, ribbon:{k:2, ok:true} },
+    { cls:'ok',    tag:'构造', log:'目标函数加上约束的倍数项，这就是拉格朗日函数', count:2, ribbon:{k:3, ok:true} },
+    { cls:'ok',    tag:'求偏导', log:'三个偏导为零，每个式子都是段长除以自己的系数再加拉姆达', count:3, ribbon:{k:4, ok:true} },
+    { cls:'ok',    tag:'解比值', log:'三段长都由同一个 k 表示，比例是二倍圆周率比八比六倍根号三', count:4, ribbon:{k:5, ok:true} },
+    { cls:'ok',    tag:'定 k', log:'代回约束解出 k，等于分母圆周率加四加三倍根号三分之一', count:5, ribbon:{k:6, ok:true} },
+    { cls:'ok',    tag:'巧算', log:'每块面积恰好等于段长乘 k 的一半，总和乘二分之一就是 k 本身', count:6, ribbon:{k:7, ok:true} },
+    { cls:'ok',    tag:'判定', log:'正定二次型加有界闭域保证最小值存在，只用两个图形的边界方案面积更大', count:7, ribbon:{k:8, ok:true} },
+    { cls:'done',  tag:'完成', log:'结论：最小面积和存在，等于分母圆周率加四加三倍根号三分之一个平方米', count:8, ribbon:{k:9, ok:true}, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    var rows = this._rows;
+    for (var j = 0; j < rows.length; j++){
+      rows[j].className = 'aw-stepcard' + (j < i ? ' good' : (j === i ? ' key' : ''));
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '$f_{\\min}=\\dfrac{1}{\\pi+4+3\\sqrt3}\\ \\mathrm{m}^{2}$（存在最小值）',
+    html: '记忆锚点：<b>周长 $s$ 围成的面积正比于 $s^{2}$，比例系数越小越「划算」</b>——最优点按 $x:y:z=2\\pi:8:6\\sqrt3$ 分配，此时 $\\dfrac{x}{2\\pi}=\\dfrac{y}{8}=\\dfrac{\\sqrt3 z}{18}=k$，总面积恰为 $k$。易错：正三角形面积丢 $\\sqrt3$；求出驻点不说明为何是最小。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

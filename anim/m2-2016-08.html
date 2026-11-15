@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2016·08 由正负惯性指数定参数 a</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_concept_template.html，只改题目专属区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+// 一张推理卡片（body 里可写 $..$ / $$..$$ 公式）
+function card(n, cls, title, body){
+  return '<div class="aw-stepcard ' + (cls || '') + '"><h4><span class="n">' + n +
+         '</span>' + title + '</h4>' + body + '</div>';
+}
+
+// 推理链：每一步的完整内容（引擎按步数截取显示）
+var STEPS = [
+  { title: '审题眼：惯性指数 = 特征值符号配额',
+    cls: 'key',
+    tag: '审题',
+    body: '<p>正惯性指数 = 正特征值个数，负惯性指数 = 负特征值个数。题设配额「正 1、负 2」即：<b>一个正、两个负、零个零</b>。</p>',
+    log: '目标：1 个正特征值 + 2 个负特征值' },
+  { title: '写矩阵、认结构',
+    cls: 'step',
+    tag: '拆矩阵',
+    body: '<p>$$A=\\begin{pmatrix}a&1&1\\\\1&a&1\\\\1&1&a\\end{pmatrix}=(a-1)E+J,$$ 其中 $J$ 是全 1 矩阵——三行相同、行和皆为 $a+2$，结构特殊。</p>',
+    log: 'A = (a−1)E + J，先拆出全 1 阵' },
+  { title: '借 J 的特征值平移',
+    cls: 'key',
+    tag: '特征值',
+    body: '<p>$J$ 的特征值：$3$（对应 $(1,1,1)^{T}$，即行和）与 $0$（二重）。$A$ 在 $J$ 基础上平移 $a-1$：$$\\lambda_1=a+2\\ (\\text{一重}),\\qquad \\lambda_{2,3}=a-1\\ (\\text{二重}).$$</p>',
+    log: 'λ₁ = a+2，λ₂,₃ = a−1（二重）' },
+  { title: '符号配额 → 不等式组',
+    cls: 'step',
+    tag: '列条件',
+    body: '<p>要「一正二负无零」：一重根 $a+2$ 必须当正根、二重根 $a-1$ 必须当负根：$$\\begin{cases}a+2>0\\\\ a-1<0\\end{cases}$$</p>',
+    log: 'a+2 > 0 且 a−1 < 0' },
+  { title: '解出范围并核对边界',
+    cls: 'good',
+    tag: '求解',
+    ribbon: {k:1, ok:true},
+    body: '<p>$-2<a<1$。边界上特征值归零、惯性配额即破：$a=1$ 时 $\\lambda_{2,3}=0$（秩 1），$a=-2$ 时 $\\lambda_1=0$（正惯性指数 0）。两侧 $a>1$ 全正、$a<-2$ 全负，也不符。</p>',
+    log: '−2 < a < 1，边界与两侧全排除' },
+  { title: '对选项',
+    cls: 'bad',
+    tag: '防坑',
+    body: '<p><b>A</b> $a>1$：三正，正惯性指数 3。<b>B</b> $a<-2$：三负，正惯性指数 0。<b>D</b> $a=1$ 或 $a=-2$：出现零特征值，配额不足。<b>C</b> $-2<a<1$：恰好一正二负。</p>',
+    log: 'A/B 符号全偏，D 含零特征值' },
+  { title: '结论',
+    cls: 'good',
+    tag: '完成',
+    body: '<p>答案选 <b>C</b>。记忆锚点：<b>行和相等的矩阵拆 $(a-1)E+J$，特征值一步平移到位</b>；惯性指数给的是符号配额，零特征值即出局。</p>',
+    log: '选 C：−2 < a < 1' },
+];
+
+var snaps = STEPS.map(function(s, i){
+  return {
+    cls: i === STEPS.length - 1 ? 'done' : 'step',
+    tag: s.tag || ('第 ' + (i + 1) + ' 步'),
+    log: s.log || s.title,
+    count: i + 1,
+    ribbon: s.ribbon,
+    html: STEPS.slice(0, i + 1).map(function(x, j){
+      return card(j + 1, x.cls, x.title, x.body);
+    }).join(''),
+    done: i === STEPS.length - 1,
+  };
+});
+
+AW.init({
+  title: '二次型正、负惯性指数为 $1,\\ 2$ 时定 $a$ 的范围',
+  subtitle: '考点：惯性指数与特征值符号 · 方法：拆 $(a-1)E+J$ → 平移特征值 → 符号配额',
+  counterLabel: '推理步',
+  ribbonTitle: '结论判定（✓ 范围成立）',
+  intro: '点击「▶ 播放」逐步展开推理链。',
+  render: function(stage, sn){
+    if(sn.html != null) stage.innerHTML = sn.html;
+    renderMathAfterSnap(stage);
+  },
+  snaps: snaps,
+  result: {
+    big: '答案 C（−2 < a < 1）',
+    html: '记忆锚点：<b>惯性指数是特征值的「符号配额」</b>——$\\lambda_1=a+2$、$\\lambda_{2,3}=a-1$，配 $1+2$ 要求 $a+2>0$ 且 $a-1<0$；$a=1$ 或 $a=-2$ 时零特征值抢走一个名额，直接出局。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

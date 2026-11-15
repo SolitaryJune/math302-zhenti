@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2011·22 由"不能表示"定 a，再求线性表示</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改 AW.init 区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [];
+
+var LINES = [
+  "<p><b>审题</b>：$\\boldsymbol\\alpha$ 组<b>不能</b>由 $\\boldsymbol\\beta$ 组线性表示。记 $A=(\\boldsymbol\\alpha_1,\\boldsymbol\\alpha_2,\\boldsymbol\\alpha_3)$，$B=(\\boldsymbol\\beta_1,\\boldsymbol\\beta_2,\\boldsymbol\\beta_3)$，其中 $\\boldsymbol\\alpha_1=(1,0,1)^{\\mathrm T},\\ \\boldsymbol\\alpha_2=(0,1,1)^{\\mathrm T},\\ \\boldsymbol\\alpha_3=(1,3,5)^{\\mathrm T}$。</p>",
+  "<p><b>$\\boldsymbol\\alpha$ 组满秩</b>：$$\\det A=\\begin{vmatrix}1&0&1\\\\0&1&3\\\\1&1&5\\end{vmatrix}=1\\neq0,$$ 故 $\\boldsymbol\\alpha$ 组线性无关，张满 $\\mathbb R^3$。</p>",
+  "<p><b>反证</b>：若 $\\det B\\neq0$，则 $\\boldsymbol\\beta$ 组也张满 $\\mathbb R^3$，任何向量（含每个 $\\boldsymbol\\alpha_i$）都能由 $\\boldsymbol\\beta$ 组表示——与题设矛盾。故必有 $\\det B=0$。</p>",
+  "<p><b>消元求 $\\det B$</b>：$$\\det B=\\begin{vmatrix}1&1&3\\\\1&2&4\\\\1&3&a\\end{vmatrix}\\ \\xrightarrow[\\ r_3-r_1\\ ]{\\ r_2-r_1\\ }\\ \\begin{vmatrix}1&1&3\\\\0&1&1\\\\0&2&a-3\\end{vmatrix}=a-5,$$ 由 $a-5=0$ 得 $a=5$（此时 $\\boldsymbol\\beta$ 组秩为 $2$，条件自洽）。</p>",
+  "<p><b>(2) 化成矩阵方程</b>：三组表示式合写为 $B=AX$，解为 $X=A^{-1}B$。由 $\\det A=1$ 求逆：$$A^{-1}=\\begin{pmatrix}2&1&-1\\\\3&4&-3\\\\-1&-1&1\\end{pmatrix}.$$</p>",
+  "<p><b>矩阵乘法</b>：$$X=A^{-1}B=\\begin{pmatrix}2&1&-1\\\\3&4&-3\\\\-1&-1&1\\end{pmatrix}\\begin{pmatrix}1&1&3\\\\1&2&4\\\\1&3&5\\end{pmatrix}=\\begin{pmatrix}2&1&5\\\\4&2&10\\\\-1&0&-2\\end{pmatrix}.$$</p>",
+  "<p><b>按列读答案</b>：$X$ 的第 $j$ 列就是 $\\boldsymbol\\beta_j$ 的坐标：$$\\boldsymbol\\beta_1=2\\boldsymbol\\alpha_1+4\\boldsymbol\\alpha_2-\\boldsymbol\\alpha_3,\\quad \\boldsymbol\\beta_2=\\boldsymbol\\alpha_1+2\\boldsymbol\\alpha_2+0\\cdot\\boldsymbol\\alpha_3,\\quad \\boldsymbol\\beta_3=5\\boldsymbol\\alpha_1+10\\boldsymbol\\alpha_2-2\\boldsymbol\\alpha_3.$$</p>",
+  "<p><b>验算</b>：$2\\boldsymbol\\alpha_1+4\\boldsymbol\\alpha_2-\\boldsymbol\\alpha_3=(2-1,\\ 4-3,\\ 2+4-5)^{\\mathrm T}=(1,1,1)^{\\mathrm T}=\\boldsymbol\\beta_1$ ✓。结论：$a=5$，三组表示式如上。</p>"
+];
+
+AW.init({
+  title: '$\\boldsymbol\\alpha$ 组不能由 $\\boldsymbol\\beta$ 组表示：求 $a$ 与表示式',
+  subtitle: '考点：向量组的线性表示与秩 · 方法：满秩反证 det B=0 → X=A⁻¹B 按列读坐标',
+  counterLabel: '步数',
+  intro: '点击「▶ 播放」逐步演示推理与矩阵计算。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    ROWS.length = 0;
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    for(var k = 0; k < LINES.length; k++){
+      var d = AW.el('div', '', LINES[k]);
+      d.style.cssText = 'margin:8px 0;padding:9px 14px;border-left:3px solid #e2e8f0;background:#f8fafc;border-radius:0 12px 12px 0;font-size:14.5px;line-height:1.9;display:none;';
+      board.appendChild(d);
+      ROWS.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  render: function(stage, sn){
+    for(var k = 0; k < ROWS.length; k++){
+      var r = ROWS[k];
+      if(k >= sn.show){ r.style.display = 'none'; continue; }
+      r.style.display = 'block';
+      if(k === sn.show - 1 && !sn.done){
+        r.style.borderLeftColor = '#d97706';
+        r.style.background = '#fffbeb';
+      } else {
+        r.style.borderLeftColor = '#16a34a';
+        r.style.background = '#f8fafc';
+      }
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  snaps: [
+    { cls:'shift', tag:'审题',    log:'方向别弄反：是 α 组不能由 β 组表示；A、B 各三列摆好', show:1, count:0 },
+    { cls:'ok',    tag:'α 满秩',  log:'A 的行列式等于 1，α 组无关、张满整个三维空间', show:2, count:1 },
+    { cls:'key',   tag:'反证',    log:'若 B 也满秩，则什么向量都能表示，与题设矛盾，所以 det B=0', show:3, count:2 },
+    { cls:'ok',    tag:'定 a',    log:'B 消元后行列式剩 a−5，为零得 a=5', show:4, count:3 },
+    { cls:'step',  tag:'列方程',  log:'表示式合写成矩阵方程 B=AX，先求 A 的逆矩阵', show:5, count:4 },
+    { cls:'step',  tag:'乘法',    log:'X=A⁻¹B 一次算出三组坐标', show:6, count:5 },
+    { cls:'ok',    tag:'读答案',  log:'X 的三列按顺序读出，就是 β₁、β₂、β₃ 的表示系数', show:7, count:6 },
+    { cls:'done',  tag:'验算',    log:'代回第一列检查：正好等于 β₁=(1,1,1)ᵀ，全部成立', show:8, count:7, done:true },
+  ],
+
+  result: {
+    big: '$a=5$；$\\boldsymbol\\beta_1=2\\boldsymbol\\alpha_1+4\\boldsymbol\\alpha_2-\\boldsymbol\\alpha_3$ 等',
+    html: '记忆锚点：<b>「不能表示」+ 一组满秩 ⇒ 另一组必不满秩</b>。表示式不必逐个解方程组：合写成 $B=AX$，一次 $A^{-1}B$ 三列全出。最后至少代回一列验算。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

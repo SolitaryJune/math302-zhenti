@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2012·22 循环型矩阵行列式与含参方程组</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改 AW.init 区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [];
+
+var LINES = [
+  '<p><b>审题</b>：$A$ 是对角线全 $1$、次对角线与左下角为 $a$ 的循环型矩阵，$\\beta=(1,-1,0,0)^{\\mathrm T}$。$|A|$ 按第一列展开（只有 $a_{11}=1$、$a_{41}=a$ 非零）；无穷多解 $\\Leftrightarrow$ $|A|=0$ 且 $r(A)=r(A\\mid\\beta)$，故先算行列式再对 $a=\\pm1$ 逐一检验。</p>',
+  '<p><b>展开求行列式</b>：$$|A|=1\\cdot\\begin{vmatrix}1&a&0\\\\0&1&a\\\\0&0&1\\end{vmatrix}-a\\cdot\\begin{vmatrix}a&0&0\\\\1&a&0\\\\0&1&a\\end{vmatrix}=1-a\\cdot a^3=1-a^4.$$（第二个三阶行列式是上三角，值为 $a^3$；$a_{41}$ 的代数余子式带符号 $(-1)^{4+1}=-1$。）</p>',
+  '<p><b>定候选值</b>：$|A|=0\\ \\Rightarrow\\ a^4=1$，实数只有 $a=1$ 与 $a=-1$，逐一检验增广矩阵。</p>',
+  '<p><b>$a=1$ 查矛盾</b>：四条方程为 $x_1+x_2=1$、$x_2+x_3=-1$、$x_3+x_4=0$、$x_1+x_4=0$。第 1 行加第 3 行得 $x_1+x_2+x_3+x_4=1$；第 2 行加第 4 行得 $x_1+x_2+x_3+x_4=-1$——矛盾，故 $r(A)=3<r(A\\mid\\beta)=4$，<b>无解</b>。</p>',
+  '<p><b>$a=-1$ 消元</b>：增广矩阵依次作 $R_4+R_1\\to R_4$、$R_4+R_2\\to R_4$、$R_4+R_3\\to R_4$：$$\\left(\\begin{array}{cccc|c}1&-1&0&0&1\\\\0&1&-1&0&-1\\\\0&0&1&-1&0\\\\0&0&0&0&0\\end{array}\\right),\\qquad r(A)=r(A\\mid\\beta)=3<4\\ \\Rightarrow\\ \\text{无穷多解}.$$</p>',
+  '<p><b>回代</b>：取自由变量 $x_4=C$：$$x_3=C,\\qquad x_2=C-1,\\qquad x_1=C.$$</p>',
+  '<p><b>通解</b>：$$\\boldsymbol x=C\\begin{pmatrix}1\\\\1\\\\1\\\\1\\end{pmatrix}+\\begin{pmatrix}0\\\\-1\\\\0\\\\0\\end{pmatrix}\\quad(C\\ \\text{为任意常数}).$$</p>',
+  '<p><b>验算</b>：取 $C=0$，$\\boldsymbol x=(0,-1,0,0)^{\\mathrm T}$：第 1 行 $0-(-1)=1$，第 2 行 $-1$，第 3、4 行为 $0$，与 $\\beta$ 吻合。</p>',
+  '<p><b>结论</b>：$|A|=1-a^4$；$a=-1$ 时通解 $C(1,1,1,1)^{\\mathrm T}+(0,-1,0,0)^{\\mathrm T}$；$a=1$ 时无解。</p>',
+];
+
+AW.init({
+  title: '$|A|$ 与 $A\\boldsymbol x=\\boldsymbol\\beta$ 的无穷多解讨论',
+  subtitle: '考点：行列式展开 · 秩的判定 · 含参通解',
+  counterLabel: '步数',
+  intro: '点击「▶ 播放」逐步演示展开、判根、消元与通解。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    ROWS.length = 0;
+    var wrap = AW.el('div', 'aw-scroll');
+    var strip = AW.el('div', '');
+    strip.style.cssText = 'display:flex;gap:10px;margin:2px 0 12px;flex-wrap:wrap;';
+    this._chips = [];
+    this._labels = ['$|A|=\\,?$', '$a=1$', '$a=-1$'];
+    for(var k = 0; k < this._labels.length; k++){
+      var c = AW.el('div', '', this._labels[k]);
+      c.style.cssText = 'padding:6px 12px;border:2px solid #e2e8f0;border-radius:12px;font-size:14px;background:#f8fafc;color:#94a3b8;';
+      strip.appendChild(c);
+      this._chips.push(c);
+    }
+    var board = AW.el('div', '');
+    for(var k = 0; k < LINES.length; k++){
+      var d = AW.el('div', '', LINES[k]);
+      d.style.cssText = 'margin:8px 0;padding:9px 14px;border-left:3px solid #e2e8f0;background:#f8fafc;border-radius:0 12px 12px 0;font-size:14.5px;line-height:1.9;display:none;';
+      board.appendChild(d);
+      ROWS.push(d);
+    }
+    wrap.appendChild(strip);
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  render: function(stage, sn){
+    var chips = this._chips, labels = this._labels;
+    var known = [sn.show >= 2, sn.show >= 4, sn.show >= 5];
+    var vals = ['$|A|=1-a^4$', '$a=1$：无解', '$a=-1$：无穷多解'];
+    for(var k = 0; k < chips.length; k++){
+      if(known[k]){
+        chips[k].style.border = '2px solid #16a34a';
+        chips[k].style.background = '#f6fef9';
+        chips[k].style.color = '#14532d';
+        chips[k].innerHTML = '<b>' + vals[k] + '</b>';
+      } else {
+        chips[k].style.border = '2px solid #e2e8f0';
+        chips[k].style.background = '#f8fafc';
+        chips[k].style.color = '#94a3b8';
+        chips[k].innerHTML = labels[k];
+      }
+    }
+    for(var k = 0; k < ROWS.length; k++){
+      var r = ROWS[k];
+      if(k >= sn.show){ r.style.display = 'none'; continue; }
+      r.style.display = 'block';
+      if(k === sn.show - 1 && !sn.done){
+        r.style.borderLeftColor = '#d97706';
+        r.style.background = '#fffbeb';
+      } else {
+        r.style.borderLeftColor = '#16a34a';
+        r.style.background = '#f8fafc';
+      }
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  snaps: [
+    { cls:'shift', tag:'审题',    log:'行列式按第一列展开，无穷多解先卡行列式为零', show:1, count:0 },
+    { cls:'ok',    tag:'行列式',  log:'两个三阶子式分别是 1 和 a³，代数余子式带负号，得 1−a⁴', show:2, count:1 },
+    { cls:'step',  tag:'定候选',  log:'a⁴=1 在实数范围内只有 a=1 和 a=−1 两个候选', show:3, count:2 },
+    { cls:'miss',  tag:'a=1',    log:'两行相加给出同一和式的两个矛盾值，无解，排除', show:4, count:3 },
+    { cls:'ok',    tag:'a=−1',   log:'三步行变换化出零行，秩 3 小于未知数个数 4，无穷多解', show:5, count:4 },
+    { cls:'step',  tag:'回代',   log:'x4 取自由变量 C，从下往上回代出各分量', show:6, count:5 },
+    { cls:'ok',    tag:'通解',   log:'齐次方向 (1,1,1,1) 加特解 (0,−1,0,0)', show:7, count:6 },
+    { cls:'ok',    tag:'验算',   log:'取 C=0 代回四条方程逐一核对，全部吻合', show:8, count:7 },
+    { cls:'done',  tag:'完成',   log:'结论：|A|=1−a⁴，a=−1 时无穷多解，a=1 时无解', show:9, count:8, done:true },
+  ],
+
+  result: {
+    big: '$|A|=1-a^4$；$a=-1$ 时 $\\boldsymbol x=C\\,(1,1,1,1)^{\\mathrm T}+(0,-1,0,0)^{\\mathrm T}$',
+    html: '记忆锚点：<b>无穷多解 = 行列式为零 + 增广秩相等</b>，两个候选 $a=\\pm1$ 必须逐一检验（$a=1$ 是矛盾方程组）。易错：按第一列展开时 $a_{41}$ 的代数余子式带 $(-1)^{4+1}$ 负号，漏掉会得 $1+a^4$。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

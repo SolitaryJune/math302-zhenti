@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>m2-2010-21 双中值点证明：构造辅助函数 + 两次拉格朗日</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+// 一张推理卡片（body 里可写 $..$ / $$..$$ 公式）
+function card(n, cls, title, body){
+  return '<div class="aw-stepcard ' + (cls || '') + '"><h4><span class="n">' + n +
+         '</span>' + title + '</h4>' + body + '</div>';
+}
+
+// 推理链：每一步的完整内容（引擎按步数截取显示）
+var STEPS = [
+  { title: "审题眼",
+    cls: "key",
+    body: "<p>$f$ 在 $[0,1]$ 连续、$(0,1)$ 可导，$f(0)=0,\\ f(1)=\\tfrac13$。要证存在 $\\xi\\in(0,\\tfrac12)$、$\\eta\\in(\\tfrac12,1)$ 使 $f'(\\xi)+f'(\\eta)=\\xi^2+\\eta^2$。</p><p>两个中值点被 $\\tfrac12$ 隔开 → <b>分区间各用一次中值定理</b>；$\\xi^2=\\big(\\tfrac{x^3}3\\big)'\\big|_{x=\\xi}$ → <b>提示构造 $g(x)=f(x)-\\dfrac{x^3}3$</b>。</p>" },
+  { title: "构造辅助函数并核对端点",
+    cls: "key",
+    body: "<p>令 $g(x)=f(x)-\\dfrac{x^3}3$，则 $g$ 在 $[0,1]$ 连续、$(0,1)$ 内可导，$g'(x)=f'(x)-x^2$，且</p>$$g(0)=f(0)-0=0,\\qquad g(1)=f(1)-\\frac13=\\frac13-\\frac13=0.$$" },
+  { title: "在 $\\big[0,\\tfrac12\\big]$ 上用拉格朗日",
+    cls: "good",
+    body: "<p>存在 $\\xi\\in\\big(0,\\tfrac12\\big)$，使</p>$$g'(\\xi)=\\frac{g(\\frac12)-g(0)}{\\frac12-0}=2\\Big[g\\big(\\tfrac12\\big)-g(0)\\Big]=2\\,g\\big(\\tfrac12\\big).$$" },
+  { title: "在 $\\big[\\tfrac12,1\\big]$ 上用拉格朗日",
+    cls: "good",
+    body: "<p>存在 $\\eta\\in\\big(\\tfrac12,1\\big)$，使</p>$$g'(\\eta)=\\frac{g(1)-g(\\frac12)}{1-\\frac12}=2\\Big[g(1)-g\\big(\\tfrac12\\big)\\Big]=-2\\,g\\big(\\tfrac12\\big).$$" },
+  { title: "相加：$g\\big(\\tfrac12\\big)$ 自动消去",
+    cls: "good",
+    body: "<p>两式相加，$g\\big(\\tfrac12\\big)$ 一正一负抵消：</p>$$g'(\\xi)+g'(\\eta)=2\\,g\\big(\\tfrac12\\big)-2\\,g\\big(\\tfrac12\\big)=0,$$<p>即 $\\big[f'(\\xi)-\\xi^2\\big]+\\big[f'(\\eta)-\\eta^2\\big]=0$。</p>" },
+  { title: "结论",
+    cls: "good",
+    body: "<p>整理即得 $f'(\\xi)+f'(\\eta)=\\xi^2+\\eta^2$，其中 $\\xi\\in\\big(0,\\tfrac12\\big),\\ \\eta\\in\\big(\\tfrac12,1\\big)$。<b>证毕</b>。</p><p>核心记忆点：$g(0)=g(1)=0$ 让两段斜率只差 $g\\big(\\tfrac12\\big)$ 的符号，相加必为零。</p>" },
+];
+
+var snaps = STEPS.map(function(s, i){
+  return {
+    cls: i === STEPS.length - 1 ? 'done' : 'step',
+    tag: '第 ' + (i + 1) + ' 步',
+    log: s.title,
+    html: STEPS.slice(0, i + 1).map(function(x, j){
+      return card(j + 1, x.cls, x.title, x.body);
+    }).join(''),
+    done: i === STEPS.length - 1,
+  };
+});
+
+AW.init({
+  title: "2010·21　证明存在 $\\xi,\\eta$ 使 $f'(\\xi)+f'(\\eta)=\\xi^2+\\eta^2$",
+  subtitle: "考点：辅助函数构造 · 拉格朗日中值定理 · 双中值点拼接",
+  intro: "点击「▶ 播放」逐步展开证明推理链。",
+  /* 统一 render：复刻引擎默认的 sn.html 行为，再对舞台做公式渲染 */
+  render: function(stage, sn){
+    if(sn.html != null) stage.innerHTML = sn.html;
+    renderMathAfterSnap(stage);
+  },
+  snaps: snaps,
+  result: {
+    big: "结论成立：f′(ξ)+f′(η) = ξ²+η²",
+    html: "证明链条：<b>移项配对 → 构造 $g=f-\\dfrac{x^3}3$（端点值恰好全为 0）→ 两段各用一次拉格朗日 → 相加消去 $g\\big(\\tfrac12\\big)$</b>。<br>" +
+          "常见误区：想用一次中值定理同时找两点；或把辅助函数写成 $f+\\dfrac{x^3}3$（凑不出结论里的减号）。",
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

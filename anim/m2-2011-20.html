@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2011·20 旋转体容积与抽水做功</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改 AW.init 区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [];
+
+var LINES = [
+  "<p><b>母线几何（文字定形）</b>：上段 $x^2+y^2=2y$ 是圆心 $(0,1)$、半径 $1$ 的圆取 $y\\ge\\dfrac12$ 的部分，$x^2=2y-y^2$，$y\\in\\left[\\dfrac12,2\\right]$（顶在 $y=2$）；下段 $x^2+y^2=1$ 取 $y\\le\\dfrac12$ 的部分，$x^2=1-y^2$，$y\\in\\left[-1,\\dfrac12\\right]$（底在 $y=-1$）。两段在 $y=\\dfrac12$ 处 $x^2=\\dfrac34$ 衔接，绕 $y$ 轴旋转成容器。</p>",
+  "<p><b>(1) 截面圆盘法</b>：高 $y$ 处截口半径平方为 $x^2(y)$，$$V=\\pi\\int_{-1}^{\\frac12}(1-y^2)\\,\\mathrm dy+\\pi\\int_{\\frac12}^{2}(2y-y^2)\\,\\mathrm dy.$$</p>",
+  "<p><b>下段积分</b>：$\\displaystyle\\int_{-1}^{\\frac12}(1-y^2)\\,\\mathrm dy=\\Big[y-\\frac{y^3}{3}\\Big]_{-1}^{\\frac12}=\\frac{11}{24}+\\frac23=\\frac98.$</p>",
+  "<p><b>上段积分</b>：$\\displaystyle\\int_{\\frac12}^{2}(2y-y^2)\\,\\mathrm dy=\\Big[y^2-\\frac{y^3}{3}\\Big]_{\\frac12}^{2}=\\frac43-\\frac{5}{24}=\\frac98.$ 两段恰好相等。</p>",
+  "<p><b>容积</b>：$$V=\\pi\\left(\\frac98+\\frac98\\right)=\\frac{9\\pi}{4}\\ \\mathrm{m}^3.$$</p>",
+  "<p><b>(2) 做功微元</b>：顶部在 $y=2$。第 $y$ 层薄水（厚 $\\mathrm dy$、截面积 $\\pi x^2$、重 $\\rho g\\,\\pi x^2\\,\\mathrm dy$）需提升行程 $2-y$：$$\\mathrm dW=10^3 g\\cdot\\pi x^2\\,(2-y)\\,\\mathrm dy.$$</p>",
+  "<p><b>下段做功积分</b>：$(1-y^2)(2-y)=2-y-2y^2+y^3$，$\\displaystyle\\int_{-1}^{\\frac12}=\\Big[2y-\\frac{y^2}{2}-\\frac{2y^3}{3}+\\frac{y^4}{4}\\Big]_{-1}^{\\frac12}=\\frac{153}{64}.$</p>",
+  "<p><b>上段做功积分</b>：$(2y-y^2)(2-y)=4y-4y^2+y^3$，$\\displaystyle\\int_{\\frac12}^{2}=\\Big[2y^2-\\frac{4y^3}{3}+\\frac{y^4}{4}\\Big]_{\\frac12}^{2}=\\frac{63}{64}.$</p>",
+  "<p><b>结论</b>：$W=10^3\\pi g\\left(\\dfrac{153}{64}+\\dfrac{63}{64}\\right)=10^3\\pi g\\cdot\\dfrac{27}{8}=\\dfrac{27\\times10^3}{8}\\,\\pi g\\ \\mathrm J$；容积 $V=\\dfrac{9\\pi}{4}\\ \\mathrm{m}^3$。</p>"
+];
+
+AW.init({
+  title: '旋转体容器：容积 $V$ 与抽水做功 $W$',
+  subtitle: '考点：定积分应用 · 方法：截面圆盘法 + 做功微元（力 × 行程沿 y 累加）',
+  counterLabel: '步数',
+  intro: '点击「▶ 播放」逐步演示容积与做功的微元计算。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    ROWS.length = 0;
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    for(var k = 0; k < LINES.length; k++){
+      var d = AW.el('div', '', LINES[k]);
+      d.style.cssText = 'margin:8px 0;padding:9px 14px;border-left:3px solid #e2e8f0;background:#f8fafc;border-radius:0 12px 12px 0;font-size:14.5px;line-height:1.9;display:none;';
+      board.appendChild(d);
+      ROWS.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  render: function(stage, sn){
+    for(var k = 0; k < ROWS.length; k++){
+      var r = ROWS[k];
+      if(k >= sn.show){ r.style.display = 'none'; continue; }
+      r.style.display = 'block';
+      if(k === sn.show - 1 && !sn.done){
+        r.style.borderLeftColor = '#d97706';
+        r.style.background = '#fffbeb';
+      } else {
+        r.style.borderLeftColor = '#16a34a';
+        r.style.background = '#f8fafc';
+      }
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  snaps: [
+    { cls:'shift', tag:'定形',   log:'两段圆弧分清归属：y≥1/2 归圆 x²+y²=2y，y≤1/2 归单位圆，交在 x²=3/4', show:1, count:0 },
+    { cls:'step',  tag:'列容积', log:'截面积 πx² 沿 y 积分，两段各积各的', show:2, count:1 },
+    { cls:'ok',    tag:'下段',   log:'下段积出 9/8', show:3, count:2 },
+    { cls:'ok',    tag:'上段',   log:'上段也算出 9/8，两段恰好相等', show:4, count:3 },
+    { cls:'ok',    tag:'容积',   log:'相加乘 π：容积 9π/4 立方米', show:5, count:4 },
+    { cls:'step',  tag:'列做功', log:'每层水重 ρg·πx²·dy，从顶部抽出要提升 2−y', show:6, count:5 },
+    { cls:'ok',    tag:'下段功', log:'下段 (1−y²)(2−y) 积出 153/64', show:7, count:6 },
+    { cls:'ok',    tag:'上段功', log:'上段 (2y−y²)(2−y) 积出 63/64', show:8, count:7 },
+    { cls:'done',  tag:'完成',   log:'合计 27/8，乘 10³πg 得总功；容积 9π/4', show:9, count:8, done:true },
+  ],
+
+  result: {
+    big: '$V=\\dfrac{9\\pi}{4}\\ \\mathrm{m}^3$，$W=\\dfrac{27\\times10^3}{8}\\,\\pi g\\ \\mathrm J$',
+    html: '记忆锚点：<b>容积 = 截面积沿 $y$ 累加；做功 = 每层水重 × 行程沿 $y$ 累加</b>。顶部 $y=2$，行程 $2-y$（越深提得越高）；力里别漏 $\\rho=10^3$ 与 $g$。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2021·21 双纽线一叶上的二重积分</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [
+  "$$\\left(x^2+y^2\\right)^2=x^2-y^2\\quad(x\\ge0,\\ y\\ge0)\\qquad\\text{双纽线第一象限一叶，用极坐标}$$",
+  "<b>① 化极坐标：</b>代入 $x=r\\cos\\theta,\\ y=r\\sin\\theta$：$r^4=r^2\\cos 2\\theta\\ \\Rightarrow\\ \\boxed{r^2=\\cos 2\\theta}$",
+  "<b>② 定范围：</b>第一象限 $\\theta\\ge0$，又需 $\\cos 2\\theta\\ge0$：$$D:\\quad 0\\le\\theta\\le\\frac{\\pi}{4},\\qquad 0\\le r\\le\\sqrt{\\cos 2\\theta}$$",
+  "<b>③ 化累次积分：</b>$xy=r^2\\cos\\theta\\sin\\theta$，$\\mathrm{d}x\\,\\mathrm{d}y=r\\,\\mathrm{d}r\\,\\mathrm{d}\\theta$：$$\\iint_D xy\\,\\mathrm{d}x\\,\\mathrm{d}y=\\int_0^{\\pi/4}\\cos\\theta\\sin\\theta\\,\\mathrm{d}\\theta\\int_0^{\\sqrt{\\cos 2\\theta}}r^{3}\\,\\mathrm{d}r$$",
+  "<b>④ 内层积分：</b>$\\displaystyle\\int_0^{\\sqrt{\\cos 2\\theta}}r^{3}\\,\\mathrm{d}r=\\frac{r^{4}}{4}\\Big|_0^{\\sqrt{\\cos 2\\theta}}=\\frac{\\cos^{2} 2\\theta}{4}$",
+  "<b>⑤ 降幂：</b>$\\cos\\theta\\sin\\theta=\\dfrac{1}{2}\\sin 2\\theta$：$$=\\frac{1}{8}\\int_0^{\\pi/4}\\sin 2\\theta\\,\\cos^{2} 2\\theta\\,\\mathrm{d}\\theta$$",
+  "<b>⑥ 换元收尾：</b>令 $u=\\cos 2\\theta$（$\\theta:0\\to\\dfrac{\\pi}{4}$ 对应 $u:1\\to0$）：$$=\\frac{1}{16}\\int_0^{1}u^{2}\\,\\mathrm{d}u=\\frac{1}{48}$$"
+];
+
+AW.init({
+  title: "2021·21　双纽线一叶上的 $\\iint_D xy\\,\\mathrm{d}x\\,\\mathrm{d}y$",
+  subtitle: "考点：极坐标 · 双纽线 $r^2=\\cos 2\\theta$ · 定角定限与换元收尾",
+  counterLabel: "推导步数",
+  ribbonTitle: "推导进度（✓ 完成）",
+  intro: "点击「▶ 播放」或「下一步」，化极坐标、定限、逐层积分。",
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var inner = AW.el('div', '');
+    inner.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>：当前步亮琥珀色，已完成步变绿'));
+    this._rows = [];
+    for (var i = 0; i < ROWS.length; i++){
+      var r = AW.el('div', 'aw-stepcard', ROWS[i]);
+      inner.appendChild(r);
+      this._rows.push(r);
+    }
+    wrap.appendChild(inner);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    {"cls": "step", "tag": "审题", "log": "区域是双纽线在第一象限的一叶，平方和平方差结构适合极坐标", "count": 0, "ribbon": {"k": 1, "ok": true}},
+    {"cls": "shift", "tag": "极坐标", "log": "代入极坐标，曲线方程化为 r 平方等于 cos 二 theta", "count": 1, "ribbon": {"k": 2, "ok": true}},
+    {"cls": "ok", "tag": "定限", "log": "要求余弦非负，theta 上限是四分之派，r 从零到根号 cos 二 theta", "count": 2, "ribbon": {"k": 3, "ok": true}},
+    {"cls": "ok", "tag": "累次", "log": "被积式化为 r 平方乘角部分，面积元多一个 r，内层是 r 三次方", "count": 3, "ribbon": {"k": 4, "ok": true}},
+    {"cls": "ok", "tag": "内层", "log": "内层积出四分之 cos 二 theta 的平方", "count": 4, "ribbon": {"k": 5, "ok": true}},
+    {"cls": "ok", "tag": "降幂", "log": "用二倍角公式把角部分降成二分之一 sin 二 theta", "count": 5, "ribbon": {"k": 6, "ok": true}},
+    {"cls": "ok", "tag": "收尾", "log": "换元 u 等于 cos 二 theta，上下限对调，积分收敛到四十八分之一", "count": 6, "ribbon": {"k": 7, "ok": true}},
+    {"cls": "done", "tag": "完成", "log": "完成：二重积分等于四十八分之一", "count": 7, "ribbon": {"k": 8, "ok": true}, "done": true}
+  ],
+
+  render: function(stage, sn, i){
+    var rows = this._rows;
+    for (var j = 0; j < rows.length; j++){
+      rows[j].className = 'aw-stepcard' + (j < i ? ' good' : (j === i ? ' key' : ''));
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: "$\\iint_D xy\\,\\mathrm{d}x\\,\\mathrm{d}y=\\dfrac{1}{48}$",
+    html: "记忆锚点：<b>双纽线 $r^2=\\cos 2\\theta$ 只占 $\\theta\\in\\left[0,\\dfrac{\\pi}{4}\\right]$；先积 $r$ 得 $\\dfrac{\\cos^2 2\\theta}{4}$，再换元 $u=\\cos 2\\theta$</b>。易错：漏雅可比因子 $r$；$\\theta$ 上限误取 $\\dfrac{\\pi}{2}$。"
+  }
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

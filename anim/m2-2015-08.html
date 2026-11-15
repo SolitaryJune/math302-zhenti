@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2015·08 换正交矩阵后二次型标准形的变化</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_concept_template.html，只改题目专属区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+// 一张推理卡片（body 里可写 $..$ / $$..$$ 公式）
+function card(n, cls, title, body){
+  return '<div class="aw-stepcard ' + (cls || '') + '"><h4><span class="n">' + n +
+         '</span>' + title + '</h4>' + body + '</div>';
+}
+
+// 推理链：每一步的完整内容（引擎按步数截取显示）
+var STEPS = [
+  { title: '审题：系数跟着列走',
+    cls: 'key',
+    body: '<p>正交变换下标准形的系数 = $P$ 各列（单位正交特征向量）对应的特征值。由 $P=(e_1,e_2,e_3)$ 下 $f=2y_1^2+y_2^2-y_3^2$ 读出：$Ae_1=2e_1,\\ Ae_2=e_2,\\ Ae_3=-e_3$。</p>',
+    log: 'e₁→2，e₂→1，e₃→−1' },
+  { title: '确认 Q 仍是正交矩阵',
+    cls: 'step',
+    body: '<p>$Q=(e_1,-e_3,e_2)$：各列仍是单位向量且两两正交——<b>列反号、换序都不破坏正交性</b>。故 $x=Qy$ 仍是正交变换，新标准形系数 = $Q$ 各列的特征值。</p>',
+    log: 'Q 仍正交：反号与换序都合法' },
+  { title: '第 1 列 e₁：特征值 2',
+    cls: 'good',
+    body: '<p>$Ae_1=2e_1$，故 $y_1^2$ 的系数是 $2$。</p>',
+    ribbon: {k:1, ok:true},
+    log: '第 1 列 e₁ → 2' },
+  { title: '第 2 列 −e₃：特征值仍是 −1',
+    cls: 'good',
+    body: '<p>$A(-e_3)=-Ae_3=-(-e_3)=(-1)\\cdot(-e_3)$——<b>特征向量反号不改变特征值</b>，$y_2^2$ 的系数是 $-1$。</p>',
+    ribbon: {k:2, ok:true},
+    log: '第 2 列 −e₃ → −1（反号不变号）' },
+  { title: '第 3 列 e₂：特征值 1，组装',
+    cls: 'good',
+    body: '<p>$Ae_2=e_2$，$y_3^2$ 的系数是 $1$。组装：$$f=2y_1^2-y_2^2+y_3^2.$$</p>',
+    ribbon: {k:3, ok:true},
+    log: '第 3 列 e₂ → 1，得 2y₁²−y₂²+y₃²' },
+  { title: '排除干扰项',
+    cls: 'bad',
+    body: '<p><b>B</b>：照抄原标准形，没按 $Q$ 重排列。<b>C</b>：误以为 $-e_3$ 使特征值变 $+1$。<b>D</b>：把 $-1$ 丢成 $+1$，三项全正，符号信息全丢。</p>',
+    log: 'B 没换列，C 反号误解，D 丢负号' },
+  { title: '结论',
+    cls: 'good',
+    body: '<p>新标准形 $f=2y_1^2-y_2^2+y_3^2$，答案选 <b>A</b>。记忆锚点：<b>标准形系数 = 正交矩阵第 $j$ 列对应的特征值</b>；列向量乘 $-1$ 或换位置，都不改变它对应的特征值。</p>',
+    log: '选 A' },
+];
+
+var snaps = STEPS.map(function(s, i){
+  return {
+    cls: i === STEPS.length - 1 ? 'done' : 'step',
+    tag: '第 ' + (i + 1) + ' 步',
+    log: s.log || s.title,
+    count: i + 1,
+    ribbon: s.ribbon,
+    html: STEPS.slice(0, i + 1).map(function(x, j){
+      return card(j + 1, x.cls, x.title, x.body);
+    }).join(''),
+    done: i === STEPS.length - 1,
+  };
+});
+
+AW.init({
+  title: '换 $Q=(e_1,-e_3,e_2)$ 后的二次型标准形',
+  subtitle: '考点：二次型 · 特征值 · 方法：标准形系数 = 正交矩阵各列的特征值',
+  counterLabel: '推理步',
+  ribbonTitle: 'Q 的各列（✓ 特征值已定）',
+  intro: '点击「▶ 播放」逐列确定新标准形的系数。',
+  render: function(stage, sn){
+    if(sn.html != null) stage.innerHTML = sn.html;
+    renderMathAfterSnap(stage);
+  },
+  snaps: snaps,
+  result: {
+    big: '答案 A（2y₁²−y₂²+y₃²）',
+    html: '记忆锚点：<b>系数跟列走</b>——第 2 列从 $e_2$ 换成 $-e_3$，系数就从 $1$ 换成 $-1$；<b>特征向量反号不改变特征值</b>（排除 C），换列必须重排系数（排除 B），负特征值不能丢（排除 D）。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

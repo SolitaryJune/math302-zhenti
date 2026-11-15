@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2016·09 斜渐近线 y = kx + b 的两步计算</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改题目专属区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+// 推导板各行：与 snaps 一一对应（build 建立、render 按 i 点亮）
+var ROWS = [
+  { label: '第 0 步 · 审题',
+    h: '<p>$y=\\dfrac{x^3}{1+x^2}+\\arctan(1+x^2)$。斜渐近线公式：$k=\\lim_{x\\to\\infty}\\dfrac yx$，$b=\\lim_{x\\to\\infty}(y-kx)$。目标：先把 $y$ 整理成「$x$ + 余项」。</p>' },
+  { label: '第 1 步 · 拆分式（分子凑分母因子）',
+    h: '<p>$$\\frac{x^3}{1+x^2}=\\frac{x(1+x^2)-x}{1+x^2}=x-\\frac{x}{1+x^2},$$ 故 $y=x-\\dfrac{x}{1+x^2}+\\arctan(1+x^2)$。</p>' },
+  { label: '第 2 步 · 求斜率 k',
+    h: '<p>$$k=\\lim_{x\\to\\infty}\\frac yx=\\lim_{x\\to\\infty}\\Big(1-\\frac{1}{1+x^2}+\\frac{\\arctan(1+x^2)}{x}\\Big)=1-0+0=1.$$ 有界量 $\\arctan$ 除以 $x$ 归零。</p>' },
+  { label: '第 3 步 · 求截距 b',
+    h: '<p>$$b=\\lim_{x\\to\\infty}(y-x)=\\lim_{x\\to\\infty}\\Big(-\\frac{x}{1+x^2}+\\arctan(1+x^2)\\Big)=0+\\frac{\\pi}{2}=\\frac{\\pi}{2}.$$</p>' },
+  { label: '第 4 步 · 两侧核对（x→−∞ 同吗）',
+    h: '<p>$x\\to\\pm\\infty$ 时 $1+x^2\\to+\\infty$，参数与 $x$ 符号无关，$\\arctan(1+x^2)\\to\\dfrac{\\pi}{2}$ 恒成立——<b>双侧渐近线相同</b>，无需另算。</p>' },
+  { label: '第 5 步 · 结论',
+    h: '<p>$$y=x+\\frac{\\pi}{2}$$ 即所求斜渐近线。</p>' },
+];
+
+var rowEls = [];
+
+AW.init({
+  title: '$y=\\dfrac{x^3}{1+x^2}+\\arctan(1+x^2)$ 的斜渐近线',
+  subtitle: '考点：渐近线 · 方法：拆分式 → $k=\\lim y/x$ → $b=\\lim(y-kx)$',
+  counterLabel: '步骤',
+  intro: '点击「▶ 播放」逐步演示推导板上的六步计算。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    rowEls = [];
+    var wrap = AW.el('div', 'aw-scroll');
+    ROWS.forEach(function(r){
+      var d = AW.el('div', '');
+      d.style.cssText = 'padding:9px 14px;margin:8px 0;border-left:4px solid transparent;border-radius:10px;opacity:.15;transition:opacity .35s,background .35s,border-color .35s;';
+      d.innerHTML = '<div style="font-size:12.5px;color:#64748b;font-weight:700;margin-bottom:2px">' + r.label + '</div>' + r.h;
+      wrap.appendChild(d);
+      rowEls.push(d);
+    });
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step', tag:'审题',   log:'目标是把 y 拆成「x + 趋于常数的余项」', count:0 },
+    { cls:'step', tag:'拆分式', log:'分子凑出 1+x² 因子，y = x − x/(1+x²) + arctan(1+x²)', count:1 },
+    { cls:'ok',   tag:'求 k',   log:'y/x 的三项极限为 1、0、0，斜率 k = 1', count:2 },
+    { cls:'ok',   tag:'求 b',   log:'y − x 的极限 = 0 + π/2 = π/2', count:3 },
+    { cls:'step', tag:'两侧',   log:'参数 1+x² 与 x 的符号无关，双侧渐近线相同', count:4 },
+    { cls:'done', tag:'完成',   log:'斜渐近线 y = x + π/2', count:5, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    rowEls.forEach(function(d, j){
+      d.style.opacity = j <= i ? '1' : '.15';
+      d.style.borderLeftColor = j < i ? '#16a34a' : (j === i ? '#d97706' : 'transparent');
+      d.style.background = j === i ? '#fffbeb' : (j < i ? '#f6fef9' : 'transparent');
+    });
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: 'y = x + π/2',
+    html: '记忆锚点：<b>先拆 $\\dfrac{x^3}{1+x^2}=x-\\dfrac{x}{1+x^2}$ 再取极限</b>，$k=1$、$b=\\dfrac\\pi2$ 一步到位；$\\arctan(1+x^2)$ 的参数随 $x\\to\\pm\\infty$ 都冲向 $+\\infty$，两侧截距同值。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学·概念/分析类动画：A*X=0 的通解推导</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+function card(n, cls, title, body){
+  return '<div class="aw-stepcard ' + (cls || '') + '"><h4><span class="n">' + n +
+         '</span>' + title + '</h4>' + body + '</div>';
+}
+
+var STEPS = [
+  { title: '审题眼：三件武器齐上',
+    cls: 'key',
+    log: '伴随秩公式 + A*A=|A|E + 代数余子式 A12≠0',
+    body: '<p>4 阶矩阵 $A$ 不可逆、$A_{12}\\ne0$，求 $A^*X=0$ 的通解。三件武器：<b>伴随秩公式</b>定解空间维数、<b>$A^*A=|A|E$</b> 造出一批解、<b>代数余子式 $A_{12}\\ne0$</b> 锁定哪三列线性无关。</p>' },
+  { title: '第一步：夹出 $r(A)=3$',
+    cls: 'step',
+    log: '不可逆给上界 3，A12≠0 给下界 3',
+    body: '<p>$A$ 不可逆 $\\Rightarrow r(A)\\le3$；$A_{12}\\ne0$ 是「删第 1 行、第 2 列」的三阶子式（带符号）非零 $\\Rightarrow r(A)\\ge3$。两者夹出 $$r(A)=3.$$</p>' },
+  { title: '第二步：$r(A^*)=1$，解空间 3 维',
+    cls: 'step',
+    log: 'r(A)=3 → r(A*)=1，基础解系要 3 个向量',
+    body: '<p>四阶伴随秩公式：$r(A)=3\\Rightarrow r(A^*)=1$。$A^*X=0$ 的解空间维数 $=4-r(A^*)=3$，基础解系需要 <b>3 个线性无关的解向量</b>。</p>' },
+  { title: '第三步：$A^*A=O$，四列全是解',
+    cls: 'step',
+    log: 'A*A = |A|E = O → 每列 αi 都是解',
+    body: '<p>$|A|=0$（不可逆），故 $$A^*A=|A|E=O.$$ 按列拆开：$A^*\\alpha_i=0\\ (i=1,2,3,4)$——$A$ 的<b>每一列都是解</b>，问题变成从四列中挑 3 个线性无关的。</p>' },
+  { title: '第四步：$A_{12}\\ne0$ 锁定 $\\alpha_1,\\alpha_3,\\alpha_4$',
+    cls: 'good',
+    log: 'A12 删的是第 2 列 → 跳过 α2 的三列无关',
+    body: '<p>$A_{12}$ 删的是第 1 行、<b>第 2 列</b>，它非零说明 $\\alpha_1,\\alpha_3,\\alpha_4$ 在第 $2,3,4$ 行上的分量拼成一个<b>可逆的三阶矩阵</b>，从而这三列线性无关。</p>' },
+  { title: '第五步：逐项排除 A / B / D',
+    cls: 'bad',
+    log: 'A/B/D 都含 α2，无保证；C 恰是锁定组',
+    body: '<p>A：$\\alpha_1,\\alpha_2,\\alpha_3$ 含被删的 $\\alpha_2$，无关性无保证。B：$\\alpha_1,\\alpha_2,\\alpha_4$ 同样含 $\\alpha_2$。D：$\\alpha_2,\\alpha_3,\\alpha_4$ 含 $\\alpha_2$ 却丢了被背书的 $\\alpha_1$。只有 C 的组合 $\\alpha_1,\\alpha_3,\\alpha_4$ 有 $A_{12}\\ne0$ 背书。</p>' },
+  { title: '结论',
+    cls: 'good',
+    log: '通解 X = k1α1 + k2α3 + k3α4，选 C',
+    body: '<p>通解 $$X=k_1\\alpha_1+k_2\\alpha_3+k_3\\alpha_4\\quad(k_1,k_2,k_3\\text{ 任意}),$$ 答案 <b>C</b>。记忆锚点：<b>$A_{12}$ 删第 2 列 → 跳过 $\\alpha_2$ 的三列无关</b>。</p>' },
+];
+
+var snaps = STEPS.map(function(s, i){
+  var cls;
+  if(i === STEPS.length - 1){ cls = 'done'; }
+  else if(s.ribbon){ cls = s.ribbon.ok ? 'ok' : 'miss'; }
+  else { cls = 'step'; }
+  return {
+    cls: cls,
+    tag: '第 ' + (i + 1) + ' 步',
+    log: s.log,
+    count: i + 1,
+    ribbon: s.ribbon,
+    html: STEPS.slice(0, i + 1).map(function(x, j){
+      return card(j + 1, x.cls, x.title, x.body);
+    }).join(''),
+    done: i === STEPS.length - 1,
+  };
+});
+
+AW.init({
+  title: '4 阶 $A$ 不可逆、$A_{12}\\ne0$：求 $A^*X=0$ 的通解',
+  subtitle: '考点：伴随矩阵与线性方程组 · 方法：秩公式 + $A^*A=|A|E$ + 余子式选无关组',
+  counterLabel: '推理步',
+  ribbonTitle: '选项判定（✓ 通解 / ✗ 不成立）',
+  intro: '点击「▶ 播放」逐步推导通解。',
+  render: function(stage, sn){
+    if(sn.html != null) stage.innerHTML = sn.html;
+    renderMathAfterSnap(stage);
+  },
+  snaps: snaps,
+  result: {
+    big: '答案 C：$X=k_1\\alpha_1+k_2\\alpha_3+k_3\\alpha_4$',
+    html: '记忆锚点：<b>$r(A)=3\\Rightarrow r(A^*)=1$，解空间 3 维；$A^*A=O$ 让四列全是解；$A_{12}\\ne0$ 保证跳过第 2 列的 $\\alpha_1,\\alpha_3,\\alpha_4$ 无关</b>。干扰项 A/B/D 的共同破绽：都含被删去的 $\\alpha_2$，无关性没有任何条件保证。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

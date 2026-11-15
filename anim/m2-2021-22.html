@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2021·22 仅两个特征值的可对角化矩阵</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [
+  "$$A=\\begin{pmatrix}2&1&0\\\\1&2&0\\\\1&a&b\\end{pmatrix}\\qquad\\text{仅有两个不同特征值，且相似于对角矩阵}$$",
+  "<b>① 特征多项式：</b>第三列只有对角元 $b$ 非零，沿第三列展开：$$\\left|A-\\lambda E\\right|=(b-\\lambda)\\left[(2-\\lambda)^{2}-1\\right]=(b-\\lambda)(\\lambda-1)(\\lambda-3)$$",
+  "<b>② 定 $b$：</b>特征值为 $1,\\ 3,\\ b$。「仅有两个不同」$\\Rightarrow b=1$ 或 $b=3$，分两种情形讨论",
+  "<b>③ 情形一（$b=3$）定 $a$：</b>二重根 $\\lambda=3$，可对角化要求 $r(A-3E)=1$：$$A-3E=\\begin{pmatrix}-1&1&0\\\\1&-1&0\\\\1&a&0\\end{pmatrix}\\ \\Rightarrow\\ \\text{第三行与前两行成比例}\\ \\Rightarrow\\ a=-1$$",
+  "<b>④ 情形一 $\\lambda=1$：</b>$(A-E)x=0$：$x_1+x_2=0,\\ x_1-x_2+2x_3=0$，取 $\\xi_1=(1,-1,-1)^{T}$",
+  "<b>⑤ 情形一 $\\lambda=3$：</b>方程化为 $x_1=x_2$（$x_3$ 自由）：$\\xi_2=(1,1,0)^{T},\\ \\xi_3=(0,0,1)^{T}$，$$P=\\begin{pmatrix}1&1&0\\\\-1&1&0\\\\-1&0&1\\end{pmatrix},\\qquad P^{-1}AP=\\operatorname{diag}(1,3,3)$$",
+  "<b>⑥ 情形二（$b=1$）定 $a$：</b>二重根 $\\lambda=1$，要求 $r(A-E)=1$：$$A-E=\\begin{pmatrix}1&1&0\\\\1&1&0\\\\1&a&0\\end{pmatrix}\\ \\Rightarrow\\ a=1$$",
+  "<b>⑦ 情形二 $\\lambda=3$：</b>$(A-3E)x=0$：$x_1=x_2,\\ x_1+x_2-2x_3=0\\ \\Rightarrow\\ \\eta_1=(1,1,1)^{T}$",
+  "<b>⑧ 情形二 $\\lambda=1$：</b>方程为 $x_1+x_2=0$（$x_3$ 自由）：$\\eta_2=(1,-1,0)^{T},\\ \\eta_3=(0,0,1)^{T}$，$$P=\\begin{pmatrix}1&1&0\\\\1&-1&0\\\\1&0&1\\end{pmatrix},\\qquad P^{-1}AP=\\operatorname{diag}(3,1,1)$$",
+  "<b>⑨ 总结两组解：</b>$$a=-1,\\ b=3:\\ \\operatorname{diag}(1,3,3);\\qquad a=1,\\ b=1:\\ \\operatorname{diag}(3,1,1)$$（$P$ 不唯一，列顺序与对角元位置对应即可）"
+];
+
+AW.init({
+  title: "2021·22　仅有两个不同特征值：反求 $a,\\ b$ 并求 $P$",
+  subtitle: "考点：特征多项式（沿第三列展开） · 可对角化秩条件 $r(A-\\lambda E)=n-2$ · 特征向量拼 $P$",
+  counterLabel: "推导步数",
+  ribbonTitle: "推导进度（✓ 完成）",
+  intro: "点击「▶ 播放」或「下一步」，先定 b，再用秩条件定 a，最后求向量拼 P。",
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var inner = AW.el('div', '');
+    inner.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>：当前步亮琥珀色，已完成步变绿'));
+    this._rows = [];
+    for (var i = 0; i < ROWS.length; i++){
+      var r = AW.el('div', 'aw-stepcard', ROWS[i]);
+      inner.appendChild(r);
+      this._rows.push(r);
+    }
+    wrap.appendChild(inner);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    {"cls": "step", "tag": "审题", "log": "矩阵带两个参数，条件是仅有两个不同特征值且可对角化", "count": 0, "ribbon": {"k": 1, "ok": true}},
+    {"cls": "shift", "tag": "特征式", "log": "沿第三列展开特征多项式，得 b 减 lambda 乘 lambda 减一乘 lambda 减三", "count": 1, "ribbon": {"k": 2, "ok": true}},
+    {"cls": "ok", "tag": "定 b", "log": "特征值是一、三、b，要与已有值重合，b 只能取一或三", "count": 2, "ribbon": {"k": 3, "ok": true}},
+    {"cls": "ok", "tag": "情形一", "log": "情形一二重根是三，秩条件要求第三行与第一行成比例，a 等于负一", "count": 3, "ribbon": {"k": 4, "ok": true}},
+    {"cls": "ok", "tag": "求向量", "log": "情形一解 lambda 等于一的方程组，得特征向量 一 负一 负一", "count": 4, "ribbon": {"k": 5, "ok": true}},
+    {"cls": "ok", "tag": "拼 P", "log": "情形一二重根给出两个无关向量，拼成 P，对应对角阵 一三三", "count": 5, "ribbon": {"k": 6, "ok": true}},
+    {"cls": "shift", "tag": "情形二", "log": "情形二二重根是一，秩条件同样要求成比例，a 等于一", "count": 6, "ribbon": {"k": 7, "ok": true}},
+    {"cls": "ok", "tag": "求向量", "log": "情形二解 lambda 等于三的方程组，得特征向量 一 一 一", "count": 7, "ribbon": {"k": 8, "ok": true}},
+    {"cls": "ok", "tag": "拼 P", "log": "情形二二重根给出两个无关向量，拼成 P，对应对角阵 三一一", "count": 8, "ribbon": {"k": 9, "ok": true}},
+    {"cls": "ok", "tag": "总结", "log": "两组解并列：负一和三，或一和一，对应两个不同的对角矩阵", "count": 9, "ribbon": {"k": 10, "ok": true}},
+    {"cls": "done", "tag": "完成", "log": "完成：两组参数与对应的 P、对角矩阵全部确定", "count": 10, "ribbon": {"k": 11, "ok": true}, "done": true}
+  ],
+
+  render: function(stage, sn, i){
+    var rows = this._rows;
+    for (var j = 0; j < rows.length; j++){
+      rows[j].className = 'aw-stepcard' + (j < i ? ' good' : (j === i ? ' key' : ''));
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: "$a=-1,\\ b=3$　或　$a=1,\\ b=1$",
+    html: "两组解：<b>$a=-1,\\,b=3$，$P^{-1}AP=\\operatorname{diag}(1,3,3)$；$a=1,\\,b=1$，$P^{-1}AP=\\operatorname{diag}(3,1,1)$</b>。记忆锚点：<b>二重根可对角化 $\\Leftrightarrow r(A-\\lambda_0E)=n-2$</b>；易错：只答一组解；秩条件误用为 $2$。"
+  }
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

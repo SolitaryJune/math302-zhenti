@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学·概念动画：调和函数最值在哪里取得（2014 年第 6 题）</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+function card(n, cls, title, body){
+  return '<div class="aw-stepcard ' + (cls || '') + '"><h4><span class="n">' + n +
+         '</span>' + title + '</h4>' + body + '</div>';
+}
+
+var STEPS = [
+  { title: '审题眼：认出调和函数', cls: 'key', tag: '审题', log: 'u_xx + u_yy = 0，内部是调和函数；u_xy 非零排除退化',
+    body: '<p>$\\dfrac{\\partial^{2}u}{\\partial x^{2}}+\\dfrac{\\partial^{2}u}{\\partial y^{2}}=0$ 在 $D$ 内处处成立——$u$ 是<b>调和函数</b>。条件 $u_{xy}\\neq0$ 排除常函数、线性函数等退化情形。</p>' },
+  { title: '反证：假设内点取极大', cls: '', tag: '反证', log: '极大值点要求 Hessian 半负定：u_xx≤0 且 u_yy≤0',
+    body: '<p>若 $u$ 在内点取极大值，则该点 $u_x=u_y=0$，且 Hessian 半负定，特别要求</p>' +
+          '<p>$$u_{xx}\\le0,\\qquad u_{yy}\\le0.$$</p>' },
+  { title: '方程逼出两者为零', cls: '', tag: '推导', log: '两个非正数互为相反数，只能同时为零',
+    body: '<p>由 $u_{xx}+u_{yy}=0$ 知 $u_{xx}=-u_{yy}$：两个非正数互为相反数，只能</p>' +
+          '<p>$$u_{xx}=u_{yy}=0.$$</p>' },
+  { title: 'Hessian 不定型 → 鞍点', cls: 'bad', tag: '矛盾', log: '行列式等于负的 u_xy 平方，小于零，是鞍点不是极值点',
+    ribbon: {k:1, ok:true},
+    body: '<p>此时 Hessian $=\\begin{pmatrix}0&u_{xy}\\\\ u_{xy}&0\\end{pmatrix}$，行列式</p>' +
+          '<p>$$0\\cdot0-u_{xy}^{2}=-u_{xy}^{2}<0\\quad(u_{xy}\\neq0),$$</p>' +
+          '<p><b>不定型</b>——该点是鞍点，不是极值点。极小值情形同理（两个非负数互为相反数）。</p>' },
+  { title: '最值只能在边界', cls: 'good', tag: '收口', log: '闭区域上连续函数必有最值，内部取不到，只能在边界',
+    ribbon: {k:2, ok:true},
+    body: '<p>$u$ 在有界闭区域 $D$ 上连续，最大、最小值<b>必存在</b>；内部取不到，故二者都在 $D$ 的<b>边界</b>上取得。</p>' },
+  { title: '结论', cls: 'good', tag: '完成', log: '最大值和最小值都在边界取得，选 A',
+    body: '<p>最大值与最小值都在 $D$ 的边界上取得，选 <b>A</b>。</p>' },
+];
+
+var snaps = STEPS.map(function(s, i){
+  return {
+    cls: i === STEPS.length - 1 ? 'done' : (s.cls === 'bad' ? 'miss' : 'step'),
+    tag: s.tag,
+    log: s.log,
+    html: STEPS.slice(0, i + 1).map(function(x, j){
+      return card(j + 1, x.cls, x.title, x.body);
+    }).join(''),
+    ribbon: s.ribbon,
+    done: i === STEPS.length - 1,
+  };
+});
+
+AW.init({
+  title: '【2014 数二·6】$u_{xx}+u_{yy}=0$ 时最值落在何处',
+  subtitle: '考点：多元极值 / 极值原理 · 推理链推演',
+  counterLabel: '步数',
+  ribbonTitle: '推理节点（✓ 对 / ✗ 错）',
+  intro: '点击「▶ 播放」逐步展开推理链。',
+  render: function(stage, sn){
+    if(sn.html != null) stage.innerHTML = sn.html;
+    renderMathAfterSnap(stage);
+  },
+  snaps: snaps,
+  result: {
+    big: '答案 A（最值都在边界取得）',
+    html: '记忆锚点：<b>$u_{xx}=-u_{yy}$ 使两个二阶偏导无法同号</b> → Hessian 不定（行列式 $-u_{xy}^{2}<0$）→ 内部无极值 → 闭区域上连续必有最值，只能在边界。$u_{xy}\\neq0$ 负责排除退化平顶情形。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

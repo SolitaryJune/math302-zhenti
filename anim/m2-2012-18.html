@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2012·18 心形线半支区域的二重积分</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改 AW.init 区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [];
+
+var LINES = [
+  '<p><b>审题</b>：区域由心形线 $r=1+\\cos\\theta$（$0\\le\\theta\\le\\pi$）与极轴围成——每条射线从极点伸到 $r=1+\\cos\\theta$。边界天然是 $r(\\theta)$，首选极坐标：$x=r\\cos\\theta$，$y=r\\sin\\theta$，$\\mathrm d\\sigma=r\\,\\mathrm dr\\,\\mathrm d\\theta$。</p>',
+  '<p><b>化被积函数</b>：$xy=(r\\cos\\theta)(r\\sin\\theta)=r^2\\cos\\theta\\sin\\theta$，乘雅可比 $r$ 得 $r^3\\cos\\theta\\sin\\theta$。</p>',
+  '<p><b>化累次积分</b>：$$\\iint_D xy\\,\\mathrm d\\sigma=\\int_0^{\\pi}\\!\\!\\int_0^{1+\\cos\\theta}r^3\\cos\\theta\\sin\\theta\\,\\mathrm dr\\,\\mathrm d\\theta.$$</p>',
+  '<p><b>先积 $r$</b>：$$\\int_0^{1+\\cos\\theta}r^3\\,\\mathrm dr=\\frac{(1+\\cos\\theta)^4}{4}\\ \\Longrightarrow\\ I=\\frac14\\int_0^{\\pi}\\cos\\theta\\sin\\theta\\,(1+\\cos\\theta)^4\\,\\mathrm d\\theta.$$</p>',
+  '<p><b>换元</b>：令 $u=1+\\cos\\theta$，则 $\\mathrm du=-\\sin\\theta\\,\\mathrm d\\theta$，$\\cos\\theta=u-1$；$\\theta:0\\to\\pi$ 时 $u:2\\to0$。</p>',
+  '<p><b>换限去负号</b>：$$I=\\frac14\\int_2^{0}(u-1)u^4(-\\mathrm du)=\\frac14\\int_0^{2}(u^5-u^4)\\,\\mathrm du.$$</p>',
+  '<p><b>积出</b>：$$I=\\frac14\\Big[\\frac{u^6}{6}-\\frac{u^5}{5}\\Big]_0^2=\\frac14\\Big(\\frac{64}{6}-\\frac{32}{5}\\Big).$$</p>',
+  '<p><b>收数</b>：$\\dfrac{64}{6}-\\dfrac{32}{5}=\\dfrac{320-192}{30}=\\dfrac{64}{15}$，故 $I=\\dfrac14\\cdot\\dfrac{64}{15}=\\dfrac{16}{15}$。</p>',
+  '<p><b>结论</b>：$$\\iint_D xy\\,\\mathrm d\\sigma=\\frac{16}{15}.$$</p>',
+];
+
+AW.init({
+  title: '$\\iint\\limits_D xy\\,\\mathrm d\\sigma$：心形线半支区域',
+  subtitle: '考点：极坐标二重积分 · 雅可比因子 · 换元 $u=1+\\cos\\theta$',
+  counterLabel: '步数',
+  intro: '点击「▶ 播放」逐步演示极坐标化累次、内层积分与换元。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    ROWS.length = 0;
+    var wrap = AW.el('div', 'aw-scroll');
+    var strip = AW.el('div', '');
+    strip.style.cssText = 'display:flex;gap:10px;margin:2px 0 12px;flex-wrap:wrap;';
+    this._chips = [];
+    this._labels = ['$0\\le\\theta\\le\\pi$', '$0\\le r\\le 1+\\cos\\theta$', '$I=\\,?$'];
+    for(var k = 0; k < this._labels.length; k++){
+      var c = AW.el('div', '', this._labels[k]);
+      c.style.cssText = 'padding:6px 12px;border:2px solid #e2e8f0;border-radius:12px;font-size:14px;background:#f8fafc;color:#94a3b8;';
+      strip.appendChild(c);
+      this._chips.push(c);
+    }
+    var board = AW.el('div', '');
+    for(var k = 0; k < LINES.length; k++){
+      var d = AW.el('div', '', LINES[k]);
+      d.style.cssText = 'margin:8px 0;padding:9px 14px;border-left:3px solid #e2e8f0;background:#f8fafc;border-radius:0 12px 12px 0;font-size:14.5px;line-height:1.9;display:none;';
+      board.appendChild(d);
+      ROWS.push(d);
+    }
+    wrap.appendChild(strip);
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  render: function(stage, sn){
+    var chips = this._chips, labels = this._labels;
+    var known = [true, sn.show >= 1, sn.show >= 9];
+    var vals = ['$0\\le\\theta\\le\\pi$', '$0\\le r\\le 1+\\cos\\theta$', '$I=\\dfrac{16}{15}$'];
+    for(var k = 0; k < chips.length; k++){
+      if(known[k]){
+        chips[k].style.border = '2px solid #16a34a';
+        chips[k].style.background = '#f6fef9';
+        chips[k].style.color = '#14532d';
+        chips[k].innerHTML = '<b>' + vals[k] + '</b>';
+      } else {
+        chips[k].style.border = '2px solid #e2e8f0';
+        chips[k].style.background = '#f8fafc';
+        chips[k].style.color = '#94a3b8';
+        chips[k].innerHTML = labels[k];
+      }
+    }
+    for(var k = 0; k < ROWS.length; k++){
+      var r = ROWS[k];
+      if(k >= sn.show){ r.style.display = 'none'; continue; }
+      r.style.display = 'block';
+      if(k === sn.show - 1 && !sn.done){
+        r.style.borderLeftColor = '#d97706';
+        r.style.background = '#fffbeb';
+      } else {
+        r.style.borderLeftColor = '#16a34a';
+        r.style.background = '#f8fafc';
+      }
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  snaps: [
+    { cls:'shift', tag:'审题',   log:'边界是 r 关于 theta 的式子，直接上极坐标，别忘雅可比因子 r', show:1, count:0 },
+    { cls:'step',  tag:'化被积', log:'xy 变成 r 平方乘三角，再乘一个 r，共 r 的三次方', show:2, count:1 },
+    { cls:'step',  tag:'累次',   log:'theta 从 0 到 π，r 从 0 到 1 加 cosθ，先 r 后 θ', show:3, count:2 },
+    { cls:'ok',    tag:'内层',   log:'内层对 r 积分得 (1+cosθ) 的四次方除以 4', show:4, count:3 },
+    { cls:'shift', tag:'换元',   log:'令 u=1+cosθ，微分带负号，θ 的两端换成 u 的 2 到 0', show:5, count:4 },
+    { cls:'ok',    tag:'换限',   log:'负号与上下限对调相抵，化为 0 到 2 上的 u⁵−u⁴', show:6, count:5 },
+    { cls:'step',  tag:'积出',   log:'幂函数直接积，代上限得 64/6 减 32/5', show:7, count:6 },
+    { cls:'ok',    tag:'收数',   log:'通分得 64/15，再乘四分之一，等于 16/15', show:8, count:7 },
+    { cls:'done',  tag:'完成',   log:'结论：二重积分 = 16/15', show:9, count:8, done:true },
+  ],
+
+  result: {
+    big: '$\\iint\\limits_D xy\\,\\mathrm d\\sigma=\\dfrac{16}{15}$',
+    html: '记忆锚点：<b>极坐标三件套——换坐标、乘 $r$、定限 $0\\le r\\le r(\\theta)$</b>。易错：漏乘雅可比 $r$ 差一次幂；换元 $\\mathrm du=-\\sin\\theta\\,\\mathrm d\\theta$ 的负号与上下限对调要一起处理；本题区域只有上半支（$\\theta\\in[0,\\pi]$）。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

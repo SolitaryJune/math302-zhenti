@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学·概念动画：加料向量组与充要条件（2014 年第 8 题）</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+function card(n, cls, title, body){
+  return '<div class="aw-stepcard ' + (cls || '') + '"><h4><span class="n">' + n +
+         '</span>' + title + '</h4>' + body + '</div>';
+}
+
+var STEPS = [
+  { title: '审题眼：两个命题与隐藏特例', cls: 'key', tag: '审题', log: 'P：对任意 k,l 两向量无关；Q：三向量无关',
+    body: '<p>命题 $P$：对<b>任意</b> $k,l$，$\\boldsymbol{\\alpha}_{1}+k\\boldsymbol{\\alpha}_{3}$ 与 $\\boldsymbol{\\alpha}_{2}+l\\boldsymbol{\\alpha}_{3}$ 线性无关；命题 $Q$：$\\boldsymbol{\\alpha}_{1},\\boldsymbol{\\alpha}_{2},\\boldsymbol{\\alpha}_{3}$ 线性无关。「任意 $k,l$」藏着特例 $k=l=0$。</p>' },
+  { title: '$Q\\Rightarrow P$：必要性方向', cls: 'good', tag: '必要性', log: '系数归拢到三个原向量，由无关得 x=y=0',
+    ribbon: {k:1, ok:true},
+    body: '<p>设 $x(\\boldsymbol{\\alpha}_{1}+k\\boldsymbol{\\alpha}_{3})+y(\\boldsymbol{\\alpha}_{2}+l\\boldsymbol{\\alpha}_{3})=\\boldsymbol{0}$，整理：</p>' +
+          '<p>$$x\\boldsymbol{\\alpha}_{1}+y\\boldsymbol{\\alpha}_{2}+(kx+ly)\\boldsymbol{\\alpha}_{3}=\\boldsymbol{0}.$$</p>' +
+          '<p>由 $Q$ 得 $x=0,\\ y=0$（$kx+ly=0$ 自动满足）。故 $Q\\Rightarrow P$ 对任意 $k,l$ 成立。</p>' },
+  { title: '$P\\not\\Rightarrow Q$：找反例', cls: 'bad', tag: '反例', log: '取 α3 为零向量：P 照样成立，Q 崩塌',
+    ribbon: {k:2, ok:false},
+    body: '<p>取 $\\boldsymbol{\\alpha}_{3}=\\boldsymbol{0}$，$\\boldsymbol{\\alpha}_{1},\\boldsymbol{\\alpha}_{2}$ 无关。加料项失效，两向量就是 $\\boldsymbol{\\alpha}_{1},\\boldsymbol{\\alpha}_{2}$，$P$ 对任意 $k,l$ 成立；但<b>含零向量的向量组必线性相关</b>，$Q$ 不成立。</p>' },
+  { title: '方向判定', cls: 'good', tag: '判定', log: 'Q 推得出 P，P 推不出 Q：P 是 Q 的必要非充分条件',
+    body: '<p>$Q\\Rightarrow P$ 成立而 $P\\not\\Rightarrow Q$：$Q$ 是 $P$ 的充分条件，$P$ 是 $Q$ 的<b>必要非充分</b>条件。</p>' },
+  { title: '结论', cls: 'good', tag: '完成', log: '必要非充分，答案 A',
+    body: '<p>选 <b>A</b>。B 是把推理方向说反了，C 忽略了反例，D 否定了已证明的 $Q\\Rightarrow P$。</p>' },
+];
+
+var snaps = STEPS.map(function(s, i){
+  return {
+    cls: i === STEPS.length - 1 ? 'done' : (s.cls === 'bad' ? 'miss' : 'step'),
+    tag: s.tag,
+    log: s.log,
+    html: STEPS.slice(0, i + 1).map(function(x, j){
+      return card(j + 1, x.cls, x.title, x.body);
+    }).join(''),
+    ribbon: s.ribbon,
+    done: i === STEPS.length - 1,
+  };
+});
+
+AW.init({
+  title: '【2014 数二·8】加料向量组无关 $\\Rightarrow$ 原组无关？',
+  subtitle: '考点：向量组线性无关 · 充要条件双向判定',
+  counterLabel: '步数',
+  ribbonTitle: '两个方向（✓ 成立 / ✗ 不成立）',
+  intro: '点击「▶ 播放」逐步展开推理链。',
+  render: function(stage, sn){
+    if(sn.html != null) stage.innerHTML = sn.html;
+    renderMathAfterSnap(stage);
+  },
+  snaps: snaps,
+  result: {
+    big: '答案 A（必要非充分）',
+    html: '记忆锚点：<b>$Q\\Rightarrow P$ 靠系数归拢（$x\\boldsymbol{\\alpha}_{1}+y\\boldsymbol{\\alpha}_{2}+(kx+ly)\\boldsymbol{\\alpha}_{3}=\\boldsymbol{0}$），$P\\not\\Rightarrow Q$ 靠反例 $\\boldsymbol{\\alpha}_{3}=\\boldsymbol{0}$</b>。方向口诀：能推出别人的是充分条件，被推出的是必要条件。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

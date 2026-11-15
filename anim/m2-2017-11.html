@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2017·11 反常积分的分部积分</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改 AW.init 区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [];
+
+var LINES = [
+  "<p><b>第一步：选 $u$ 与 $\\mathrm{d}v$</b>。被积函数 $\\dfrac{\\ln(1+x)}{(1+x)^2}$ 是\"对数 × 幂\"型——对数求导降阶、幂函数积分升幂：$$u=\\ln(1+x),\\qquad \\mathrm{d}v=\\frac{\\mathrm{d}x}{(1+x)^2}\\ \\Longrightarrow\\ v=-\\frac{1}{1+x}.$$ 注意 $v$ 带<b>负号</b>。</p>",
+  "<p><b>第二步：分部</b>$$I=\\int_0^{+\\infty}\\frac{\\ln(1+x)}{(1+x)^2}\\,\\mathrm{d}x=\\left[-\\frac{\\ln(1+x)}{1+x}\\right]_0^{+\\infty}+\\int_0^{+\\infty}\\frac{\\mathrm{d}x}{(1+x)^2}.$$ 分部时负负得正，剩下的积分不带对数。</p>",
+  "<p><b>第三步：验收边界项</b>。$x\\to+\\infty$ 时，洛必达 $\\lim\\dfrac{\\ln(1+x)}{1+x}=\\lim\\dfrac{1/(1+x)}{1}=0$（对数慢于一次幂）；$x=0$ 时 $\\ln 1=0$。边界项 $=0-0=0$。</p>",
+  "<p><b>第四步：算剩余积分</b>$$\\int_0^{+\\infty}\\frac{\\mathrm{d}x}{(1+x)^2}=\\left[-\\frac{1}{1+x}\\right]_0^{+\\infty}=0-(-1)=1.$$ 上限处趋于 $0$，下限处是 $-1$，相减得 $+1$。</p>",
+  "<p><b>第五步：合并</b>$$I=0+1=1.$$ 结论：原反常积分收敛且值为 $1$。</p>",
+  "<p><b>易错对照</b>：$v$ 丢负号则边界项与剩余积分全错；$\\infty$ 处不交代 $\\dfrac{\\ln(1+x)}{1+x}\\to0$ 属步骤缺失；上下限代反得 $-1$。</p>"
+];
+
+AW.init({
+  title: '$\\displaystyle\\int_0^{+\\infty}\\frac{\\ln(1+x)}{(1+x)^2}\\,\\mathrm{d}x$',
+  subtitle: '考点：反常积分 + 分部积分 · 方法：u=ln(1+x)，边界项验收敛，剩余幂函数积分',
+  counterLabel: '已执行',
+  intro: '点击「▶ 播放」逐步演示每一步推导。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    ROWS.length = 0;
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    for(var k = 0; k < LINES.length; k++){
+      var d = AW.el('div', '', LINES[k]);
+      d.style.cssText = 'margin:8px 0;padding:9px 14px;border-left:3px solid #e2e8f0;background:#f8fafc;border-radius:0 12px 12px 0;font-size:14.5px;line-height:1.9;display:none;';
+      board.appendChild(d);
+      ROWS.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  render: function(stage, sn){
+    for(var k = 0; k < ROWS.length; k++){
+      var r = ROWS[k];
+      if(k >= sn.show){ r.style.display = 'none'; continue; }
+      r.style.display = 'block';
+      if(k === sn.show - 1 && !sn.done){
+        r.style.borderLeftColor = '#d97706';
+        r.style.background = '#fffbeb';
+      } else {
+        r.style.borderLeftColor = '#16a34a';
+        r.style.background = '#f8fafc';
+      }
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  snaps: [
+    { cls:'shift', tag:'选 u,dv', log:'对数求导降阶：u=ln(1+x)，v=−1/(1+x)，注意负号', show:1, count:0 },
+    { cls:'step',  tag:'分部',    log:'边界项 −ln(1+x)/(1+x) 加剩余积分，负负得正', show:2, count:1 },
+    { cls:'ok',    tag:'边界项',  log:'∞ 处洛必达趋于 0，0 处 ln1=0，边界项为 0', show:3, count:2 },
+    { cls:'ok',    tag:'剩余积分', log:'∫dx/(1+x)² = 0 −(−1) = 1', show:4, count:3 },
+    { cls:'done',  tag:'完成',    log:'I = 0 + 1 = 1，收敛且值为 1', show:5, count:4, done:true },
+    { cls:'step',  tag:'易错',    log:'v 的负号、∞ 处验收、上下限方向', show:6, count:5, done:true },
+  ],
+
+  result: {
+    big: '原积分 $=1$',
+    html: '记忆锚点：<b>"对数 × 幂"用分部，$u$ 取对数</b>；分部后 $\\dfrac{\\ln(1+x)}{1+x}\\to0$（对数慢于一次幂），只剩 $\\displaystyle\\int_0^{+\\infty}\\frac{\\mathrm{d}x}{(1+x)^2}=1$。$v=-\\dfrac{1}{1+x}$ 的负号是第一颗雷。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

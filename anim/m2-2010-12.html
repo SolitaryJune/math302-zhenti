@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学·算法/过程类动画</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+/* 推导板：所有推导行在 build 时建好（含公式），render 按 i 逐行点亮 */
+var rows = [];
+function drow(html, at, green){
+  var d = AW.el('div', '', html);
+  d.style.cssText = 'margin:10px 0;padding:10px 16px;border-left:4px solid #cbd5e1;' +
+    'background:#f8fafc;border-radius:8px;font-size:15.5px;line-height:1.9;' +
+    'opacity:0.15;transform:translateX(-10px);transition:all .4s;';
+  rows.push({el: d, at: at, green: !!green});
+  return d;
+}
+
+AW.init({
+  title: '2010 数学二 第12题 · 对数螺线 $r=\\mathrm e^\\theta$ 在 $0\\le\\theta\\le\\pi$ 上的弧长',
+  subtitle: '考点：定积分应用（极坐标弧长） · 方法：$s=\\int\\sqrt{r^2+(r\')^2}\\,\\mathrm d\\theta$',
+  counterLabel: '已推导',
+  intro: '点击「▶ 播放」逐步演示极坐标弧长公式的代入与积分。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var inner = AW.el('div', '');
+    inner.appendChild(AW.el('div', 'aw-row-label',
+      '<b>推导板</b>：弧长微元来自 $(\\mathrm ds)^2=(\\mathrm dr)^2+(r\\,\\mathrm d\\theta)^2$'));
+    inner.appendChild(drow(
+      '<b>写公式</b>：$s=\\displaystyle\\int_0^{\\pi}\\sqrt{r^2+\\big(r\'\\big)^2}\\,\\mathrm d\\theta$', 1));
+    inner.appendChild(drow(
+      '<b>求 $r\'$</b>：$r=\\mathrm e^\\theta\\ \\Rightarrow\\ r\'=\\mathrm e^\\theta$（对数螺线的标志：$r\'=r$）', 2));
+    inner.appendChild(drow(
+      '<b>化简被积函数</b>：$\\sqrt{r^2+(r\')^2}=\\sqrt{\\mathrm e^{2\\theta}+\\mathrm e^{2\\theta}}=\\sqrt{2\\,\\mathrm e^{2\\theta}}=\\sqrt2\\,\\mathrm e^\\theta$（$\\mathrm e^\\theta\\gt0$，开方无需绝对值）', 3));
+    inner.appendChild(drow(
+      '<b>积分</b>：$s=\\sqrt2\\displaystyle\\int_0^{\\pi}\\mathrm e^\\theta\\,\\mathrm d\\theta=\\sqrt2\\Big[\\mathrm e^\\theta\\Big]_0^{\\pi}$', 4));
+    inner.appendChild(drow(
+      '<b>结果</b>：$s=\\sqrt2\\,\\big(\\mathrm e^{\\pi}-1\\big)$', 5, true));
+    wrap.appendChild(inner);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls: 'step',  tag: '审题',   log: '极坐标曲线的弧长：公式是根号下 r 平方加 r 一撇的平方，对 θ 从 0 积到 π', count: 1 },
+    { cls: 'step',  tag: '求导',   log: 'e 的 θ 次方求导还是它自己，对数螺线的 r 一撇等于 r', count: 2 },
+    { cls: 'shift', tag: '化简',   log: '根号里两项相同，合并成 2 乘 e 的 2θ 次方，开方得根号 2 乘 e 的 θ 次方', count: 3 },
+    { cls: 'step',  tag: '积分',   log: '提出根号 2，e 的 θ 次方的原函数就是自己，代入上下限', count: 4 },
+    { cls: 'done',  tag: '完成',   log: '弧长等于根号 2 乘 e 的 π 次方减 1', count: 5, done: true },
+  ],
+
+  render: function(stage, sn, i){
+    for(var k = 0; k < rows.length; k++){
+      var r = rows[k];
+      var revealed = i >= r.at;
+      var active = revealed && r.at === i && !sn.done;
+      var green = sn.done && r.green;
+      r.el.style.opacity = revealed ? '1' : '0.15';
+      r.el.style.transform = revealed ? 'none' : 'translateX(-10px)';
+      r.el.style.background = green ? '#ecfdf3' : (active ? '#fff7e0' : '#f8fafc');
+      r.el.style.borderLeftColor = green ? '#16a34a' : (active ? '#f59e0b' : '#cbd5e1');
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '$s=\\sqrt2\\,(\\mathrm e^\\pi-1)$',
+    html: '记忆锚点：<b>$r=\\mathrm e^\\theta\\Rightarrow r\'=r\\Rightarrow$ 被积函数恒为 $\\sqrt2\\,\\mathrm e^\\theta$</b>。易错：弧长公式记成 $r+r\'$（漏平方）；开方时丢系数 $\\sqrt2$。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

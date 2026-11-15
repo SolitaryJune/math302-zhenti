@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2011·18 切线倾角造方程，降阶解 y(x)</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改 AW.init 区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [];
+
+var LINES = [
+  "<p><b>翻译倾角</b>：$\\tan\\alpha=y'\\Rightarrow\\alpha=\\arctan y'$，对 $x$ 求导：$$\\frac{\\mathrm d\\alpha}{\\mathrm dx}=\\frac{y''}{1+y'^2}.$$</p>",
+  "<p><b>列方程</b>：由 $\\dfrac{\\mathrm d\\alpha}{\\mathrm dx}=\\dfrac{\\mathrm dy}{\\mathrm dx}$ 得 $$\\frac{y''}{1+y'^2}=y';$$ “与 $y=x$ 相切于原点”给两个初值：$y(0)=0,\\ y'(0)=1$。</p>",
+  "<p><b>降阶</b>：方程缺 $y$，令 $p=y'$：$\\dfrac{p'}{1+p^2}=p$，分离变量 $$\\frac{\\mathrm dp}{p(1+p^2)}=\\mathrm dx.$$</p>",
+  "<p><b>部分分式</b>：$\\dfrac{1}{p(1+p^2)}=\\dfrac1p-\\dfrac{p}{1+p^2}$，积分得 $$\\ln\\frac{p}{\\sqrt{1+p^2}}=x+C_1.$$</p>",
+  "<p><b>定 $C_1$</b>：代入 $p(0)=1$：$\\ln\\dfrac{1}{\\sqrt2}=C_1=-\\ln\\sqrt2$，于是 $$\\frac{p}{\\sqrt{1+p^2}}=\\frac{\\mathrm e^x}{\\sqrt2}.$$</p>",
+  "<p><b>解出 $p$</b>：两边平方整理 $p^2=\\dfrac{\\mathrm e^{2x}}{2-\\mathrm e^{2x}}$，由 $y'(0)=1>0$（$p$ 连续不变号）取正：$$p=\\frac{\\mathrm e^x}{\\sqrt{2-\\mathrm e^{2x}}}.$$</p>",
+  "<p><b>再积分</b>：令 $u=\\mathrm e^x$：$$y=\\int\\frac{\\mathrm e^x\\,\\mathrm dx}{\\sqrt{2-\\mathrm e^{2x}}}=\\int\\frac{\\mathrm du}{\\sqrt{2-u^2}}=\\arcsin\\frac{\\mathrm e^x}{\\sqrt2}+C_2.$$</p>",
+  "<p><b>定 $C_2$</b>：由 $y(0)=0$：$\\arcsin\\dfrac{1}{\\sqrt2}=\\dfrac\\pi4$，故 $C_2=-\\dfrac\\pi4$。</p>",
+  "<p><b>结论</b>：$$y=\\arcsin\\left(\\frac{\\sqrt2}{2}\\,\\mathrm e^x\\right)-\\frac{\\pi}{4}.$$</p>"
+];
+
+AW.init({
+  title: '由 $\\dfrac{\\mathrm d\\alpha}{\\mathrm dx}=\\dfrac{\\mathrm dy}{\\mathrm dx}$ 求曲线 $l$：可降阶二阶方程',
+  subtitle: '考点：微分方程 · 方法：倾角翻译 $\\alpha=\\arctan y\'$ → 缺 $y$ 令 $p=y\'$ 降阶 → 分离变量',
+  counterLabel: '步数',
+  intro: '点击「▶ 播放」逐步演示从几何条件到解曲线的全过程。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    ROWS.length = 0;
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    for(var k = 0; k < LINES.length; k++){
+      var d = AW.el('div', '', LINES[k]);
+      d.style.cssText = 'margin:8px 0;padding:9px 14px;border-left:3px solid #e2e8f0;background:#f8fafc;border-radius:0 12px 12px 0;font-size:14.5px;line-height:1.9;display:none;';
+      board.appendChild(d);
+      ROWS.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  render: function(stage, sn){
+    for(var k = 0; k < ROWS.length; k++){
+      var r = ROWS[k];
+      if(k >= sn.show){ r.style.display = 'none'; continue; }
+      r.style.display = 'block';
+      if(k === sn.show - 1 && !sn.done){
+        r.style.borderLeftColor = '#d97706';
+        r.style.background = '#fffbeb';
+      } else {
+        r.style.borderLeftColor = '#16a34a';
+        r.style.background = '#f8fafc';
+      }
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  snaps: [
+    { cls:'shift', tag:'翻译',   log:'切线倾角的正切就是 y′，把 α 写成 arctan y′ 再求导', show:1, count:0 },
+    { cls:'key',   tag:'列方程', log:'题设条件变成 y″/(1+y′²)=y′；相切于原点给 y(0)=0 与 y′(0)=1', show:2, count:1 },
+    { cls:'step',  tag:'降阶',   log:'方程里没有 y，令 p=y′，分离变量后可以积分', show:3, count:2 },
+    { cls:'step',  tag:'拆分式', log:'1/(p(1+p²)) 拆成 1/p 减 p/(1+p²)，积出对数式', show:4, count:3 },
+    { cls:'ok',    tag:'定 C1', log:'用 p(0)=1 定出 C₁=−ln√2，右边变成 eˣ/√2', show:5, count:4 },
+    { cls:'ok',    tag:'解 p',  log:'平方解出 p，由 y′(0)=1>0 取正号', show:6, count:5 },
+    { cls:'step',  tag:'再积分', log:'换元 u=eˣ，积出 arcsin(u/√2)，即 arcsin(eˣ/√2)', show:7, count:6 },
+    { cls:'ok',    tag:'定 C2', log:'用 y(0)=0 定出 C₂=−π/4', show:8, count:7 },
+    { cls:'done',  tag:'完成',   log:'解曲线确定，代回验证 y(0)=0、y′(0)=1 相符', show:9, count:8, done:true },
+  ],
+
+  result: {
+    big: '$y=\\arcsin\\left(\\dfrac{\\sqrt2}{2}\\mathrm e^x\\right)-\\dfrac{\\pi}{4}$',
+    html: '记忆锚点：<b>倾角 $\\alpha=\\arctan y\'$，求导必出 $\\dfrac{1}{1+y\'^2}$</b>；缺 $y$ 的二阶方程令 $p=y\'$ 降阶。两个初值各管一个常数：$y\'(0)=1$ 定 $C_1$ 与开方正负号，$y(0)=0$ 定 $C_2$。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

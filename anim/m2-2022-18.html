@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2022·18 一阶线性方程与弧长</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [
+  "$$2xy'-4y=2\\ln x-1,\\qquad y(1)=\\tfrac14,\\qquad \\text{求曲线 } y=y(x)\\ (1\\le x\\le \\mathrm{e}) \\text{ 的弧长}$$",
+  "<b>① 化标准形：</b>两边除以 $2x$：$y'-\\dfrac{2}{x}y=\\dfrac{\\ln x}{x}-\\dfrac{1}{2x}$；积分因子 $\\mu=\\mathrm{e}^{\\int-\\frac2x\\mathrm{d}x}=x^{-2}$",
+  "<b>② 凑导数：</b>$\\left(x^{-2}y\\right)'=\\dfrac{\\ln x}{x^{3}}-\\dfrac{1}{2x^{3}}$",
+  "<b>③ 分部积分：</b>$\\displaystyle\\int\\frac{\\ln x}{x^{3}}\\mathrm{d}x=-\\dfrac{\\ln x}{2x^{2}}-\\dfrac{1}{4x^{2}}$，而 $\\displaystyle\\int-\\dfrac{1}{2x^{3}}\\mathrm{d}x=\\dfrac{1}{4x^{2}}$——$\\pm\\dfrac{1}{4x^{2}}$ 恰好相消",
+  "<b>④ 通解：</b>$x^{-2}y=-\\dfrac{\\ln x}{2x^{2}}+C\\ \\Rightarrow\\ y=-\\dfrac{\\ln x}{2}+Cx^{2}$",
+  "<b>⑤ 定特解：</b>代 $y(1)=\\tfrac14\\Rightarrow C=\\tfrac14$，得 $y=\\dfrac{x^{2}}{4}-\\dfrac{\\ln x}{2}$（回代验算 $2xy'-4y=2\\ln x-1$ 成立）",
+  "<b>⑥ 弧长公式：</b>$L=\\displaystyle\\int_1^{\\mathrm{e}}\\sqrt{1+y'^{2}}\\,\\mathrm{d}x$，其中 $y'=\\dfrac{x}{2}-\\dfrac{1}{2x}$",
+  "<b>⑦ 关键完全平方：</b>$1+y'^{2}=1+\\dfrac{x^{2}}{4}-\\dfrac12+\\dfrac{1}{4x^{2}}=\\dfrac{x^{2}}{4}+\\dfrac12+\\dfrac{1}{4x^{2}}=\\left(\\dfrac{x}{2}+\\dfrac{1}{2x}\\right)^{2}$",
+  "<b>⑧ 开根号：</b>$[1,\\mathrm{e}]$ 上 $\\dfrac{x}{2}+\\dfrac{1}{2x}>0$，故 $L=\\displaystyle\\int_1^{\\mathrm{e}}\\left(\\dfrac{x}{2}+\\dfrac{1}{2x}\\right)\\mathrm{d}x$",
+  "<b>⑨ 收尾：</b>$L=\\left[\\dfrac{x^{2}}{4}+\\dfrac{\\ln x}{2}\\right]_1^{\\mathrm{e}}=\\dfrac{\\mathrm{e}^{2}}{4}+\\dfrac12-\\dfrac14=\\dfrac{\\mathrm{e}^{2}+1}{4}$"
+];
+
+AW.init({
+  title: '2022·18　一阶线性方程特解与曲线弧长',
+  subtitle: '考点：积分因子法 · 初值定常数 · 弧长公式 $L=\\int\\sqrt{1+y\'^2}\\,\\mathrm{d}x$ 与完全平方开根',
+  counterLabel: '已推进',
+  ribbonTitle: '推导进度（✓ 完成）',
+  intro: '点击「▶ 播放」或「下一步」，先解方程再算弧长，两问一气呵成。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var inner = AW.el('div', '');
+    inner.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>：当前行亮琥珀色，已完成的行变绿'));
+    this._rows = [];
+    for (var i = 0; i < ROWS.length; i++){
+      var r = AW.el('div', 'aw-stepcard', ROWS[i]);
+      inner.appendChild(r);
+      this._rows.push(r);
+    }
+    wrap.appendChild(inner);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step',  tag:'审题',   log:'两问结构：先解一阶线性方程，再把解代入弧长公式', count:0, ribbon:{k:1, ok:true} },
+    { cls:'shift', tag:'标准化', log:'两边除以 2x 化成标准形，积分因子是 x 的负二次幂', count:1, ribbon:{k:2, ok:true} },
+    { cls:'ok',    tag:'凑导数', log:'乘积分因子后左边凑成 x 负二次幂乘 y 的导数', count:2, ribbon:{k:3, ok:true} },
+    { cls:'ok',    tag:'积分',   log:'两处分别分部积分，四分之一 x 负二次方恰好一正一负抵消', count:3, ribbon:{k:4, ok:true} },
+    { cls:'ok',    tag:'通解',   log:'得到通解 y 等于负二分之 ln x 加 C 乘 x 平方', count:4, ribbon:{k:5, ok:true} },
+    { cls:'ok',    tag:'定特解', log:'代初值得 C 为四分之一，特解确定并回代验算成立', count:5, ribbon:{k:6, ok:true} },
+    { cls:'ok',    tag:'弧长式', log:'写弧长公式，根号里是 1 加导数平方，先求出导数', count:6, ribbon:{k:7, ok:true} },
+    { cls:'ok',    tag:'平方',   log:'1 加导数平方恰好凑成完全平方，根号可以开尽', count:7, ribbon:{k:8, ok:true} },
+    { cls:'ok',    tag:'开根',   log:'区间上括号里恒为正，直接开根号变成普通定积分', count:8, ribbon:{k:9, ok:true} },
+    { cls:'done',  tag:'完成',   log:'结论：弧长等于 e 平方加 1 再除以 4', count:9, ribbon:{k:10, ok:true}, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    var rows = this._rows;
+    for (var j = 0; j < rows.length; j++){
+      rows[j].className = 'aw-stepcard' + (j < i ? ' good' : (j === i ? ' key' : ''));
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: "$y=\\dfrac{x^{2}}{4}-\\dfrac{\\ln x}{2},\\qquad L=\\dfrac{\\mathrm{e}^{2}+1}{4}$",
+    html: "记忆锚点：<b>一阶线性方程乘积分因子 $\\mathrm{e}^{\\int P\\mathrm{d}x}$；弧长题看到 $y'=\\frac x2-\\frac1{2x}$ 这种「减法」结构，立刻试 $1+y'^2$ 是否为完全平方</b>。易错：弧长公式漏根号或漏 1；开根号不交代符号；积分因子指数写反。",
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

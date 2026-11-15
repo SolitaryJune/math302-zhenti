@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2017·04 特解形式的设法（共振判定）</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改 AW.init 区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [];
+
+var LINES = [
+  "<p><b>第一步：解特征方程</b>（判断共振的基准）$$r^2-4r+8=0\\quad\\Longrightarrow\\quad r=\\frac{4\\pm\\sqrt{16-32}}{2}=2\\pm2\\mathrm{i}$$ 特征根为一对共轭复根 $2\\pm2\\mathrm{i}$（单重）。</p>",
+  "<p><b>第二步：拆自由项</b>$$\\mathrm{e}^{2x}(1+\\cos 2x)=\\underbrace{\\mathrm{e}^{2x}}_{\\text{块 1}}+\\underbrace{\\mathrm{e}^{2x}\\cos 2x}_{\\text{块 2}}$$ 两块特征量不同，必须<b>逐块</b>判断是否与特征根重合。</p>",
+  "<p><b>块 1：$\\mathrm{e}^{2x}$，特征量 $\\lambda=2$</b>。$2\\neq2\\pm2\\mathrm{i}$，<b>不共振</b>——标准设法不乘 $x$：$$\\text{设 } A\\mathrm{e}^{2x}$$</p>",
+  "<p><b>块 2：$\\mathrm{e}^{2x}\\cos2x$，特征量 $2\\pm2\\mathrm{i}$</b>。恰好就是特征根（单重），<b>共振</b>——标准设法 $\\mathrm{e}^{2x}(B\\cos2x+C\\sin2x)$ 前乘 $x$：$$\\text{设 } x\\mathrm{e}^{2x}(B\\cos2x+C\\sin2x)$$</p>",
+  "<p><b>第三步：合并</b>$$y^*=A\\mathrm{e}^{2x}+x\\mathrm{e}^{2x}(B\\cos2x+C\\sin2x)$$ 对应选项 <b>C</b>。</p>",
+  "<p><b>排错</b>：A 给块 2 漏乘 $x$（共振必乘）；B、D 给块 1 乘了 $x$（$\\lambda=2$ 只是特征根的实部，不共振）；共振块必须 $B\\cos2x$ 与 $C\\sin2x$ 同时设。</p>"
+];
+
+AW.init({
+  title: '$y\'\'-4y\'+8y=\\mathrm{e}^{2x}(1+\\cos 2x)$ 的特解 $y^*$ 怎么设',
+  subtitle: '考点：二阶常系数线性方程 · 方法：特征根 → 逐块判共振 → 共振乘 x',
+  counterLabel: '已执行',
+  intro: '点击「▶ 播放」逐步演示每一步推导。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    ROWS.length = 0;
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    for(var k = 0; k < LINES.length; k++){
+      var d = AW.el('div', '', LINES[k]);
+      d.style.cssText = 'margin:8px 0;padding:9px 14px;border-left:3px solid #e2e8f0;background:#f8fafc;border-radius:0 12px 12px 0;font-size:14.5px;line-height:1.9;display:none;';
+      board.appendChild(d);
+      ROWS.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  render: function(stage, sn){
+    for(var k = 0; k < ROWS.length; k++){
+      var r = ROWS[k];
+      if(k >= sn.show){ r.style.display = 'none'; continue; }
+      r.style.display = 'block';
+      if(k === sn.show - 1 && !sn.done){
+        r.style.borderLeftColor = '#d97706';
+        r.style.background = '#fffbeb';
+      } else {
+        r.style.borderLeftColor = '#16a34a';
+        r.style.background = '#f8fafc';
+      }
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  snaps: [
+    { cls:'shift', tag:'特征根', log:'r²−4r+8=0，判别式负，得共轭复根 2±2i', show:1, count:0 },
+    { cls:'step',  tag:'拆自由项', log:'指数因子拆成两块：e^(2x) 与 e^(2x)cos2x，逐块判', show:2, count:1 },
+    { cls:'ok',    tag:'块1不共振', log:'λ=2 不是特征根（只是实部），不乘 x，设 Ae^(2x)', show:3, count:2 },
+    { cls:'ok',    tag:'块2共振', log:'2±2i 恰为单重特征根，标准设法前乘 x', show:4, count:3 },
+    { cls:'ok',    tag:'合并',    log:'合并：y* = Ae^(2x) + xe^(2x)(Bcos2x+Csin2x)，选 C', show:5, count:4 },
+    { cls:'done',  tag:'完成',    log:'A 漏乘、B/D 多乘；三角块必须 cos 与 sin 同时设', show:6, count:5, done:true },
+  ],
+
+  result: {
+    big: '答案 C：$y^*=A\\mathrm{e}^{2x}+x\\mathrm{e}^{2x}(B\\cos2x+C\\sin2x)$',
+    html: '记忆锚点：<b>共振 = 特征量恰为特征根</b>。$\\lambda=2$ 只是 $2\\pm2\\mathrm{i}$ 的实部——不算共振；$2\\pm2\\mathrm{i}$ 本人才算——必须乘 $x$。谁共振谁乘 $x$，别整块一起乘。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学·算法/过程类动画</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+/* 推导板：所有推导行在 build 时建好（含公式），render 按 i 逐行点亮 */
+var rows = [];
+function drow(html, at, green){
+  var d = AW.el('div', '', html);
+  d.style.cssText = 'margin:10px 0;padding:10px 16px;border-left:4px solid #cbd5e1;' +
+    'background:#f8fafc;border-radius:8px;font-size:15.5px;line-height:1.9;' +
+    'opacity:0.15;transform:translateX(-10px);transition:all .4s;';
+  rows.push({el: d, at: at, green: !!green});
+  return d;
+}
+
+AW.init({
+  title: '2010 数学二 第5题 · $F\\!\\left(\\dfrac yx,\\dfrac zx\\right)=0$，求 $x\\dfrac{\\partial z}{\\partial x}+y\\dfrac{\\partial z}{\\partial y}$',
+  subtitle: '考点：隐函数求导（链式法则） · 方法：两个方向求导后对称消元',
+  counterLabel: '已推导',
+  intro: '点击「▶ 播放」逐步演示隐函数求导与消元过程。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var inner = AW.el('div', '');
+    inner.appendChild(AW.el('div', 'aw-row-label',
+      '<b>推导板</b>：$F$ 有两个中间变量 $\\dfrac yx$ 与 $\\dfrac zx$，后者分子含 $z$，求导勿漏'));
+    inner.appendChild(drow(
+      '<b>记中间变量</b>：$u=\\dfrac yx,\\ v=\\dfrac zx$，方程 $F(u,v)=0$ 确定 $z=z(x,y)$；目标是 $xz_x+yz_y$', 1));
+    inner.appendChild(drow(
+      '<b>对 $x$ 求导</b>：$F_1\'\\cdot\\Big(-\\dfrac{y}{x^2}\\Big)+F_2\'\\cdot\\dfrac{xz_x-z}{x^2}=0$' +
+      '$\\ \\Longrightarrow\\ xz_x=z+\\dfrac{yF_1\'}{F_2\'}$', 2));
+    inner.appendChild(drow(
+      '<b>对 $y$ 求导</b>：$\\dfrac{F_1\'}{x}+\\dfrac{F_2\'z_y}{x}=0\\ \\Longrightarrow\\ z_y=-\\dfrac{F_1\'}{F_2\'}$' +
+      '$\\ \\Longrightarrow\\ yz_y=-\\dfrac{yF_1\'}{F_2\'}$', 3));
+    inner.appendChild(drow(
+      '<b>两式相加</b>：$xz_x+yz_y=z+\\dfrac{yF_1\'}{F_2\'}-\\dfrac{yF_1\'}{F_2\'}=z$，含 $F_1\'$ 的项恰好抵消', 4));
+    inner.appendChild(drow(
+      '<b>结论</b>：$x\\dfrac{\\partial z}{\\partial x}+y\\dfrac{\\partial z}{\\partial y}=z$，选 B。' +
+      '另解：把 $(x,y,z)$ 换成 $(tx,ty,tz)$ 方程不变，$z$ 是一次齐次函数，欧拉定理直接给出', 5, true));
+    wrap.appendChild(inner);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls: 'step',  tag: '审题',   log: '方程里 z 藏在第二个中间变量的分子上，先记好两个中间变量，目标是对 x 和 y 的两个偏导的加权和', count: 1 },
+    { cls: 'shift', tag: '对 x 求', log: '对 x 求导：第一个中间变量给负的 y 比 x 平方，第二个用商的求导法则出现 x 乘 z 下标 x 再减 z', count: 2 },
+    { cls: 'step',  tag: '对 y 求', log: '对 y 求导干净利落，直接解出 z 对 y 的偏导等于负的 F1 比 F2', count: 3 },
+    { cls: 'shift', tag: '相加',   log: '两条结果相加，含 F1 的项一正一负恰好抵消，只剩 z', count: 4 },
+    { cls: 'done',  tag: '完成',   log: '答案是 z 本身，选 B；齐次函数的欧拉定理也直接给出同一结论', count: 5, done: true },
+  ],
+
+  render: function(stage, sn, i){
+    for(var k = 0; k < rows.length; k++){
+      var r = rows[k];
+      var revealed = i >= r.at;
+      var active = revealed && r.at === i && !sn.done;
+      var green = sn.done && r.green;
+      r.el.style.opacity = revealed ? '1' : '0.15';
+      r.el.style.transform = revealed ? 'none' : 'translateX(-10px)';
+      r.el.style.background = green ? '#ecfdf3' : (active ? '#fff7e0' : '#f8fafc');
+      r.el.style.borderLeftColor = green ? '#16a34a' : (active ? '#f59e0b' : '#cbd5e1');
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '答案 B：原式 $=z$',
+    html: '记忆锚点：<b>分母带 $z$ 的隐函数，商的求导法则必出 $xz_x-z$</b>；两方向求导后相加常整体消元。另记：$F\\!\\big(\\frac yx,\\frac zx\\big)=0$ 对 $(x,y,z)$ 的一次缩放不变 $\\Rightarrow$ $z$ 一次齐次 $\\Rightarrow$ 欧拉关系 $xz_x+yz_y=z$。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

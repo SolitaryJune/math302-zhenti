@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2024·09 由 A(A−A*)=O 定 r(A) 的可能值</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_concept_template.html，只改题目专属区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+// 一张推理卡片（body 里可写 $..$ / $$..$$ 公式）
+function card(n, cls, title, body){
+  return '<div class="aw-stepcard ' + (cls || '') + '"><h4><span class="n">' + n +
+         '</span>' + title + '</h4>' + body + '</div>';
+}
+
+// 推理链：每一步的完整内容（引擎按步数截取显示）
+var STEPS = [
+  { title: '审题眼：先压方程，再按秩分类',
+    cls: 'key',
+    tag: '方法',
+    body: '<p>$\\boldsymbol A$ 为 4 阶矩阵，$\\boldsymbol A(\\boldsymbol A-\\boldsymbol A^*)=\\boldsymbol O$ 且 $\\boldsymbol A\\neq\\boldsymbol A^*$。展开方程得 $\\boldsymbol A^2=\\boldsymbol A\\boldsymbol A^*$，代入核心恒等式 $$\\boldsymbol A\\boldsymbol A^*=|\\boldsymbol A|\\,\\boldsymbol E\\ \\Longrightarrow\\ \\boldsymbol A^2=|\\boldsymbol A|\\,\\boldsymbol E.$$ 伴随阵被消掉，剩下对 $r(\\boldsymbol A)=0,1,2,3,4$ 分类过筛。备用工具：$r(\\boldsymbol A^*)=4\\,(r=4)\\ /\\ 1\\,(r=3)\\ /\\ 0\\,(r\\le2)$。</p>',
+    log: 'A²=|A|E，按 r(A)=0~4 五种情况讨论' },
+  { title: 'r = 4：与 A ≠ A* 矛盾',
+    cls: 'bad',
+    tag: 'r=4 ✗',
+    ribbon: {k:1, ok:false},
+    body: '<p>$r=4$ 时 $\\boldsymbol A$ 可逆，$|\\boldsymbol A|\\neq0$。$\\boldsymbol A^2=|\\boldsymbol A|\\boldsymbol E$ 两边右乘 $\\boldsymbol A^{-1}$：$$\\boldsymbol A=|\\boldsymbol A|\\,\\boldsymbol A^{-1}=\\boldsymbol A^*,$$ 与条件 $\\boldsymbol A\\neq\\boldsymbol A^*$ 直接矛盾。<b>排除</b>。</p>',
+    log: '可逆时 A=A*，违反条件，排除' },
+  { title: 'r = 3：被秩不等式卡死',
+    cls: 'bad',
+    tag: 'r=3 ✗',
+    ribbon: {k:2, ok:false},
+    body: '<p>$r=3\\Rightarrow|\\boldsymbol A|=0\\Rightarrow\\boldsymbol A^2=\\boldsymbol O$。而 $\\boldsymbol A^2=\\boldsymbol O$ 意味着 $\\boldsymbol A$ 的列空间含于零空间：$\\mathrm r(\\boldsymbol A)\\le\\mathrm n(\\boldsymbol A)=4-r(\\boldsymbol A)$，即 $$r(\\boldsymbol A)\\le\\frac42=2,$$ 与 $r=3$ 矛盾。<b>排除</b>。（伴随阵口径同样撞墙：$r=3$ 时 $r(\\boldsymbol A^*)=1\\neq0$。）</p>',
+    log: 'A²=O 强制 r(A)≤2，与 r=3 矛盾，排除' },
+  { title: 'r = 2：两个零化若尔当块可取',
+    cls: 'good',
+    tag: 'r=2 ✓',
+    ribbon: {k:3, ok:true},
+    body: '<p>$r=2\\Rightarrow|\\boldsymbol A|=0\\Rightarrow\\boldsymbol A^*=\\boldsymbol O$（秩公式），且需 $\\boldsymbol A^2=\\boldsymbol O$。构造：$\\boldsymbol A=\\mathrm{diag}\\big(J_2(0),\\,J_2(0)\\big)$（两个 2 阶幂零若尔当块拼成 4 阶阵），$r(\\boldsymbol A)=2$，$\\boldsymbol A^2=\\boldsymbol O$，且 $\\boldsymbol A\\neq\\boldsymbol O=\\boldsymbol A^*$。<b>可取</b>。</p>',
+    log: '两个 J₂(0) 拼起来：r=2 且 A²=O，可取' },
+  { title: 'r = 1：迹为零的秩 1 阵可取',
+    cls: 'good',
+    tag: 'r=1 ✓',
+    ribbon: {k:4, ok:true},
+    body: '<p>$r=1\\Rightarrow\\boldsymbol A^*=\\boldsymbol O$，需 $\\boldsymbol A^2=\\boldsymbol O$ 且 $\\boldsymbol A\\neq\\boldsymbol O$。秩 1 阵可写 $\\boldsymbol A=\\boldsymbol u\\boldsymbol v^{\\mathrm T}$，于是 $$\\boldsymbol A^2=(\\boldsymbol v^{\\mathrm T}\\boldsymbol u)\\,\\boldsymbol A=(\\operatorname{tr}\\boldsymbol A)\\,\\boldsymbol A.$$ 取<b>迹为零</b>的秩 1 阵（如严格上三角阵）即得 $\\boldsymbol A^2=\\boldsymbol O$，$\\boldsymbol A\\neq\\boldsymbol O=\\boldsymbol A^*$。<b>可取</b>。</p>',
+    log: '迹为零的秩 1 阵：A²=O，可取' },
+  { title: 'r = 0：A = O = A*，违反条件',
+    cls: 'bad',
+    tag: 'r=0 ✗',
+    ribbon: {k:5, ok:false},
+    body: '<p>$r=0$ 即 $\\boldsymbol A=\\boldsymbol O$，此时 $\\boldsymbol A^*=\\boldsymbol O=\\boldsymbol A$，违反 $\\boldsymbol A\\neq\\boldsymbol A^*$。<b>排除</b>。这个看似多余的小条件专门用来卡零矩阵。</p>',
+    log: '零矩阵的伴随还是零，A≠A* 不满足' },
+  { title: '结论',
+    cls: 'good',
+    tag: '完成',
+    body: '<p>$r(\\boldsymbol A)$ 可能取 $1$ 或 $2$，答案选 <b>D</b>。记忆锚点：$\\boldsymbol A(\\boldsymbol A-\\boldsymbol A^*)=\\boldsymbol O\\Rightarrow\\boldsymbol A^2=|\\boldsymbol A|\\boldsymbol E$；<b>满秩被 $\\boldsymbol A\\neq\\boldsymbol A^*$ 杀、$r\\ge3$ 被 $\\boldsymbol A^2=\\boldsymbol O\\Rightarrow r\\le\\frac n2$ 杀、零阵被条件杀</b>。</p>',
+    log: 'r(A) 可能 1 或 2，选 D' },
+];
+
+var snaps = STEPS.map(function(s, i){
+  return {
+    cls: i === STEPS.length - 1 ? 'done' : 'step',
+    tag: s.tag || ('第 ' + (i + 1) + ' 步'),
+    log: s.log || s.title,
+    count: i,
+    ribbon: s.ribbon,
+    html: STEPS.slice(0, i + 1).map(function(x, j){
+      return card(j + 1, x.cls, x.title, x.body);
+    }).join(''),
+    done: i === STEPS.length - 1,
+  };
+});
+
+AW.init({
+  title: '$\\boldsymbol A(\\boldsymbol A-\\boldsymbol A^*)=\\boldsymbol O$（$\\boldsymbol A\\neq\\boldsymbol A^*$）时 $r(\\boldsymbol A)$ 的可能值',
+  subtitle: '考点：伴随矩阵与秩 · 方法：$\\boldsymbol A^2=|\\boldsymbol A|\\boldsymbol E$ + 按 $r$ 分类过筛',
+  counterLabel: '分类进度',
+  ribbonTitle: '秩的可能值（✓ 可取 / ✗ 排除）',
+  intro: '点击「▶ 播放」逐步展开推理链。',
+  render: function(stage, sn){
+    if(sn.html != null) stage.innerHTML = sn.html;
+    renderMathAfterSnap(stage);
+  },
+  snaps: snaps,
+  result: {
+    big: '答案 D（r(A) = 1 或 2）',
+    html: '记忆锚点：恒等式 $\\boldsymbol A\\boldsymbol A^*=|\\boldsymbol A|\\boldsymbol E$ 把方程压成 $\\boldsymbol A^2=|\\boldsymbol A|\\boldsymbol E$。排除链：$r=4$ 时 $\\boldsymbol A=\\boldsymbol A^*$（矛盾）；$r\\ge3$ 时 $\\boldsymbol A^2=\\boldsymbol O\\Rightarrow r\\le2$（矛盾）；$r=0$ 时 $\\boldsymbol A=\\boldsymbol A^*=\\boldsymbol O$（矛盾）。$r=1$（迹为零）与 $r=2$（两个 $J_2(0)$）均有实例。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

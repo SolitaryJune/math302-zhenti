@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学·算法类动画：曲线 y=x ln(e+1/(x−1)) 的斜渐近线</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+AW.init({
+  title: '曲线 $y=x\\ln\\Bigl(\\mathrm e+\\dfrac{1}{x-1}\\Bigr)$ 的渐近线：先 k 后 b',
+  subtitle: '考点：渐近线 · 方法：$k=\\lim\\dfrac yx$ → 凑 $\\ln(1+t)$ 求截距 $b$',
+  counterLabel: '推导步',
+  intro: '点击「▶ 播放」逐步演示斜渐近线的完整推导。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    var lines = [
+      '<b>审题</b>：$x\\to\\infty$ 时 $\\dfrac1{x-1}\\to0$，$y\\sim x\\ln\\mathrm e=x$，必有斜渐近线 $y=kx+b$ $$k=\\lim_{x\\to\\infty}\\frac yx=\\lim_{x\\to\\infty}\\ln\\Bigl(\\mathrm e+\\frac1{x-1}\\Bigr)=\\ln\\mathrm e=1$$',
+      '<b>截距</b>：$$b=\\lim_{x\\to\\infty}\\bigl(y-x\\bigr)=\\lim_{x\\to\\infty}x\\Bigl[\\ln\\Bigl(\\mathrm e+\\frac1{x-1}\\Bigr)-1\\Bigr]$$ 括号内是「对数减常数」，直接套等价会翻车——标准动作：整体除进去',
+      '<b>凑 $\\ln(1+t)$</b>：$$\\ln\\Bigl(\\mathrm e+\\frac1{x-1}\\Bigr)-1=\\ln\\frac{\\mathrm e+\\frac1{x-1}}{\\mathrm e}=\\ln\\Bigl(1+\\frac{1}{\\mathrm e(x-1)}\\Bigr)\\sim\\frac{1}{\\mathrm e(x-1)}$$',
+      '<b>收尾</b>：$$b=\\lim_{x\\to\\infty}x\\cdot\\frac{1}{\\mathrm e(x-1)}=\\frac1{\\mathrm e}\\lim_{x\\to\\infty}\\frac x{x-1}=\\frac1{\\mathrm e}\\approx0.367879$$',
+      '<b>自检</b>：取 $x=10^7$，$y-x\\approx0.367879=\\dfrac1{\\mathrm e}$，数值吻合；另在 $x\\to1^+$ 处 $y\\to+\\infty$ 有铅直渐近线 $x=1$，但四个选项都是斜渐近线形式',
+      '<b>结论</b>：斜渐近线 $$y=x+\\frac1{\\mathrm e}\\qquad\\Rightarrow\\qquad \\text{选 B}$$',
+    ];
+    this._lines = [];
+    for(var i=0;i<lines.length;i++){
+      var d = AW.el('div', '', lines[i]);
+      d.style.cssText = 'padding:9px 14px;margin:7px 0;border-left:3px solid transparent;border-radius:10px;transition:all .35s;opacity:.28;font-size:15px;line-height:1.9;';
+      board.appendChild(d);
+      this._lines.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step',  tag:'定斜率', log:'分子分母同除 x，k 就是对数本身的极限，等于 1', count:0 },
+    { cls:'shift', tag:'求截距', log:'b 是 y 减 x 的极限，括号里是对数减常数 1', count:1 },
+    { cls:'shift', tag:'凑等价', log:'把 e 除进去，凑成 ln(1+小量)，等价于那个小量本身', count:2 },
+    { cls:'step',  tag:'算极限', log:'小量是 1/(e(x−1))，乘 x 后极限为 1/e', count:3 },
+    { cls:'ok',    tag:'数值自检', log:'代 x=一千万验证差值恰为 1/e；x 趋 1 右侧还有铅直渐近线', count:4 },
+    { cls:'done',  tag:'完成', log:'结论：斜渐近线 y = x + 1/e，选 B', count:5, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    for(var j=0;j<this._lines.length;j++){
+      var L = this._lines[j];
+      L.style.opacity = j<=i ? '1' : '0.28';
+      L.style.borderLeftColor = (j===i) ? '#d97706' : (j<i ? '#16a34a' : 'transparent');
+      L.style.background = (j===i) ? '#fef3c7' : 'transparent';
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '$y=x+\\dfrac{1}{\\mathrm e}$（选 B）',
+    html: '记忆锚点：<b>求 $b$ 必把「对数 $-$ 常数」除进去凑成 $\\ln(1+t)$，再用 $\\ln(1+t)\\sim t$</b>。易错：只算 $k=1$ 就选 C（漏截距）；凑的时候丢掉因子 $\\dfrac1{\\mathrm e}$ 会错选 A；$\\ln(1+\\text{正小量})>0$，$b$ 为正、不是 D。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

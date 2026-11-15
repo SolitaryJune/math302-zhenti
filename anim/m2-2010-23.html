@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>m2-2010-23 由一列特征向量定参数并求正交矩阵 Q</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+var PAGES = [
+  "<p>$\\boldsymbol A=\\begin{pmatrix}0&-1&4\\\\-1&3&a\\\\4&a&0\\end{pmatrix}$，正交矩阵 $\\boldsymbol Q$ 使 $\\boldsymbol Q^T\\boldsymbol A\\boldsymbol Q$ 为对角阵，且 $\\boldsymbol Q$ 第 1 列为 $\\dfrac1{\\sqrt6}(1,2,1)^T$。求 $a,\\boldsymbol Q$。</p>",
+  "<p>$\\boldsymbol Q$ 的列是 $\\boldsymbol A$ 的单位正交<b>特征向量</b>，故 $\\xi_1=(1,2,1)^T$ 满足 $\\boldsymbol A\\xi_1=\\lambda\\xi_1$：</p>$$\\boldsymbol A\\xi_1=\\begin{pmatrix}-2+4\\\\-1+6+a\\\\4+2a\\end{pmatrix}=\\begin{pmatrix}2\\\\a+5\\\\2a+4\\end{pmatrix}=\\lambda\\begin{pmatrix}1\\\\2\\\\1\\end{pmatrix}$$",
+  "<p>逐分量比较：第 1 分量 $\\lambda=2$；第 2 分量 $a+5=4\\Rightarrow a=-1$；第 3 分量 $2a+4=2\\Rightarrow a=-1$，两处一致 ✓</p><p>故 $a=-1,\\ \\lambda_1=2$。</p>",
+  "<p>$a=-1$ 后用迹与行列式求其余特征值：</p>$$\\mathrm{tr}\\,\\boldsymbol A=3\\Rightarrow\\lambda_2+\\lambda_3=1,\\qquad |\\boldsymbol A|=-40=2\\lambda_2\\lambda_3\\Rightarrow\\lambda_2\\lambda_3=-20$$",
+  "<p>解二次方程：</p>$$t^2-t-20=0\\ \\Longrightarrow\\ t=5\\ \\text{或}\\ t=-4$$",
+  "<p>$\\lambda=-4$：解 $(\\boldsymbol A+4\\boldsymbol E)\\boldsymbol x=\\boldsymbol0$，即 $\\begin{pmatrix}4&-1&4\\\\-1&7&-1\\\\4&-1&4\\end{pmatrix}\\boldsymbol x=\\boldsymbol0$，得 $x_2=0,\\ x_1=-x_3$：</p>$$\\xi_2=(-1,0,1)^T$$",
+  "<p>$\\lambda=5$：解 $(\\boldsymbol A-5\\boldsymbol E)\\boldsymbol x=\\boldsymbol0$，即 $\\begin{pmatrix}-5&-1&4\\\\-1&-2&-1\\\\4&-1&-5\\end{pmatrix}\\boldsymbol x=\\boldsymbol0$，得：</p>$$\\xi_3=(1,-1,1)^T$$",
+  "<p>三个向量两两正交（实对称阵不同特征值的特征向量自动正交），单位化：</p>$$\\frac{\\xi_1}{\\sqrt6},\\qquad \\frac{\\xi_2}{\\sqrt2},\\qquad \\frac{\\xi_3}{\\sqrt3}$$",
+  "<p>按题设顺序拼成 $\\boldsymbol Q$（第 1 列对应 $\\lambda=2$，第 2 列 $-4$，第 3 列 $5$；特征向量取反号不改变结论）：</p>$$\\boldsymbol Q^T\\boldsymbol A\\boldsymbol Q=\\mathrm{diag}(2,-4,5)$$"
+];
+
+AW.init({
+  title: "2010·23　由 $\\boldsymbol Q$ 的第 1 列反求 $a$ 与 $\\boldsymbol Q$",
+  subtitle: "考点：实对称矩阵正交对角化 · 特征向量定义 · 迹与行列式 · 单位化拼 Q",
+  counterLabel: "步数",
+  intro: "点击「▶ 播放」逐步演示：Aξ=λξ 定参 → 迹/行列式求根 → 特征向量 → 拼 Q。",
+
+  build: function(stage){
+    stage.innerHTML = "";
+    var wrap = AW.el("div", "aw-scroll");
+    wrap.appendChild(AW.el("div", "aw-row-label", "<b>推导板</b>：$\\boldsymbol Q^T\\boldsymbol A\\boldsymbol Q$ 对角 $\\iff$ $\\boldsymbol Q$ 的列是单位正交特征向量"));
+    this._board = AW.el("div", "", "");
+    wrap.appendChild(this._board);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:"shift", tag:"审题", log:"正交对角化意味着 Q 的每一列都是 A 的特征向量——第 1 列 (1,2,1)ᵀ 直接可用", count:0 },
+    { cls:"step", tag:"Aξ₁", log:"计算 A·(1,2,1)ᵀ = (2, a+5, 2a+4)ᵀ，它必须与 (1,2,1)ᵀ 成比例", count:1 },
+    { cls:"ok", tag:"定 a 与 λ₁", log:"三个分量逐个比：λ₁=2，两处都解出 a=−1，互相印证", count:2 },
+    { cls:"step", tag:"迹+行列式", log:"迹 3 = 2+λ₂+λ₃ 给出和为 1；行列式 −40 给出积为 −20", count:3 },
+    { cls:"ok", tag:"解根", log:"t²−t−20=0 解得 λ=5 或 −4，特征值凑齐：2, 5, −4", count:4 },
+    { cls:"step", tag:"λ=−4 的向量", log:"解 (A+4E)x=0：x₂=0 且 x₁=−x₃，取 (−1,0,1)ᵀ", count:5 },
+    { cls:"step", tag:"λ=5 的向量", log:"解 (A−5E)x=0：取 (1,−1,1)ᵀ", count:6 },
+    { cls:"step", tag:"单位化", log:"三个向量两两正交，分别除以 √6、√2、√3 变成单位向量", count:7 },
+    { cls:"done", tag:"拼 Q", log:"按列拼成 Q，对角元与列一一对应：2, −4, 5", count:8, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    this._board.innerHTML = PAGES[i];
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: "a = −1，QᵀAQ = diag(2, −4, 5)",
+    html: "最终答案：$a=-1$，$\\boldsymbol Q=\\begin{pmatrix}\\dfrac1{\\sqrt6}&-\\dfrac1{\\sqrt2}&\\dfrac1{\\sqrt3}\\\\[4pt]\\dfrac2{\\sqrt6}&0&-\\dfrac1{\\sqrt3}\\\\[4pt]\\dfrac1{\\sqrt6}&\\dfrac1{\\sqrt2}&\\dfrac1{\\sqrt3}\\end{pmatrix}$（第 2、3 列取反号亦可）。<br>" +
+          "记忆点：<b>给了一列就代 $\\boldsymbol A\\xi=\\lambda\\xi$ 逐分量定参定根</b>；其余特征值用 $\\mathrm{tr}\\,\\boldsymbol A$ 与 $|\\boldsymbol A|$ 速算，再解齐次组、单位化、按列拼 $\\boldsymbol Q$。",
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

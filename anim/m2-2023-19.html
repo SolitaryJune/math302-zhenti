@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2023·19 无界区域的面积与旋转体体积</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [
+  "<b>① 审题：</b>$D$ 沿 $x\\ge1$ 无界，面积与体积都是<b>无穷限反常积分</b>",
+  "<b>② (1) 面积：</b>曲线 $y=\\frac{1}{x\\sqrt{1+x^2}}$ 下方、$x\\ge1$ 上方，$S=\\int_1^{+\\infty}\\frac{\\mathrm dx}{x\\sqrt{1+x^2}}$",
+  "<b>③ 倒代换：</b>令 $x=\\frac1t$：$\\mathrm dx=-\\frac{\\mathrm dt}{t^2}$，且 $t>0$ 时 $\\sqrt{1+x^2}=\\frac{\\sqrt{1+t^2}}{t}$，被积式化为 $-\\frac{\\mathrm dt}{\\sqrt{1+t^2}}$",
+  "<b>④ 变限：</b>$x:1\\to+\\infty$ 对应 $t:1\\to0^+$，$S=\\int_0^1\\frac{\\mathrm dt}{\\sqrt{1+t^2}}$",
+  "<b>⑤ (1) 完成：</b>原函数 $\\ln\\big(t+\\sqrt{1+t^2}\\big)$，$S=\\ln(1+\\sqrt2)-\\ln1=\\boxed{\\,\\ln(\\sqrt2+1)\\,}$",
+  "<b>⑥ (2) 圆盘法：</b>$V=\\pi\\int_1^{+\\infty}\\Big(\\frac{1}{x\\sqrt{1+x^2}}\\Big)^2\\mathrm dx=\\pi\\int_1^{+\\infty}\\frac{\\mathrm dx}{x^2(1+x^2)}$",
+  "<b>⑦ 部分分式：</b>$\\frac{1}{x^2(1+x^2)}=\\frac{1}{x^2}-\\frac{1}{1+x^2}$（通分 $\\frac{1+x^2-x^2}{x^2(1+x^2)}$ 回验成立）",
+  "<b>⑧ 逐项积分：</b>原函数 $-\\frac1x-\\arctan x$",
+  "<b>⑨ 代上限：</b>$x\\to+\\infty$：$-\\frac1x\\to0$，$\\arctan x\\to\\frac\\pi2$，得 $0-\\frac\\pi2$",
+  "<b>⑩ (2) 收尾：</b>$V=\\pi\\Big[\\big(0-\\frac\\pi2\\big)-\\big(-1-\\frac\\pi4\\big)\\Big]=\\boxed{\\,\\pi\\Big(1-\\frac\\pi4\\Big)\\,}$"
+];
+var rowEls = [];
+
+AW.init({
+  title: '2023·19　无界区域的面积与旋转体体积',
+  subtitle: '考点：无穷限反常积分 · 倒代换 · 部分分式 · 圆盘法',
+  counterLabel: '已推进',
+  ribbonTitle: '推导进度（✓ 完成）',
+  intro: '点击「▶ 播放」或「下一步」：(1) 倒代换算面积，(2) 部分分式算旋转体体积。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var inner = AW.el('div', '');
+    inner.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>：当前行亮琥珀色，已完成的行变绿'));
+    rowEls = [];
+    for (var i = 0; i < ROWS.length; i++){
+      var r = AW.el('div', 'aw-stepcard', ROWS[i]);
+      inner.appendChild(r);
+      rowEls.push(r);
+    }
+    wrap.appendChild(inner);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step', tag:'审题',   log:'第①步：区域延伸到无穷远，面积和体积都要用无穷限反常积分', count:0, ribbon:{k:1,  ok:true} },
+    { cls:'ok',   tag:'写面积', log:'第②步：第一问把曲线下方到 x 轴的面积写成积分', count:1, ribbon:{k:2,  ok:true} },
+    { cls:'ok',   tag:'倒代换', log:'第③步：令 x 等于 t 分之一，根号里的式子提出来，被积式大幅化简', count:2, ribbon:{k:3,  ok:true} },
+    { cls:'ok',   tag:'变限',   log:'第④步：x 从 1 到无穷，对应 t 从 1 到 0 的正侧，方向反过来', count:3, ribbon:{k:4,  ok:true} },
+    { cls:'ok',   tag:'算面积', log:'第⑤步：用对数形式的原函数代上下限，面积等于 1 加根号 2 的对数', count:4, ribbon:{k:5,  ok:true} },
+    { cls:'ok',   tag:'写体积', log:'第⑥步：第二问绕 x 轴转，圆盘法把纵坐标平方后积分', count:5, ribbon:{k:6,  ok:true} },
+    { cls:'ok',   tag:'拆分式', log:'第⑦步：分母是 x 平方乘 1 加 x 平方，拆成两个简单分式之差', count:6, ribbon:{k:7,  ok:true} },
+    { cls:'ok',   tag:'积分',   log:'第⑧步：两项分别积分，原函数是负的 x 分之一减反正切', count:7, ribbon:{k:8,  ok:true} },
+    { cls:'ok',   tag:'代上限', log:'第⑨步：x 趋于无穷时，第一项归零，反正切趋于二分之派', count:8, ribbon:{k:9,  ok:true} },
+    { cls:'done', tag:'完成',   log:'第⑩步：上限减下限，整理得派乘 1 减四分之派，两问全部完成', count:9, ribbon:{k:10, ok:true}, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    for (var j = 0; j < rowEls.length; j++){
+      rowEls[j].className = 'aw-stepcard' + (j < i ? ' good' : (j === i ? ' key' : ''));
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: "$S=\\ln(\\sqrt2+1),\\qquad V=\\pi\\Big(1-\\frac\\pi4\\Big)$",
+    html: "按问结论：<b>(1) $S=\\ln(\\sqrt2+1)$；(2) $V=\\pi\\big(1-\\frac\\pi4\\big)$</b>。记忆锚点：<b>倒代换 $x=\\frac1t$ 专治 $\\frac{1}{x\\sqrt{1+x^2}}$ 型</b>，把无穷限变成有限限 $[0,1]$；$\\frac{1}{x^2(1+x^2)}$ 拆分后两项原函数分别是 $-\\frac1x$ 与 $-\\arctan x$。易错：代换后忘写 $\\lvert t\\rvert$；上下限方向弄反；上限处 $\\arctan x$ 的极限是 $\\frac\\pi2$ 不是 $1$。",
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

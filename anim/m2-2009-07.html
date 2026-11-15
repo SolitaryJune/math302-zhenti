@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2009·07 分块反对角矩阵的伴随</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改 AW.init 区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [];
+
+var LINES = [
+  "<p><b>主公式</b>：$\\boldsymbol M^*=|\\boldsymbol M|\\,\\boldsymbol M^{-1}$，其中 $\\boldsymbol M=\\begin{pmatrix}O&A\\\\B&O\\end{pmatrix}$，$|A|=2$、$|B|=3$（$A,B$ 均 2 阶）。</p>",
+  "<p><b>行列式</b>：反对角分块 $|\\boldsymbol M|=(-1)^{n^2}|A|\\,|B|$，$n=2$ 时 $(-1)^4=1$：$$|\\boldsymbol M|=2\\times3=6$$</p>",
+  "<p><b>求逆</b>（分块乘法可验证 $\\boldsymbol M\\boldsymbol M^{-1}=E$）：$$\\boldsymbol M^{-1}=\\begin{pmatrix}O&B^{-1}\\\\A^{-1}&O\\end{pmatrix}$$</p>",
+  "<p><b>代入主公式</b>：$$\\boldsymbol M^*=6\\,\\boldsymbol M^{-1}=\\begin{pmatrix}O&6B^{-1}\\\\6A^{-1}&O\\end{pmatrix}$$</p>",
+  "<p><b>换成伴随</b>：$B^{-1}=\\dfrac{B^*}{|B|}=\\dfrac{B^*}{3}$，$A^{-1}=\\dfrac{A^*}{|A|}=\\dfrac{A^*}{2}$，故 $6B^{-1}=2B^*$，$6A^{-1}=3A^*$。</p>",
+  "<p><b>结论</b>：$$\\boldsymbol M^*=\\begin{pmatrix}O&2B^*\\\\3A^*&O\\end{pmatrix}$$与选项 B 一致。</p>"
+];
+
+AW.init({
+  title: '分块反对角矩阵 $\\begin{pmatrix}O&A\\\\B&O\\end{pmatrix}$ 的伴随矩阵',
+  subtitle: '考点：矩阵运算（伴随） · 方法：$\\boldsymbol M^*=|\\boldsymbol M|\\,\\boldsymbol M^{-1}$ 三步走',
+  counterLabel: '步数',
+  intro: '点击「▶ 播放」逐步演示每一步推导。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    ROWS.length = 0;
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    for(var k = 0; k < LINES.length; k++){
+      var d = AW.el('div', '', LINES[k]);
+      d.style.cssText = 'margin:8px 0;padding:9px 14px;border-left:3px solid #e2e8f0;background:#f8fafc;border-radius:0 12px 12px 0;font-size:14.5px;line-height:1.9;display:none;';
+      board.appendChild(d);
+      ROWS.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  render: function(stage, sn){
+    for(var k = 0; k < ROWS.length; k++){
+      var r = ROWS[k];
+      if(k >= sn.show){ r.style.display = 'none'; continue; }
+      r.style.display = 'block';
+      if(k === sn.show - 1 && !sn.done){
+        r.style.borderLeftColor = '#d97706';
+        r.style.background = '#fffbeb';
+      } else {
+        r.style.borderLeftColor = '#16a34a';
+        r.style.background = '#f8fafc';
+      }
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  snaps: [
+    { cls:'shift', tag:'审题',   log:'伴随用万能公式 M* = |M|·M逆，先算行列式再求逆', show:1, count:0 },
+    { cls:'step',  tag:'行列式', log:'n=2 时符号项 (−1)⁴ = 1，行列式为 6', show:2, count:1 },
+    { cls:'step',  tag:'求逆',   log:'反对角阵的逆仍是反对角：两块互换并各自取逆', show:3, count:2 },
+    { cls:'step',  tag:'代公式', log:'乘 6 后，右上与左下分别是 6B⁻¹ 与 6A⁻¹', show:4, count:3 },
+    { cls:'ok',    tag:'换伴随', log:'除以各块行列式：6/3 = 2 配 B*，6/2 = 3 配 A*', show:5, count:4 },
+    { cls:'done',  tag:'完成',   log:'结论：右上 2B*、左下 3A*，选 B', show:6, count:5, done:true },
+  ],
+
+  result: {
+    big: '选 B',
+    html: '记忆锚点：<b>$\\boldsymbol M^*=|\\boldsymbol M|\\boldsymbol M^{-1}$，系数 = $|\\boldsymbol M|$ 除以对应块的行列式</b>。所以 $2$ 配 $B^*$、$3$ 配 $A^*$；选项 A 恰好把系数配反，C 里还混进了未取伴随的 $B$。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

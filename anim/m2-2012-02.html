@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2012·02 乘积函数的导数 f′(0)</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改 AW.init 区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [];   // 推导板的持久 DOM 行
+
+var LINES = [
+  "<p><b>拆因子</b>：记 $g_k(x)=\\mathrm{e}^{kx}-k$，则 $f(x)=g_1(x)\\,g_2(x)\\cdots g_n(x)$。</p>",
+  "<p><b>代值找零因子</b>：$g_1(0)=\\mathrm{e}^{0}-1=0$；而 $g_k(0)=1-k\\neq0\\ (k=2,\\dots,n)$。零因子<b>只有</b> $g_1$。</p>",
+  "<p><b>乘积法则展开</b>：$$f'(x)=\\sum_{j=1}^{n}g_j'(x)\\prod_{i\\neq j}g_i(x)$$代 $x=0$ 时逐项检查。</p>",
+  "<p><b>筛死项</b>：$j\\ge2$ 的项里连乘 $\\prod_{i\\neq j}g_i(0)$ 仍含 $g_1(0)=0$，整项 $=0$——全部阵亡。</p>",
+  "<p><b>只剩一项存活</b>：$$f'(0)=g_1'(0)\\cdot\\prod_{k=2}^{n}g_k(0)$$</p>",
+  "<p><b>算 $g_1'$</b>：$g_1'(x)=\\mathrm{e}^{x}$，故 $g_1'(0)=1$。</p>",
+  "<p><b>算连乘</b>：$\\prod_{k=2}^{n}(1-k)=(-1)(-2)\\cdots\\big(-(n-1)\\big)$，共 $n-1$ 个负因子、绝对值 $(n-1)!$，即 $(-1)^{\\,n-1}(n-1)!$。</p>",
+  "<p><b>验算 $n=2$</b>：$f(x)=(\\mathrm{e}^{x}-1)(\\mathrm{e}^{2x}-2)$，$f'(0)=1\\cdot(1-2)+0=-1=(-1)^{1}\\cdot1!$，公式吻合 ✓</p>",
+  "<p><b>结论</b>：$f'(0)=(-1)^{\\,n-1}(n-1)!$，<b>选 A</b>。</p>"
+];
+
+AW.init({
+  title: '乘积函数求导：$f(x)=(\\mathrm{e}^{x}-1)(\\mathrm{e}^{2x}-2)\\cdots(\\mathrm{e}^{nx}-n)$',
+  subtitle: '考点：乘积求导法则 · 方法：找零因子 → 封杀死项 → 只算存活项',
+  counterLabel: '已推演',
+  intro: '点击「▶ 播放」逐步演示每一步推导。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    ROWS.length = 0;
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    for(var k = 0; k < LINES.length; k++){
+      var d = AW.el('div', '', LINES[k]);
+      d.style.cssText = 'margin:8px 0;padding:9px 14px;border-left:3px solid #e2e8f0;background:#f8fafc;border-radius:0 12px 12px 0;font-size:14.5px;line-height:1.9;display:none;';
+      board.appendChild(d);
+      ROWS.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  render: function(stage, sn){
+    for(var k = 0; k < ROWS.length; k++){
+      var r = ROWS[k];
+      if(k >= sn.show){ r.style.display = 'none'; continue; }
+      r.style.display = 'block';
+      if(k === sn.show - 1 && !sn.done){
+        r.style.borderLeftColor = '#d97706';
+        r.style.background = '#fffbeb';
+      } else {
+        r.style.borderLeftColor = '#16a34a';
+        r.style.background = '#f8fafc';
+      }
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  snaps: [
+    { cls:'shift', tag:'拆因子',  log:'n 个因子相乘，记 g_k = e^{kx} − k，准备代值', show:1, count:0 },
+    { cls:'step',  tag:'找零因子', log:'x=0 处只有第一个因子为零：g_1(0)=0，其余 g_k(0)=1−k 非零', show:2, count:1 },
+    { cls:'step',  tag:'展开',    log:'乘积法则：n 项求和，每项求导一个因子、其余取值', show:3, count:2 },
+    { cls:'miss',  tag:'筛死项',  log:'只要不导第一个因子，连乘里就含 g_1(0)=0，整项为零', show:4, count:3 },
+    { cls:'ok',    tag:'存活项',  log:'只剩求导第一个因子那一项：f′(0) = g₁′(0) × 后面连乘', show:5, count:4 },
+    { cls:'ok',    tag:'算导数',  log:'g₁′ = e^x，在 0 处取值为 1', show:6, count:5 },
+    { cls:'ok',    tag:'算连乘',  log:'(−1)(−2)⋯(−(n−1))：n−1 个负号，绝对值 (n−1)!', show:7, count:6 },
+    { cls:'step',  tag:'验算',    log:'n=2 时 f′(0)=−1，与公式 (−1)¹·1! 一致', show:8, count:7 },
+    { cls:'done',  tag:'完成',    log:'结论：f′(0) = (−1)^(n−1)(n−1)!，选 A', show:9, count:8, done:true },
+  ],
+
+  result: {
+    big: 'f′(0) = (−1)^(n−1)·(n−1)!（选 A）',
+    html: '记忆锚点：<b>零因子封杀死项</b>——$g_1(0)=0$ 让所有「没导 $g_1$」的乘积项归零。负因子共 $n-1$ 个、绝对值 $(n-1)!$，故 $f\'(0)=(-1)^{n-1}(n-1)!$。易错：符号写成 $(-1)^n$（B、D）或阶乘写成 $n!$（C、D）。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2014·17 对称性二重积分</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改 AW.init 区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [];
+
+var LINES = [
+  "<p><b>审题</b>：$D=\\{1\\le x^2+y^2\\le4,\\ x\\ge0,\\ y\\ge0\\}$ 是第一象限的圆环（$r\\in[1,2]$，$\\theta\\in\\left[0,\\tfrac\\pi2\\right]$），关于直线 $y=x$ 对称。被积函数 $\\dfrac{x\\sin\\bigl(\\pi\\sqrt{x^2+y^2}\\bigr)}{x+y}$ 中 $\\sin(\\pi r)$ 交换 $x,y$ 不变，<b>只有 $\\dfrac{x}{x+y}$ 不对称</b>。</p>",
+  "<p><b>交换 $x,y$</b>：区域不变，$$I=\\iint_D\\frac{y\\sin\\bigl(\\pi\\sqrt{x^2+y^2}\\bigr)}{x+y}\\,\\mathrm dx\\,\\mathrm dy.$$</p>",
+  "<p><b>两式相加</b>：分子 $x$ 变成 $x+y$，分母恰好消掉：$$2I=\\iint_D\\sin\\bigl(\\pi\\sqrt{x^2+y^2}\\bigr)\\,\\mathrm dx\\,\\mathrm dy.$$</p>",
+  "<p><b>化极坐标</b>：$x=r\\cos\\theta,\\ y=r\\sin\\theta$，面积元带雅可比 $r$：$$2I=\\int_0^{\\pi/2}\\mathrm d\\theta\\int_1^2 r\\sin(\\pi r)\\,\\mathrm dr=\\frac{\\pi}{2}\\int_1^2 r\\sin(\\pi r)\\,\\mathrm dr.$$</p>",
+  "<p><b>分部积分</b>：$$\\int r\\sin(\\pi r)\\,\\mathrm dr=-\\frac{r\\cos(\\pi r)}{\\pi}+\\frac{\\sin(\\pi r)}{\\pi^2}.$$</p>",
+  "<p><b>代上下限</b>：$r=2$：$-\\dfrac{2\\cos2\\pi}{\\pi}+0=-\\dfrac2\\pi$；$r=1$：$-\\dfrac{\\cos\\pi}{\\pi}+0=\\dfrac1\\pi$。故 $$\\int_1^2 r\\sin(\\pi r)\\,\\mathrm dr=-\\frac2\\pi-\\frac1\\pi=-\\frac3\\pi.$$</p>",
+  "<p><b>符号检查</b>：$r\\in[1,2]$ 时 $\\pi r\\in[\\pi,2\\pi]$，$\\sin(\\pi r)\\le0$，积分值为负是合理的。</p>",
+  "<p><b>收尾</b>：$$2I=\\frac{\\pi}{2}\\cdot\\left(-\\frac{3}{\\pi}\\right)=-\\frac32\\quad\\Longrightarrow\\quad I=\\boxed{-\\frac34}.$$</p>"
+];
+
+AW.init({
+  title: "对称性消分母，极坐标收尾",
+  subtitle: "考点：二重积分 · 区域关于 $y=x$ 对称 · 极坐标（2014 年数学二第 17 题）",
+  counterLabel: "推导步",
+  ribbonTitle: "关键节点（✓ 已完成）",
+  intro: "点击「▶ 播放」逐步演示对称性技巧与极坐标计算。",
+
+  build: function(stage){
+    stage.innerHTML = '';
+    ROWS.length = 0;
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    for(var k = 0; k < LINES.length; k++){
+      var d = AW.el('div', '', LINES[k]);
+      d.style.cssText = 'margin:8px 0;padding:9px 14px;border-left:3px solid #e2e8f0;background:#f8fafc;border-radius:0 12px 12px 0;font-size:14.5px;line-height:1.9;display:none;';
+      board.appendChild(d);
+      ROWS.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  render: function(stage, sn){
+    for(var k = 0; k < ROWS.length; k++){
+      var r = ROWS[k];
+      if(k >= sn.show){ r.style.display = 'none'; continue; }
+      r.style.display = 'block';
+      if(k === sn.show - 1 && !sn.done){
+        r.style.borderLeftColor = '#d97706';
+        r.style.background = '#fffbeb';
+      } else {
+        r.style.borderLeftColor = '#16a34a';
+        r.style.background = '#f8fafc';
+      }
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  snaps: [
+    { cls:"shift", tag:"审题",     log:"区域是第一象限的圆环，关于对角线对称，只有分子里的 x 不对称", show:1, count:0 },
+    { cls:"step",  tag:"交换变量", log:"把 x 和 y 互换重写一遍积分，区域和正弦因子都不变", show:2, count:1 },
+    { cls:"ok",    tag:"相加",     log:"两个式子相加，分子凑成 x 加 y，分母正好消掉", show:3, count:2, ribbon:{k:1, ok:true} },
+    { cls:"ok",    tag:"极坐标",   log:"化成极坐标，角度积出二分之派，剩下径向的定积分", show:4, count:3, ribbon:{k:2, ok:true} },
+    { cls:"step",  tag:"分部积分", log:"被积函数是 r 乘正弦，分部积分一次写成原函数", show:5, count:4 },
+    { cls:"ok",    tag:"代限",     log:"上限给出负的 2 比派，下限给出正的 1 比派，差是负的 3 比派", show:6, count:5, ribbon:{k:3, ok:true} },
+    { cls:"step",  tag:"符号检查", log:"角在派到两派之间正弦非正，负答案正常", show:7, count:6 },
+    { cls:"done",  tag:"完成",     log:"乘二分之派再除以二，最终结果是负四分之三", show:8, count:7, done:true },
+  ],
+
+  result: {
+    big: "$I=-\\dfrac{3}{4}$",
+    html: "记忆锚点：<b>区域关于 $y=x$ 对称 + 被积函数只差 $\\frac{x}{x+y}$ 不对称 → 交换 $x,y$ 相加消分母</b>。$2I=\\iint_D\\sin(\\pi r)\\,\\mathrm dA=\\frac\\pi2\\int_1^2 r\\sin(\\pi r)\\,\\mathrm dr=-\\frac32$。易错：极坐标漏乘雅可比 $r$；$\\sin(\\pi r)$ 在 $[1,2]$ 上非正，负答案正常。",
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

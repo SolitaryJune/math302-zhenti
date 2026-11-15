@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2016·01 三个无穷小量按阶数排序</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_concept_template.html，只改题目专属区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+// 一张推理卡片（body 里可写 $..$ / $$..$$ 公式）
+function card(n, cls, title, body){
+  return '<div class="aw-stepcard ' + (cls || '') + '"><h4><span class="n">' + n +
+         '</span>' + title + '</h4>' + body + '</div>';
+}
+
+// 推理链：每一步的完整内容（引擎按步数截取显示）
+var STEPS = [
+  { title: '审题眼：比阶 = 比幂次',
+    cls: 'key',
+    tag: '方法',
+    body: '<p>当 $x\\to0^+$，把每个无穷小的主部写成 $C\\,x^{p}$（$C\\neq0$）。<b>幂次 $p$ 越小，趋于零越慢，阶数越低</b>。手头三件标准等价：$\\cos u-1\\sim-\\dfrac{u^2}{2}$、$\\ln(1+u)\\sim u$、$(1+u)^a-1\\sim au$。</p>',
+    log: '把三个量逐个标定成 C·x^p，再按 p 排序' },
+  { title: '标定 α₁：二阶',
+    cls: 'step',
+    tag: 'α₁',
+    body: '<p>$\\cos\\sqrt{x}-1\\sim-\\dfrac{(\\sqrt{x})^2}{2}=-\\dfrac{x}{2}$，注意外面还挂着因子 $x$：$$\\alpha_1=x\\cdot\\Big(-\\frac{x}{2}\\Big)=-\\frac{x^2}{2},\\qquad p_1=2.$$</p>',
+    log: 'cos√x−1 是一阶，乘外因子 x 后 α₁ 是二阶' },
+  { title: '标定 α₂：5/6 阶（最低）',
+    cls: 'key',
+    tag: 'α₂',
+    body: '<p>$\\ln(1+\\sqrt[3]{x})\\sim x^{\\frac13}$，幂次相加：$$\\alpha_2=x^{\\frac12}\\cdot x^{\\frac13}=x^{\\frac56},\\qquad p_2=\\frac56.$$</p>',
+    log: '幂次相加 1/2 + 1/3 = 5/6，三者中最低' },
+  { title: '标定 α₃：一阶',
+    cls: 'step',
+    tag: 'α₃',
+    body: '<p>$\\alpha_3=(1+x)^{\\frac13}-1\\sim\\dfrac{1}{3}x$，即 $p_3=1$。</p>',
+    log: 'α₃ 是标准一阶无穷小' },
+  { title: '排序定答案',
+    cls: 'good',
+    tag: '排序',
+    ribbon: {k:1, ok:true},
+    body: '<p>$p_2=\\dfrac56<p_3=1<p_1=2$，从低阶到高阶为 $\\alpha_2,\\ \\alpha_3,\\ \\alpha_1$——恰是选项 <b>B</b>。</p>',
+    log: '5/6 < 1 < 2：α₂, α₃, α₁，选 B' },
+  { title: '干扰项复盘',
+    cls: 'bad',
+    tag: '防坑',
+    body: '<p><b>A</b>：把 $\\alpha_1$ 当最低阶——漏乘了外面的 $x$。<b>C</b>：$\\alpha_2$ 判对了，却把 2 阶的 $\\alpha_1$ 排在 1 阶的 $\\alpha_3$ 前。<b>D</b>：起点就错，$\\alpha_3$（1 阶）不是最低，$\\alpha_2$（$\\frac56$ 阶）才是。</p>',
+    log: '三个干扰项全是「阶数标错 / 排序方向反」' },
+  { title: '结论',
+    cls: 'good',
+    tag: '完成',
+    body: '<p>答案选 <b>B</b>。记忆锚点：先化主部 $C\\,x^p$，<b>幂次小的阶低</b>；乘积因子幂次相加、复合（$\\cos\\sqrt x$）先平方。</p>',
+    log: '选 B：α₂ → α₃ → α₁' },
+];
+
+var snaps = STEPS.map(function(s, i){
+  return {
+    cls: i === STEPS.length - 1 ? 'done' : 'step',
+    tag: s.tag || ('第 ' + (i + 1) + ' 步'),
+    log: s.log || s.title,
+    count: i + 1,
+    ribbon: s.ribbon,
+    html: STEPS.slice(0, i + 1).map(function(x, j){
+      return card(j + 1, x.cls, x.title, x.body);
+    }).join(''),
+    done: i === STEPS.length - 1,
+  };
+});
+
+AW.init({
+  title: '$x\\to0^+$ 时 $\\alpha_1,\\alpha_2,\\alpha_3$ 从低阶到高阶的排序',
+  subtitle: '考点：无穷小阶数比较 · 方法：主部标定 $C\\,x^p$ → 幂次排序',
+  counterLabel: '推理步',
+  ribbonTitle: '排序结果（✓ 低→高）',
+  intro: '点击「▶ 播放」逐步展开推理链。',
+  render: function(stage, sn){
+    if(sn.html != null) stage.innerHTML = sn.html;
+    renderMathAfterSnap(stage);
+  },
+  snaps: snaps,
+  result: {
+    big: '答案 B（α₂ → α₃ → α₁）',
+    html: '记忆锚点：<b>比阶先化主部</b>——$\\alpha_1=-\\frac{x^2}{2}$（2 阶）、$\\alpha_2=x^{\\frac56}$（$\\frac56$ 阶）、$\\alpha_3=\\frac x3$（1 阶）；幂次 $\\frac56<1<2$。易错：$\\cos\\sqrt x-1$ 外面还有个 $x$ 别漏乘。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

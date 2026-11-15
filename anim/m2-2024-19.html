@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2024·19 旋转体体积的最值：变限积分求导</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+<style>
+.mb-line{border:1px solid #e2e8f0;border-radius:12px;padding:10px 14px;margin:8px 0;background:#fff;font-size:14.5px;line-height:1.9;transition:all .25s}
+.mb-line.act{border-color:#d97706;background:#fffbeb;box-shadow:0 2px 8px rgba(217,119,6,.14)}
+.mb-line.past{opacity:.7}
+.mb-title{font-size:12.5px;color:#64748b;font-weight:700;margin-bottom:2px}
+.mb-signrow{display:flex;gap:10px;flex-wrap:wrap;margin:6px 0}
+.mb-sign{border-radius:10px;padding:6px 12px;font-size:13.5px;border:2px solid #cbd5e1;background:#f8fafc}
+.mb-sign.up{border-color:#16a34a;background:#f6fef9}
+.mb-sign.down{border-color:#dc2626;background:#fff8f8}
+</style>
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+var SECS = [
+  { t: '第一步 · 圆盘法写出体积',
+    h: '<p>曲边 $y=\\sqrt x\\,\\mathrm e^{-x}$ 在 $[t,2t]$ 绕 $x$ 轴旋转，截面是半径 $y$ 的圆盘：</p>' +
+       '$$V(t)=\\pi\\int_t^{2t}y^2\\,\\mathrm dx=\\pi\\int_t^{2t}\\big(\\sqrt x\\,\\mathrm e^{-x}\\big)^2\\mathrm dx=\\pi\\int_t^{2t}x\\,\\mathrm e^{-2x}\\,\\mathrm dx$$' },
+  { t: '第二步 · 变限积分求导公式',
+    h: '<p>上下限都含 $t$，不必先积分，直接用公式（上限 $2t$ 求导<b>乘 2</b>）：</p>' +
+       '$$\\frac{\\mathrm d}{\\mathrm dt}\\int_t^{2t}f(x)\\,\\mathrm dx=2f(2t)-f(t),\\qquad f(x)=x\\,\\mathrm e^{-2x}$$' },
+  { t: '第三步 · 求出 $V\'(t)$',
+    h: '$$V\'(t)=\\pi\\big[2\\cdot 2t\\,\\mathrm e^{-4t}-t\\,\\mathrm e^{-2t}\\big]=\\pi t\\,\\mathrm e^{-4t}\\big(4-\\mathrm e^{2t}\\big)$$' +
+       '<p>提出公因子 $\\pi t\\,\\mathrm e^{-4t}$（$t>0$ 时恒为正），符号由 $4-\\mathrm e^{2t}$ 决定。</p>' },
+  { t: '第四步 · 找驻点',
+    h: '<p>令 $4-\\mathrm e^{2t}=0$：$\\mathrm e^{2t}=4=\\mathrm e^{2\\ln2}$，</p>' +
+       '$$t=\\frac{\\ln4}{2}=\\ln 2$$' },
+  { t: '第五步 · 判号定最大值',
+    h: '<div class="mb-signrow">' +
+       '<span class="mb-sign up">$0<t<\\ln2$：$\\mathrm e^{2t}<4$，$V\'>0$ ↗ 递增</span>' +
+       '<span class="mb-sign down">$t>\\ln2$：$\\mathrm e^{2t}>4$，$V\'<0$ ↘ 递减</span></div>' +
+       '<p>先增后减、驻点唯一 → $t=\\ln2$ 是<b>最大值点</b>。</p>' },
+  { t: '第六步 · 分部积分算原函数',
+    h: '<p>$u=x,\\ \\mathrm dv=\\mathrm e^{-2x}\\mathrm dx$：</p>' +
+       '$$\\int x\\,\\mathrm e^{-2x}\\,\\mathrm dx=-\\frac{x}{2}\\mathrm e^{-2x}-\\frac14\\mathrm e^{-2x}=-\\frac{2x+1}{4}\\,\\mathrm e^{-2x}+C$$' },
+  { t: '第七步 · 写出 $V(t)$ 的表达式',
+    h: '$$V(t)=\\pi\\left[-\\frac{2x+1}{4}\\mathrm e^{-2x}\\right]_t^{2t}=\\frac\\pi4\\Big[(2t+1)\\mathrm e^{-2t}-(4t+1)\\mathrm e^{-4t}\\Big]$$' },
+  { t: '第八步 · 代入 $t=\\ln 2$',
+    h: '<p>$\\mathrm e^{-2t}=\\mathrm e^{-2\\ln2}=\\dfrac14$，$\\mathrm e^{-4t}=\\dfrac1{16}$：</p>' +
+       '$$V(\\ln2)=\\frac\\pi4\\left[\\frac{2\\ln2+1}{4}-\\frac{4\\ln2+1}{16}\\right]=\\frac\\pi{64}\\Big[4(2\\ln2+1)-(4\\ln2+1)\\Big]$$' },
+  { t: '结论',
+    h: '<p>方括号内 $=8\\ln2+4-4\\ln2-1=4\\ln2+3$：</p>' +
+       '$$V_{\\max}=V(\\ln2)=\\frac\\pi{64}(4\\ln2+3)=\\frac\\pi{16}\\ln2+\\frac{3\\pi}{64}$$' },
+];
+
+var snaps = [
+  { cls:'step',  tag:'建模', log:'圆盘法：体积等于 pi 乘以 y 平方从 t 到 2t 的积分，被积函数化简为 x 乘 e 的负 2x', count:0 },
+  { cls:'shift', tag:'求导', log:'上下限都含 t，用变限积分求导公式，上限 2t 求导要乘 2', count:1, ribbon:{k:1, ok:true} },
+  { cls:'step',  tag:'化简', log:'提出恒正的公因子，导数符号完全由 4 减 e 的 2t 次方决定', count:2 },
+  { cls:'ok',    tag:'驻点', log:'令 4 减 e 的 2t 次方为零，解出驻点 t 等于 ln2', count:3, ribbon:{k:2, ok:true} },
+  { cls:'ok',    tag:'判号', log:'驻点左侧导数为正、右侧为负，先增后减，最大值在 ln2 处', count:4, ribbon:{k:3, ok:true} },
+  { cls:'shift', tag:'积分', log:'分部积分一次：原函数是负的 2x 加 1 除以 4，再乘 e 的负 2x', count:5 },
+  { cls:'step',  tag:'表达式', log:'代上下限相减，得到 V(t) 的显式表达式', count:6 },
+  { cls:'step',  tag:'代入', log:'把 t 等于 ln2 代入：两个指数因子分别是四分之一和十六分之一', count:7 },
+  { cls:'done',  tag:'完成', log:'化简得最大值：64 分之 pi 乘以 4 ln2 加 3', count:8, done:true, ribbon:{k:4, ok:true} },
+];
+
+AW.init({
+  title: '【2024·19】$V(t)=\\pi\\int_t^{2t}x\\mathrm e^{-2x}\\mathrm dx$ 的最大值',
+  subtitle: '考点：旋转体体积（圆盘法）· 变限积分求导 · 最值',
+  counterLabel: '已完成',
+  intro: '点击「▶ 播放」逐步演示：建模 → 求导 → 驻点 → 判号 → 代回。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    this._board = AW.el('div', '');
+    wrap.appendChild(this._board);
+    stage.appendChild(wrap);
+  },
+
+  render: function(stage, sn, i){
+    var b = this._board;
+    b.innerHTML = '';
+    for(var k = 0; k <= i && k < SECS.length; k++){
+      var cur = (k === Math.min(i, SECS.length - 1));
+      b.appendChild(AW.el('div', 'mb-line' + (cur ? ' act' : ' past'),
+        '<div class="mb-title">' + SECS[k].t + '</div>' + SECS[k].h));
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  snaps: snaps,
+
+  result: {
+    big: '$V_{\\max}=\\dfrac\\pi{16}\\ln 2+\\dfrac{3\\pi}{64}$（在 $t=\\ln2$ 取得）',
+    html: '<p>记忆锚点：$\\dfrac{\\mathrm d}{\\mathrm dt}\\displaystyle\\int_t^{2t}f\\,\\mathrm dx=2f(2t)-f(t)$ —— <b>上限是 $2t$ 必须乘 2</b>，漏了它驻点会错成 $\\frac12\\ln2$。</p>' +
+          '<p>易错：$y^2=x\\,\\mathrm e^{-2x}$（指数是 $-2x$）；下最大值结论要交代导数变号（先增后减），不能只给驻点。</p>',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

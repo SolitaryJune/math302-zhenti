@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2009·10 反常积分定参</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改 AW.init 区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [];
+
+var LINES = [
+  "<p><b>偶函数化简</b>：$\\mathrm e^{k|x|}$ 关于 $y$ 轴对称：$$\\int_{-\\infty}^{+\\infty}\\mathrm e^{k|x|}\\,\\mathrm dx=2\\int_0^{+\\infty}\\mathrm e^{kx}\\,\\mathrm dx$$</p>",
+  "<p><b>收敛性定符号</b>：只有 $k<0$ 时 $\\mathrm e^{kx}\\to0\\ (x\\to+\\infty)$，积分才收敛；$k\\ge0$ 时积分发散，等式不可能成立。</p>",
+  "<p><b>算积分</b>（$k<0$）：$$\\int_0^{+\\infty}\\mathrm e^{kx}\\,\\mathrm dx=\\left[\\frac{\\mathrm e^{kx}}{k}\\right]_0^{+\\infty}=0-\\frac{1}{k}=-\\frac{1}{k}$$</p>",
+  "<p><b>解方程</b>：原积分 $=2\\cdot\\Big(-\\dfrac{1}{k}\\Big)=-\\dfrac{2}{k}$，令 $$-\\frac{2}{k}=1\\ \\Longrightarrow\\ k=-2$$</p>",
+  "<p><b>验算</b>：$k=-2$ 时 $2\\displaystyle\\int_0^{+\\infty}\\mathrm e^{-2x}\\,\\mathrm dx=2\\cdot\\dfrac{1}{2}=1$，与题设一致。</p>"
+];
+
+AW.init({
+  title: '已知 $\\int_{-\\infty}^{+\\infty}\\mathrm e^{k|x|}\\,\\mathrm dx=1$，求 $k$',
+  subtitle: '考点：反常积分 · 方法：偶函数化简 → 收敛性定符号 → 算积分解方程',
+  counterLabel: '步数',
+  intro: '点击「▶ 播放」逐步演示每一步推导。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    ROWS.length = 0;
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    for(var k = 0; k < LINES.length; k++){
+      var d = AW.el('div', '', LINES[k]);
+      d.style.cssText = 'margin:8px 0;padding:9px 14px;border-left:3px solid #e2e8f0;background:#f8fafc;border-radius:0 12px 12px 0;font-size:14.5px;line-height:1.9;display:none;';
+      board.appendChild(d);
+      ROWS.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  render: function(stage, sn){
+    for(var k = 0; k < ROWS.length; k++){
+      var r = ROWS[k];
+      if(k >= sn.show){ r.style.display = 'none'; continue; }
+      r.style.display = 'block';
+      if(k === sn.show - 1 && !sn.done){
+        r.style.borderLeftColor = '#d97706';
+        r.style.background = '#fffbeb';
+      } else {
+        r.style.borderLeftColor = '#16a34a';
+        r.style.background = '#f8fafc';
+      }
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  snaps: [
+    { cls:'shift', tag:'偶函数', log:'绝对值函数是偶函数，全轴积分等于右半轴的两倍', show:1, count:0 },
+    { cls:'ok',    tag:'收敛性', log:'指数上的 k 必须小于 0，否则积分发散', show:2, count:1 },
+    { cls:'step',  tag:'算积分', log:'原函数 e^(kx)/k，上限代入为 0，得 −1/k', show:3, count:2 },
+    { cls:'ok',    tag:'解方程', log:'−2/k = 1，解出 k = −2', show:4, count:3 },
+    { cls:'done',  tag:'完成',   log:'验算 2×1/2 = 1 成立，答案 k = −2', show:5, count:4, done:true },
+  ],
+
+  result: {
+    big: '$k = -2$',
+    html: '记忆锚点：<b>$\\int_0^{+\\infty}\\mathrm e^{kx}\\,\\mathrm dx$ 收敛 $\\Leftrightarrow\\ k<0$，值为 $-\\dfrac{1}{k}$</b>；不先判收敛，$k\\ge0$ 时「等于 1」根本无从谈起。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

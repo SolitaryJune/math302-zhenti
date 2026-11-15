@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2018·03 两分段函数之和在全轴连续定参数</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改 AW.init 区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [];
+
+var LINES = [
+  "<p><b>第一步：先把 $h=f+g$ 逐段相加拼出来</b>$$h(x)=\\begin{cases}1-ax, & x\\le-1,\\\\ -1+x, & -1<x<0,\\\\ x+1-b, & x\\ge0.\\end{cases}$$ 三段都是多项式（初等函数），段内必连续——只需检查两个拼接点 $x=-1$ 与 $x=0$。</p>",
+  "<p><b>第二步：在 $x=-1$ 处列方程（用相邻两段）</b>$$\\text{左极限}=1-a(-1)=1+a,\\qquad \\text{右极限}=-1+(-1)=-2$$ 令其相等：$$1+a=-2\\ \\Longrightarrow\\ a=-3.$$</p>",
+  "<p><b>第三步：在 $x=0$ 处列方程（注意 $f$ 在此跳变）</b>$$\\text{左极限}=-1+0=-1,\\qquad \\text{右极限}=0+1-b=1-b$$ 令其相等：$$-1=1-b\\ \\Longrightarrow\\ b=2.$$</p>",
+  "<p><b>第四步：验证</b>$$h(-1)=-2\\ (\\text{两段衔接})，\\qquad h(0)=-1\\ (\\text{两段衔接})$$ 全轴连续成立，没有第三处可疑点。</p>",
+  "<p><b>排错</b>：A、B 的 $a=3$ 使 $x=-1$ 处左极限 $=4\\ne-2$，不连续；C 的 $b=1$ 使 $x=0$ 处右值 $=0\\ne-1$，不连续。</p>",
+  "<p><b>结论</b>$$a=-3,\\ b=2\\quad(\\text{答案 D})$$ $a$ 只归 $x=-1$ 管，$b$ 只归 $x=0$ 管，两个方程互相独立。</p>"
+];
+
+AW.init({
+  title: '$f+g$ 在 $\\mathbf R$ 上连续：拼接点列方程定 $a,b$',
+  subtitle: '考点：分段函数连续性 · 方法：拼接点左右极限对齐',
+  counterLabel: '推导步',
+  intro: '点击「▶ 播放」：拼出 h → 两个拼接点列方程 → 验证。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    ROWS.length = 0;
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    for(var k = 0; k < LINES.length; k++){
+      var d = AW.el('div', '', LINES[k]);
+      d.style.cssText = 'margin:8px 0;padding:9px 14px;border-left:3px solid #e2e8f0;background:#f8fafc;border-radius:0 12px 12px 0;font-size:14.5px;line-height:1.9;display:none;';
+      board.appendChild(d);
+      ROWS.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  render: function(stage, sn){
+    for(var k = 0; k < ROWS.length; k++){
+      var r = ROWS[k];
+      if(k >= sn.show){ r.style.display = 'none'; continue; }
+      r.style.display = 'block';
+      if(k === sn.show - 1 && !sn.done){
+        r.style.borderLeftColor = '#d97706';
+        r.style.background = '#fffbeb';
+      } else {
+        r.style.borderLeftColor = '#16a34a';
+        r.style.background = '#f8fafc';
+      }
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  snaps: [
+    { cls:'shift', tag:'拼接',   log:'f 与 g 逐段相加，h 分三段，段内自动连续', show:1, count:0 },
+    { cls:'step',  tag:'x=-1',   log:'左极限 1+a，右极限 -2，相等得 a=-3', show:2, count:1, ribbon:{k:1, ok:true} },
+    { cls:'step',  tag:'x=0',    log:'f 在 0 处从 -1 跳到 1：-1=1-b，得 b=2', show:3, count:2, ribbon:{k:2, ok:true} },
+    { cls:'ok',    tag:'验证',   log:'h(-1)=-2、h(0)=-1 两处衔接，全轴连续', show:4, count:3 },
+    { cls:'miss',  tag:'排错',   log:'a=3 左极限 4；b=1 右值 0，都断', show:5, count:4, ribbon:{k:3, ok:false} },
+    { cls:'done',  tag:'完成',   log:'a=-3、b=2，选 D', show:6, count:5, done:true, ribbon:{k:4, ok:true} },
+  ],
+
+  result: {
+    big: '答案 D：$a=-3,\\ b=2$',
+    html: '记忆锚点：<b>分段连续 = 拼接点对齐</b>。先把 $f+g$ 逐段拼好再取极限，千万别只对 $g$ 列方程——$f$ 在 $x=0$ 从 $-1$ 跳到 $1$，必须整体考虑。两个方程互相独立：$x=-1$ 定 $a$，$x=0$ 定 $b$。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

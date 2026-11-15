@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2018·09 中值定理 + 夹逼求极限</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改 AW.init 区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [];
+
+var LINES = [
+  "<p><b>第一步：识别 $\\infty\\cdot0$ 型</b>$$x^2\\to+\\infty,\\qquad \\arctan(x+1)-\\arctan x\\to0$$ 两处 $\\arctan$ 都趋于 $\\dfrac\\pi2$，谁也代替不了谁——「都趋于 $\\dfrac\\pi2$ 所以差为 0」不够用，必须定量处理相邻函数值之差。</p>",
+  "<p><b>第二步：拉格朗日中值定理化差为导数</b>对 $f(t)=\\arctan t$（$f\'(t)=\\dfrac1{1+t^2}$）在 $[x,\\,x+1]$ 上：$$\\arctan(x+1)-\\arctan x=f\'(\\xi)\\cdot\\big[(x+1)-x\\big]=\\frac1{1+\\xi^2},\\qquad x<\\xi<x+1.$$ 区间长度恰为 1，差变成一个分式。</p>",
+  "<p><b>第三步：搭夹逼</b>由 $x<\\xi<x+1$ 得 $1+x^2<1+\\xi^2<1+(x+1)^2$，取倒数放大缩小（$x>0$）：$$\\frac{x^2}{1+(x+1)^2}<\\frac{x^2}{1+\\xi^2}<\\frac{x^2}{1+x^2}.$$</p>",
+  "<p><b>第四步：两端取极限</b>$$\\lim_{x\\to+\\infty}\\frac{x^2}{1+x^2}=1,\\qquad \\lim_{x\\to+\\infty}\\frac{x^2}{1+(x+1)^2}=1\\quad(\\text{分母最高次同为 } x^2)$$ 由夹逼定理，原式 $=1$。</p>",
+  "<p><b>第五步：换口径验算（等价无穷小）</b>$$\\arctan(x+1)-\\arctan x=\\arctan\\frac1{1+x(x+1)}\\sim\\frac1{1+x^2+x}$$ $$x^2\\cdot\\frac1{1+x^2+x}\\to1\\quad\\checkmark\\ \\text{两种方法一致}$$</p>",
+  "<p><b>结论</b>$$\\lim_{x\\to+\\infty}x^2\\big[\\arctan(x+1)-\\arctan x\\big]=1\\quad(\\text{填 } 1)$$ 相近函数值之差 = 中值定理；带未知点 $\\xi$ = 夹逼。</p>"
+];
+
+AW.init({
+  title: '$\\lim_{x\\to+\\infty}x^2\\big[\\arctan(x+1)-\\arctan x\\big]$',
+  subtitle: '考点：拉格朗日中值定理 · 夹逼定理 · 方法：化差为导数再夹逼',
+  counterLabel: '推导步',
+  intro: '点击「▶ 播放」：识别型 → 中值定理 → 夹逼 → 验算。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    ROWS.length = 0;
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    for(var k = 0; k < LINES.length; k++){
+      var d = AW.el('div', '', LINES[k]);
+      d.style.cssText = 'margin:8px 0;padding:9px 14px;border-left:3px solid #e2e8f0;background:#f8fafc;border-radius:0 12px 12px 0;font-size:14.5px;line-height:1.9;display:none;';
+      board.appendChild(d);
+      ROWS.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  render: function(stage, sn){
+    for(var k = 0; k < ROWS.length; k++){
+      var r = ROWS[k];
+      if(k >= sn.show){ r.style.display = 'none'; continue; }
+      r.style.display = 'block';
+      if(k === sn.show - 1 && !sn.done){
+        r.style.borderLeftColor = '#d97706';
+        r.style.background = '#fffbeb';
+      } else {
+        r.style.borderLeftColor = '#16a34a';
+        r.style.background = '#f8fafc';
+      }
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  snaps: [
+    { cls:'shift', tag:'识别类型', log:'∞·0 型：x² 发散、arctan 差趋于 0，需定量', show:1, count:0 },
+    { cls:'step',  tag:'中值定理', log:'在 [x, x+1] 用 MVT：差 = 1/(1+ξ²)，x<ξ<x+1', show:2, count:1, ribbon:{k:1, ok:true} },
+    { cls:'step',  tag:'搭夹逼',   log:'1+x² < 1+ξ² < 1+(x+1)²，倒数放缩', show:3, count:2, ribbon:{k:2, ok:true} },
+    { cls:'ok',    tag:'夹逼定值', log:'两端都 →1，夹逼得原式 = 1', show:4, count:3, ribbon:{k:3, ok:true} },
+    { cls:'ok',    tag:'验算',     log:'arctan 差化为 arctan(1/(1+x(x+1))) ∼ 1/(1+x²+x)，也得 1', show:5, count:4 },
+    { cls:'done',  tag:'完成',     log:'填空答案：1', show:6, count:5, done:true, ribbon:{k:4, ok:true} },
+  ],
+
+  result: {
+    big: '填空答案：$1$',
+    html: '记忆锚点：<b>相邻函数值之差用中值定理</b>（区间长度 1 直接进公式），差里带未知点 $\\xi$ 就用<b>夹逼</b>收尾。别用洛必达硬算，也别只说「两个 arctan 都趋于 $\\dfrac\\pi2$」——$0\\cdot\\infty$ 必须定量。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

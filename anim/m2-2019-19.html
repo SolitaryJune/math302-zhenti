@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2019·19 曲线与 x 轴围面积（等比级数）</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [
+  "$$y=\\mathrm{e}^{-x}\\sin x\\ (x\\ge0)\\ \\text{与}\\ x\\ \\text{轴之间的面积}\\qquad\\text{正负相间，必须分块取绝对值}$$",
+  "<b>① 分块：</b>在 $[k\\pi,(k+1)\\pi]$ 上 $\\sin x$ 不变号，第 $k$ 块面积 $A_k=\\left|\\displaystyle\\int_{k\\pi}^{(k+1)\\pi}\\mathrm{e}^{-x}\\sin x\\,\\mathrm{d}x\\right|$；数二问法先求 $S_n=\\sum_{k=0}^{n-1}A_k$",
+  "<b>② 原函数（两次分部积分，原式重现后移项）：</b>$$\\int \\mathrm{e}^{-x}\\sin x\\,\\mathrm{d}x=-\\frac12\\,\\mathrm{e}^{-x}\\left(\\sin x+\\cos x\\right)+C$$",
+  "<b>③ 端点代入：</b>$\\sin k\\pi=0,\\ \\cos k\\pi=(-1)^k$ → $F(k\\pi)=-\\tfrac12(-1)^k\\mathrm{e}^{-k\\pi}$，作差取绝对值：$$A_k=\\frac12\\,\\mathrm{e}^{-k\\pi}\\left(1+\\mathrm{e}^{-\\pi}\\right)$$",
+  "<b>④ 认出等比结构：</b>$A_{k+1}/A_k=\\mathrm{e}^{-\\pi}<1$——衰减因子让各块面积构成公比 $\\mathrm{e}^{-\\pi}$ 的等比数列",
+  "<b>⑤ 有限和（数二问法）：</b>$$S_n=\\frac12\\left(1+\\mathrm{e}^{-\\pi}\\right)\\cdot\\frac{1-\\mathrm{e}^{-n\\pi}}{1-\\mathrm{e}^{-\\pi}}$$",
+  "<b>⑥ 取极限（等价于无穷等比求和）：</b>$n\\to\\infty$ 时 $\\mathrm{e}^{-n\\pi}\\to0$：$$S=\\frac12\\cdot\\frac{1+\\mathrm{e}^{-\\pi}}{1-\\mathrm{e}^{-\\pi}}=\\frac12\\cdot\\frac{\\mathrm{e}^{\\pi}+1}{\\mathrm{e}^{\\pi}-1}$$",
+  "<b>⑦ 拆项成最终形态：</b>$$S=\\frac{\\mathrm{e}^{\\pi}+1}{2\\left(\\mathrm{e}^{\\pi}-1\\right)}=\\frac{\\left(\\mathrm{e}^{\\pi}-1\\right)+2}{2\\left(\\mathrm{e}^{\\pi}-1\\right)}=\\frac12+\\frac{1}{\\mathrm{e}^{\\pi}-1}$$"
+];
+
+AW.init({
+  title: '2019·19　$y=\\mathrm{e}^{-x}\\sin x$ 与 $x$ 轴围成的面积',
+  subtitle: '考点：分块面积取绝对值 · 两次分部积分 · 等比数列求和与极限',
+  counterLabel: '已完成',
+  ribbonTitle: '推导进度（✓ 完成）',
+  intro: '点击「▶ 播放」或「下一步」，分块算面积、认等比、再求和取极限。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var inner = AW.el('div', '');
+    inner.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>：当前行亮琥珀色，已完成的行变绿'));
+    this._rows = [];
+    for (var i = 0; i < ROWS.length; i++){
+      var r = AW.el('div', 'aw-stepcard', ROWS[i]);
+      inner.appendChild(r);
+      this._rows.push(r);
+    }
+    wrap.appendChild(inner);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step',  tag:'审题',   log:'曲线正负相间地穿过 x 轴，面积要逐块取绝对值再相加', count:0, ribbon:{k:1, ok:true} },
+    { cls:'step',  tag:'分块',   log:'每个半周期是一块，第 k 块从 k 派 到 k 加一派', count:1, ribbon:{k:2, ok:true} },
+    { cls:'ok',    tag:'原函数', log:'两次分部积分后原式重现，移项解出原函数', count:2, ribbon:{k:3, ok:true} },
+    { cls:'ok',    tag:'算块',   log:'端点值代入作差取绝对值，每块是首块乘 e 的负 k 派', count:3, ribbon:{k:4, ok:true} },
+    { cls:'ok',    tag:'认等比', log:'相邻两块之比恒为 e 的负派，公比小于一收敛', count:4, ribbon:{k:5, ok:true} },
+    { cls:'ok',    tag:'有限和', log:'数二问法先写前 n 块的和，等比公式直接套', count:5, ribbon:{k:6, ok:true} },
+    { cls:'ok',    tag:'取极限', log:'n 趋于无穷时 e 的负 n 派消失，剩下无穷等比和', count:6, ribbon:{k:7, ok:true} },
+    { cls:'done',  tag:'完成',   log:'结论：拆项得二分之一加 e 派减一分之一', count:7, ribbon:{k:8, ok:true}, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    var rows = this._rows;
+    for (var j = 0; j < rows.length; j++){
+      rows[j].className = 'aw-stepcard' + (j < i ? ' good' : (j === i ? ' key' : ''));
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: "$S=\\lim_{n\\to\\infty}S_n=\\dfrac12+\\dfrac{1}{\\mathrm{e}^{\\pi}-1}$",
+    html: "记忆锚点：<b>与 $x$ 轴围面积必须分块取绝对值；衰减振荡的块面积成等比数列</b>。易错：直接积 $\\int_0^{+\\infty}$ 得到的是带符号代数和（$\\tfrac12$），不是面积；分部积分不移动项原地打转；首项误写成 $\\tfrac12$。",
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

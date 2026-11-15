@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2016·06 求偏导并验证 f′ₓ + f′ᵧ = f</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改题目专属区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+// 推导板各行：与 snaps 一一对应（build 建立、render 按 i 点亮）
+var ROWS = [
+  { label: '第 0 步 · 审题',
+    h: '<p>$f(x,y)=\\dfrac{\\mathrm e^x}{x-y}$。目标：算出 $f_x\',\\ f_y\'$，验证四个组合式哪条成立。记 $u=x-y$，把 $f$ 写成 $\\mathrm e^x u^{-1}$。</p>' },
+  { label: '第 1 步 · 对 x 求偏导（乘积法则）',
+    h: '<p>$\\mathrm e^x$ 与 $u^{-1}$ 都随 $x$ 变：$$f_x\'=\\mathrm e^x u^{-1}+\\mathrm e^x\\cdot(-u^{-2})\\cdot1=\\frac{\\mathrm e^x}{x-y}-\\frac{\\mathrm e^x}{(x-y)^2}.$$</p>' },
+  { label: '第 2 步 · 对 y 求偏导（只有幂在动）',
+    h: '<p>$\\mathrm e^x$ 不含 $y$，只对 $u^{-1}$ 链式求导，内导 $\\partial_y u=-1$：$$f_y\'=\\mathrm e^x\\cdot(-u^{-2})\\cdot(-1)=\\frac{\\mathrm e^x}{(x-y)^2}.$$ 幂导的 $-$ 与内导的 $-$ 抵消，符号为正。</p>' },
+  { label: '第 3 步 · 求和：平方项互消',
+    h: '<p>$$f_x\'+f_y\'=\\frac{\\mathrm e^x}{x-y}-\\frac{\\mathrm e^x}{(x-y)^2}+\\frac{\\mathrm e^x}{(x-y)^2}=\\frac{\\mathrm e^x}{x-y}=f.$$</p>' },
+  { label: '第 4 步 · 顺手排除 A/C（求差）',
+    h: '<p>$$f_x\'-f_y\'=\\frac{\\mathrm e^x}{x-y}-\\frac{2\\mathrm e^x}{(x-y)^2},$$ 既不等于 $0$ 也不等于 $f$，A、C 出局。</p>' },
+  { label: '第 5 步 · 结论',
+    h: '<p>$f_x\'+f_y\'=f$ 成立，<b>选 D</b>。</p>' },
+];
+
+var rowEls = [];
+
+AW.init({
+  title: '$f(x,y)=\\dfrac{\\mathrm e^x}{x-y}$ 的偏导组合 $f_x\'+f_y\'$',
+  subtitle: '考点：多元函数偏导 · 方法：幂形式 → 乘积/链式法则 → 验组合',
+  counterLabel: '步骤',
+  intro: '点击「▶ 播放」逐步演示推导板上的六步计算。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    rowEls = [];
+    var wrap = AW.el('div', 'aw-scroll');
+    ROWS.forEach(function(r){
+      var d = AW.el('div', '');
+      d.style.cssText = 'padding:9px 14px;margin:8px 0;border-left:4px solid transparent;border-radius:10px;opacity:.15;transition:opacity .35s,background .35s,border-color .35s;';
+      d.innerHTML = '<div style="font-size:12.5px;color:#64748b;font-weight:700;margin-bottom:2px">' + r.label + '</div>' + r.h;
+      wrap.appendChild(d);
+      rowEls.push(d);
+    });
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step', tag:'审题',   log:'写成 e^x·(x−y)⁻¹，认清对 x、对 y 各自谁在动', count:0 },
+    { cls:'step', tag:'∂x',     log:'乘积法则两项：e^x/(x−y) − e^x/(x−y)²', count:1 },
+    { cls:'ok',   tag:'∂y',     log:'幂导 −1 与内导 −1 抵消，得 +e^x/(x−y)²', count:2 },
+    { cls:'ok',   tag:'求和',   log:'两块平方项正好互消，和等于 f 本身', count:3 },
+    { cls:'miss', tag:'排除',   log:'求差得含 2/(x−y)² 的式子，A/C 出局', count:4 },
+    { cls:'done', tag:'完成',   log:'fₓ′ + fᵧ′ = f，选 D', count:5, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    rowEls.forEach(function(d, j){
+      d.style.opacity = j <= i ? '1' : '.15';
+      d.style.borderLeftColor = j < i ? '#16a34a' : (j === i ? '#d97706' : 'transparent');
+      d.style.background = j === i ? '#fffbeb' : (j < i ? '#f6fef9' : 'transparent');
+    });
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '选 D：fₓ′ + fᵧ′ = f',
+    html: '记忆锚点：<b>$f_y\'$ 的符号由「幂导 $\\times$ 内导」双负抵消定为正</b>，于是 $f_x\'+f_y\'$ 中平方项互消、恰好剩 $f$。易错：$f_x\'$ 漏掉 $\\mathrm e^x$ 那一项（B 的坑）、$\\partial_y(x-y)^{-1}$ 符号写负（A 的坑）。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

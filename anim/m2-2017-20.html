@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2017·20 二重积分：对称性 + 极坐标</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+AW.init({
+  title: '2017·20　$D=\\{x^{2}+y^{2}\\le2y\\}$，求 $\\iint\\limits_{D}(x+1)^{2}\\,\\mathrm{d}x\\mathrm{d}y$',
+  subtitle: '考点：二重积分 · 方法：对称性拆项 → 极坐标 → 点火公式',
+  counterLabel: '已完成',
+  ribbonTitle: '推导进度（✓ 完成）',
+  intro: '点击「▶ 播放」或「下一步」，三块拆开逐个击破。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var inner = AW.el('div', '');
+    inner.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>：当前行亮琥珀色，已完成的行变绿'));
+    var LINES = [
+      "$$D:\\ x^{2}+y^{2}\\le2y\\ \\Longleftrightarrow\\ x^{2}+(y-1)^{2}\\le1\\quad(\\text{圆心}(0,1),\\ r=1,\\ \\text{关于}\\ y\\ \\text{轴对称})$$",
+      "<b>① 展开：</b>$(x+1)^{2}=x^{2}+2x+1$，三块分治",
+      "<b>② 奇函数归零：</b>$D$ 关于 $y$ 轴对称而 $2x$ 是 $x$ 的奇函数 $\\Rightarrow\\displaystyle\\iint_D2x\\,\\mathrm{d}x\\mathrm{d}y=0$",
+      "<b>③ 面积白捡：</b>$\\displaystyle\\iint_D1\\,\\mathrm{d}x\\mathrm{d}y=\\pi\\cdot1^{2}=\\pi$",
+      "<b>④ 极坐标：</b>边界 $x^{2}+y^{2}=2y\\Rightarrow r=2\\sin\\theta$，$\\theta\\in[0,\\pi]$；$x=r\\cos\\theta$，$\\mathrm{d}x\\mathrm{d}y=r\\,\\mathrm{d}r\\,\\mathrm{d}\\theta$",
+      "<b>⑤ 先积 $r$：</b>$\\displaystyle\\iint_Dx^{2}\\,\\mathrm{d}x\\mathrm{d}y=\\int_0^{\\pi}\\cos^{2}\\theta\\left[\\frac{r^{4}}{4}\\right]_0^{2\\sin\\theta}\\mathrm{d}\\theta=4\\int_0^{\\pi}\\sin^{4}\\theta\\cos^{2}\\theta\\,\\mathrm{d}\\theta$",
+      "<b>⑥ 对称折半：</b>被积函数关于 $\\theta=\\dfrac{\\pi}{2}$ 对称 $\\Rightarrow\\ 8\\displaystyle\\int_0^{\\pi/2}\\sin^{4}\\theta\\cos^{2}\\theta\\,\\mathrm{d}\\theta$",
+      "<b>⑦ 点火公式：</b>$\\displaystyle\\int_0^{\\pi/2}\\sin^{4}\\theta\\cos^{2}\\theta\\,\\mathrm{d}\\theta=\\frac{3\\cdot1\\cdot1}{6\\cdot4\\cdot2}\\cdot\\frac{\\pi}{2}=\\frac{\\pi}{32}\\ \\Rightarrow\\ 8\\cdot\\frac{\\pi}{32}=\\frac{\\pi}{4}$",
+      "<b>⑧ 合并：</b>$$\\iint_D(x+1)^{2}\\,\\mathrm{d}x\\mathrm{d}y=\\frac{\\pi}{4}+0+\\pi=\\frac{5\\pi}{4}$$"
+    ];
+    this._rows = [];
+    for (var i = 0; i < LINES.length; i++){
+      var r = AW.el('div', 'aw-stepcard', LINES[i]);
+      inner.appendChild(r);
+      this._rows.push(r);
+    }
+    wrap.appendChild(inner);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step',  tag:'认域', log:'配方后看出：圆心在纵轴上一、半径为一的圆盘，左右对称', count:0, ribbon:{k:1, ok:true} },
+    { cls:'shift', tag:'拆项', log:'平方展开成三块：x 平方、二 x、一，逐个处理', count:1, ribbon:{k:2, ok:true} },
+    { cls:'ok',    tag:'归零', log:'区域左右对称，二 x 是奇函数，这项直接为零', count:2, ribbon:{k:3, ok:true} },
+    { cls:'ok',    tag:'面积', log:'常数项的积分就是圆盘面积，白捡一个派', count:3, ribbon:{k:4, ok:true} },
+    { cls:'ok',    tag:'换极', log:'边界化成 r 等于二倍 sin theta，角度从零到派，别忘乘 r', count:4, ribbon:{k:5, ok:true} },
+    { cls:'ok',    tag:'积 r', log:'r 的三次方先积，上限代入得四倍 sin 四次方 cos 平方', count:5, ribbon:{k:6, ok:true} },
+    { cls:'step',  tag:'折半', log:'被积函数关于二分之派对称，积分区间折半、系数加倍', count:6, ribbon:{k:7, ok:true} },
+    { cls:'ok',    tag:'点火', log:'点火公式：降二连乘比上总次数降二连乘，再乘二分之派，得三十二分之派', count:7, ribbon:{k:8, ok:true} },
+    { cls:'ok',    tag:'合并', log:'四分之派加零加派，合为四分之五派', count:8, ribbon:{k:9, ok:true} },
+    { cls:'done',  tag:'完成', log:'结论：二重积分等于四分之五派', count:9, ribbon:{k:10, ok:true}, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    var rows = this._rows;
+    for (var j = 0; j < rows.length; j++){
+      rows[j].className = 'aw-stepcard' + (j < i ? ' good' : (j === i ? ' key' : ''));
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '$\\iint_D(x+1)^{2}\\,\\mathrm{d}x\\mathrm{d}y=\\dfrac{5\\pi}{4}$',
+    html: '记忆锚点：<b>圆 $x^{2}+y^{2}=2ay\\Rightarrow r=2a\\sin\\theta$；$=2ax\\Rightarrow r=2a\\cos\\theta$</b>，且 $\\mathrm{d}x\\mathrm{d}y=r\\,\\mathrm{d}r\\,\\mathrm{d}\\theta$ 别丢 $r$。流程：先查对称性扔奇函数项 → 面积项直接写 → 剩下一项点火公式。验算路：平移成单位圆，$\\iint x^{2}=\\dfrac12\\iint r^{2}=\\dfrac{\\pi}{4}$。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

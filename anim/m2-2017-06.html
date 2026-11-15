@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2017·06 速度曲线面积与追及时刻</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改 AW.init 区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [];
+var BOXES = [];
+
+/* 四个里程碑上「乙净落后甲的距离」（含初始 10 m 差距） */
+var MILES = [
+  { t: '计时开始 t=0', v: '落后 10', cap: '甲先跑 10 m', cls: 'dim' },
+  { t: '第一块末',     v: '落后 20', cap: '甲快，又拉开 10', cls: '' },
+  { t: '第二块末',     v: '追平 0',  cap: '乙快，补回 20', cls: 'ok' },
+  { t: '第三块末',     v: '乙反超 3', cap: '甲又快 3（已无关）', cls: 'dim' }
+];
+
+var LINES = [
+  "<p><b>建模</b>：速度曲线下面积 = 路程。设 $g(t)=\\displaystyle\\int_0^t(v_2-v_1)\\,\\mathrm{d}\\tau$ 为乙比甲<b>多跑</b>的路程，即两曲线之间<b>带符号</b>的面积：乙快取正、甲快取负。起跑时甲在乙前方 $10$ m，故 $$\\text{追上}\\iff g(t_0)=10.$$</p>",
+  "<p><b>第一块（甲快，面积 10）</b>：对 $g$ 的贡献是 $-10$，累计 $g=-10$；加上初始 $10$ m，乙净落后 $20$ m——越落越远，谈不上追上。</p>",
+  "<p><b>第二块（乙快，面积 20）</b>：贡献 $+20$，累计 $g=-10+20=10$。$g$ 恰好在本块结束时达到 $10$——乙补回初始差距，追上时刻就是两曲线第二次相交处：$$t_0=25.$$</p>",
+  "<p><b>第三块（甲快，面积 3）</b>：发生在追上<b>之后</b>，累计 $g$ 从 $10$ 降到 $7$（乙反超变甲反超 3 m），不影响 $t_0$。</p>",
+  "<p><b>逐项排除</b>：A（$t_0=10$）还在甲快段，$g<0$ 落差扩大；B（$15<t_0<20$）第二块中途 $g$ 未到 $10$，差距未补平；D（$t_0>25$）之后 $g$ 只从 $10$ 往下减，追上条件不会再度成立。</p>",
+  "<p><b>结论</b>：追上 ⟺ 带符号面积累计到 $10$，恰在第二块结束发生，$t_0=25$，选 <b>C</b>。</p>"
+];
+
+AW.init({
+  title: '甲乙赛跑：三块阴影面积 10、20、3，求追上时刻 $t_0$',
+  subtitle: '考点：定积分应用（速度—路程） · 方法：带符号面积累计，追上 ⟺ 乙多跑 10 m',
+  counterLabel: '已执行',
+  intro: '点击「▶ 播放」逐步演示每一步推导。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    BOXES.length = 0; ROWS.length = 0;
+    var wrap = AW.el('div', 'aw-scroll');
+    var inner = AW.el('div', '');
+
+    var label = AW.el('div', 'aw-row-label',
+      '<b>里程碑仪表盘</b>——乙净落后甲的距离（含初始 10 m 差距）');
+    inner.appendChild(label);
+
+    var row = AW.el('div', '');
+    row.style.cssText = 'display:flex;gap:10px;margin:10px 0 14px;flex-wrap:wrap;';
+    MILES.forEach(function(m){
+      var col = AW.el('div', 'aw-col');
+      col.style.cssText = 'min-width:150px;text-align:center;';
+      var cap = AW.el('div', '', m.cap);
+      cap.style.cssText = 'font-size:12px;color:#64748b;margin-bottom:4px;';
+      var box = AW.el('div', 'aw-box' + (m.cls ? ' ' + m.cls : ''), m.v);
+      box.style.cssText = 'min-width:150px;padding:10px 8px;font-size:14px;';
+      var tl = AW.el('div', '', m.t);
+      tl.style.cssText = 'font-size:12.5px;color:#334155;margin-top:4px;font-weight:600;';
+      col.appendChild(cap); col.appendChild(box); col.appendChild(tl);
+      col.style.display = 'none';
+      row.appendChild(col);
+      BOXES.push(col);
+    });
+    inner.appendChild(row);
+
+    var board = AW.el('div', '');
+    for(var k = 0; k < LINES.length; k++){
+      var d = AW.el('div', '', LINES[k]);
+      d.style.cssText = 'margin:8px 0;padding:9px 14px;border-left:3px solid #e2e8f0;background:#f8fafc;border-radius:0 12px 12px 0;font-size:14.5px;line-height:1.9;display:none;';
+      board.appendChild(d);
+      ROWS.push(d);
+    }
+    inner.appendChild(board);
+    wrap.appendChild(inner);
+    stage.appendChild(wrap);
+    this._boxes = BOXES;
+    this._rows = ROWS;
+  },
+
+  render: function(stage, sn){
+    for(var b = 0; b < this._boxes.length; b++){
+      this._boxes[b].style.display = (b < sn.mile) ? 'flex' : 'none';
+    }
+    for(var k = 0; k < this._rows.length; k++){
+      var r = this._rows[k];
+      if(k >= sn.show){ r.style.display = 'none'; continue; }
+      r.style.display = 'block';
+      if(k === sn.show - 1 && !sn.done){
+        r.style.borderLeftColor = '#d97706';
+        r.style.background = '#fffbeb';
+      } else {
+        r.style.borderLeftColor = '#16a34a';
+        r.style.background = '#f8fafc';
+      }
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  snaps: [
+    { cls:'shift', tag:'建模',   log:'位移=面积；追上 ⟺ 乙比甲多跑 10 m（带符号面积累计）', mile:1, show:1, count:0 },
+    { cls:'step',  tag:'第一块', log:'甲快：贡献 −10，乙净落后拉大到 20 m', mile:2, show:2, count:1 },
+    { cls:'ok',    tag:'第二块', log:'乙快：贡献 +20，累计 g=10，恰好补回 10 m——追上，t0=25', mile:3, show:3, count:2 },
+    { cls:'step',  tag:'第三块', log:'甲又快 3 m，但发生在追上之后，不影响 t0', mile:4, show:4, count:3 },
+    { cls:'step',  tag:'排除',   log:'t=10 没追上、第二块中途没追上、t>25 不会再次追上', mile:4, show:5, count:4 },
+    { cls:'done',  tag:'完成',   log:'结论：t0 = 25，选 C', mile:4, show:6, count:5, done:true },
+  ],
+
+  result: {
+    big: '答案 C：$t_0=25$',
+    html: '记忆锚点：<b>追上 ⟺ 带符号面积累计 = 初始差距</b>。甲快段贡献为<b>负</b>（差距变大），乙快段为正；$10\\to-10\\to+10$ 的累计表是本题骨架。别忘了起跑时甲已领先 $10$ m。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

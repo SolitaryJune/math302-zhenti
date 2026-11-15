@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2015·03 分段振荡函数导函数的连续性</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_concept_template.html，只改题目专属区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+// 一张推理卡片（body 里可写 $..$ / $$..$$ 公式）
+function card(n, cls, title, body){
+  return '<div class="aw-stepcard ' + (cls || '') + '"><h4><span class="n">' + n +
+         '</span>' + title + '</h4>' + body + '</div>';
+}
+
+// 推理链：每一步的完整内容（引擎按步数截取显示）
+var STEPS = [
+  { title: '审题：连续 = 两个要求',
+    cls: 'key',
+    body: '<p>$f^{\\prime}(x)$ 在 $x=0$ 连续：① $f^{\\prime}(0)$ 存在；② $\\lim_{x\\to0}f^{\\prime}(x)=f^{\\prime}(0)$。$x\\le0$ 时 $f\\equiv0$，故左导数 $=0$，必须 $f^{\\prime}(0)=0$，真正门槛是右极限是否趋于 $0$。</p>',
+    log: '左导数为 0，关键看右极限是否趋于 0' },
+  { title: '验证 f′(0) 存在',
+    cls: 'step',
+    body: '<p>$f^{\\prime}(0)=\\lim_{x\\to0^+}\\dfrac{x^{\\alpha}\\cos\\frac{1}{x^{\\beta}}-0}{x}=\\lim_{x\\to0^+}x^{\\alpha-1}\\cos\\dfrac{1}{x^{\\beta}}$：有界 $\\times$ 幂，需 $\\alpha>1$ 才为 $0$（下面会看到该条件被自动满足）。</p>',
+    log: 'f′(0)=0 需要 α>1，稍后自动满足' },
+  { title: '求 x>0 一侧的 f′(x)',
+    cls: 'key',
+    body: '<p>$$f^{\\prime}(x)=\\alpha x^{\\alpha-1}\\cos\\frac{1}{x^{\\beta}}+\\beta x^{\\alpha-\\beta-1}\\sin\\frac{1}{x^{\\beta}},$$ 第二项来自 $\\Big(\\cos\\dfrac{1}{x^{\\beta}}\\Big)^{\\prime}=\\beta x^{-\\beta-1}\\sin\\dfrac{1}{x^{\\beta}}$ 再乘幂 $x^{\\alpha}$。</p>',
+    log: '两项的幂次分别是 α−1 与 α−β−1' },
+  { title: '逐项定临界条件',
+    cls: 'step',
+    body: '<p>$\\sin\\dfrac{1}{x^{\\beta}},\\ \\cos\\dfrac{1}{x^{\\beta}}$ 有界但振荡不趋零，靠幂次压制：第一项 $\\to0\\iff\\alpha>1$；第二项 $\\to0\\iff\\alpha-\\beta-1>0$，即 $\\alpha-\\beta>1$。由 $\\beta>0$，它已蕴含 $\\alpha>1$。</p>',
+    log: '临界条件：α−β>1（自动涵盖 α>1）' },
+  { title: '临界情形反证：α−β=1 不连续',
+    cls: 'bad',
+    body: '<p>若 $\\alpha-\\beta=1$：第二项恰为 $\\beta\\sin\\dfrac{1}{x^{\\beta}}$，振荡而不趋零，$\\lim_{x\\to0^+}f^{\\prime}(x)$ 不存在——$f^{\\prime}$ 在 $0$ 不连续，故 B（$0<\\alpha-\\beta\\le1$）不成立。</p>',
+    log: 'α−β=1 时第二项振荡，导函数不连续' },
+  { title: '核对四个选项',
+    cls: 'good',
+    body: '<p><b>A</b> $\\alpha-\\beta>1$：恰为充要条件。<b>B</b>：含 $\\alpha-\\beta\\le1$ 的坏情形。<b>C</b> $>2$：过强，漏掉 $1<\\alpha-\\beta\\le2$。<b>D</b> $\\le2$：包含 $\\alpha-\\beta\\le1$ 的不连续情形。</p>',
+    ribbon: {k:1, ok:true},
+    log: 'A 充要 ✓；B/C/D 均不成立' },
+  { title: '结论',
+    cls: 'good',
+    body: '<p>答案选 <b>A</b>。记忆锚点：振荡因子 $\\sin\\frac{1}{x^{\\beta}}$ 靠<b>幂次压制</b>才趋零——指数最低的那一项 $x^{\\alpha-\\beta-1}$ 决定临界线 $\\alpha-\\beta>1$。</p>',
+    log: '选 A：α−β>1' },
+];
+
+var snaps = STEPS.map(function(s, i){
+  return {
+    cls: i === STEPS.length - 1 ? 'done' : 'step',
+    tag: '第 ' + (i + 1) + ' 步',
+    log: s.log || s.title,
+    count: i + 1,
+    ribbon: s.ribbon,
+    html: STEPS.slice(0, i + 1).map(function(x, j){
+      return card(j + 1, x.cls, x.title, x.body);
+    }).join(''),
+    done: i === STEPS.length - 1,
+  };
+});
+
+AW.init({
+  title: '$f^{\\prime}(x)$ 在 $x=0$ 连续的充要条件（振荡型分段函数）',
+  subtitle: '考点：导数连续 · 振荡有界量 · 方法：拆两个要求 + 逐项看幂次压制',
+  counterLabel: '推理步',
+  ribbonTitle: '选项判定（✓ 充要 / ✗ 不成立）',
+  intro: '点击「▶ 播放」逐步展开推理链。',
+  render: function(stage, sn){
+    if(sn.html != null) stage.innerHTML = sn.html;
+    renderMathAfterSnap(stage);
+  },
+  snaps: snaps,
+  result: {
+    big: '答案 A（α−β>1）',
+    html: '记忆锚点：<b>谁指数最低谁说了算</b>——第二项 $\\beta x^{\\alpha-\\beta-1}\\sin\\frac{1}{x^{\\beta}}$ 的指数 $\\alpha-\\beta-1$ 必须为正；$\\alpha-\\beta=1$ 的临界情形第二项振荡不趋零，直接排除 B/C/D。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

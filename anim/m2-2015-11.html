@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2015·11 被积函数含 x 的变限积分求导</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改题目专属区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+// 推导板各行：与 snaps 一一对应（build 建立、render 按 i 点亮）
+var ROWS = [
+  { label: '第 0 步 · 审题：x 出现在两处',
+    h: '<p>$\\varphi(x)=\\int_0^{x^2} x f(t)\\,\\mathrm{d}t$：$x$ 既在<b>被积函数</b>里、又是<b>积分上限</b>的一部分——先把 $x$ 提出去再求导。</p>' },
+  { label: '第 1 步 · 提出因子 x，引入 G(u)',
+    h: '<p>记 $G(u)=\\int_0^u f(t)\\,\\mathrm{d}t$，则 $\\varphi(x)=x\\int_0^{x^2}f(t)\\,\\mathrm{d}t=x\\,G(x^2)$。</p>' },
+  { label: '第 2 步 · 用第一个条件 φ(1)=1',
+    h: '<p>$\\varphi(1)=1\\cdot G(1)=1\\ \\Longrightarrow\\ G(1)=\\int_0^1 f(t)\\,\\mathrm{d}t=1.$</p>' },
+  { label: '第 3 步 · 乘积法则 + 链式法则',
+    h: '<p>$$\\varphi^{\\prime}(x)=G(x^2)+x\\cdot G^{\\prime}(x^2)\\cdot 2x=G(x^2)+2x^2 f(x^2),$$ 其中 $G^{\\prime}(u)=f(u)$，上限 $x^2$ 的导数 $2x$ 别丢。</p>' },
+  { label: '第 4 步 · 代第二个条件 φ′(1)=5',
+    h: '<p>$\\varphi^{\\prime}(1)=G(1)+2f(1)=1+2f(1)=5.$</p>' },
+  { label: '第 5 步 · 解出 f(1)',
+    h: '<p>$2f(1)=4\\ \\Longrightarrow\\ f(1)=\\boxed{2}.$</p>' },
+];
+
+var rowEls = [];
+
+AW.init({
+  title: '$\\varphi(x)=\\int_0^{x^2} x f(t)\\,\\mathrm{d}t$，由 $\\varphi(1)=1,\\ \\varphi^{\\prime}(1)=5$ 求 $f(1)$',
+  subtitle: '考点：变限积分求导 · 方法：先提出 x → 乘积法则 + 链式法则 → 两条件联立',
+  counterLabel: '步骤',
+  intro: '点击「▶ 播放」逐步演示推导板上的六步计算。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    rowEls = [];
+    var wrap = AW.el('div', 'aw-scroll');
+    ROWS.forEach(function(r){
+      var d = AW.el('div', '');
+      d.style.cssText = 'padding:9px 14px;margin:8px 0;border-left:4px solid transparent;border-radius:10px;opacity:.15;transition:opacity .35s,background .35s,border-color .35s;';
+      d.innerHTML = '<div style="font-size:12.5px;color:#64748b;font-weight:700;margin-bottom:2px">' + r.label + '</div>' + r.h;
+      wrap.appendChild(d);
+      rowEls.push(d);
+    });
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step',  tag:'审题',   log:'x 在被积函数和上限两处出现，先整理再求导', count:0 },
+    { cls:'ok',    tag:'提出 x', log:'x 与 t 无关，提出积分号：φ(x)=x·G(x²)', count:1 },
+    { cls:'ok',    tag:'条件一', log:'φ(1)=G(1)=1，存下这个值备用', count:2 },
+    { cls:'shift', tag:'求导',   log:'乘积法则 + 上限链式（×2x）：φ′=G(x²)+2x²f(x²)', count:3 },
+    { cls:'ok',    tag:'条件二', log:'φ′(1)=G(1)+2f(1)=1+2f(1)=5', count:4 },
+    { cls:'done',  tag:'完成',   log:'解出 f(1)=2', count:5, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    rowEls.forEach(function(d, j){
+      d.style.opacity = j <= i ? '1' : '.15';
+      d.style.borderLeftColor = j < i ? '#16a34a' : (j === i ? '#d97706' : 'transparent');
+      d.style.background = j === i ? '#fffbeb' : (j < i ? '#f6fef9' : 'transparent');
+    });
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: 'f(1) = 2',
+    html: '记忆锚点：<b>被积函数里混有 x，先提出去再求导</b>；上限 $x^2$ 求导要带链式因子 $2x$；$\\varphi^{\\prime}(1)$ 里藏着的 $G(1)$ 正是条件一存的 $1$——两个条件就这样接上了头。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

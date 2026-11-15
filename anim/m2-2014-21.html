@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2014·21 绕 y=-1 的旋转体体积</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改 AW.init 区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [];
+
+var LINES = [
+  "<p><b>审题</b>：已知 $\\dfrac{\\partial f}{\\partial y}=2(y+1)$ 与 $f(y,y)=(y+1)^2-(2-y)\\ln y$，求 $f(x,y)=0$ 所围图形绕直线 $y=-1$ 旋转的体积。路线：<b>还原 $f$ → 认曲线 → 圆盘法</b>。</p>",
+  "<p><b>对 $y$ 积分</b>（$x$ 暂当常数）：$$f(x,y)=(y+1)^2+\\varphi(x).$$ 积分「常数」是只含 $x$ 的待定函数 $\\varphi$。</p>",
+  "<p><b>定 $\\varphi$</b>：令 $x=y$：$f(y,y)=(y+1)^2+\\varphi(y)$，与条件比较得 $\\varphi(y)=-(2-y)\\ln y$，即 $$\\varphi(x)=-(2-x)\\ln x,\\qquad f(x,y)=(y+1)^2-(2-x)\\ln x.$$</p>",
+  "<p><b>曲线方程</b>：$f=0$ 即 $$(y+1)^2=(2-x)\\ln x.$$ 要有实点须 $(2-x)\\ln x\\ge0$：$\\ln x\\ge0$ 给 $x\\ge1$，$2-x\\ge0$ 给 $x\\le2$，故 $1\\le x\\le2$。</p>",
+  "<p><b>区域形状</b>：对每个 $x$ 有上下两支 $y=-1\\pm\\sqrt{(2-x)\\ln x}$，关于直线 $y=-1$ 对称，两端在 $(1,-1)$、$(2,-1)$ 处相接——<b>一条闭合曲线</b>。平移 $y'=y+1$ 后就是绕新横轴的标准问题。</p>",
+  "<p><b>圆盘法</b>：旋转半径是到轴的距离 $R(x)=\\lvert y+1\\rvert=\\sqrt{(2-x)\\ln x}$：$$V=\\pi\\int_1^2(2-x)\\ln x\\,\\mathrm dx.$$</p>",
+  "<p><b>分部积分</b>：取 $u=\\ln x$，$\\mathrm dv=(2-x)\\,\\mathrm dx$，$v=2x-\\dfrac{x^2}2$：$$\\int_1^2(2-x)\\ln x\\,\\mathrm dx=\\Bigl[\\bigl(2x-\\tfrac{x^2}2\\bigr)\\ln x\\Bigr]_1^2-\\int_1^2\\Bigl(2-\\frac x2\\Bigr)\\mathrm dx.$$ 首项：$x=2$ 处为 $2\\ln2$，$x=1$ 处 $\\ln1=0$。</p>",
+  "<p><b>剩余积分</b>：$$\\int_1^2\\Bigl(2-\\frac x2\\Bigr)\\mathrm dx=\\Bigl[2x-\\frac{x^2}4\\Bigr]_1^2=3-\\frac74=\\frac54.$$ 故积分 $=2\\ln2-\\dfrac54$。</p>",
+  "<p><b>收尾</b>：$$V=\\pi\\left(2\\ln2-\\frac54\\right)\\approx0.43.$$ $2\\ln2\\approx1.386>\\dfrac54$，体积为正，合理。</p>"
+];
+
+AW.init({
+  title: "还原 $f(x,y)$，再算绕 $y=-1$ 的旋转体积",
+  subtitle: "考点：偏导还原函数 · 旋转体体积（圆盘法） · 分部积分（2014 年数学二第 21 题）",
+  counterLabel: "推导步",
+  ribbonTitle: "关键节点（✓ 已完成）",
+  intro: "点击「▶ 播放」逐步演示还原函数与体积计算。",
+
+  build: function(stage){
+    stage.innerHTML = '';
+    ROWS.length = 0;
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    for(var k = 0; k < LINES.length; k++){
+      var d = AW.el('div', '', LINES[k]);
+      d.style.cssText = 'margin:8px 0;padding:9px 14px;border-left:3px solid #e2e8f0;background:#f8fafc;border-radius:0 12px 12px 0;font-size:14.5px;line-height:1.9;display:none;';
+      board.appendChild(d);
+      ROWS.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  render: function(stage, sn){
+    for(var k = 0; k < ROWS.length; k++){
+      var r = ROWS[k];
+      if(k >= sn.show){ r.style.display = 'none'; continue; }
+      r.style.display = 'block';
+      if(k === sn.show - 1 && !sn.done){
+        r.style.borderLeftColor = '#d97706';
+        r.style.background = '#fffbeb';
+      } else {
+        r.style.borderLeftColor = '#16a34a';
+        r.style.background = '#f8fafc';
+      }
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  snaps: [
+    { cls:"shift", tag:"审题",   log:"先由偏导数和边界条件把二元函数还原出来", show:1, count:0 },
+    { cls:"step",  tag:"对 y 积分", log:"把 x 当常数对 y 积分，多出一个只含 x 的待定函数", show:2, count:1 },
+    { cls:"ok",    tag:"定函数", log:"令两个变量相等，与条件对照，待定函数是对数式", show:3, count:2, ribbon:{k:1, ok:true} },
+    { cls:"ok",    tag:"认曲线", log:"曲线方程要求对数与线性因子同号非负，横坐标限在一到二之间", show:4, count:3, ribbon:{k:2, ok:true} },
+    { cls:"step",  tag:"看区域", log:"上下两支关于直线对称，两端相接，是一条闭合曲线", show:5, count:4 },
+    { cls:"ok",    tag:"圆盘法", log:"旋转半径是点到轴的距离，体积是派乘半径平方的积分", show:6, count:5, ribbon:{k:3, ok:true} },
+    { cls:"step",  tag:"分部积分", log:"对数取作 u，首项在对数处留下 2 乘 ln2，下限处对数为零", show:7, count:6 },
+    { cls:"step",  tag:"剩余积分", log:"剩下的二次式积分等于四分之五，总积分是 2ln2 减四分之五", show:8, count:7 },
+    { cls:"done",  tag:"完成",   log:"乘上派得到体积，数值为正，验算合理", show:9, count:8, done:true },
+  ],
+
+  result: {
+    big: "$V=\\pi\\left(2\\ln2-\\dfrac54\\right)$",
+    html: "记忆锚点：<b>先对 $y$ 积分还原 $f=(y+1)^2+\\varphi(x)$，再用 $f(y,y)$ 定 $\\varphi$</b>；曲线 $(y+1)^2=(2-x)\\ln x$ 限在 $1\\le x\\le2$，绕 $y=-1$ 用圆盘法，半径 $\\sqrt{(2-x)\\ln x}$。易错：把旋转轴当 $x$ 轴（半径写成 $\\lvert y\\rvert$）；不讨论 $(2-x)\\ln x\\ge0$ 就乱定积分限。",
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

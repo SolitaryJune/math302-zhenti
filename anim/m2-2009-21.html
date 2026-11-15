@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2009 数二第 21 题 · 拉格朗日中值定理证明与导数极限定理（推理链动画）</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+// 一张推理卡片（body 里可写 $..$ / $$..$$ 公式）
+function card(n, cls, title, body){
+  return '<div class="aw-stepcard ' + (cls || '') + '"><h4><span class="n">' + n +
+         '</span>' + title + '</h4>' + body + '</div>';
+}
+
+// 推理链：每一步的完整内容（引擎按步数截取显示）
+var STEPS = [
+  { title: '审题眼：两问各考什么',
+    cls: 'key',
+    body: '<p>第(1)问是<b>教材定理的证明</b>：把拉格朗日中值定理化归为罗尔定理，核心动作是<b>构造辅助函数</b>让新函数在两端点取相等值。第(2)问是<b>导数极限定理</b>：单侧导数存在且等于导函数的极限，桥梁是<b>在变区间 $[0,x]$ 上用中值定理</b>。</p>' },
+  { title: '(1) 构造辅助函数——减去弦',
+    cls: 'key',
+    body: '<p>令曲线减去连接两端点的弦：</p><p>$$\\varphi(x)=f(x)-f(a)-\\frac{f(b)-f(a)}{b-a}(x-a).$$</p><p>它继承连续性与可导性，且 $\\varphi(a)=0$、$\\varphi(b)=f(b)-f(a)-\\dfrac{f(b)-f(a)}{b-a}(b-a)=0$——两端等值，罗尔定理的条件齐了。</p>' },
+  { title: '(1) 罗尔定理收尾',
+    cls: 'good',
+    body: '<p>存在 $\\xi\\in(a,b)$ 使 $\\varphi\'(\\xi)=0$，而 $\\varphi\'(x)=f\'(x)-\\dfrac{f(b)-f(a)}{b-a}$，故</p><p>$$f\'(\\xi)=\\frac{f(b)-f(a)}{b-a}\\quad\\Longleftrightarrow\\quad f(b)-f(a)=f\'(\\xi)(b-a).$$</p>' },
+  { title: '(2) 在 $[0,x]$ 上用中值定理架桥',
+    cls: 'key',
+    body: '<p>任取 $x\\in(0,\\delta)$：$f$ 在 $0$ 处<b>连续</b>、在 $(0,x]$ 上可导，所以在闭区间 $[0,x]$ 上满足拉格朗日条件——存在 $\\xi_x\\in(0,x)$ 使</p><p>$$\\frac{f(x)-f(0)}{x-0}=f\'(\\xi_x).$$</p><p>这一步把「差商」换成「某中间点的导数值」。</p>' },
+  { title: '(2) 夹逼 + 导数极限',
+    cls: 'good',
+    body: '<p>由 $0<\\xi_x<x$，$x\\to0^+$ 时夹逼得 $\\xi_x\\to0^+$。于是</p><p>$$f\'_+(0)=\\lim_{x\\to0^+}\\frac{f(x)-f(0)}{x}=\\lim_{x\\to0^+}f\'(\\xi_x)=\\lim_{t\\to0^+}f\'(t)=A.$$</p><p>最后一步用了题设 $\\lim\\limits_{x\\to0^+}f\'(x)=A$，所以 $f\'_+(0)$ 存在且等于 $A$。</p>' },
+  { title: '结论与记忆锚点',
+    cls: 'good',
+    body: '<p>(1) <b>减去弦</b>构造 $\\varphi$，化归罗尔定理；(2) 中值定理架桥 + 夹逼，得 $f\'_+(0)=A$。</p><p>易错：第(2)问不能跳过中值定理直接写 $\\lim f\'=A$——必须先把差商变成 $f\'(\\xi_x)$，再让 $\\xi_x$ 趋于 $0^+$。</p>' },
+];
+
+var snaps = STEPS.map(function(s, i){
+  return {
+    cls: i === STEPS.length - 1 ? 'done' : 'step',
+    tag: '第 ' + (i + 1) + ' 步',
+    log: s.title,
+    html: STEPS.slice(0, i + 1).map(function(x, j){
+      return card(j + 1, x.cls, x.title, x.body);
+    }).join(''),
+    done: i === STEPS.length - 1,
+  };
+});
+
+AW.init({
+  title: '2009·21　拉格朗日中值定理的证明 + 单侧导数的导数极限定理',
+  subtitle: '考点：罗尔定理化归 · 变区间 $[0,x]$ 上的中值定理 · 夹逼取极限',
+  intro: '点击「▶ 播放」逐步展开两问的证明推理链。',
+  /* 统一 render：复刻引擎默认的 sn.html 行为，再对舞台做公式渲染 */
+  render: function(stage, sn){
+    if(sn.html != null) stage.innerHTML = sn.html;
+    renderMathAfterSnap(stage);
+  },
+  snaps: snaps,
+  result: {
+    big: "(2) 结论：$f'_+(0)=A$",
+    html: '<p><b>(1)</b> 构造 $\\varphi(x)=f(x)-f(a)-\\dfrac{f(b)-f(a)}{b-a}(x-a)$，两端等值，罗尔定理收尾。</p><p><b>(2)</b> 在 $[0,x]$ 上用拉格朗日：差商 $=f\'(\\xi_x)$，夹逼得 $\\xi_x\\to0^+$，再用 $\\lim\\limits_{x\\to0^+}f\'(x)=A$。</p><p>记忆锚点：<b>证中值定理 = 减去弦；证单侧导数 = 中值定理架桥 + 夹逼 + 导数极限</b>。$f$ 在 $0$ 处连续是能用中值定理的前提。</p>',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

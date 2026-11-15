@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2021·02 分段点的连续、可导与极值判定</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改题目专属区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [
+  "<b>① 审题：</b>$f(x)=\\begin{cases}\\dfrac{\\mathrm{e}^x-1}{x},&x\\ne0\\\\1,&x=0\\end{cases}$——分段点 $x=0$ 处依次判：连续？可导？极值？",
+  "<b>② 连续性：</b>$\\displaystyle\\lim_{x\\to0}\\frac{\\mathrm{e}^x-1}{x}=1=f(0)$（重要极限），连续 ✓——但这只是入场券",
+  "<b>③ 回到导数定义：</b>分段点函数值单独定义，不能套求导公式：$f'(0)=\\displaystyle\\lim_{x\\to0}\\frac{\\frac{\\mathrm{e}^x-1}{x}-1}{x}=\\lim_{x\\to0}\\frac{\\mathrm{e}^x-1-x}{x^2}$",
+  "<b>④ 泰勒展开：</b>$\\mathrm{e}^x=1+x+\\dfrac{x^2}{2}+o(x^2)$，分子 $=\\dfrac{x^2}{2}+o(x^2)$（最低次是 $x^2$，必须展到这里）",
+  "<b>⑤ 定出导数：</b>$f'(0)=\\displaystyle\\lim_{x\\to0}\\frac{x^2/2+o(x^2)}{x^2}=\\dfrac12\\ne0$——可导成立，但导数不为零",
+  "<b>⑥ 排除 C：</b>导数确实存在，但 $f'(0)=\\dfrac12\\neq0$，不是「导数等于零」",
+  "<b>⑦ 排除 A、B（极值）：</b>费马定理——可导点取极值 $\\Rightarrow$ 导数为零；现在 $f'(0)=\\dfrac12$，故 $x=0$ 不是极值点",
+  "<b>⑧ 结论：</b>连续、可导、导数不为零、非极值——选 D"
+];
+
+AW.init({
+  title: '2021·02　$f(x)=\\dfrac{\\mathrm{e}^x-1}{x}$（补充定义 $f(0)=1$）在 $x=0$ 处的性质',
+  subtitle: '考点：导数定义 · 泰勒展开 $\\mathrm{e}^x=1+x+\\frac{x^2}{2}+o(x^2)$ · 费马定理',
+  counterLabel: '已推导',
+  ribbonTitle: '判定进度（✓ 完成）',
+  intro: '点击「▶ 播放」或「下一步」，先连续后可导，最后排除极值。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var inner = AW.el('div', '');
+    inner.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>：当前行亮琥珀色，已完成的行变绿'));
+    this._rows = [];
+    for (var i = 0; i < ROWS.length; i++){
+      var r = AW.el('div', 'aw-stepcard', ROWS[i]);
+      inner.appendChild(r);
+      this._rows.push(r);
+    }
+    wrap.appendChild(inner);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step',  tag:'审题',   log:'分段点三连问：连不连续、可不可导、是不是极值', count:0, ribbon:{k:1, ok:true} },
+    { cls:'ok',    tag:'连续',   log:'重要极限算出极限等于一，恰好等于定义值，连续成立', count:1, ribbon:{k:2, ok:true} },
+    { cls:'shift', tag:'定义',   log:'分段点必须回到导数定义，不能对表达式直接套公式', count:2, ribbon:{k:3, ok:true} },
+    { cls:'ok',    tag:'展开',   log:'e 的 x 次方展到平方项，分子化成二分之 x 平方', count:3, ribbon:{k:4, ok:true} },
+    { cls:'ok',    tag:'定导数', log:'极限是二分之一，可导且导数不为零', count:4, ribbon:{k:5, ok:true} },
+    { cls:'ok',    tag:'排 C',   log:'导数存在但等于二分之一，不是零，排除选项 C', count:5, ribbon:{k:6, ok:true} },
+    { cls:'ok',    tag:'排 A B', log:'可导点取极值必须导数为零，现在不为零，极大极小都排除', count:6, ribbon:{k:7, ok:true} },
+    { cls:'done',  tag:'完成',   log:'结论：可导且导数不为零，选 D', count:7, ribbon:{k:8, ok:true}, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    var rows = this._rows;
+    for (var j = 0; j < rows.length; j++){
+      rows[j].className = 'aw-stepcard' + (j < i ? ' good' : (j === i ? ' key' : ''));
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '选 D　$f\'(0)=\\dfrac12\\neq0$：连续、可导、非极值',
+    html: '记忆锚点：<b>分段点两件事——连续看极限，可导回定义；费马定理反向用：导数不为零必非极值</b>。易错：对 $\\frac{\\mathrm{e}^x-1}{x}$ 直接套公式得 $f\'(0)=0$ 错选 C；$\\mathrm{e}^x$ 只展到一阶分子归零。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

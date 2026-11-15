@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2019·09 幂指极限 (x+2^x)^(2/x)</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改 AW.init 区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [];
+
+var LINES = [
+  "<p><b>审题</b>：底数 $x+2^x\\to1$、指数 $\\dfrac2x\\to\\infty$，标准 $\\boldsymbol{1^\\infty}$ 型。套路：取对数把幂指化乘积。设原极限为 $L$。</p>",
+  "<p><b>取对数</b>：$$\\ln L=\\lim_{x\\to0}\\frac{2}{x}\\ln\\big(x+2^x\\big).$$</p>",
+  "<p><b>等价替换</b>：$x\\to0$ 时 $x+2^x-1\\to0$，把对数写成 $\\ln\\big(1+(x+2^x-1)\\big)$ 后整体用 $\\ln(1+u)\\sim u$：$$\\ln L=\\lim_{x\\to0}\\frac{2\\,(x+2^x-1)}{x}=2\\lim_{x\\to0}\\left(1+\\frac{2^x-1}{x}\\right).$$</p>",
+  "<p><b>重要极限</b>：$2^x-1=\\mathrm{e}^{x\\ln2}-1\\sim x\\ln2$，故 $$\\lim_{x\\to0}\\frac{2^x-1}{x}=\\ln2.$$</p>",
+  "<p><b>收口</b>：$$\\ln L=2\\,(1+\\ln2)=2+2\\ln2.$$</p>",
+  "<p><b>回指数</b>：$$L=\\mathrm{e}^{\\,2+2\\ln2}=\\mathrm{e}^2\\cdot\\mathrm{e}^{2\\ln2}=\\mathrm{e}^2\\cdot2^2=4\\mathrm{e}^2.$$</p>",
+  "<p><b>结论</b>：$\\lim_{x\\to0}\\left(x+2^x\\right)^{\\frac{2}{x}}=\\boldsymbol{4\\mathrm{e}^2}$。</p>"
+];
+
+AW.init({
+  title: '$\\lim\\limits_{x\\to0}\\left(x+2^x\\right)^{\\frac{2}{x}}$',
+  subtitle: '考点：1^∞ 型幂指极限 · 方法：取对数 + ln(1+u)~u + (a^x−1)/x→ln a',
+  counterLabel: '已执行',
+  intro: '点击「▶ 播放」逐步演示求值过程。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    ROWS.length = 0;
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    for(var k = 0; k < LINES.length; k++){
+      var d = AW.el('div', '', LINES[k]);
+      d.style.cssText = 'margin:8px 0;padding:9px 14px;border-left:3px solid #e2e8f0;background:#f8fafc;border-radius:0 12px 12px 0;font-size:14.5px;line-height:1.9;display:none;';
+      board.appendChild(d);
+      ROWS.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  render: function(stage, sn){
+    for(var k = 0; k < ROWS.length; k++){
+      var r = ROWS[k];
+      if(k >= sn.show){ r.style.display = 'none'; continue; }
+      r.style.display = 'block';
+      if(k === sn.show - 1 && !sn.done){
+        r.style.borderLeftColor = '#d97706';
+        r.style.background = '#fffbeb';
+      } else {
+        r.style.borderLeftColor = '#16a34a';
+        r.style.background = '#f8fafc';
+      }
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  snaps: [
+    { cls:'shift', tag:'审题',   log:'底数趋于 1、指数趋于无穷，1 的无穷次方型，取对数', show:1, count:0 },
+    { cls:'step',  tag:'取对数', log:'ln L 等于指数乘以底数的对数', show:2, count:1 },
+    { cls:'ok',    tag:'替换',   log:'对数里是 1 加小量，等价替换成小量本身', show:3, count:2 },
+    { cls:'step',  tag:'拆项',   log:'拆成 1 加 2 的 x 次方减 1 比 x，后者趋于 ln 2', show:4, count:3 },
+    { cls:'ok',    tag:'收口',   log:'对数极限为 2 加 2 倍 ln 2', show:5, count:4 },
+    { cls:'ok',    tag:'回指数', log:'e 的指数幂拆开：e² 乘 2² 等于 4e²', show:6, count:5, ribbon:{k:1, ok:true} },
+    { cls:'done',  tag:'完成',   log:'原极限 = 4e²', show:7, count:6, done:true },
+  ],
+
+  result: {
+    big: '答案：$4\\mathrm{e}^2$',
+    html: '记忆锚点：<b>$1^\\infty$ 型 = 取对数 + $\\ln(1+u)\\sim u$ + $\\dfrac{a^x-1}{x}\\to\\ln a$</b>。注意别被"底数趋于 1"骗着答 1；回指数时 $\\mathrm{e}^{2\\ln2}=2^2=4$，最终是 $4\\mathrm{e}^2$。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

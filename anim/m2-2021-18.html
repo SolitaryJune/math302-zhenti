@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2021·18 含绝对值函数的凹凸区间与渐近线</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [
+  "$$f(x)=\\frac{x|x|}{1+x}\\qquad\\text{含 } |x|\\text{，先分段去绝对值}$$",
+  "<b>① 右段 $x\\ge0$：</b>$|x|=x$，$$f(x)=\\frac{x^2}{1+x}=x-1+\\frac{1}{1+x}$$",
+  "<b>② 左段 $x<0$：</b>$|x|=-x$，$$f(x)=\\frac{-x^2}{1+x}=-x+1-\\frac{1}{1+x}$$",
+  "<b>③ 右段二阶导：</b>$f^{\\prime}(x)=1-\\dfrac{1}{(1+x)^2}$，$f^{\\prime\\prime}(x)=\\dfrac{2}{(1+x)^3}>0$（$x>0$）$\\Rightarrow$ 凹",
+  "<b>④ 左段二阶导：</b>$f^{\\prime}(x)=-1+\\dfrac{1}{(1+x)^2}$，$f^{\\prime\\prime}(x)=-\\dfrac{2}{(1+x)^3}$（$x<0$ 且 $x\\ne-1$）",
+  "<b>⑤ 左段判号：</b>$-1<x<0$ 时 $(1+x)^3>0\\Rightarrow f^{\\prime\\prime}<0$（凸）；$x<-1$ 时 $(1+x)^3<0\\Rightarrow f^{\\prime\\prime}>0$（凹）",
+  "<b>⑥ 凹凸结论：</b>凹区间 $(-\\infty,-1)$ 与 $(0,+\\infty)$；凸区间 $(-1,0)$（$x=-1$ 处无定义，不并入）",
+  "<b>⑦ 铅直渐近线：</b>$x\\to-1$ 时分子 $\\to-1\\ne0$、分母 $\\to0$，$\\lim_{x\\to-1}f(x)=\\infty\\ \\Rightarrow\\ x=-1$",
+  "<b>⑧ 右侧斜渐近线：</b>$x\\to+\\infty$：$f(x)=x-1+\\dfrac{1}{1+x}\\ \\Rightarrow\\ y=x-1$",
+  "<b>⑨ 左侧斜渐近线：</b>$x\\to-\\infty$：$f(x)=-x+1-\\dfrac{1}{1+x}\\ \\Rightarrow\\ y=-x+1$"
+];
+
+AW.init({
+  title: "2021·18　$f(x)=\\dfrac{x|x|}{1+x}$ 的凹凸区间与渐近线",
+  subtitle: "考点：分段去绝对值 · $f^{\\prime\\prime}$ 判凹凸 · 铅直渐近线与双侧斜渐近线",
+  counterLabel: "推导步数",
+  ribbonTitle: "推导进度（✓ 完成）",
+  intro: "点击「▶ 播放」或「下一步」，先分段化简，再判凹凸、找渐近线。",
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var inner = AW.el('div', '');
+    inner.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>：当前步亮琥珀色，已完成步变绿'));
+    this._rows = [];
+    for (var i = 0; i < ROWS.length; i++){
+      var r = AW.el('div', 'aw-stepcard', ROWS[i]);
+      inner.appendChild(r);
+      this._rows.push(r);
+    }
+    wrap.appendChild(inner);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    {"cls": "step", "tag": "审题", "log": "函数含绝对值，先按 x 大于等于零与小于零分两段化简", "count": 0, "ribbon": {"k": 1, "ok": true}},
+    {"cls": "shift", "tag": "右段", "log": "右段化成 x 减一加真分式，求导方便", "count": 1, "ribbon": {"k": 2, "ok": true}},
+    {"cls": "shift", "tag": "左段", "log": "左段化成负 x 加一减真分式，注意整体变号", "count": 2, "ribbon": {"k": 3, "ok": true}},
+    {"cls": "ok", "tag": "右段导", "log": "右段二阶导恒为正，零到正无穷是凹区间", "count": 3, "ribbon": {"k": 4, "ok": true}},
+    {"cls": "ok", "tag": "左段导", "log": "左段二阶导带负号，正负取决于一加 x 的立方的符号", "count": 4, "ribbon": {"k": 5, "ok": true}},
+    {"cls": "ok", "tag": "判号", "log": "负一到零之间二阶导为负是凸，负一到负无穷之间为正是凹", "count": 5, "ribbon": {"k": 6, "ok": true}},
+    {"cls": "ok", "tag": "凹凸结论", "log": "汇总：凹区间两个，凸区间一个，负一处无定义要切开", "count": 6, "ribbon": {"k": 7, "ok": true}},
+    {"cls": "ok", "tag": "铅直", "log": "负一处分母为零分子不为零，x 等于负一是铅直渐近线", "count": 7, "ribbon": {"k": 8, "ok": true}},
+    {"cls": "ok", "tag": "右斜", "log": "右侧无穷远处贴直线 y 等于 x 减一", "count": 8, "ribbon": {"k": 9, "ok": true}},
+    {"cls": "ok", "tag": "左斜", "log": "左侧无穷远处贴直线 y 等于负 x 加一，两条斜渐近线都要写", "count": 9, "ribbon": {"k": 10, "ok": true}},
+    {"cls": "done", "tag": "完成", "log": "完成：凹凸区间与三条渐近线全部确定", "count": 10, "ribbon": {"k": 11, "ok": true}, "done": true}
+  ],
+
+  render: function(stage, sn, i){
+    var rows = this._rows;
+    for (var j = 0; j < rows.length; j++){
+      rows[j].className = 'aw-stepcard' + (j < i ? ' good' : (j === i ? ' key' : ''));
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: "凹 $(-\\infty,-1)$、$(0,+\\infty)$；凸 $(-1,0)$",
+    html: "渐近线共三条：<b>铅直 $x=-1$；斜 $y=x-1$（$x\\to+\\infty$）与 $y=-x+1$（$x\\to-\\infty$）</b>。记忆锚点：两侧一次项不同，斜渐近线必查左右两向；易错：把 $x=-1$ 并入凹凸区间（无定义点必须切开）。"
+  }
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

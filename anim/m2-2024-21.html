@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2024·21 泰勒展开加权消元 + 积分放缩证明</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+// 一张推理卡片（body 里可写 $..$ / $$..$$ 公式）
+function card(n, cls, title, body){
+  return '<div class="aw-stepcard ' + (cls || '') + '"><h4><span class="n">' + n +
+         '</span>' + title + '</h4>' + body + '</div>';
+}
+
+// 推理链：每一步的完整内容（引擎按步数截取显示）
+var STEPS = [
+  { title: '审题眼',
+    cls: 'key',
+    body: '<p>条件：$f$ 二阶可导、$\\lvert f\'\'\\rvert\\le1$（$f\'(0)=f\'(1)$ 本解法用不到）。目标：用 $f(0),f(1)$ 的线性组合控制 $f(x)$。思路：<b>把两个端点值在动点 $x$ 处作带拉格朗日余项的一阶泰勒展开</b>，余项里出现 $f\'\'$，正好用 $\\lvert f\'\'\\rvert\\le1$ 放缩。</p>' },
+  { title: '两个端点值在 $x$ 处展开',
+    cls: '',
+    body: '<p>存在 $\\xi_1\\in(0,x)$、$\\xi_2\\in(x,1)$：</p>' +
+          '$$f(0)=f(x)-xf\'(x)+\\frac{x^2}{2}f\'\'(\\xi_1),\\qquad f(1)=f(x)+(1-x)f\'(x)+\\frac{(1-x)^2}{2}f\'\'(\\xi_2).$$' },
+  { title: '用 $(1-x)$ 与 $x$ 加权组合',
+    cls: 'key',
+    body: '<p>$(1-x)\\times$ 第一式 $+\\ x\\times$ 第二式：$f(x)$ 系数 $(1-x)+x=1$；<b>$f\'(x)$ 系数 $-x(1-x)+x(1-x)=0$，恰好消光</b>——这正是选这组权的原因。</p>' },
+  { title: '解出目标表达式',
+    cls: '',
+    body: '$$f(x)-f(0)(1-x)-f(1)x=-\\frac12\\Big[x^2(1-x)f\'\'(\\xi_1)+x(1-x)^2f\'\'(\\xi_2)\\Big]$$' },
+  { title: '放缩：第 (1) 问得证',
+    cls: 'good',
+    body: '<p>用 $\\lvert f\'\'\\rvert\\le1$ 与 $x+(1-x)=1$：</p>' +
+          '$$\\Big|f(x)-f(0)(1-x)-f(1)x\\Big|\\le\\frac12\\big[x^2(1-x)+x(1-x)^2\\big]=\\frac{x(1-x)}{2}.$$' +
+          '<p>$x=0,1$ 两端两边均为 $0$，式子在 $[0,1]$ 上都成立。</p>' },
+  { title: '过渡：梯形公式对接第 (2) 问',
+    cls: 'key',
+    body: '<p>记 $g(x)=f(x)-f(0)(1-x)-f(1)x$。线性部分积出来恰是梯形值：</p>' +
+          '$$\\int_0^1\\big[f(0)(1-x)+f(1)x\\big]\\mathrm dx=\\frac{f(0)+f(1)}{2}\\ \\Longrightarrow\\ \\int_0^1f\\,\\mathrm dx-\\frac{f(0)+f(1)}{2}=\\int_0^1g\\,\\mathrm dx.$$' },
+  { title: '对逐点界积分：第 (2) 问得证',
+    cls: 'good',
+    body: '<p>两步放缩：$\\Big|\\int_0^1 g\\Big|\\le\\int_0^1\\lvert g\\rvert\\ \\mathrm dx\\le\\int_0^1\\dfrac{x(1-x)}2\\,\\mathrm dx$，而</p>' +
+          '$$\\int_0^1 x(1-x)\\,\\mathrm dx=\\frac12-\\frac13=\\frac16\\ \\Longrightarrow\\ \\Big|\\int_0^1 f\\,\\mathrm dx-\\frac{f(0)+f(1)}{2}\\Big|\\le\\frac12\\cdot\\frac16=\\frac1{12}.$$' },
+  { title: '结论',
+    cls: 'good',
+    body: '<p>两问证毕。<b>记忆锚点</b>：展开点选动点 $x$；权取 $(1-x)$ 与 $x$ 让 $f\'$ 消光；第 (2) 问是第 (1) 问的「积分版」，梯形公式 $\\int_0^1[f(0)(1-x)+f(1)x]\\mathrm dx=\\frac{f(0)+f(1)}2$ 是桥梁。</p>' },
+];
+
+var snaps = STEPS.map(function(s, i){
+  return {
+    cls: i === STEPS.length - 1 ? 'done' : 'step',
+    tag: '第 ' + (i + 1) + ' 步',
+    log: s.title.replace(/\$/g, ''),
+    html: STEPS.slice(0, i + 1).map(function(x, j){
+      return card(j + 1, x.cls, x.title, x.body);
+    }).join(''),
+    done: i === STEPS.length - 1,
+  };
+});
+
+AW.init({
+  title: '【2024·21】证明 $\\Big|f(x)-f(0)(1-x)-f(1)x\\Big|\\le\\dfrac{x(1-x)}2$ 与积分版 $\\dfrac1{12}$',
+  subtitle: '考点：泰勒展开（拉格朗日余项）· 加权消元 · 积分放缩',
+  intro: '点击「▶ 播放」逐步展开证明推理链。',
+  /* 统一 render：复刻引擎默认的 sn.html 行为，再对舞台做公式渲染 */
+  render: function(stage, sn){
+    if(sn.html != null) stage.innerHTML = sn.html;
+    renderMathAfterSnap(stage);
+  },
+  snaps: snaps,
+  result: {
+    big: '两问均得证',
+    html: '<p>(1) $\\Big|f(x)-f(0)(1-x)-f(1)x\\Big|\\le\\dfrac{x(1-x)}{2}$；(2) $\\Big|\\displaystyle\\int_0^1f\\,\\mathrm dx-\\dfrac{f(0)+f(1)}2\\Big|\\le\\dfrac1{12}$。</p>' +
+          '<p>核心套路：<b>在动点处展开端点值 + $(1-x),\\ x$ 加权消 $f\'$</b>；对逐点不等式积分时补一句端点处两边同为 $0$。条件 $f\'(0)=f\'(1)$ 在此证法中未用（留给其他证法）。</p>',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

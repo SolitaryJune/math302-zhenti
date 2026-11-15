@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2018·20 相关变化率：面积 S 的变化率</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+AW.init({
+  title: '2018·20　$S$ 是 $OA$、$AP$ 与曲线 $y=\\frac49x^{2}$ 围成的面积，求 $\\dfrac{\\mathrm{d}S}{\\mathrm{d}t}$',
+  subtitle: '考点：相关变化率 · 方法：几何建模 → $S=S(p)$ → 链式法则 $\\dfrac{\\mathrm{d}S}{\\mathrm{d}t}=S\'(p)\\cdot\\dfrac{\\mathrm{d}p}{\\mathrm{d}t}$',
+  counterLabel: '已完成',
+  ribbonTitle: '推导进度（✓ 完成）',
+  intro: '已知：$P=(3,4)$ 时水平速度 $\\dfrac{\\mathrm{d}p}{\\mathrm{d}t}=4$。区域边界（文字描述）：左为 $y$ 轴段 $OA$，上为弦 $AP$，下为曲线弧 $OP$。点击「▶ 播放」逐步求解。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var inner = AW.el('div', '');
+    inner.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>：当前行亮琥珀色，已完成的行变绿'));
+    var LINES = [
+      "<p><b>设点：</b>$P=\\left(p,\\dfrac49 p^{2}\\right)$，当前 $p=3$，$\\dfrac{\\mathrm{d}p}{\\mathrm{d}t}=4$。$$\\text{区域边界：}\\ \\overline{OA}\\,(\\text{$y$ 轴})\\ +\\ \\overline{AP}\\,(\\text{弦})\\ +\\ \\widehat{OP}\\,(\\text{曲线})$$</p>",
+      "<b>① 上下边界：</b>$0\\le x\\le p$ 上弦 $AP$ 在曲线 $y=\\frac49x^{2}$ 上方 $\\Rightarrow$ 竖条「上减下」积分：$S(p)=\\displaystyle\\int_0^{p}(y_{AP}-y_{L})\\,\\mathrm{d}x$",
+      "<b>② 弦 $AP$：</b>过 $A(0,1)$、$P\\left(p,\\frac49p^{2}\\right)$：$$y_{AP}=1+\\frac{\\frac49 p^{2}-1}{p}\\,x=1+\\frac{4p^{2}-9}{9p}\\,x\\quad(p=3\\ \\text{时斜率}=1)$$",
+      "<b>③ 写出 $S(p)$：</b>$$S(p)=\\int_0^{p}\\left[\\left(1+\\frac{4p^{2}-9}{9p}x\\right)-\\frac49 x^{2}\\right]\\mathrm{d}x$$",
+      "<b>④ 逐项积分：</b>$\\displaystyle\\int_0^{p}1\\,\\mathrm{d}x=p$；$\\dfrac{4p^{2}-9}{9p}\\cdot\\dfrac{p^{2}}{2}=\\dfrac{(4p^{2}-9)p}{18}$；$\\dfrac49\\cdot\\dfrac{p^{3}}{3}=\\dfrac{4p^{3}}{27}$",
+      "<b>⑤ 合并：</b>$$S(p)=p+\\frac{(4p^{2}-9)p}{18}-\\frac{4p^{3}}{27}=\\frac{4p^{3}+27p}{54}\\qquad(p=3\\ \\text{时}\\ S=3.5\\ \\text{校核无误})$$",
+      "<b>⑥ 对 $p$ 求导：</b>$\\dfrac{\\mathrm{d}S}{\\mathrm{d}p}=\\dfrac{12p^{2}+27}{54}=\\dfrac{2p^{2}}{9}+\\dfrac12$，$p=3$ 时 $=2+\\dfrac12=\\dfrac52$",
+      "<b>⑦ 链式法则：</b>$$\\dfrac{\\mathrm{d}S}{\\mathrm{d}t}=\\dfrac{\\mathrm{d}S}{\\mathrm{d}p}\\cdot\\dfrac{\\mathrm{d}p}{\\mathrm{d}t}=\\dfrac52\\times4=10$$",
+      "<b>⑧ 结论：</b>此时 $S$ 关于时间 $t$ 的变化率为 $\\dfrac{\\mathrm{d}S}{\\mathrm{d}t}=10$（面积单位每单位时间）"
+    ];
+    this._rows = [];
+    for (var i = 0; i < LINES.length; i++){
+      var r = AW.el('div', 'aw-stepcard', LINES[i]);
+      inner.appendChild(r);
+      this._rows.push(r);
+    }
+    wrap.appendChild(inner);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step',  tag:'审题', log:'动点横坐标记 p，已知的水平速度是链式法则的最后一环', count:0, ribbon:{k:1, ok:true} },
+    { cls:'ok',    tag:'辨边界', log:'左边封在纵轴上，弦在曲线上方，面积按上减下竖条积分', count:1, ribbon:{k:2, ok:true} },
+    { cls:'ok',    tag:'写弦', log:'两点式写出弦的方程，当前时刻斜率恰好等于一', count:2, ribbon:{k:3, ok:true} },
+    { cls:'step',  tag:'列式', log:'弦减曲线，从零积到 p，面积成为 p 的一元函数', count:3, ribbon:{k:4, ok:true} },
+    { cls:'ok',    tag:'逐项积', log:'三项分别积分，常数项给 p，弦给二次项，曲线给三次项', count:4, ribbon:{k:5, ok:true} },
+    { cls:'ok',    tag:'合并', log:'通分合并成三十四分之四 p 立方加二十七 p，代入三校核得三点五', count:5, ribbon:{k:6, ok:true} },
+    { cls:'ok',    tag:'求导', log:'对 p 求导得五分之二乘 p 方加二分之一，在 p 等于三处为二分之五', count:6, ribbon:{k:7, ok:true} },
+    { cls:'ok',    tag:'链式', log:'面积变化率等于面积对 p 的导数乘以水平速度，二分之五乘四得十', count:7, ribbon:{k:8, ok:true} },
+    { cls:'done',  tag:'完成', log:'结论：此时 S 关于时间的变化率等于十', count:8, ribbon:{k:9, ok:true}, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    var rows = this._rows;
+    for (var j = 0; j < rows.length; j++){
+      rows[j].className = 'aw-stepcard' + (j < i ? ' good' : (j === i ? ' key' : ''));
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '$\\dfrac{\\mathrm{d}S}{\\mathrm{d}t}=10$',
+    html: '记忆锚点：<b>相关变化率三步走：把 $S$ 表成 $p$ 的函数 → 求 $S\'(p)$ → 乘 $\\dfrac{\\mathrm{d}p}{\\mathrm{d}t}$</b>。易错：漏掉 $y$ 轴段 $OA$ 这条左边界；上下边界弄反；求出 $S\'(p)$ 忘乘水平速度。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

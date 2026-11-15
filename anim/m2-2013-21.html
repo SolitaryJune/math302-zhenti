@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2013·21 完全平方弧长与形心横坐标</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改 AW.init 区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [];
+
+var LINES = [
+  "<p><b>审题</b>：$L:\\ y=\\dfrac14x^2-\\dfrac12\\ln x$，$1\\le x\\le\\mathrm e$。(1) 求弧长；(2) 求 $D$（曲线、$x=1$、$x=\\mathrm e$ 与 $x$ 轴围成）的形心横坐标。</p>",
+  "<p><b>(1) 求导</b>：$$y'=\\frac x2-\\frac1{2x}=\\frac{x^2-1}{2x}$$</p>",
+  "<p><b>(1) 配完全平方</b>：$$1+(y')^2=1+\\frac{(x^2-1)^2}{4x^2}=\\frac{4x^2+(x^2-1)^2}{4x^2}=\\frac{(x^2+1)^2}{4x^2}$$</p>",
+  "<p><b>(1) 开方</b>：$x\\in[1,\\mathrm e]$ 时 $x>0$，$$\\sqrt{1+(y')^2}=\\frac{x^2+1}{2x}=\\frac x2+\\frac1{2x}$$</p>",
+  "<p><b>(1) 弧长</b>：$$s=\\int_1^{\\mathrm e}\\Big(\\frac x2+\\frac1{2x}\\Big)\\mathrm dx=\\Big[\\frac{x^2}4+\\frac{\\ln x}2\\Big]_1^{\\mathrm e}=\\frac{\\mathrm e^2}4+\\frac12-\\frac14=\\frac{\\mathrm e^2+1}4$$</p>",
+  "<p><b>(2) 形心公式</b>：$$\\bar x=\\frac{\\displaystyle\\int_1^{\\mathrm e}x\\,y\\,\\mathrm dx}{\\displaystyle\\int_1^{\\mathrm e}y\\,\\mathrm dx}$$ $1\\le x\\le\\mathrm e$ 时 $y\\ge0$（$x^2\\ge4\\ln x$），图形在 $x$ 轴上方。</p>",
+  "<p><b>(2) 分母：面积</b>：$$A=\\int_1^{\\mathrm e}\\Big(\\frac{x^2}4-\\frac{\\ln x}2\\Big)\\mathrm dx=\\frac{\\mathrm e^3-1}{12}-\\frac12\\cdot1=\\frac{\\mathrm e^3-7}{12}$$（$\\int_1^{\\mathrm e}\\ln x\\,\\mathrm dx=[x\\ln x-x]_1^{\\mathrm e}=1$）</p>",
+  "<p><b>(2) 分子：静矩</b>：$\\displaystyle\\int_1^{\\mathrm e}x\\ln x\\,\\mathrm dx=\\Big[\\frac{x^2}2\\ln x\\Big]_1^{\\mathrm e}-\\int_1^{\\mathrm e}\\frac x2\\,\\mathrm dx=\\frac{\\mathrm e^2}2-\\frac{\\mathrm e^2-1}4=\\frac{\\mathrm e^2+1}4$，$$\\int_1^{\\mathrm e}xy\\,\\mathrm dx=\\frac{\\mathrm e^4-1}{16}-\\frac{\\mathrm e^2+1}8=\\frac{\\mathrm e^4-2\\mathrm e^2-3}{16}$$</p>",
+  "<p><b>(2) 相除</b>：$$\\bar x=\\frac{\\dfrac{\\mathrm e^4-2\\mathrm e^2-3}{16}}{\\dfrac{\\mathrm e^3-7}{12}}=\\frac{12\\,(\\mathrm e^4-2\\mathrm e^2-3)}{16\\,(\\mathrm e^3-7)}=\\frac{3\\,(\\mathrm e^4-2\\mathrm e^2-3)}{4\\,(\\mathrm e^3-7)}$$</p>",
+  "<p><b>结论</b>：$$\\boxed{\\;s=\\frac{\\mathrm e^2+1}4,\\qquad \\bar x=\\frac{3\\,(\\mathrm e^4-2\\mathrm e^2-3)}{4\\,(\\mathrm e^3-7)}\\;}$$</p>"
+];
+
+AW.init({
+  title: '弧长 $\\dfrac{\\mathrm e^2+1}4$ 与形心横坐标的两步计算',
+  subtitle: '考点：定积分应用（弧长、形心） · 方法：完全平方 + 分部积分',
+  counterLabel: '推导步',
+  ribbonTitle: '两大问（✓ 已完成）',
+  intro: '点击「▶ 播放」逐步演示弧长与形心的计算。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    ROWS.length = 0;
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    for(var k = 0; k < LINES.length; k++){
+      var d = AW.el('div', '', LINES[k]);
+      d.style.cssText = 'margin:8px 0;padding:9px 14px;border-left:3px solid #e2e8f0;background:#f8fafc;border-radius:0 12px 12px 0;font-size:14.5px;line-height:1.9;display:none;';
+      board.appendChild(d);
+      ROWS.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  render: function(stage, sn){
+    for(var k = 0; k < ROWS.length; k++){
+      var r = ROWS[k];
+      if(k >= sn.show){ r.style.display = 'none'; continue; }
+      r.style.display = 'block';
+      if(k === sn.show - 1 && !sn.done){
+        r.style.borderLeftColor = '#d97706';
+        r.style.background = '#fffbeb';
+      } else {
+        r.style.borderLeftColor = '#16a34a';
+        r.style.background = '#f8fafc';
+      }
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  snaps: [
+    { cls:'shift', tag:'审题',     log:'抛物线减对数的曲线，区间 [1, e]，两问：弧长与形心', show:1, count:0 },
+    { cls:'step',  tag:'(1)求导',  log:'导数是 x/2 − 1/(2x)，通分写成分式更好看', show:2, count:1 },
+    { cls:'key',   tag:'(1)配平方', log:'根号里 1 + 导数平方通分后正好是完全平方 (x²+1)²/(4x²)', show:3, count:2 },
+    { cls:'ok',    tag:'(1)开方',  log:'区间内 x 为正，开方得 (x²+1)/(2x)，拆成 x/2 + 1/(2x)', show:4, count:3 },
+    { cls:'ok',    tag:'(1)积分',  log:'积分出 (e²+1)/4，第一问完成', show:5, count:4, ribbon:{k:1, ok:true} },
+    { cls:'shift', tag:'(2)公式',  log:'形心横坐标 = x 的静矩除以面积，分子分母各一个定积分', show:6, count:5 },
+    { cls:'ok',    tag:'(2)面积',  log:'分母：对 y 积分，对数部分用现成结果，面积 (e³−7)/12', show:7, count:6 },
+    { cls:'step',  tag:'(2)静矩',  log:'分子：对 x·y 积分，x·ln x 那项用分部积分，得 (e⁴−2e²−3)/16', show:8, count:7 },
+    { cls:'ok',    tag:'(2)相除',  log:'分子除分母：12 与 16 约，得 3(e⁴−2e²−3) / 4(e³−7)', show:9, count:8, ribbon:{k:2, ok:true} },
+    { cls:'done',  tag:'完成',     log:'弧长 (e²+1)/4，形心横坐标 3(e⁴−2e²−3)/4(e³−7)', show:10, count:9, done:true },
+  ],
+
+  result: {
+    big: '$s=\\dfrac{\\mathrm e^2+1}4,\\qquad \\bar x=\\dfrac{3(\\mathrm e^4-2\\mathrm e^2-3)}{4(\\mathrm e^3-7)}$',
+    html: '记忆锚点：<b>$y=\\frac{x^2}4-\\frac12\\ln x$ 型曲线的 $1+(y\')^2$ 是完全平方</b>，弧长必可积。形心分子是静矩 $\\int xy\\,\\mathrm dx$（勿漏 $x$）；$\\int\\ln x\\,\\mathrm dx=x\\ln x-x$、$\\int x\\ln x\\,\\mathrm dx=\\frac{x^2}2\\ln x-\\frac{x^2}4$。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

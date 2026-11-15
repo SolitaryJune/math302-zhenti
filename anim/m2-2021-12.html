@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2021·12 参数方程的二阶导数</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改题目专属区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [
+  "<b>① 审题：</b>$x=2\\mathrm{e}^t+t+1,\\ y=4(t-1)\\mathrm{e}^t+t^2$，求 $\\left.\\dfrac{\\mathrm{d}^2y}{\\mathrm{d}x^2}\\right|_{t=0}$",
+  "<b>② 公式备好：</b>$\\dfrac{\\mathrm{d}y}{\\mathrm{d}x}=\\dfrac{y'_t}{x'_t}$，$\\dfrac{\\mathrm{d}^2y}{\\mathrm{d}x^2}=\\dfrac{\\dfrac{\\mathrm{d}}{\\mathrm{d}t}\\!\\left(\\dfrac{\\mathrm{d}y}{\\mathrm{d}x}\\right)}{x'_t}$——<b>分母是 $x'_t$，最后还要除一次</b>",
+  "<b>③ 分别求导：</b>$x'_t=2\\mathrm{e}^t+1$；$y'_t=4\\mathrm{e}^t+4(t-1)\\mathrm{e}^t+2t=4t\\,\\mathrm{e}^t+2t$（$(t-1)\\mathrm{e}^t$ 的导数是 $t\\mathrm{e}^t$）",
+  "<b>④ 一阶导：</b>$\\dfrac{\\mathrm{d}y}{\\mathrm{d}x}=\\dfrac{4t\\mathrm{e}^t+2t}{2\\mathrm{e}^t+1}$",
+  "<b>⑤ 商法则对 $t$ 再导：</b>$u=4t\\mathrm{e}^t+2t,\\ u'=4\\mathrm{e}^t+4t\\mathrm{e}^t+2$；$v=2\\mathrm{e}^t+1,\\ v'=2\\mathrm{e}^t$",
+  "<b>⑥ 代 $t=0$：</b>$u=0,\\ u'=6,\\ v=3,\\ v'=2$，故 $\\dfrac{\\mathrm{d}}{\\mathrm{d}t}\\!\\left(\\dfrac{\\mathrm{d}y}{\\mathrm{d}x}\\right)\\Big|_0=\\dfrac{6\\cdot3-0\\cdot2}{9}=2$",
+  "<b>⑦ 最后一次除法：</b>$\\left.\\dfrac{\\mathrm{d}^2y}{\\mathrm{d}x^2}\\right|_{t=0}=\\dfrac{2}{x'_t|_{t=0}}=\\dfrac{2}{2\\mathrm{e}^0+1}=\\dfrac23$",
+  "<b>⑧ 结论：</b>$\\left.\\dfrac{\\mathrm{d}^2y}{\\mathrm{d}x^2}\\right|_{t=0}=\\dfrac23$"
+];
+
+AW.init({
+  title: '2021·12　参数方程 $x=2\\mathrm{e}^t+t+1$，$y=4(t-1)\\mathrm{e}^t+t^2$ 求二阶导',
+  subtitle: '考点：参数方程求导公式 · 商法则 · 二阶导分母是 $x\'_t$',
+  counterLabel: '已推导',
+  ribbonTitle: '推导进度（✓ 完成）',
+  intro: '点击「▶ 播放」或「下一步」，先一阶、再对 t 求导、最后除一次 x 导数。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var inner = AW.el('div', '');
+    inner.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>：当前行亮琥珀色，已完成的行变绿'));
+    this._rows = [];
+    for (var i = 0; i < ROWS.length; i++){
+      var r = AW.el('div', 'aw-stepcard', ROWS[i]);
+      inner.appendChild(r);
+      this._rows.push(r);
+    }
+    wrap.appendChild(inner);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step',  tag:'审题',   log:'参数方程二阶导在 t 等于零处的值，先把公式备好', count:0, ribbon:{k:1, ok:true} },
+    { cls:'shift', tag:'公式',   log:'一阶导是 y 导比 x 导，二阶导还要再对 t 求导后除以 x 导', count:1, ribbon:{k:2, ok:true} },
+    { cls:'ok',    tag:'分别求导', log:'x 导是二 e 的 t 次方加一，y 导化简成四 t e 的 t 次方加二 t', count:2, ribbon:{k:3, ok:true} },
+    { cls:'ok',    tag:'一阶导', log:'两者相除得到一阶导表达式', count:3, ribbon:{k:4, ok:true} },
+    { cls:'ok',    tag:'商法则', log:'分子分母各自求导备好，准备在零点代入', count:4, ribbon:{k:5, ok:true} },
+    { cls:'ok',    tag:'代零点', log:'分子为零分母为三，对 t 求导的结果是二', count:5, ribbon:{k:6, ok:true} },
+    { cls:'ok',    tag:'再除一次', log:'最后除以 x 导在零点的值三，得到三分之二', count:6, ribbon:{k:7, ok:true} },
+    { cls:'done',  tag:'完成',   log:'结论：二阶导等于三分之二', count:7, ribbon:{k:8, ok:true}, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    var rows = this._rows;
+    for (var j = 0; j < rows.length; j++){
+      rows[j].className = 'aw-stepcard' + (j < i ? ' good' : (j === i ? ' key' : ''));
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '$\\left.\\dfrac{\\mathrm{d}^2y}{\\mathrm{d}x^2}\\right|_{t=0}=\\dfrac23$',
+    html: '记忆锚点：<b>二阶导 = 「对 $t$ 求导 $\\frac{\\mathrm{d}y}{\\mathrm{d}x}$」再 ÷ $x\'_t$</b>——除的是 $x\'_t$ 本身，不是 $(x\'_t)^2$。易错：把中间结果 2 当最终答案（漏最后一步）；$(t-1)\\mathrm{e}^t$ 的导数写成 $\\mathrm{e}^t$。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

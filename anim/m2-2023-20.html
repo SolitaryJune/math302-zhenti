@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2023·20 扇环区域上的极坐标二重积分</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [
+  "<b>① 审题：</b>边界 $x^2+y^2-xy=c$（$c=1,2$）+ 射线 $y=0,\\ y=\\sqrt3x$ —— 第一象限内的<b>扇环</b>，选极坐标 $x=r\\cos\\theta,\\ y=r\\sin\\theta$",
+  "<b>② 定角：</b>$y=\\sqrt3x\\Rightarrow\\tan\\theta=\\sqrt3\\Rightarrow\\theta=\\frac\\pi3$，故 $\\theta\\in\\Big[0,\\frac\\pi3\\Big]$",
+  "<b>③ 边界极坐标化：</b>$x^2+y^2-xy=r^2\\big(1-\\frac12\\sin2\\theta\\big)$，故 $r^2=\\frac{c}{1-\\frac12\\sin2\\theta}$",
+  "<b>④ 两条边界：</b>$r_1^2=\\frac{1}{1-\\frac12\\sin2\\theta}$，$r_2^2=\\frac{2}{1-\\frac12\\sin2\\theta}\\ \\Rightarrow\\ \\frac{r_2^2}{r_1^2}=2$",
+  "<b>⑤ 被积函数：</b>$3x^2+y^2=r^2(3\\cos^2\\theta+\\sin^2\\theta)=r^2(1+2\\cos^2\\theta)$，且 $\\mathrm dx\\,\\mathrm dy=r\\,\\mathrm dr\\,\\mathrm d\\theta$",
+  "<b>⑥ 分离：</b>$\\displaystyle\\iint_D\\frac{\\mathrm dx\\,\\mathrm dy}{3x^2+y^2}=\\int_0^{\\pi/3}\\frac{\\mathrm d\\theta}{1+2\\cos^2\\theta}\\int_{r_1}^{r_2}\\frac{\\mathrm dr}{r}$",
+  "<b>⑦ 径向：</b>$\\displaystyle\\int_{r_1}^{r_2}\\frac{\\mathrm dr}{r}=\\ln\\frac{r_2}{r_1}=\\frac12\\ln\\frac{r_2^2}{r_1^2}=\\frac12\\ln2$（与 $\\theta$ 无关，可提出）",
+  "<b>⑧ 角向化简：</b>分子分母同除 $\\cos^2\\theta$：$\\displaystyle\\int_0^{\\pi/3}\\frac{\\sec^2\\theta\\,\\mathrm d\\theta}{\\tan^2\\theta+3}$",
+  "<b>⑨ 换元 $t=\\tan\\theta$：</b>$\\displaystyle\\int_0^{\\sqrt3}\\frac{\\mathrm dt}{t^2+3}=\\frac{1}{\\sqrt3}\\arctan\\frac{t}{\\sqrt3}\\Big|_0^{\\sqrt3}=\\frac1{\\sqrt3}\\cdot\\frac\\pi4=\\frac{\\sqrt3\\,\\pi}{12}$",
+  "<b>⑩ 合并：</b>$\\frac12\\ln2\\cdot\\frac{\\sqrt3\\,\\pi}{12}=\\boxed{\\,\\dfrac{\\sqrt3\\,\\pi\\ln2}{24}\\,}$"
+];
+var rowEls = [];
+
+AW.init({
+  title: '2023·20　扇环区域上的极坐标二重积分',
+  subtitle: '考点：极坐标变换 · $r$ 与 $\\theta$ 分离 · 凑 $\\tan\\theta$ 的角向积分',
+  counterLabel: '已推进',
+  ribbonTitle: '推导进度（✓ 完成）',
+  intro: '点击「▶ 播放」或「下一步」：定角、化边界、分离径向与角向，最后合并。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var inner = AW.el('div', '');
+    inner.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>：当前行亮琥珀色，已完成的行变绿'));
+    rowEls = [];
+    for (var i = 0; i < ROWS.length; i++){
+      var r = AW.el('div', 'aw-stepcard', ROWS[i]);
+      inner.appendChild(r);
+      rowEls.push(r);
+    }
+    wrap.appendChild(inner);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step', tag:'审题',   log:'第①步：两条同型二次曲线加两条过原点的射线，围成扇环，选极坐标', count:0, ribbon:{k:1,  ok:true} },
+    { cls:'ok',   tag:'定角',   log:'第②步：斜率根号 3 的射线对应六十度角，角度范围是零到三分之派', count:1, ribbon:{k:2,  ok:true} },
+    { cls:'ok',   tag:'化边界', log:'第③步：二次曲线在极坐标下左边是 r 平方乘一个只含角度的因子', count:2, ribbon:{k:3,  ok:true} },
+    { cls:'ok',   tag:'比半径', log:'第④步：两条边界的 r 平方只差常数倍两倍，比值与角度无关', count:3, ribbon:{k:4,  ok:true} },
+    { cls:'ok',   tag:'化被积', log:'第⑤步：分母提成 r 平方乘角度因子，面积元补上雅可比 r', count:4, ribbon:{k:5,  ok:true} },
+    { cls:'ok',   tag:'分离',   log:'第⑥步：r 的一次除以 r 的平方，径向只剩 dr 比 r，两个变量分开', count:5, ribbon:{k:6,  ok:true} },
+    { cls:'ok',   tag:'径向',   log:'第⑦步：径向积分是对数，用平方比化简得二分之 ln2，与角度无关', count:6, ribbon:{k:7,  ok:true} },
+    { cls:'ok',   tag:'角向化简', log:'第⑧步：分子分母同除余弦平方，凑出正切的微分', count:7, ribbon:{k:8,  ok:true} },
+    { cls:'ok',   tag:'换元',   log:'第⑨步：令 t 等于正切，积分上限变根号 3，反正切在一处取四分之派', count:8, ribbon:{k:9,  ok:true} },
+    { cls:'done', tag:'完成',   log:'第⑩步：径向乘角向，二分之 ln2 乘 12 分之根号 3 派，得出最终结果', count:9, ribbon:{k:10, ok:true}, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    for (var j = 0; j < rowEls.length; j++){
+      rowEls[j].className = 'aw-stepcard' + (j < i ? ' good' : (j === i ? ' key' : ''));
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: "$\\displaystyle\\iint_D\\frac{\\mathrm dx\\,\\mathrm dy}{3x^2+y^2}=\\frac{\\sqrt3\\,\\pi\\ln2}{24}$",
+    html: "结论：<b>$\\displaystyle\\iint_D\\frac{\\mathrm dx\\,\\mathrm dy}{3x^2+y^2}=\\frac{\\sqrt3\\,\\pi\\ln2}{24}$（径向 $\\frac12\\ln2$ × 角向 $\\frac{\\sqrt3\\pi}{12}$）</b>。记忆锚点：边界 $x^2+y^2-xy=c$ 与被积函数同为二次型 → 极坐标后<b>径向只剩 $\\frac{\\mathrm dr}{r}$</b>，$r$ 与 $\\theta$ 自动分离；角向 $\\frac{\\mathrm d\\theta}{1+2\\cos^2\\theta}$ 靠同除 $\\cos^2\\theta$ 凑 $\\tan\\theta$。易错：极径上下限写成常数；丢雅可比 $r$；倾角 $\\frac\\pi3$ 记成 $\\frac\\pi4$。",
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2011·15 双极限定 α 的范围</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改 AW.init 区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [];
+
+var LINES = [
+  "<p><b>审题</b>：$F(x)=\\dfrac{\\int_0^x\\ln(1+t^2)\\,\\mathrm dt}{x^{\\alpha}}$，要求 $\\lim_{x\\to0^+}F(x)=\\lim_{x\\to+\\infty}F(x)=0$。分子在两端的“增长档位”不同，必须分头比阶。</p>",
+  "<p><b>$x\\to0^+$ 端</b>：$\\ln(1+t^2)\\sim t^2$（$t\\to0$），$$G(x)=\\int_0^x\\ln(1+t^2)\\,\\mathrm dt\\sim\\int_0^x t^2\\,\\mathrm dt=\\frac{x^3}{3}.$$</p>",
+  "<p><b>$0^+$ 端比阶</b>：$F(x)\\sim\\dfrac{x^3/3}{x^{\\alpha}}=\\dfrac13\\,x^{3-\\alpha}$；要 $F\\to0$，需指数 $3-\\alpha>0$，得 $$\\alpha<3.$$</p>",
+  "<p><b>$x\\to+\\infty$ 端</b>：分子发散，洛必达（需 $\\alpha>0$ 保证 $\\infty/\\infty$）：$$\\lim_{x\\to+\\infty}F(x)=\\lim_{x\\to+\\infty}\\frac{\\ln(1+x^2)}{\\alpha x^{\\alpha-1}}.$$</p>",
+  "<p><b>$\\infty$ 端比阶</b>：分子只是对数阶，分母是幂。当 $\\alpha-1>0$ 时幂压倒对数，极限为 $0$，得 $$\\alpha>1.$$</p>",
+  "<p><b>排除 $\\alpha\\le1$</b>：取 $\\alpha=1$，$F(x)\\sim\\dfrac{2x\\ln x}{x}=2\\ln x\\to+\\infty\\neq0$，不满足。</p>",
+  "<p><b>排除 $\\alpha\\ge3$</b>：取 $\\alpha=3$，$0^+$ 端 $F(x)\\to\\dfrac13\\neq0$，也不满足。两端把 $\\alpha$ 夹住了。</p>",
+  "<p><b>结论</b>：$$\\boxed{1<\\alpha<3}$$</p>"
+];
+
+AW.init({
+  title: '两端极限同时为零：求 $\\alpha$ 的取值范围',
+  subtitle: '考点：无穷小阶的比较 · 方法：$0^+$ 端等价无穷小定阶 / $\\infty$ 端洛必达比增速',
+  counterLabel: '步数',
+  intro: '点击「▶ 播放」逐步演示两个极限各自的比阶过程。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    ROWS.length = 0;
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    for(var k = 0; k < LINES.length; k++){
+      var d = AW.el('div', '', LINES[k]);
+      d.style.cssText = 'margin:8px 0;padding:9px 14px;border-left:3px solid #e2e8f0;background:#f8fafc;border-radius:0 12px 12px 0;font-size:14.5px;line-height:1.9;display:none;';
+      board.appendChild(d);
+      ROWS.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  render: function(stage, sn){
+    for(var k = 0; k < ROWS.length; k++){
+      var r = ROWS[k];
+      if(k >= sn.show){ r.style.display = 'none'; continue; }
+      r.style.display = 'block';
+      if(k === sn.show - 1 && !sn.done){
+        r.style.borderLeftColor = '#d97706';
+        r.style.background = '#fffbeb';
+      } else {
+        r.style.borderLeftColor = '#16a34a';
+        r.style.background = '#f8fafc';
+      }
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  snaps: [
+    { cls:'shift', tag:'审题',   log:'两个极限都要为 0，分子在 0 附近和无穷远处的档位不同，分头比阶', show:1, count:0 },
+    { cls:'step',  tag:'0 端',   log:'0 附近用等价无穷小：ln(1+t²) 换成 t²，积分出 x³/3', show:2, count:1 },
+    { cls:'ok',    tag:'上界',   log:'分子是 x³ 阶，除以 x^α 后要趋于 0，指数 3−α 必须为正，得 α<3', show:3, count:2 },
+    { cls:'step',  tag:'∞ 端',   log:'无穷远处分子发散，洛必达一次，分子变成 ln(1+x²)', show:4, count:3 },
+    { cls:'ok',    tag:'下界',   log:'对数压不过正幂：α−1>0 时极限才是 0，得 α>1', show:5, count:4 },
+    { cls:'miss',  tag:'排除',   log:'反例 α=1：F(x) 约 2ln x，趋于无穷，不行', show:6, count:5 },
+    { cls:'miss',  tag:'排除',   log:'反例 α=3：0 端极限变成 1/3，不为 0，也不行', show:7, count:6 },
+    { cls:'done',  tag:'完成',   log:'两端夹住：α 大于 1 且小于 3', show:8, count:7, done:true },
+  ],
+
+  result: {
+    big: '$1<\\alpha<3$',
+    html: '记忆锚点：<b>$0^+$ 端看分子最低次幂，$\\infty$ 端看分子对幂的抵抗（对数必输给正幂）</b>。$0^+$ 端给 $\\alpha<3$，$\\infty$ 端给 $\\alpha>1$；两端条件缺一不可。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

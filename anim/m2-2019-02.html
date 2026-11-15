@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2019·02 曲线 y=xsinx+2cosx 的拐点</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_concept_template.html，只改题目专属区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+// 一张推理卡片（body 里可写 $..$ / $$..$$ 公式）
+function card(n, cls, title, body){
+  return '<div class="aw-stepcard ' + (cls || '') + '"><h4><span class="n">' + n +
+         '</span>' + title + '</h4>' + body + '</div>';
+}
+
+// 推理链：每一步的完整内容（引擎按步数截取显示）
+var STEPS = [
+  { title: '审题：拐点要过两道门',
+    cls: 'key',
+    body: '<p>拐点的判定流程：<b>求 $y\'\'$ → 令 $y\'\'=0$ 得候选 → 验证两侧凹凸性真的变号 → 算坐标</b>。$y\'\'=0$ 只是入场券，变号才是门票——本题的陷阱就藏在"候选点不变号"里。</p>',
+    log: '拐点流程：候选点必须过变号检验' },
+  { title: '求一、二阶导，锁定候选点',
+    cls: 'step',
+    body: '<p>$$y\'=\\sin x+x\\cos x-2\\sin x=x\\cos x-\\sin x,$$ $$y\'\'=\\cos x-x\\sin x-\\cos x=-x\\sin x.$$ 在区间 $\\left(-\\frac{\\pi}{2},2\\pi\\right)$ 内令 $y\'\'=0$，得候选 $x=0$ 与 $x=\\pi$。</p>',
+    log: 'y 的二阶导 = −x·sinx，候选 x=0 与 x=π' },
+  { title: '候选一 $x=0$：两侧不变号，淘汰',
+    cls: 'bad',
+    body: '<p>$x=0$ 附近 $x$ 与 $\\sin x$ <b>同号</b>，故 $x\\sin x>0$，两侧都有 $y\'\'=-x\\sin x<0$：曲线两边都是凸的，凹凸性没有换向。$(0,2)$ 只是"路过"的二阶零点，<b>不是拐点</b>——A 出局。</p>',
+    log: 'x=0 两侧 y 二阶导都为负，不变号，淘汰', ribbon: {k:1, ok:false} },
+  { title: '候选二 $x=\\pi$：变号，入选',
+    cls: 'good',
+    body: '<p>$x$ 略小于 $\\pi$ 时 $\\sin x>0$，$y\'\'<0$（凸）；略大于 $\\pi$ 时 $\\sin x<0$，$y\'\'>0$（凹）。<b>变号成立</b>。纵坐标 $$y(\\pi)=\\pi\\sin\\pi+2\\cos\\pi=0-2=-2.$$</p>',
+    log: 'x=π 左凸右凹，变号成立，y(π)=−2', ribbon: {k:2, ok:true} },
+  { title: 'C、D：连必要条件都不满足',
+    cls: 'bad',
+    body: '<p>$y\'\'\\big|_{x=\\frac{\\pi}{2}}=-\\frac{\\pi}{2}\\neq0$，$y\'\'\\big|_{x=\\frac{3\\pi}{2}}=\\frac{3\\pi}{2}\\neq0$：这两处二阶导根本不为零，连候选资格都没有，直接排除。</p>',
+    log: 'π/2 与 3π/2 处二阶导非零，直接排除' },
+  { title: '结论',
+    cls: 'good',
+    body: '<p>变号候选只有 $x=\\pi$，拐点为 $\\boldsymbol{(\\pi,-2)}$——答案选 <b>B</b>。</p>',
+    log: '拐点 (π, −2)，选 B' },
+];
+
+var snaps = STEPS.map(function(s, i){
+  return {
+    cls: i === STEPS.length - 1 ? 'done' : (s.cls === 'bad' ? 'miss' : 'step'),
+    tag: '第 ' + (i + 1) + ' 步',
+    log: s.log || s.title,
+    count: i + 1,
+    ribbon: s.ribbon,
+    html: STEPS.slice(0, i + 1).map(function(x, j){
+      return card(j + 1, x.cls, x.title, x.body);
+    }).join(''),
+    done: i === STEPS.length - 1,
+  };
+});
+
+AW.init({
+  title: '曲线 $y=x\\sin x+2\\cos x$ 在 $\\left(-\\frac{\\pi}{2},2\\pi\\right)$ 上的拐点',
+  subtitle: '考点：凹凸性与拐点 · 方法：y″=0 只是候选，两侧变号才作数',
+  counterLabel: '推理步',
+  ribbonTitle: '检验环节（✓ 通过 / ✗ 淘汰）',
+  intro: '点击「▶ 播放」逐步展开推理链。',
+  render: function(stage, sn){
+    if(sn.html != null) stage.innerHTML = sn.html;
+    renderMathAfterSnap(stage);
+  },
+  snaps: snaps,
+  result: {
+    big: '答案 B：拐点 $(\\pi,-2)$',
+    html: '记忆锚点：<b>$y\'\'=0$ 的点未必是拐点，两侧凹凸性变号才是</b>。本题 $y\'\'=-x\\sin x$，$x=0$ 两侧 $x$ 与 $\\sin x$ 同号、$y\'\'$ 恒负不变号（陷阱），$x=\\pi$ 两侧 $\\sin x$ 变号、凹凸互换（真拐点），$y(\\pi)=-2$。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

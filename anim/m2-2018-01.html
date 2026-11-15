@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2018·01 1^∞ 型幂指极限定参数</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改 AW.init 区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [];
+
+var LINES = [
+  "<p><b>第一步：识别 $1^\\infty$ 型</b>$$\\lim_{x\\to0}\\left(e^x+ax^2+bx\\right)^{\\frac1{x^2}}=1,\\qquad x\\to0:\\ \\text{底数}\\to e^0=1,\\ \\frac1{x^2}\\to+\\infty$$ 幂指结构先取对数降维。</p>",
+  "<p><b>第二步：取对数</b>$$\\ln L=\\lim_{x\\to0}\\frac{\\ln\\left(e^x+ax^2+bx\\right)}{x^2}=0\\quad\\Longleftrightarrow\\quad L=1$$ 原极限为 1 等价于对数极限为 0。</p>",
+  "<p><b>第三步：泰勒展开到 $x^2$</b>$$e^x=1+x+\\frac{x^2}{2}+o(x^2)\\ \\Longrightarrow\\ u=e^x+ax^2+bx-1=(1+b)x+\\left(\\frac12+a\\right)x^2+o(x^2)$$ 底数 $=1+u$，$u\\to0$；分母是 $x^2$，一阶项不许丢。</p>",
+  "<p><b>第四步：$\\ln(1+u)\\sim u$ 整体替换</b>$$\\ln L=\\lim_{x\\to0}\\frac{(1+b)x+\\left(\\frac12+a\\right)x^2+o(x^2)}{x^2}=\\lim_{x\\to0}\\left[\\frac{1+b}{x}+\\left(\\frac12+a\\right)+o(1)\\right]$$ 一阶项与二阶项分别曝光。</p>",
+  "<p><b>第五步：一阶项必须消失 → 定 $b$</b>$$\\frac{1+b}{x}\\ \\text{发散}\\ \\Longrightarrow\\ 1+b=0\\ \\Longrightarrow\\ b=-1$$ 否则对数极限根本不存在。</p>",
+  "<p><b>第六步：二阶项归零 → 定 $a$</b>$$\\frac12+a=0\\ \\Longrightarrow\\ a=-\\frac12,\\qquad \\ln L=0$$ 对数极限恰好等于 0，两个条件全部用上。</p>",
+  "<p><b>结论</b>$$L=e^{\\ln L}=e^0=1\\ \\checkmark\\qquad a=-\\frac12,\\ b=-1\\quad(\\text{答案 B})$$ 一阶逼死 $b$，二阶定死 $a$。</p>"
+];
+
+AW.init({
+  title: '$1^\\infty$ 型定参数：$\\lim_{x\\to0}\\left(e^x+ax^2+bx\\right)^{1/x^2}=1$',
+  subtitle: '考点：幂指函数极限 · 方法：取对数 + 泰勒展开定阶',
+  counterLabel: '推导步',
+  intro: '点击「▶ 播放」逐步演示取对数与泰勒定阶的全过程。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    ROWS.length = 0;
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    for(var k = 0; k < LINES.length; k++){
+      var d = AW.el('div', '', LINES[k]);
+      d.style.cssText = 'margin:8px 0;padding:9px 14px;border-left:3px solid #e2e8f0;background:#f8fafc;border-radius:0 12px 12px 0;font-size:14.5px;line-height:1.9;display:none;';
+      board.appendChild(d);
+      ROWS.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  render: function(stage, sn){
+    for(var k = 0; k < ROWS.length; k++){
+      var r = ROWS[k];
+      if(k >= sn.show){ r.style.display = 'none'; continue; }
+      r.style.display = 'block';
+      if(k === sn.show - 1 && !sn.done){
+        r.style.borderLeftColor = '#d97706';
+        r.style.background = '#fffbeb';
+      } else {
+        r.style.borderLeftColor = '#16a34a';
+        r.style.background = '#f8fafc';
+      }
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  snaps: [
+    { cls:'shift', tag:'识别类型', log:'底数→1、指数 1/x²→∞，1^∞ 型，先取对数', show:1, count:0 },
+    { cls:'step',  tag:'取对数',  log:'原式=1 等价于对数极限=0', show:2, count:1 },
+    { cls:'step',  tag:'泰勒展开', log:'e^x 展到二阶，底数=1+u，给 u 定阶', show:3, count:2 },
+    { cls:'step',  tag:'等价替换', log:'ln(1+u) 与 u 等价，一阶二阶项曝光', show:4, count:3 },
+    { cls:'ok',    tag:'定 b',   log:'一阶项发散 ⇒ 1+b=0，b=-1', show:5, count:4, ribbon:{k:1, ok:true} },
+    { cls:'ok',    tag:'定 a',   log:'二阶项归零 ⇒ 1/2+a=0，a=-1/2', show:6, count:5, ribbon:{k:2, ok:true} },
+    { cls:'done',  tag:'完成',   log:'对数极限=0，原极限=1，选 B', show:7, count:6, done:true, ribbon:{k:3, ok:true} },
+  ],
+
+  result: {
+    big: '答案 B：$a=-\\dfrac12,\\ b=-1$',
+    html: '记忆锚点：<b>$1^\\infty$ 型三步走</b>：取对数 → 底数减 1 泰勒定阶 → 逐阶置零。分母 $x^2$ 先逼死一阶项（$1+b=0$，否则发散），再令二阶系数归零（$\\dfrac12+a=0$）。误选 A 是只让极限存在、忘了对数极限必须为 $0$——那会得 $e$ 而不是 $1$。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

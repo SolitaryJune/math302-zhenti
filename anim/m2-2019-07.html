@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2019·07 由基础解系个数求伴随矩阵的秩</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_concept_template.html，只改题目专属区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+// 一张推理卡片（body 里可写 $..$ / $$..$$ 公式）
+function card(n, cls, title, body){
+  return '<div class="aw-stepcard ' + (cls || '') + '"><h4><span class="n">' + n +
+         '</span>' + title + '</h4>' + body + '</div>';
+}
+
+// 推理链：每一步的完整内容（引擎按步数截取显示）
+var STEPS = [
+  { title: '审题：一条两步链条',
+    cls: 'key',
+    body: '<p>$\\boldsymbol{A}$ 是 4 阶矩阵，$\\boldsymbol{AX}=\\boldsymbol{0}$ 的基础解系只有 2 个向量，问 $r(\\boldsymbol{A}^*)$。链条：<b>基础解系个数 → $r(\\boldsymbol{A})$ → 伴随秩公式 → $r(\\boldsymbol{A}^*)$</b>。两步都必须走完，别把中间量当答案。</p>',
+    log: '链条：基础解系 → 秩 → 伴随秩' },
+  { title: '第一步：基础解系个数定 $r(A)$',
+    cls: 'step',
+    body: '<p>$n$ 元齐次方程组的基础解系含 $n-r(\\boldsymbol{A})$ 个向量。本题 $n=4$、个数 $=2$：$$4-r(\\boldsymbol{A})=2\\ \\Longrightarrow\\ r(\\boldsymbol{A})=2.$$</p>',
+    log: '4 减秩等于 2，秩为 2' },
+  { title: '第二步：伴随矩阵秩公式（三档）',
+    cls: 'step',
+    body: '<p>$$r(\\boldsymbol{A}^*)=\\begin{cases}n, & r(\\boldsymbol{A})=n,\\\\ 1, & r(\\boldsymbol{A})=n-1,\\\\ 0, & r(\\boldsymbol{A})\\le n-2.\\end{cases}$$ 记忆点：$r(\\boldsymbol{A}^*)$ 只能取 $n,\\,1,\\,0$ 三个值——满秩陪满秩，差一陪一个 1，差二以上全部归零。</p>',
+    log: '伴随秩只有 n、1、0 三种可能' },
+  { title: '对号入座：落在第三档',
+    cls: 'good',
+    body: '<p>$r(\\boldsymbol{A})=2$，而 $n-2=4-2=2$，恰好满足 $r(\\boldsymbol{A})\\le n-2$，故 $r(\\boldsymbol{A}^*)=0$。直观原因：秩 $2<3$ 意味着 $\\boldsymbol{A}$ 的一切 3 阶子式全为 $0$，而 $\\boldsymbol{A}^*$ 的元素全是 3 阶代数余子式，于是 $\\boldsymbol{A}^*=\\boldsymbol{O}$。</p>',
+    log: '秩 2 不超过 n−2，伴随矩阵是零矩阵，秩为 0', ribbon: {k:1, ok:true} },
+  { title: '逐项排错 B / C / D',
+    cls: 'bad',
+    body: '<p>B（$=1$）：需要 $r(\\boldsymbol{A})=n-1=3$，即基础解系只剩 1 个向量，与题不符。C（$=2$）：伴随秩取不到 2 这种中间值。D（$=3$）：同样没有对应档位——$r(\\boldsymbol{A}^*)$ 只能是 $n,1,0$。</p>',
+    log: 'B 条件不符，C、D 不是伴随秩的可能取值' },
+  { title: '结论',
+    cls: 'good',
+    body: '<p>$r(\\boldsymbol{A}^*)=0$——答案选 <b>A</b>。</p>',
+    log: '选 A：伴随矩阵的秩为 0' },
+];
+
+var snaps = STEPS.map(function(s, i){
+  return {
+    cls: i === STEPS.length - 1 ? 'done' : (s.cls === 'bad' ? 'miss' : 'step'),
+    tag: '第 ' + (i + 1) + ' 步',
+    log: s.log || s.title,
+    count: i + 1,
+    ribbon: s.ribbon,
+    html: STEPS.slice(0, i + 1).map(function(x, j){
+      return card(j + 1, x.cls, x.title, x.body);
+    }).join(''),
+    done: i === STEPS.length - 1,
+  };
+});
+
+AW.init({
+  title: '基础解系 2 个向量，$r(\\boldsymbol{A}^*)=?$',
+  subtitle: '考点：齐次方程组基础解系 · 伴随矩阵秩公式 · 方法：两步链条',
+  counterLabel: '推理步',
+  ribbonTitle: '关键结论（✓ 达成）',
+  intro: '点击「▶ 播放」逐步展开推理链。',
+  render: function(stage, sn){
+    if(sn.html != null) stage.innerHTML = sn.html;
+    renderMathAfterSnap(stage);
+  },
+  snaps: snaps,
+  result: {
+    big: '答案 A：$r(\\boldsymbol{A}^*)=0$',
+    html: '记忆锚点：<b>基础解系 2 个 $\\Rightarrow r(\\boldsymbol{A})=2\\le n-2\\Rightarrow$ 所有 3 阶子式为 0，$\\boldsymbol{A}^*=\\boldsymbol{O}$</b>。伴随秩公式三档 $n/1/0$ 对应秩为 $n/n-1/\\le n-2$，倒背如流。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

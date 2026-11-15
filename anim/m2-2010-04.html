@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学·概念/分析类动画</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+// 一张推理卡片（body 里可写 $..$ / $$..$$ 公式）
+function card(n, cls, title, body){
+  return '<div class="aw-stepcard ' + (cls || '') + '"><h4><span class="n">' + n +
+         '</span>' + title + '</h4>' + body + '</div>';
+}
+
+// 推理链：每一步的完整内容（引擎按步数截取显示）
+var STEPS = [
+  { title: '审题眼：瑕点只可能在两端',
+    cls: 'key',
+    body: '<p>被积函数在 $(0,1)$ 内部连续，嫌疑只在 $x=0^+$ 与 $x=1^-$ 两处瑕点。注意 $m,n$ 是<b>任意正整数</b>——结论若对一切 $m,n$ 成立，敛散性就与它们无关。</p>' },
+  { title: '整理被积函数',
+    cls: 'key',
+    body: '<p>$\\sqrt[m]{\\ln^2(1-x)}=\\big\\lvert\\ln(1-x)\\big\\rvert^{2/m}$（先平方再开 $m$ 次方，恒非负），分母为 $x^{1/n}$：</p><p>$$\\int_0^1\\frac{\\big\\lvert\\ln(1-x)\\big\\rvert^{2/m}}{x^{1/n}}\\,\\mathrm dx.$$</p>' },
+  { title: '$x\\to0^+$ 端：幂次比较，恒收敛',
+    cls: 'good',
+    ribbon: {k: 1, ok: true},
+    body: '<p>$\\ln(1-x)\\sim-x$，被积函数与 $x^{\\frac2m-\\frac1n}$ 同阶。$\\int_0^1x^p\\,\\mathrm dx$ 收敛 $\\iff p\\gt-1$，而</p><p>$$\\frac1n-\\frac2m\\lt1\\iff\\frac1n\\lt1+\\frac2m,$$</p><p>右边恒成立（$\\frac1n\\le1\\lt1+\\frac2m$）。此端对<b>一切</b> $m,n$ 收敛。</p>' },
+  { title: '$x\\to1^-$ 端：对数压不过负幂，恒收敛',
+    cls: 'good',
+    ribbon: {k: 2, ok: true},
+    body: '<p>令 $t=1-x\\to0^+$，被积函数 $\\sim\\lvert\\ln t\\rvert^{2/m}$。对数增长慢于任何负幂，取 $\\varepsilon=\\dfrac12$：$t$ 充分小时 $\\lvert\\ln t\\rvert^{2/m}\\le t^{-1/2}$，而 $\\int_0^1t^{-1/2}\\,\\mathrm dt$ 收敛。此端也对<b>一切</b> $m,n$ 收敛。</p>' },
+  { title: '据此排除 A、B、C',
+    cls: 'bad',
+    ribbon: {k: 3, ok: false},
+    body: '<p>两端都恒收敛，不存在任何使积分发散的 $m$ 或 $n$：「仅与 $m$ 有关」「仅与 $n$ 有关」「与两者都有关」全都不成立。</p>' },
+  { title: '结论',
+    cls: 'good',
+    body: '<p>对一切正整数 $m,n$ 积分都收敛，敛散性<b>与 $m,n$ 的取值都无关</b>，答案选 <b>D</b>。</p>' },
+];
+
+var snaps = STEPS.map(function(s, i){
+  return {
+    cls: i === STEPS.length - 1 ? 'done' : 'step',
+    tag: '第 ' + (i + 1) + ' 步',
+    log: s.title,
+    html: STEPS.slice(0, i + 1).map(function(x, j){
+      return card(j + 1, x.cls, x.title, x.body);
+    }).join(''),
+    ribbon: s.ribbon || undefined,
+    done: i === STEPS.length - 1,
+  };
+});
+
+AW.init({
+  title: '2010 数学二 第4题 · $\\displaystyle\\int_0^1\\frac{\\sqrt[m]{\\ln^2(1-x)}}{\\sqrt[n]{x}}\\,\\mathrm dx$ 的敛散性',
+  subtitle: '考点：反常积分审敛 · 方法：两端瑕点分别比较判别',
+  intro: '点击「▶ 播放」逐步展开推理链：分别审查两个瑕点。',
+  render: function(stage, sn){
+    if(sn.html != null) stage.innerHTML = sn.html;
+    renderMathAfterSnap(stage);
+  },
+  ribbonTitle: '审查进度（✓ 端点收敛 / ✗ 排除选项）',
+  snaps: snaps,
+  result: {
+    big: '答案 D（与 $m,n$ 都无关，恒收敛）',
+    html: '记忆锚点：<b>$0$ 端比幂次（$\\frac2m-\\frac1n\\gt-1$ 恒成立），$1$ 端比对数（$\\lvert\\ln t\\rvert$ 的任何次幂都压不过 $t^{-1/2}$）</b>。对数永远斗不过负幂，这是敛散判别里的万能事实。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

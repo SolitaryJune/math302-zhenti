@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学·概念动画：曲线与弦的高低（2014 年第 3 题）</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+function card(n, cls, title, body){
+  return '<div class="aw-stepcard ' + (cls || '') + '"><h4><span class="n">' + n +
+         '</span>' + title + '</h4>' + body + '</div>';
+}
+
+var STEPS = [
+  { title: '审题眼：认出 $g(x)$ 是弦', cls: 'key', tag: '审题', log: 'g 连接 (0,f(0)) 与 (1,f(1))，比较曲线与弦',
+    body: '<p>$g(x)=f(0)(1-x)+f(1)x$ 满足 $g(0)=f(0)$、$g(1)=f(1)$，是连接两端点 $(0,f(0))$、$(1,f(1))$ 的<b>直线（弦）</b>。比较 $f$ 与 $g$ 就是比较曲线与弦的高低。</p>' },
+  { title: '选项 A、B：单调性不够用', cls: 'bad', tag: '选项 A/B', log: 'f 一撇非负只管单调，管不了与弦的高低',
+    ribbon: {k:1, ok:false},
+    body: '<p>$f\'\\ge0$ 只保证 $f$ 单调不减：曲线可以先陡后缓、也可以先缓后陡，与弦的上下关系<b>不定</b>，A、B 的前提不足以推出结论。</p>' },
+  { title: '选项 C：凹凸方向判反', cls: 'bad', tag: '选项 C', log: 'f 两撇非负图形开口向上，曲线在弦下方，不是上方',
+    ribbon: {k:2, ok:false},
+    body: '<p>同济教材口径：$f\'\'\\ge0$ 图形<b>凹（开口向上）</b>，曲线在两端连线的<b>下方</b>，应是 $f\\le g$；C 说 $f\\ge g$ 正好反了。</p>' },
+  { title: '选项 D：完整推理链', cls: 'good', tag: '选项 D', log: '差函数两端为零、二阶导非负，得差非正',
+    ribbon: {k:3, ok:true},
+    body: '<p>令 $\\varphi(x)=f(x)-g(x)$，则 $\\varphi(0)=\\varphi(1)=0$；$g$ 是一次函数，故</p>' +
+          '<p>$$\\varphi\'\'(x)=f\'\'(x)\\ge0.$$</p>' +
+          '<p>凹函数整段不超过两端连线，而两端 $\\varphi=0$，故</p>' +
+          '<p>$$\\varphi(x)\\le0\\ \\Longleftrightarrow\\ f(x)\\le g(x),\\qquad x\\in[0,1].$$</p>' },
+  { title: '结论', cls: 'good', tag: '完成', log: 'f 两撇非负推出 f 不超过 g，选 D',
+    body: '<p>$f\'\'\\ge0\\Rightarrow f\\le g$，选 <b>D</b>。</p>' },
+];
+
+var snaps = STEPS.map(function(s, i){
+  return {
+    cls: i === STEPS.length - 1 ? 'done' : (s.cls === 'bad' ? 'miss' : 'step'),
+    tag: s.tag,
+    log: s.log,
+    html: STEPS.slice(0, i + 1).map(function(x, j){
+      return card(j + 1, x.cls, x.title, x.body);
+    }).join(''),
+    ribbon: s.ribbon,
+    done: i === STEPS.length - 1,
+  };
+});
+
+AW.init({
+  title: '【2014 数二·3】$g(x)=f(0)(1-x)+f(1)x$ 与 $f$ 谁高谁低',
+  subtitle: '考点：凹凸性与弦 · 选项逐项推演',
+  counterLabel: '步数',
+  ribbonTitle: '推理链（✓ 对 / ✗ 错）',
+  intro: '点击「▶ 播放」逐步展开推理链。',
+  render: function(stage, sn){
+    if(sn.html != null) stage.innerHTML = sn.html;
+    renderMathAfterSnap(stage);
+  },
+  snaps: snaps,
+  result: {
+    big: '答案 D（f ≤ g）',
+    html: '记忆锚点：<b>弦 = 两端连线，凹（开口向上）的曲线躺在弦下方</b>。技巧：作差 $\\varphi=f-g$，两端为零 + $\\varphi\'\'=f\'\'\\ge0$ 即得 $\\varphi\\le0$。$f\'\\ge0$（单调）与高低关系无关——这是 A、B 的陷阱。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

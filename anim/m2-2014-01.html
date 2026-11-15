@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学·过程动画：无穷小阶数定 α 的范围（2014 年第 1 题）</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+var CARDS = [
+  { cls: 'key', title: '审题：把「高阶」翻译成阶数',
+    body: '<p>$x\\to0^{+}$ 时若某量 $\\sim Cx^{p}$（$C\\neq0$），则「比 $x$ 高阶」$\\Longleftrightarrow$ <b>阶数 $p>1$</b>。两个量各列一个不等式，取交集定 $\\alpha$。</p>' },
+  { cls: '', title: '第一量：$\\ln^{\\alpha}(1+2x)$ 的阶',
+    body: '<p>$\\ln(1+2x)\\sim2x$，幂取 $\\alpha$ 次不改变比例阶：</p>' +
+          '<p>$$\\ln^{\\alpha}(1+2x)\\sim(2x)^{\\alpha},\\qquad \\text{阶数}=\\alpha.$$</p>' },
+  { cls: 'good', title: '条件一：$\\alpha>1$',
+    body: '<p>第一量要是比 $x$ 高阶的无穷小，必须</p><p>$$\\alpha>1.$$</p>' },
+  { cls: '', title: '第二量：$(1-\\cos x)^{1/\\alpha}$ 的阶',
+    body: '<p>$1-\\cos x\\sim\\dfrac{x^{2}}{2}$，故</p>' +
+          '<p>$$(1-\\cos x)^{\\frac{1}{\\alpha}}\\sim\\Big(\\dfrac{x^{2}}{2}\\Big)^{\\frac{1}{\\alpha}},\\qquad \\text{阶数}=\\dfrac{2}{\\alpha}.$$</p>' },
+  { cls: 'good', title: '条件二：$\\alpha<2$',
+    body: '<p>第二量要是高阶，必须</p><p>$$\\dfrac{2}{\\alpha}>1\\ \\Longleftrightarrow\\ \\alpha<2\\quad(\\alpha>0).$$</p>' },
+  { cls: 'good', title: '取交集并回验',
+    body: '<p>$$1<\\alpha<2.$$</p>' +
+          '<p>取 $\\alpha=1.5$ 回验：第一量阶 $1.5>1$，第二量阶 $\\dfrac{2}{1.5}\\approx1.33>1$，均高阶，成立。答案 <b>B</b>。</p>' },
+];
+
+AW.init({
+  title: '【2014 数二·1】两个无穷小都比 $x$ 高阶，定 $\\alpha$',
+  subtitle: '考点：无穷小比较 · 方法：等价无穷小定阶 + 解不等式组',
+  counterLabel: '已列条件',
+  ribbonTitle: '条件一 / 条件二 / 交集',
+  intro: '点击「▶ 播放」逐步演示定阶推导。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    stage.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>：每步点亮一张卡'));
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    this._cards = [];
+    for(var k = 0; k < CARDS.length; k++){
+      var d = AW.el('div', 'aw-stepcard ' + (CARDS[k].cls || ''),
+        '<h4><span class="n">' + (k + 1) + '</span>' + CARDS[k].title + '</h4>' + CARDS[k].body);
+      d.style.display = 'none';
+      board.appendChild(d);
+      this._cards.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'shift', tag:'审题', log:'比 x 高阶就是阶数大于 1，两个量各列一个不等式', count:0 },
+    { cls:'step',  tag:'第一量', log:'ln(1+2x) 等价于 2x，取 α 次幂后阶数是 α', count:1 },
+    { cls:'ok',    tag:'条件一', log:'第一量要高阶：α 大于 1', count:2, ribbon:{k:1, ok:true} },
+    { cls:'step',  tag:'第二量', log:'1−cos x 等价于 x²/2，取 1/α 次幂后阶数是 2/α', count:3 },
+    { cls:'ok',    tag:'条件二', log:'第二量要高阶：2/α 大于 1，即 α 小于 2', count:4, ribbon:{k:2, ok:true} },
+    { cls:'done',  tag:'完成', log:'交集 1<α<2，答案 B', count:5, ribbon:{k:3, ok:true}, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    for(var k = 0; k < this._cards.length; k++){
+      this._cards[k].style.display = (k <= i) ? '' : 'none';
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '答案 B（1 < α < 2）',
+    html: '记忆锚点：<b>幂取次不改变阶</b>——$\\ln^{\\alpha}(1+2x)$ 的阶是 $\\alpha$，$(1-\\cos x)^{1/\\alpha}$ 的阶是 $\\dfrac{2}{\\alpha}$；两阶都要大于 $1$，交集 $(1,2)$。易错：只查一个量会误选 A；解 $\\dfrac{2}{\\alpha}>1$ 时别丢 $\\alpha>0$。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

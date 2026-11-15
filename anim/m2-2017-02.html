@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2017·02 凹函数与定积分的符号</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_concept_template.html，只改题目专属区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+// 一张推理卡片（body 里可写 $..$ / $$..$$ 公式）
+function card(n, cls, title, body){
+  return '<div class="aw-stepcard ' + (cls || '') + '"><h4><span class="n">' + n +
+         '</span>' + title + '</h4>' + body + '</div>';
+}
+
+// 推理链：每一步的完整内容（引擎按步数截取显示）
+var STEPS = [
+  { title: '审题：$f\'\'>0$ 的几何含义',
+    cls: 'key',
+    body: '<p>$f\'\'(x)>0$ ⟹ $f$ 严格<b>下凸</b>：任一段区间内部，图像严格位于两端点连线（弦）的<b>下方</b>。已知三点 $(-1,1)$、$(0,-1)$、$(1,1)$，恰好把 $[-1,1]$ 分成两段。</p>',
+    log: '下凸：图像被端点弦压在下方' },
+  { title: '策略：与弦比较，而不是硬算',
+    cls: 'step',
+    body: '<p>$f$ 没给表达式，$\\int_{-1}^1 f$ 不能直接算；但<b>弦是线性的</b>，积分好算——用 $f<\\text{弦}$ 把不等式"积分过去"。</p>',
+    log: '拿线性弦当比较基准' },
+  { title: '左段 $[-1,0]$：弦积分恰为 0',
+    cls: 'good',
+    body: '<p>过 $(-1,1)$、$(0,-1)$ 的弦 $L_1(x)=-1-2x$：$$\\int_{-1}^{0}L_1\\,\\mathrm{d}x=\\Big[-x-x^2\\Big]_{-1}^{0}=0$$ 由下凸性 $f(x)<L_1(x)$（内部），故 $\\int_{-1}^{0}f\\,\\mathrm{d}x<0$。</p>',
+    ribbon: {k:1, ok:true},
+    log: '左段：f 低于弦，积分 < 0' },
+  { title: '右段 $[0,1]$：同样 < 0',
+    cls: 'good',
+    body: '<p>过 $(0,-1)$、$(1,1)$ 的弦 $L_2(x)=-1+2x$：$$\\int_{0}^{1}L_2\\,\\mathrm{d}x=\\Big[-x+x^2\\Big]_{0}^{1}=0$$ 同理 $\\int_{0}^{1}f\\,\\mathrm{d}x<0$。</p>',
+    ribbon: {k:2, ok:true},
+    log: '右段：f 低于弦，积分 < 0' },
+  { title: '相加得结论；C、D 为何定不了',
+    cls: 'good',
+    body: '<p>两段相加：$\\int_{-1}^{1}f\\,\\mathrm{d}x<0$，A 方向相反。C、D 比的是 $\\int_{-1}^0 f$ 与 $\\int_0^1 f$ 谁大——两段都 $<0$ 但大小取决于 $f$ 形状：如 $f=2x^2-1$（满足全部条件）两段同为 $-\\dfrac13$，相等；不对称扰动后可任意，故 C、D 不恒成立。</p>',
+    ribbon: {k:3, ok:true},
+    log: '总积分 < 0；左右两段大小不定' },
+  { title: '结论',
+    cls: 'good',
+    body: '<p>答案选 <b>B</b>：$\\displaystyle\\int_{-1}^1 f(x)\\,\\mathrm{d}x<0$。</p>',
+    log: '选 B' },
+];
+
+var snaps = STEPS.map(function(s, i){
+  return {
+    cls: i === STEPS.length - 1 ? 'done' : 'step',
+    tag: '第 ' + (i + 1) + ' 步',
+    log: s.log || s.title,
+    count: i + 1,
+    ribbon: s.ribbon,
+    html: STEPS.slice(0, i + 1).map(function(x, j){
+      return card(j + 1, x.cls, x.title, x.body);
+    }).join(''),
+    done: i === STEPS.length - 1,
+  };
+});
+
+AW.init({
+  title: '$f\'\'>0$，$f(\\pm1)=1$，$f(0)=-1$：判断 $\\int_{-1}^1 f\\,\\mathrm{d}x$ 的符号',
+  subtitle: '考点：凹凸性 + 定积分比较 · 方法：图像与弦比高低，弦的积分恰为 0',
+  counterLabel: '推理步',
+  ribbonTitle: '关键环节（✓ 完成）',
+  intro: '点击「▶ 播放」逐步展开推理链。',
+  render: function(stage, sn){
+    if(sn.html != null) stage.innerHTML = sn.html;
+    renderMathAfterSnap(stage);
+  },
+  snaps: snaps,
+  result: {
+    big: '答案 B：$\\int_{-1}^1 f\\,\\mathrm{d}x<0$',
+    html: '记忆锚点：<b>下凸 ⟹ 图像在弦下方</b>；两端值相反的弦积分恰为 $0$，于是 $f$ 的积分被压成负。C、D 属于"条件不足"型——$\\int_{-1}^0 f$ 与 $\\int_0^1 f$ 的大小题设定不了。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

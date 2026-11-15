@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2021·05 sec x 的 2 次泰勒多项式</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改题目专属区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [
+  "<b>① 审题：</b>$f(x)=\\sec x$ 的 2 次泰勒多项式为 $1+ax+bx^2$，即 $a=f'(0)$、$b=\\dfrac{f''(0)}{2}$——只缺两个数",
+  "<b>② 奇偶性先定 $a$：</b>$\\sec x=\\dfrac{1}{\\cos x}$ 是<b>偶函数</b>，麦克劳林展开无奇次项，$a=0$ 直接锁定（排除 A、B）",
+  "<b>③ 方法一·一阶导：</b>$f'(x)=\\sec x\\tan x$，代 $x=0$：$f'(0)=1\\cdot0=0$，与 ② 一致",
+  "<b>④ 方法一·二阶导：</b>$f''(x)=(\\sec x\\tan x)'=\\sec x\\tan^2x+\\sec^3x$，代 $x=0$：$f''(0)=0+1=1$",
+  "<b>⑤ 得 $b$：</b>$b=\\dfrac{f''(0)}{2}=\\dfrac12$——求导法完毕：$a=0,\\ b=\\dfrac12$",
+  "<b>⑥ 方法二·倒数展开：</b>$\\cos x=1-\\dfrac{x^2}{2}+o(x^2)$，令 $u=\\dfrac{x^2}{2}$，用 $\\dfrac{1}{1-u}=1+u+o(u)$",
+  "<b>⑦ 展开验证：</b>$\\sec x=\\dfrac{1}{1-\\frac{x^2}{2}+o(x^2)}=1+\\dfrac{x^2}{2}+o(x^2)$——二次系数 $+\\dfrac12$，两法一致",
+  "<b>⑧ 结论：</b>$a=0,\\ b=\\dfrac12$，选 D"
+];
+
+AW.init({
+  title: '2021·05　$\\sec x$ 的 2 次泰勒多项式 $1+ax+bx^2$',
+  subtitle: '考点：麦克劳林展开 · 偶函数奇次项为零 · $\\cos x$ 展开取倒数',
+  counterLabel: '已推导',
+  ribbonTitle: '推导进度（✓ 完成）',
+  intro: '点击「▶ 播放」或「下一步」，求导法与倒数展开法互相印证。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var inner = AW.el('div', '');
+    inner.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>：当前行亮琥珀色，已完成的行变绿'));
+    this._rows = [];
+    for (var i = 0; i < ROWS.length; i++){
+      var r = AW.el('div', 'aw-stepcard', ROWS[i]);
+      inner.appendChild(r);
+      this._rows.push(r);
+    }
+    wrap.appendChild(inner);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step',  tag:'审题',   log:'系数含义明确：a 是一阶导数值，b 是二阶导数值的一半', count:0, ribbon:{k:1, ok:true} },
+    { cls:'shift', tag:'定 a',   log:'正割是余弦的倒数，偶函数没有奇次项，a 必为零', count:1, ribbon:{k:2, ok:true} },
+    { cls:'ok',    tag:'一阶导', log:'正割乘正切在零点等于零，验证 a 为零', count:2, ribbon:{k:3, ok:true} },
+    { cls:'ok',    tag:'二阶导', log:'再求一次导得两项，在零点只剩正割立方等于一', count:3, ribbon:{k:4, ok:true} },
+    { cls:'ok',    tag:'得 b',   log:'二分之一乘一，b 等于二分之一', count:4, ribbon:{k:5, ok:true} },
+    { cls:'shift', tag:'换法',   log:'换倒数展开法验证：余弦展到平方项，取倒数套几何级数', count:5, ribbon:{k:6, ok:true} },
+    { cls:'ok',    tag:'验证',   log:'二次项系数翻转成正的二分之一，两种方法结果一致', count:6, ribbon:{k:7, ok:true} },
+    { cls:'done',  tag:'完成',   log:'结论：a 为零、b 为正二分之一，选 D', count:7, ribbon:{k:8, ok:true}, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    var rows = this._rows;
+    for (var j = 0; j < rows.length; j++){
+      rows[j].className = 'aw-stepcard' + (j < i ? ' good' : (j === i ? ' key' : ''));
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '选 D　$a=0,\\ b=\\dfrac12$，即 $\\sec x=1+\\dfrac{x^2}{2}+o(x^2)$',
+    html: '记忆锚点：<b>偶函数 $\\Rightarrow a=0$；$\\cos$ 展开取倒数，二次系数符号翻转（$-\\frac12\\to+\\frac12$）</b>。易错：把 $\\sec$ 当 $\\cos$ 展开错选 C；把 $f(0)=1$ 误当一次项系数错选 A/B。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

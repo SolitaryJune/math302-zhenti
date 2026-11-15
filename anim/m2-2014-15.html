@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2014·15 变限积分极限</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改 AW.init 区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [];
+
+var LINES = [
+  "<p><b>审题</b>：分子是变限积分 $\\int_1^x\\big[t^2\\big(e^{1/t}-1\\big)-t\\big]\\,\\mathrm dt$，分母是 $x^2\\ln\\big(1+\\tfrac1x\\big)$。$x\\to+\\infty$ 时两者都趋于 $+\\infty$，属 $\\dfrac{\\infty}{\\infty}$ 型。</p>",
+  "<p><b>分母的主部</b>：用 $\\ln(1+u)=u-\\dfrac{u^2}{2}+o(u^2)$（取 $u=\\tfrac1x$）：$$x^2\\ln\\Big(1+\\frac1x\\Big)=x^2\\Big(\\frac1x-\\frac{1}{2x^2}+o\\big(\\tfrac1{x^2}\\big)\\Big)=x-\\frac12+o(1)\\sim x.$$</p>",
+  "<p><b>分子的主部</b>：被积函数 $t^2\\big(e^{1/t}-1\\big)-t$ 当 $t$ 很大时趋于 $\\dfrac12$（下一步算），故分子 $\\sim\\dfrac x2\\to+\\infty$——确认 $\\dfrac{\\infty}{\\infty}$ 型。</p>",
+  "<p><b>洛必达：分子求导</b>（变限积分求导，上限 $x$ 代入被积函数）：$$\\Big(\\int_1^x\\big[t^2(e^{1/t}-1)-t\\big]\\mathrm dt\\Big)^{\\prime}=x^2\\big(e^{1/x}-1\\big)-x.$$</p>",
+  "<p><b>泰勒展开看主部</b>：令 $u=\\dfrac1x\\to0^+$，$$e^u-1=u+\\frac{u^2}{2}+o(u^2)\\ \\Longrightarrow\\ x^2\\big(e^{1/x}-1\\big)=\\frac1u+\\frac12+o(1)=x+\\frac12+o(1).$$</p>",
+  "<p><b>分子导数的极限</b>：$$x^2\\big(e^{1/x}-1\\big)-x=\\Big(x+\\frac12+o(1)\\Big)-x=\\frac12+o(1)\\ \\longrightarrow\\ \\frac12.$$</p>",
+  "<p><b>分母不硬求导</b>：由主部 $x^2\\ln\\big(1+\\tfrac1x\\big)=x-\\dfrac12+o(1)$ 知其导数趋于 $1$（硬算 $2x\\ln\\big(1+\\tfrac1x\\big)-\\dfrac{x}{x+1}\\to1$ 也一致）。</p>",
+  "<p><b>收尾</b>：洛必达后分子导数趋于 $\\dfrac12$、分母导数趋于 $1$：$$\\lim_{x\\to+\\infty}\\frac{\\int_1^x\\big[t^2(e^{1/t}-1)-t\\big]\\mathrm dt}{x^2\\ln\\big(1+\\frac1x\\big)}=\\frac{1/2}{1}=\\boxed{\\dfrac12}.$$</p>"
+];
+
+AW.init({
+  title: "变限积分的极限：洛必达之前先看主部",
+  subtitle: "考点：变限积分求导 · 泰勒展开 · $\\dfrac{\\infty}{\\infty}$ 型极限（2014 年数学二第 15 题）",
+  counterLabel: "推导步",
+  ribbonTitle: "关键节点（✓ 已完成）",
+  intro: "点击「▶ 播放」逐步演示极限的求解过程。",
+
+  build: function(stage){
+    stage.innerHTML = '';
+    ROWS.length = 0;
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    for(var k = 0; k < LINES.length; k++){
+      var d = AW.el('div', '', LINES[k]);
+      d.style.cssText = 'margin:8px 0;padding:9px 14px;border-left:3px solid #e2e8f0;background:#f8fafc;border-radius:0 12px 12px 0;font-size:14.5px;line-height:1.9;display:none;';
+      board.appendChild(d);
+      ROWS.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  render: function(stage, sn){
+    for(var k = 0; k < ROWS.length; k++){
+      var r = ROWS[k];
+      if(k >= sn.show){ r.style.display = 'none'; continue; }
+      r.style.display = 'block';
+      if(k === sn.show - 1 && !sn.done){
+        r.style.borderLeftColor = '#d97706';
+        r.style.background = '#fffbeb';
+      } else {
+        r.style.borderLeftColor = '#16a34a';
+        r.style.background = '#f8fafc';
+      }
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  snaps: [
+    { cls:"shift", tag:"审题",     log:"分子是变限积分，分母带对数，两个都冲向无穷，先确认是无穷比无穷", show:1, count:0 },
+    { cls:"step",  tag:"分母主部", log:"对数用泰勒展开，分母的主部就是 x", show:2, count:1 },
+    { cls:"step",  tag:"分子主部", log:"被积函数在 t 很大时趋于常数二分之一，分子大约是 x 的一半", show:3, count:2, ribbon:{k:1, ok:true} },
+    { cls:"step",  tag:"洛必达",   log:"无穷比无穷，分子按变限积分求导，把上限直接代进被积函数", show:4, count:3 },
+    { cls:"step",  tag:"泰勒展开", log:"指数函数展开到二阶，换成倒数变量看主部", show:5, count:4 },
+    { cls:"ok",    tag:"分子导数", log:"展开式减去 x 后恰好剩下二分之一，分子导数的极限是二分之一", show:6, count:5, ribbon:{k:2, ok:true} },
+    { cls:"step",  tag:"分母导数", log:"分母不硬求导，用主部知道它的导数趋于 1", show:7, count:6 },
+    { cls:"done",  tag:"完成",     log:"两个导数的极限一比，最终结果是二分之一", show:8, count:7, done:true },
+  ],
+
+  result: {
+    big: "极限 $=\\dfrac{1}{2}$",
+    html: "记忆锚点：<b>变限积分求导 + 泰勒展开看主部</b>。$e^{1/x}-1$ 必须展到二阶：$\\frac1x+\\frac{1}{2x^2}+o\\big(\\frac{1}{x^2}\\big)$，减 $x$ 后才剩下 $\\frac12$；只展一阶会误得 $0$。分母 $x^2\\ln(1+\\frac1x)=x-\\frac12+o(1)$，导数趋于 $1$。捷径：分子 $\\sim\\frac x2$、分母 $\\sim x$，比值即 $\\frac12$。",
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

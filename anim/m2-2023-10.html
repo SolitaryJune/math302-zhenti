@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学·算法类动画：两个生成子空间的交</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+AW.init({
+  title: '既可由 $\\alpha_1,\\alpha_2$ 又可由 $\\beta_1,\\beta_2$ 表示的 $\\gamma$',
+  subtitle: '考点：子空间的交 · 方法：联立成齐次方程组 → 消元 → 回代',
+  counterLabel: '消元步',
+  intro: '点击「▶ 播放」逐步演示增广矩阵消元与回代。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    var lines = [
+      '<b>设式联立</b>：$\\gamma$ 同时落在两个生成子空间里，设 $$x_1\\boldsymbol\\alpha_1+x_2\\boldsymbol\\alpha_2=y_1\\boldsymbol\\beta_1+y_2\\boldsymbol\\beta_2$$ 移项得 4 元齐次方程组 $x_1\\boldsymbol\\alpha_1+x_2\\boldsymbol\\alpha_2-y_1\\boldsymbol\\beta_1-y_2\\boldsymbol\\beta_2=\\boldsymbol 0$',
+      '<b>系数矩阵</b>：$$\\Bigl(\\begin{array}{cccc}1&2&2&1\\\\2&1&5&0\\\\3&1&9&1\\end{array}\\Bigr)$$',
+      '<b>消元</b>：$r_2-2r_1,\\ r_3-3r_1$ 后再 $r_3-\\frac53r_2$：$$\\Bigl(\\begin{array}{cccc}1&2&2&1\\\\0&-3&1&-2\\\\0&0&\\frac43&\\frac43\\end{array}\\Bigr)$$ 秩 3，一个自由变量，取 $y_2$',
+      '<b>回代</b>：末行 $\\frac43(y_1+y_2)=0\\Rightarrow y_1=-y_2$；第二行 $\\Rightarrow x_2=-y_2$；第一行 $\\Rightarrow x_1=3y_2$。取 $y_2=1$ 得 $(x_1,x_2,y_1,y_2)=(3,-1,-1,1)$',
+      '<b>算出 γ 并验算</b>：$\\gamma=3\\boldsymbol\\alpha_1-\\boldsymbol\\alpha_2=(1,5,8)^{\\mathsf T}$；另一侧 $-\\boldsymbol\\beta_1+\\boldsymbol\\beta_2=(-1,-5,-8)^{\\mathsf T}=-\\gamma$，两个方向一致 ✓',
+      '<b>结论</b>：$$\\gamma=k\\begin{pmatrix}1\\\\5\\\\8\\end{pmatrix}\\qquad\\Rightarrow\\qquad \\text{选 D}$$',
+    ];
+    this._lines = [];
+    for(var i=0;i<lines.length;i++){
+      var d = AW.el('div', '', lines[i]);
+      d.style.cssText = 'padding:9px 14px;margin:7px 0;border-left:3px solid transparent;border-radius:10px;transition:all .35s;opacity:.28;font-size:15px;line-height:1.9;';
+      board.appendChild(d);
+      this._lines.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step',  tag:'设式',   log:'两种表示相等，移项成四元齐次方程组', count:0 },
+    { cls:'step',  tag:'列矩阵', log:'四个向量按列排成三行四列的系数矩阵', count:1 },
+    { cls:'shift', tag:'消元',   log:'三步行变换化成阶梯形，秩 3，自由变量取 y₂', count:2 },
+    { cls:'shift', tag:'回代',   log:'从下往上逐行回代，解出一组基础解', count:3 },
+    { cls:'ok',    tag:'验算',   log:'两组向量各自表示出的向量方向一致，确认是交线', count:4 },
+    { cls:'done',  tag:'完成',   log:'结论：γ = k(1,5,8)，选 D', count:5, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    for(var j=0;j<this._lines.length;j++){
+      var L = this._lines[j];
+      L.style.opacity = j<=i ? '1' : '0.28';
+      L.style.borderLeftColor = (j===i) ? '#d97706' : (j<i ? '#16a34a' : 'transparent');
+      L.style.background = (j===i) ? '#fef3c7' : 'transparent';
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '$\\gamma=k\\,(1,5,8)^{\\mathsf T}$（选 D）',
+    html: '记忆锚点：<b>「同时能被两组向量表示」= 两个生成子空间的交 = 解一个联立齐次方程组</b>。易错：不联立、凭选项硬凑会误选 A；回代时自由变量的负号要逐行核对。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

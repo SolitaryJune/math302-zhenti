@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2012·21 方程根的存在唯一性与数列极限</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_concept_template.html，只改 AW.init 区域（STEPS 与 result） -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+// 一张推理卡片（body 里可写 $..$ / $$..$$ 公式）
+function card(n, cls, title, body){
+  return '<div class="aw-stepcard ' + (cls || '') + '"><h4><span class="n">' + n +
+         '</span>' + title + '</h4>' + body + '</div>';
+}
+
+// 推理链：每一步的完整内容（引擎按步数截取显示）
+var STEPS = [
+  { title: '审题：两条证明线索',
+    cls: 'key',
+    body: '<p>方程 $x+x^2+\\cdots+x^n=1$（$n>1$ 为整数）。(1) 存在性用<b>零点定理</b>（区间两端异号），唯一性用<b>严格单调</b>；(2) 对 $x_n$ 满足的方程做<b>等比求和</b>逼出简洁关系式，再用单调有界收敛、在关系式中取极限。</p>' },
+  { title: '存在性：两端异号',
+    cls: 'good',
+    body: '<p>令 $f_n(x)=x+x^2+\\cdots+x^n-1$，在 $[\\tfrac12,1]$ 上连续：$$f_n(1)=n-1>0,\\qquad f_n\\Big(\\frac12\\Big)=\\frac{\\tfrac12\\big(1-2^{-n}\\big)}{1-\\tfrac12}-1=-\\frac{1}{2^n}<0.$$由零点定理，存在 $x_n\\in\\big(\\tfrac12,1\\big)$ 使 $f_n(x_n)=0$。</p>' },
+  { title: '唯一性：严格递增',
+    cls: 'good',
+    body: '<p>$f_n\'(x)=1+2x+\\cdots+nx^{n-1}>0$ 在 $(0,1)$ 内恒成立，$f_n$ 严格单调增，故根<b>唯一</b>。</p>' },
+  { title: '关键关系式：等比求和',
+    cls: 'good',
+    body: '<p>$x_n\\neq1$，对 $x_n+x_n^2+\\cdots+x_n^n=1$ 用等比求和：$$\\frac{x_n\\big(1-x_n^{n}\\big)}{1-x_n}=1\\ \\Longrightarrow\\ x_n-x_n^{n+1}=1-x_n\\ \\Longrightarrow\\ \\boxed{2x_n-1=x_n^{n+1}}.$$</p>' },
+  { title: '单调有界：极限存在',
+    cls: 'good',
+    body: '<p>对固定的 $x$，$f_{n+1}(x)=f_n(x)+x^{n+1}>f_n(x)$。在 $x=x_n$ 处：$$f_{n+1}(x_n)=1+x_n^{n+1}>1=f_{n+1}(x_{n+1}),$$而 $f_{n+1}$ 递增，故 $x_n>x_{n+1}$：$\\{x_n\\}$ 递减且有下界 $\\tfrac12$，由单调有界准则极限 $A$ 存在。</p>' },
+  { title: '取极限解出 A',
+    cls: 'good',
+    body: '<p>$n\\ge2$ 时 $x_n\\le x_2<1$，故 $0\\le x_n^{n+1}\\le x_2^{n+1}\\to0$。在 $2x_n-1=x_n^{n+1}$ 两边令 $n\\to\\infty$：$$2A-1=0\\ \\Longrightarrow\\ A=\\frac12.$$即 $\\lim_{n\\to\\infty}x_n=\\dfrac12$。</p>' },
+];
+
+var snaps = STEPS.map(function(s, i){
+  return {
+    cls: i === STEPS.length - 1 ? 'done' : 'step',
+    tag: '第 ' + (i + 1) + ' 步',
+    log: s.title,
+    html: STEPS.slice(0, i + 1).map(function(x, j){
+      return card(j + 1, x.cls, x.title, x.body);
+    }).join(''),
+    done: i === STEPS.length - 1,
+  };
+});
+
+AW.init({
+  title: '$x^n+x^{n-1}+\\cdots+x=1$：根的存在唯一性与 $\\lim\\limits_{n\\to\\infty}x_n$',
+  subtitle: '考点：零点定理 · 严格单调 · 等比求和 · 单调有界准则',
+  intro: '点击「▶ 播放」逐步展开推理链。',
+  /* 统一 render：复刻引擎默认的 sn.html 行为，再对舞台做公式渲染 */
+  render: function(stage, sn){
+    if(sn.html != null) stage.innerHTML = sn.html;
+    renderMathAfterSnap(stage);
+  },
+  snaps: snaps,
+  result: {
+    big: '$\\lim\\limits_{n\\to\\infty}x_n=\\dfrac{1}{2}$',
+    html: '记忆锚点：<b>等比求和逼出 $2x_n-1=x_n^{n+1}$，右端因底数一致小于 $1$（$x_n\\le x_2<1$）而归零</b>。存在唯一性靠零点定理 + 严格递增；递减方向来自"项数变多、根必须左移"。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

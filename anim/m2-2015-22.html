@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2015 数二第 22 题 · $A^3=O$ 与矩阵方程求 $X$（交互动画）</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  /* stage 同步渲染；结论卡/标题/副标题由引擎在 render 返回后才写入或只写一次，
+     用 setTimeout(0) 兜底渲染（后台标签页 setTimeout 仍会触发） */
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+AW.init({
+  title: '2015·22　(I) 由 $A^3=O$ 求 $a$；(II) 解矩阵方程求 $X$',
+  subtitle: '考点：矩阵幂与行列式 · <b>方程因式分解 $(E-A)X(E-A^2)=E$</b>',
+  counterLabel: '已完成',
+  ribbonTitle: '推导进度（✓ 完成）',
+  intro: '点击「▶ 播放」或「下一步」，看 a 如何被逼出来、X 如何被「因式分解 + 求逆」解出。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var inner = AW.el('div', '');
+    inner.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>：当前行亮琥珀色，已完成的行变绿'));
+    var LINES = [
+      '$$\\boldsymbol A=\\begin{pmatrix}a&1&0\\\\1&a&-1\\\\0&1&a\\end{pmatrix},\\qquad \\boldsymbol A^{3}=\\boldsymbol O$$',
+      '<b>① (I) 取行列式：</b>$(\\det A)^3=\\det O=0\\ \\Rightarrow\\ \\det A=0$',
+      '<b>② 展开计算：</b>$\\det A=a\\,(a^2+1)-1\\cdot a=a^{3}\\ \\Rightarrow\\ a=0$（代回验证 $A^3=O$ ✓）',
+      '<b>③ (II) 因式分解：</b>$X-XA^2-AX+AXA^2=(X-XA^2)-A(X-XA^2)=(E-A)\\,X\\,(E-A^2)$，方程即 $(E-A)X(E-A^2)=E$',
+      '<b>④ 代入 $a=0$ 算 $A^2$：</b>$A^2=\\begin{pmatrix}1&0&-1\\\\0&0&0\\\\1&0&-1\\end{pmatrix}$',
+      '<b>⑤ 检查可逆：</b>$E-A$ 与 $E-A^2$ 的行列式都等于 $1\\ne0$，均可逆',
+      '<b>⑥ 求逆：</b>$(E-A)^{-1}=\\begin{pmatrix}2&1&-1\\\\1&1&-1\\\\1&1&0\\end{pmatrix},\\qquad(E-A^2)^{-1}=\\begin{pmatrix}2&0&-1\\\\0&1&0\\\\1&0&0\\end{pmatrix}$',
+      '<b>⑦ 相乘：</b>$X=(E-A)^{-1}(E-A^2)^{-1}=\\begin{pmatrix}2&1&-1\\\\1&1&-1\\\\1&1&0\\end{pmatrix}\\begin{pmatrix}2&0&-1\\\\0&1&0\\\\1&0&0\\end{pmatrix}=\\begin{pmatrix}3&1&-2\\\\1&1&-1\\\\2&1&-1\\end{pmatrix}$'
+    ];
+    this._rows = [];
+    for (var i = 0; i < LINES.length; i++){
+      var r = AW.el('div', 'aw-stepcard', LINES[i]);
+      inner.appendChild(r);
+      this._rows.push(r);
+    }
+    wrap.appendChild(inner);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step',  tag:'审题',   log:'第一问给立方零矩阵，第二问是含 X 的矩阵方程，先解 a 再解 X', count:0, ribbon:{k:1, ok:true} },
+    { cls:'ok',    tag:'取行列式', log:'立方等于零矩阵，两边取行列式，行列式的立方为零', count:1, ribbon:{k:2, ok:true} },
+    { cls:'ok',    tag:'算 a',  log:'按第一行展开，行列式恰是 a 的立方，故 a 等于零', count:2, ribbon:{k:3, ok:true} },
+    { cls:'shift', tag:'分解',  log:'四个项按公因式分组：提出左因子 E 减 A、右因子 E 减 A 平方', count:3, ribbon:{k:4, ok:true} },
+    { cls:'ok',    tag:'算 A²', log:'a 为零时代入算 A 的平方，三行两两相同结构清晰', count:4, ribbon:{k:5, ok:true} },
+    { cls:'ok',    tag:'可逆',  log:'两个行列式都等于一，都可逆，才能两边求逆', count:5, ribbon:{k:6, ok:true} },
+    { cls:'ok',    tag:'求逆',  log:'分别求出两个逆矩阵', count:6, ribbon:{k:7, ok:true} },
+    { cls:'done',  tag:'完成',  log:'按顺序相乘得到 X，注意左因子在左、右因子在右', count:7, ribbon:{k:8, ok:true}, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    var rows = this._rows;
+    for (var j = 0; j < rows.length; j++){
+      rows[j].className = 'aw-stepcard' + (j < i ? ' good' : (j === i ? ' key' : ''));
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '$a=0,\\quad X=\\begin{pmatrix}3&1&-2\\\\1&1&-1\\\\2&1&-1\\end{pmatrix}$',
+    html: '记忆锚点：<b>$A^3=O\\Rightarrow\\det A=0$ 定参数；矩阵方程按公因式分组</b>：$(E-A)X(E-A^2)=E\\Rightarrow X=(E-A)^{-1}(E-A^2)^{-1}$。易错：左右位置不能装反（乘法无交换律）；求逆前先验 $\\det\\neq0$（本题两个都等于 $1$）。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

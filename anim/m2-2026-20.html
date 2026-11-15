@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2026 数二第 20 题 · 拐点定 M + 无界区域旋转体体积（交互动画）</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+AW.init({
+  title: '2026·20　拐点 $M$ 与无界区域 $D$ 绕 $x$ 轴的旋转体体积',
+  subtitle: '考点：拐点判定 · 圆盘法 · <b>反常积分</b>（题库无图：区域用不等式文字描述）',
+  counterLabel: '已完成',
+  ribbonTitle: '推导进度（✓ 完成）',
+  intro: '点击「▶ 播放」或「下一步」，先定拐点，再分两段算体积。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var inner = AW.el('div', '');
+    inner.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>：当前行亮琥珀色，已完成的行变绿'));
+    var LINES = [
+      "<b>题目：</b>$M(x_0,y_0)$ 是 $y=\\dfrac{1}{1+x^2}$（$x\\ge0$）的拐点；$D$ 由曲线（$x\\ge x_0$ 段）、线段 $OM$ 与 $x$ 正半轴围成（第一象限无界区域），求 $D$ 绕 $x$ 轴旋转的体积",
+      "<b>求拐点：</b>$y'=\\dfrac{-2x}{(1+x^2)^2}$，$y''=\\dfrac{6x^2-2}{(1+x^2)^3}$；令 $y''=0$ 得 $x_0=\\dfrac{1}{\\sqrt3}$，两侧 $y''$ 由负变正；$y_0=\\dfrac{1}{1+1/3}=\\dfrac34$，故 $M=\\Big(\\dfrac{1}{\\sqrt3},\\ \\dfrac34\\Big)$",
+      "<b>区域结构（用不等式描述）：</b>$0\\le x\\le x_0$ 段上边界是线段 $OM$：斜率 $k=\\dfrac{3/4}{1/\\sqrt3}=\\dfrac{3\\sqrt3}{4}$，即 $y=kx$；$x\\ge x_0$ 段上边界是曲线；下边界都是 $x$ 轴",
+      "<b>圆盘法分段：</b>$$V=\\pi\\int_0^{x_0}(kx)^2\\,dx+\\pi\\int_{x_0}^{+\\infty}\\frac{dx}{(1+x^2)^2}=:V_1+V_2$$",
+      "<b>算 $V_1$：</b>$k^2=\\dfrac{27}{16}$，$x_0^3=3^{-3/2}=\\dfrac{1}{3\\sqrt3}$：$$V_1=\\pi\\cdot\\frac{27}{16}\\cdot\\frac{x_0^3}{3}=\\pi\\cdot\\frac{3}{16\\sqrt3}=\\frac{\\sqrt3}{16}\\pi$$（直线段旋转即圆锥，可用 $\\dfrac13\\pi y_0^2x_0$ 核对）",
+      "<b>反常积分的原函数：</b>$$\\int\\frac{dx}{(1+x^2)^2}=\\frac12\\Big(\\frac{x}{1+x^2}+\\arctan x\\Big)+C$$　上端 $x\\to+\\infty$：值 $=\\dfrac{\\pi}{4}$；下端 $x=x_0$：$\\dfrac{x_0}{1+x_0^2}=\\dfrac{\\sqrt3}{4}$，$\\arctan\\dfrac{1}{\\sqrt3}=\\dfrac{\\pi}{6}$，值 $=\\dfrac{\\sqrt3}{8}+\\dfrac{\\pi}{12}$",
+      "<b>算 $V_2$：</b>$$V_2=\\pi\\Big[\\frac{\\pi}{4}-\\Big(\\frac{\\sqrt3}{8}+\\frac{\\pi}{12}\\Big)\\Big]=\\pi\\Big(\\frac{\\pi}{6}-\\frac{\\sqrt3}{8}\\Big)=\\frac{\\pi^2}{6}-\\frac{\\sqrt3}{8}\\pi$$",
+      "<b>合并：</b>$$V=\\frac{\\sqrt3}{16}\\pi+\\frac{\\pi^2}{6}-\\frac{\\sqrt3}{8}\\pi=\\frac{\\pi^2}{6}-\\frac{\\sqrt3}{16}\\pi$$",
+      "<b>结论：</b>$M=\\Big(\\dfrac{1}{\\sqrt3},\\ \\dfrac34\\Big)$；$$V=\\frac{\\pi^2}{6}-\\frac{\\sqrt3}{16}\\pi\\approx1.30$$"
+    ];
+    this._rows = [];
+    for (var i = 0; i < LINES.length; i++){
+      var r = AW.el('div', 'aw-stepcard', LINES[i]);
+      inner.appendChild(r);
+      this._rows.push(r);
+    }
+    wrap.appendChild(inner);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step',  tag:'审题',   log:'题目有两个任务：先用 y″=0 定拐点 M，再算无界区域旋转体的体积', count:0, ribbon:{k:1, ok:true} },
+    { cls:'ok',    tag:'定拐点', log:'求出两阶导数，y″ 的零点在 x=1/√3 且两侧变号，M 坐标确定', count:1, ribbon:{k:2, ok:true} },
+    { cls:'step',  tag:'定区域', log:'区域在 0 到 x₀ 段的上边界是直线 OM，x₀ 之后才是曲线，下边界都是 x 轴', count:2, ribbon:{k:3, ok:true} },
+    { cls:'shift', tag:'列式',   log:'绕 x 轴旋转用圆盘法，直线段和曲线段分开积分再相加', count:3, ribbon:{k:4, ok:true} },
+    { cls:'ok',    tag:'算 V₁',  log:'直线段旋转是圆锥：k² 乘 x₀³/3，化简得 √3π/16，可用锥体公式核对', count:4, ribbon:{k:5, ok:true} },
+    { cls:'step',  tag:'背原函数', log:'曲线段的积分上限是无穷，这是反常积分；先写好 (1+x²)² 的原函数，再分别算两端值', count:5, ribbon:{k:6, ok:true} },
+    { cls:'ok',    tag:'算 V₂',  log:'上端 arctan 趋于 π/2 得 π/4，下端代入 1/√3，两值相减得 π/6 − √3/8', count:6, ribbon:{k:7, ok:true} },
+    { cls:'ok',    tag:'合并',   log:'两块相加，√3 项合并同类项：1/16 − 1/8 = −1/16', count:7, ribbon:{k:8, ok:true} },
+    { cls:'done',  tag:'完成',   log:'结论：拐点 M=(1/√3, 3/4)，体积 V = π²/6 − √3π/16 ≈ 1.30', count:8, ribbon:{k:9, ok:true}, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    var rows = this._rows;
+    for (var j = 0; j < rows.length; j++){
+      rows[j].className = 'aw-stepcard' + (j < i ? ' good' : (j === i ? ' key' : ''));
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '$M=\\left(\\dfrac{1}{\\sqrt3},\\dfrac34\\right)$，$V=\\dfrac{\\pi^2}{6}-\\dfrac{\\sqrt3}{16}\\pi$',
+    html: '记忆锚点：<b>无图题先写出区域的不等式描述</b>（$OM$ 段 $y=\\dfrac{3\\sqrt3}4x$，曲线段 $y=\\dfrac{1}{1+x^2}$）；圆盘法 $V=\\pi\\int y^2dx$ 分段相加；曲线段上限是 $+\\infty$，按反常积分取极限，$\\arctan x\\to\\dfrac\\pi2$、$\\dfrac{x}{1+x^2}\\to0$。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2020-21 几何量列方程解微分方程 · 逐步推导</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域 ================== */
+var rows = [];
+
+AW.init({
+  title: '面积比 $3:2$ 求曲线：$y=f(x)$ 过原点、$f\'>0$',
+  subtitle: '考点：几何量列积分方程 → 求导 → 降阶解微分方程',
+  counterLabel: '已推进',
+  intro: '点击「▶ 播放」：几何量表出 → 列方程 → 求导降阶 → 定常数。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    rows = [];
+    var wrap = AW.el('div', 'aw-scroll');
+    wrap.appendChild(AW.el('div', 'aw-row-label',
+      '<b>推导板</b>：$M=(x,f(x))$，$P=(x,0)$，$T$ 为 $M$ 处切线与 $x$ 轴交点'));
+    var ROWS = [
+      '$$T\\left(x-\\frac f{f\'},\\,0\\right)\\ \\Rightarrow\\ TP=\\frac f{f\'};\\qquad S_1=\\int_0^x f(t)\\,\\mathrm dt,\\qquad S_2=\\frac12\\cdot\\frac f{f\'}\\cdot f=\\frac{f^2}{2f\'}$$',
+      '$$S_1:S_2=3:2\\ \\Longrightarrow\\ \\int_0^x f(t)\\,\\mathrm dt=\\frac32\\cdot\\frac{f^2}{2f\'}=\\frac{3f^2}{4f\'}$$',
+      '$$\\text{两边对 } x \\text{ 求导}:\\quad f=\\frac34\\cdot\\frac{2f(f\')^2-f^2f\'\'}{(f\')^2}\\ \\Longrightarrow\\ \\frac{ff\'\'}{(f\')^2}=\\frac23$$',
+      '$$p=f\',\\ f\'\'=p\\frac{\\mathrm dp}{\\mathrm df}:\\quad \\frac{\\mathrm dp}{p}=\\frac23\\cdot\\frac{\\mathrm df}{f}\\ \\Longrightarrow\\ f\'=C_1f^{2/3}$$',
+      '$$f^{-2/3}\\,\\mathrm df=C_1\\,\\mathrm dx\\ \\Longrightarrow\\ 3f^{1/3}=C_1x+C_2;\\qquad f(0)=0\\ \\Rightarrow\\ C_2=0$$',
+      '$$y=Cx^3\\ (C>0);\\quad \\text{验证}:\\ \\frac{\\int_0^xCt^3\\mathrm dt}{(Cx^3)^2/(2\\cdot3Cx^2)}=\\frac{Cx^4/4}{Cx^4/6}=\\frac32\\ \\checkmark$$'
+    ];
+    ROWS.forEach(function(html){
+      var row = AW.el('div', 'derive-row', html);
+      row.style.cssText = 'padding:6px 14px;margin:8px 0;border-radius:8px;' +
+        'border-left:4px solid #cbd5e1;background:#f8fafc;opacity:0;' +
+        'transform:translateY(8px);transition:all .35s ease;';
+      wrap.appendChild(row);
+      rows.push(row);
+    });
+    stage.appendChild(wrap);
+  },
+
+  render: function(stage, sn, i){
+    rows.forEach(function(row, j){
+      var vis = j < i;
+      var cur = vis && j === i - 1;
+      row.style.opacity = vis ? '1' : '0';
+      row.style.transform = vis ? 'translateY(0)' : 'translateY(8px)';
+      row.style.borderLeftColor = cur ? '#f59e0b' : (vis ? '#10b981' : '#cbd5e1');
+      row.style.background = cur ? '#fffbeb' : (vis ? '#f0fdf4' : '#f8fafc');
+    });
+    renderMathAfterSnap(stage);
+  },
+
+  snaps: [
+    { cls:'shift', tag:'审题', log:'几何量全用 f 表出：切线交点、两块面积', count:0 },
+    { cls:'step',  tag:'几何量', log:'切线与 x 轴交点给出 TP = f 除以 f 一撇', count:1 },
+    { cls:'ok',    tag:'列方程', log:'面积比 3 比 2 写成积分等于 3f² 除以 4f 一撇', count:2 },
+    { cls:'step',  tag:'求导', log:'两边求导消去积分号，整理出 ff 两撇比 f 一撇平方 = 2/3', count:3 },
+    { cls:'step',  tag:'降阶', log:'缺 x 的方程：令 p=f 一撇，把 p 看成 f 的函数', count:4 },
+    { cls:'ok',    tag:'积分', log:'两次分离变量积分，过原点把 C2 定成 0', count:5 },
+    { cls:'done',  tag:'结论', log:'y = Cx³（C>0），回代验证比值恰为 3:2', count:6, done:true },
+  ],
+
+  result: {
+    big: '$y=Cx^3\\ (C>0)$',
+    html: '正确答案：所求曲线为 $y=Cx^3$（$C>0$ 为任意常数）。记忆点：<b>$TP=\\dfrac f{f\'}$</b>（切线在 $x$ 轴上的截距差）；含变限积分的方程<b>两边求导</b>化微分方程；缺 $x$ 型方程令 $f\'\'=p\\dfrac{\\mathrm dp}{\\mathrm df}$ 降阶。最后<b>务必回代验证</b> $3:2$。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

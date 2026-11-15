@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2018·02 哪个函数在 x=0 处不可导</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_concept_template.html，只改题目专属区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+// 一张推理卡片（body 里可写 $..$ / $$..$$ 公式）
+function card(n, cls, title, body){
+  return '<div class="aw-stepcard ' + (cls || '') + '"><h4><span class="n">' + n +
+         '</span>' + title + '</h4>' + body + '</div>';
+}
+
+// 推理链：每一步的完整内容（引擎按步数截取显示）
+var STEPS = [
+  { title: '审题眼：差商极限 + 分子量级',
+    cls: 'key',
+    body: '<p>四个函数在 $x=0$ 都连续，可导与否只看 $f\'(0)=\\lim_{x\\to0}\\dfrac{f(x)-f(0)}{x}$ 是否存在。分子含 $|x|$ 时 $\\dfrac{|x|}{x}$ 左右分别取 $\\pm1$：<b>分子恰为 $|x|$ 的一阶无穷小 ⇒ 左右导数不等；高于一阶 ⇒ 可导且 $f\'(0)=0$</b>。用 $\\sin t\\sim t$、$1-\\cos t\\sim\\dfrac{t^2}{2}$ 逐项称量。</p>',
+    log: '判别工具：差商极限 + 分子量级' },
+  { title: 'A：$|x|\\sin|x|$ —— 可导',
+    cls: 'good',
+    body: '<p>$f(0)=0$，$\\sin|x|\\sim|x|$，分子 $\\sim|x|\\cdot|x|=x^2$（比 $|x|$ 高两阶）：$$\\frac{|x|\\sin|x|}{x}=\\pm\\sin|x|\\to0$$ 可导，$f\'(0)=0$。</p>',
+    ribbon: {k:1, ok:false},
+    log: 'A 分子是 x²，高阶，可导' },
+  { title: 'B：$|x|\\sin\\sqrt{|x|}$ —— 可导',
+    cls: 'good',
+    body: '<p>$\\sin\\sqrt{|x|}\\sim\\sqrt{|x|}$，分子 $\\sim|x|^{3/2}$（仍高于一阶）：$$\\frac{|x|\\sin\\sqrt{|x|}}{x}=\\pm\\sin\\sqrt{|x|}\\to0$$ 可导，$f\'(0)=0$。</p>',
+    ribbon: {k:2, ok:false},
+    log: 'B 分子是 |x|^(3/2)，高阶，可导' },
+  { title: 'C：$\\cos|x|$ —— 可导（假绝对值）',
+    cls: 'good',
+    body: '<p>偶函数去绝对值不变：$\\cos|x|=\\cos x$，是处处光滑的初等函数，$f\'(0)=-\\sin0=0$。可导。</p>',
+    ribbon: {k:3, ok:false},
+    log: 'C 去掉绝对值就是 cos x，光滑' },
+  { title: 'D：$\\cos\\sqrt{|x|}$ —— 不可导！',
+    cls: 'bad',
+    body: '<p>$f(0)=1$，令 $t=\\sqrt{|x|}$，用 $1-\\cos t\\sim\\dfrac{t^2}{2}$：$$f(x)-f(0)=\\cos\\sqrt{|x|}-1\\sim-\\frac{t^2}{2}=-\\frac{|x|}{2}$$ 分子<b>恰为一阶</b>！$$\\frac{f(x)-f(0)}{x}\\sim-\\frac12\\cdot\\frac{|x|}{x}\\longrightarrow\\begin{cases}-\\dfrac12, & x\\to0^+\\\\[2pt]+\\dfrac12, & x\\to0^-\\end{cases}$$ 左右导数存在但不相等，$f\'(0)$ 不存在。</p>',
+    ribbon: {k:4, ok:true},
+    log: 'D 分子恰为 -|x|/2，一阶，左右导数 ±1/2 不等' },
+  { title: '结论',
+    cls: 'good',
+    body: '<p>答案选 <b>D</b>。核心记忆点：分子量级<b>高于</b> $|x|$ 一阶 → 可导（A、B、C）；恰为<b>一阶</b> → 差商出现 $\\dfrac{|x|}{x}$，左右导数必不等 → 不可导。</p>',
+    log: '一阶同阶必断，高阶必导，选 D' },
+];
+
+var snaps = STEPS.map(function(s, i){
+  return {
+    cls: i === STEPS.length - 1 ? 'done' : 'step',
+    tag: '第 ' + (i + 1) + ' 步',
+    log: s.log || s.title,
+    count: i + 1,
+    ribbon: s.ribbon,
+    html: STEPS.slice(0, i + 1).map(function(x, j){
+      return card(j + 1, x.cls, x.title, x.body);
+    }).join(''),
+    done: i === STEPS.length - 1,
+  };
+});
+
+AW.init({
+  title: '哪个函数在 $x=0$ 处不可导？逐项称分子的量级',
+  subtitle: '考点：导数定义 · 无穷小阶数 · 方法：高阶可导 / 同阶必断',
+  counterLabel: '推理步',
+  ribbonTitle: '选项判定（✓ 不可导 / ✗ 可导排除）',
+  intro: '点击「▶ 播放」逐项称量分子，锁定不可导的那个。',
+  render: function(stage, sn){
+    if(sn.html != null) stage.innerHTML = sn.html;
+    renderMathAfterSnap(stage);
+  },
+  snaps: snaps,
+  result: {
+    big: '答案 D：$\\cos\\sqrt{|x|}$ 在 $x=0$ 处不可导',
+    html: '记忆锚点：<b>量级称重</b>——$|x|\\sin|x|\\sim x^2$、$|x|\\sin\\sqrt{|x|}\\sim|x|^{3/2}$ 都高于一阶 ⇒ 可导；$\\cos\\sqrt{|x|}-1\\sim-\\dfrac{|x|}{2}$ 恰一阶 ⇒ 差商出现 $\\dfrac{|x|}{x}$，左右导数 $\\mp\\dfrac12$ 不相等。C 的绝对值是「假绝对值」：$\\cos|x|=\\cos x$。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

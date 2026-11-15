@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2017·07 由 P⁻¹AP=Λ 读特征向量</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改 AW.init 区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [];
+
+var LINES = [
+  "<p><b>第一步：改写相似式</b>。$P^{-1}AP=\\Lambda$ 两边左乘 $P$，得等价形式 $$AP=P\\Lambda.$$ 把 $P$ 按列分块 $P=(\\alpha_1,\\alpha_2,\\alpha_3)$，$\\Lambda=\\mathrm{diag}(0,1,2)$。</p>",
+  "<p><b>第二步：逐列比较</b>（$AP$ 的第 $j$ 列 = $P\\Lambda$ 的第 $j$ 列 = $\\Lambda$ 第 $j$ 个对角元 × $\\alpha_j$）$$A(\\alpha_1,\\alpha_2,\\alpha_3)=(\\alpha_1,\\alpha_2,\\alpha_3)\\begin{pmatrix}0&0&0\\\\0&1&0\\\\0&0&2\\end{pmatrix}$$</p>",
+  "<p><b>第 1 列</b>：对角线第 1 个是 $\\mathbf{0}$！$$A\\alpha_1=0\\cdot\\alpha_1=\\mathbf{0}$$ $\\alpha_1$ 属于特征值 $0$，贡献是<b>零向量</b>。</p>",
+  "<p><b>第 2、3 列</b>：$$A\\alpha_2=1\\cdot\\alpha_2=\\alpha_2,\\qquad A\\alpha_3=2\\cdot\\alpha_3=2\\alpha_3.$$ $P$ 可逆 ⟹ $\\alpha_i\\neq\\mathbf{0}$，都是<b>真</b>特征向量。</p>",
+  "<p><b>第三步：线性性合成</b>$$A(\\alpha_1+\\alpha_2+\\alpha_3)=A\\alpha_1+A\\alpha_2+A\\alpha_3=\\mathbf{0}+\\alpha_2+2\\alpha_3.$$</p>",
+  "<p><b>结论与排错</b>：结果 $\\alpha_2+2\\alpha_3$，选 <b>B</b>。C 漏乘对角元 $2$；D 特征值错位（$\\alpha_1$ 对应 $0$ 而非出现 $\\alpha_1$，$\\alpha_2$ 对应 $1$ 而非 $2$）；A 无中生有。</p>"
+];
+
+AW.init({
+  title: '$P^{-1}AP=\\mathrm{diag}(0,1,2)$，求 $A(\\alpha_1+\\alpha_2+\\alpha_3)$',
+  subtitle: '考点：相似对角化 + 特征值特征向量 · 方法：AP=PΛ 逐列比较，再线性合成',
+  counterLabel: '已执行',
+  intro: '点击「▶ 播放」逐步演示每一步推导。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    ROWS.length = 0;
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    for(var k = 0; k < LINES.length; k++){
+      var d = AW.el('div', '', LINES[k]);
+      d.style.cssText = 'margin:8px 0;padding:9px 14px;border-left:3px solid #e2e8f0;background:#f8fafc;border-radius:0 12px 12px 0;font-size:14.5px;line-height:1.9;display:none;';
+      board.appendChild(d);
+      ROWS.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  render: function(stage, sn){
+    for(var k = 0; k < ROWS.length; k++){
+      var r = ROWS[k];
+      if(k >= sn.show){ r.style.display = 'none'; continue; }
+      r.style.display = 'block';
+      if(k === sn.show - 1 && !sn.done){
+        r.style.borderLeftColor = '#d97706';
+        r.style.background = '#fffbeb';
+      } else {
+        r.style.borderLeftColor = '#16a34a';
+        r.style.background = '#f8fafc';
+      }
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  snaps: [
+    { cls:'shift', tag:'改写',    log:'左乘 P：AP = PΛ，按列分块看', show:1, count:0 },
+    { cls:'step',  tag:'逐列比较', log:'AP 的第 j 列 = 对角元 × αj，逐列相等', show:2, count:1 },
+    { cls:'step',  tag:'第1列',   log:'对角线第 1 个是 0：Aα1 = 零向量，贡献为零', show:3, count:2 },
+    { cls:'ok',    tag:'第2、3列', log:'Aα2 = α2，Aα3 = 2α3；P 可逆保证 αi 非零', show:4, count:3 },
+    { cls:'ok',    tag:'合成',    log:'线性合成：0 + α2 + 2α3 = α2+2α3，选 B', show:5, count:4 },
+    { cls:'done',  tag:'完成',    log:'C 漏乘 2、D 错位、A 无中生有', show:6, count:5, done:true },
+  ],
+
+  result: {
+    big: '答案 B：$\\alpha_2+2\\alpha_3$',
+    html: '记忆锚点：<b>$AP=P\\Lambda$ 的第 $j$ 列 = 对角元 × $\\alpha_j$</b>——对角线上是谁，$A\\alpha_j$ 就等于谁乘 $\\alpha_j$。第 1 个对角元是 $0$，$\\alpha_1$ 贡献零向量；别忘 $P$ 可逆 ⟹ $\\alpha_i\\ne\\mathbf{0}$。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

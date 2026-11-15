@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学·概念/分析类动画</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+// 一张推理卡片（body 里可写 $..$ / $$..$$ 公式）
+function card(n, cls, title, body){
+  return '<div class="aw-stepcard ' + (cls || '') + '"><h4><span class="n">' + n +
+         '</span>' + title + '</h4>' + body + '</div>';
+}
+
+// 推理链：每一步的完整内容（引擎按步数截取显示）
+var STEPS = [
+  { title: '审题眼：三个条件各管一件事',
+    cls: 'key',
+    body: '<p>4 阶<b>实对称</b>矩阵 $\\boldsymbol A$：保证可对角化；$\\boldsymbol A^2+\\boldsymbol A=\\boldsymbol O$：限定特征值的取值范围；$r(\\boldsymbol A)=3$：确定非零特征值的个数。三者合起来即可写出相似对角阵。</p>' },
+  { title: '矩阵方程 $\\Rightarrow$ 特征值方程',
+    cls: 'key',
+    body: '<p>设 $\\boldsymbol A\\boldsymbol\\xi=\\lambda\\boldsymbol\\xi$（$\\boldsymbol\\xi\\neq\\boldsymbol0$），代入 $\\boldsymbol A^2+\\boldsymbol A=\\boldsymbol O$：</p><p>$$(\\lambda^2+\\lambda)\\,\\boldsymbol\\xi=\\boldsymbol0\\ \\Longrightarrow\\ \\lambda(\\lambda+1)=0\\ \\Longrightarrow\\ \\lambda\\in\\{0,\\,-1\\}.$$</p><p>特征值<b>绝不可能取 1</b>——这是第一个关键事实。</p>' },
+  { title: '秩的含义：非零特征值有几个',
+    cls: 'good',
+    body: '<p>实对称矩阵必可对角化，可对角化矩阵的秩 $=$ 非零特征值的个数。$r(\\boldsymbol A)=3$，而 4 个特征值只能取 $0$ 或 $-1$，所以恰好是<b>三个非零 + 一个零</b>。</p>' },
+  { title: '定出特征值组合',
+    cls: 'good',
+    body: '<p>非零特征值只能取 $-1$，于是 4 个特征值为</p><p>$$\\lambda_1=\\lambda_2=\\lambda_3=-1,\\qquad\\lambda_4=0.$$</p><p>由实对称性，$\\boldsymbol A$ 相似于 $\\operatorname{diag}(-1,-1,-1,0)$。</p>' },
+  { title: '排除 A、B、C：都混进了特征值 1',
+    cls: 'bad',
+    ribbon: {k: 1, ok: false},
+    body: '<p>A 为 $\\operatorname{diag}(1,1,1,0)$、B 为 $\\operatorname{diag}(1,-1,-1,0)$、C 为 $\\operatorname{diag}(1,1,-1,0)$——三者都含 $1$，违反 $\\lambda^2+\\lambda=0$，全部淘汰。</p>' },
+  { title: '结论',
+    cls: 'good',
+    body: '<p>特征值集合 $\\{0,-1\\}$ + 秩 $3$ $\\Rightarrow$ 相似于 $\\operatorname{diag}(-1,-1,-1,0)$，答案选 <b>D</b>。</p>' },
+];
+
+var snaps = STEPS.map(function(s, i){
+  return {
+    cls: i === STEPS.length - 1 ? 'done' : 'step',
+    tag: '第 ' + (i + 1) + ' 步',
+    log: s.title,
+    html: STEPS.slice(0, i + 1).map(function(x, j){
+      return card(j + 1, x.cls, x.title, x.body);
+    }).join(''),
+    ribbon: s.ribbon || undefined,
+    done: i === STEPS.length - 1,
+  };
+});
+
+AW.init({
+  title: '2010 数学二 第8题 · $\\boldsymbol A^2+\\boldsymbol A=\\boldsymbol O$、$r(\\boldsymbol A)=3$，$\\boldsymbol A$ 相似于谁',
+  subtitle: '考点：矩阵方程定特征值 + 秩定重数 · 实对称保证可对角化',
+  intro: '点击「▶ 播放」逐步展开推理链：先限特征值，再数非零个数。',
+  render: function(stage, sn){
+    if(sn.html != null) stage.innerHTML = sn.html;
+    renderMathAfterSnap(stage);
+  },
+  ribbonTitle: '选项核对（✓ 正确 / ✗ 淘汰）',
+  snaps: snaps,
+  result: {
+    big: '答案 D（$\\operatorname{diag}(-1,-1,-1,0)$）',
+    html: '记忆锚点：<b>$\\boldsymbol A^2+\\boldsymbol A=\\boldsymbol O\\Rightarrow\\lambda\\in\\{0,-1\\}$；实对称 $\\Rightarrow$ 秩 $=$ 非零特征值个数</b>。把 $1$ 塞进对角阵是最常见的陷阱（本题 A/B/C 全踩）。「秩 $=$ 非零特征值个数」只对可对角化矩阵使用。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

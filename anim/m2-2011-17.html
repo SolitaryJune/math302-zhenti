@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2011·17 抽象复合函数的二阶混合偏导</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改 AW.init 区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [];
+
+var LINES = [
+  "<p><b>设中间变量</b>：$u=xy,\\ v=yg(x)$，$z=f(u,v)$。求导链：$z\\to(f_1',f_2')\\to(u,v)\\to(x,y)$，$u$、$v$ 同时依赖 $x$ 与 $y$。</p>",
+  "<p><b>先求 $\\partial z/\\partial x$</b>：$$\\frac{\\partial z}{\\partial x}=f_1'\\cdot\\frac{\\partial u}{\\partial x}+f_2'\\cdot\\frac{\\partial v}{\\partial x}=y f_1'+y g'(x)f_2'.$$ 注意 $f_1',f_2'$ 仍是 $(u,v)$ 的函数——伏笔在此。</p>",
+  "<p><b>挖出钥匙</b>：$g$ 可导且在 $x=1$ 处取得极值 $\\Rightarrow g'(1)=0$；又 $g(1)=1$。这两条待时代入。</p>",
+  "<p><b>对 $y$ 求导·第一项</b>（乘积法则 + 链式，$\\dfrac{\\partial u}{\\partial y}=x,\\ \\dfrac{\\partial v}{\\partial y}=g(x)$）：$$\\frac{\\partial}{\\partial y}\\big(y f_1'\\big)=f_1'+y\\big(x f_{11}''+g(x)f_{12}''\\big).$$</p>",
+  "<p><b>对 $y$ 求导·第二项</b>：$$\\frac{\\partial}{\\partial y}\\big(y g'(x)f_2'\\big)=g'(x)f_2'+y g'(x)\\big(x f_{21}''+g(x)f_{22}''\\big).$$</p>",
+  "<p><b>代入 $x=y=1$</b>：此时 $u=v=1$，$g(1)=1$，$g'(1)=0$。含 $f_2'$ 的两项、以及 $g'(1)$ 乘出的整块全部归零，只剩 $f_1'+f_{11}''+f_{12}''$（均在 $(1,1)$ 取值）。</p>",
+  "<p><b>结论</b>：$$\\left.\\frac{\\partial^2 z}{\\partial x\\,\\partial y}\\right|_{\\substack{x=1\\\\ y=1}}=f_1'(1,1)+f_{11}''(1,1)+f_{12}''(1,1).$$</p>"
+];
+
+AW.init({
+  title: '$z=f[\\,xy,\\ y g(x)\\,]$ 在 $(1,1)$ 处的 $\\dfrac{\\partial^2 z}{\\partial x\\partial y}$',
+  subtitle: '考点：多元复合函数二阶偏导 · 方法：链式法则 + 极值点导数为零清场',
+  counterLabel: '步数',
+  intro: '点击「▶ 播放」逐步演示混合偏导的链式展开与化简。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    ROWS.length = 0;
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    for(var k = 0; k < LINES.length; k++){
+      var d = AW.el('div', '', LINES[k]);
+      d.style.cssText = 'margin:8px 0;padding:9px 14px;border-left:3px solid #e2e8f0;background:#f8fafc;border-radius:0 12px 12px 0;font-size:14.5px;line-height:1.9;display:none;';
+      board.appendChild(d);
+      ROWS.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  render: function(stage, sn){
+    for(var k = 0; k < ROWS.length; k++){
+      var r = ROWS[k];
+      if(k >= sn.show){ r.style.display = 'none'; continue; }
+      r.style.display = 'block';
+      if(k === sn.show - 1 && !sn.done){
+        r.style.borderLeftColor = '#d97706';
+        r.style.background = '#fffbeb';
+      } else {
+        r.style.borderLeftColor = '#16a34a';
+        r.style.background = '#f8fafc';
+      }
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  snaps: [
+    { cls:'shift', tag:'设链',   log:'设两个中间变量 u=xy、v=y·g(x)，f 的两个偏导都还挂在 u,v 上', show:1, count:0 },
+    { cls:'step',  tag:'一阶',   log:'先对 x 求偏导：两项各乘一条链，得 y·f₁ + y·g′·f₂', show:2, count:1 },
+    { cls:'key',   tag:'钥匙',   log:'g 在 x=1 取极值且可导，所以 g′(1)=0，还有 g(1)=1 备用', show:3, count:2 },
+    { cls:'step',  tag:'二阶一', log:'第一项按乘积法则拆：本体项 f₁ 留下，导数项再走链得 f₁₁、f₁₂', show:4, count:3 },
+    { cls:'step',  tag:'二阶二', log:'第二项同样拆：带 g′ 的本体项先挂着，导数项里出现 f₂₁、f₂₂', show:5, count:4 },
+    { cls:'ok',    tag:'清场',   log:'代入 x=y=1：g′(1)=0 让所有含 f₂ 的项全部消失', show:6, count:5 },
+    { cls:'done',  tag:'完成',   log:'幸存三项：本体 f₁ 加走 u 通道的 f₁₁、f₁₂', show:7, count:6, done:true },
+  ],
+
+  result: {
+    big: '$f_1\'(1,1)+f_{11}\'\'(1,1)+f_{12}\'\'(1,1)$',
+    html: '记忆锚点：<b>$f_1\',f_2\'$ 不是常数，对 $y$ 求导要再走一遍链</b>；乘积项 $y f_1\'$ 拆出本体项 $f_1\'$ 最易漏。可导点取极值 $\\Rightarrow g\'(1)=0$，一举消灭全部含 $f_2\'$、$f_{22}\'\'$ 的项。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

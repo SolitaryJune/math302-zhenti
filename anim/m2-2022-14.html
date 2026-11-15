@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学·算法/过程类动画：三阶常系数齐次方程通解</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+AW.init({
+  title: '$y\'\'\'-2y\'\'+5y\'=0$：特征方程法求通解',
+  subtitle: '考点：高阶常系数齐次方程 · 方法：特征方程 → 求根 → 按根型写解',
+  counterLabel: '求解步',
+  intro: '点击「▶ 播放」逐步演示特征方程求解流程。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    var lines = [
+      '<b>写特征方程</b>（$y^{(k)}\\leftrightarrow r^k$）：$$r^3-2r^2+5r=0$$',
+      '<b>提公因子</b>：$$r\\,(r^2-2r+5)=0\\Longrightarrow r_1=0$$',
+      '<b>解二次因式</b>：判别式 $\\Delta=4-20=-16<0$，$$r_{2,3}=\\frac{2\\pm\\sqrt{-16}}{2}=1\\pm2\\mathrm{i}$$',
+      '<b>按根型写解</b>：单实根 $r=0$ 给常数解 $C_1$；复根 $1\\pm2\\mathrm{i}$（$\\alpha=1,\\ \\beta=2$）给 $\\mathrm{e}^{x}\\cos2x$ 与 $\\mathrm{e}^{x}\\sin2x$',
+      '<b>组合通解</b>（三个线性无关解）：$$y=C_1+\\mathrm{e}^{x}\\bigl(C_2\\cos2x+C_3\\sin2x\\bigr)$$',
+      '<b>自检</b>：常数项对应 $r=0$（求导为零）；$\\mathrm{e}^{x}\\cos2x$ 类指数挂 $\\mathrm{e}^{\\alpha x}$、角频率 $\\beta=2$ —— 结构正确',
+    ];
+    this._lines = [];
+    for(var i=0;i<lines.length;i++){
+      var d = AW.el('div', '', lines[i]);
+      d.style.cssText = 'padding:9px 14px;margin:7px 0;border-left:3px solid transparent;border-radius:10px;transition:all .35s;opacity:.28;font-size:15px;line-height:1.9;';
+      board.appendChild(d);
+      this._lines.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step',  tag:'特征方程', log:'y 的各阶导换成 r 的各次幂，写三次方程', count:0 },
+    { cls:'shift', tag:'提因子',   log:'三项都有 r，提出公因子得 r₁=0（对应常数解）', count:1 },
+    { cls:'shift', tag:'求复根',   log:'二次因式判别式 −16<0，得共轭复根 1±2i', count:2 },
+    { cls:'ok',    tag:'写基础解', log:'实根给 C₁，复根给 eˣcos2x 与 eˣsin2x', count:3 },
+    { cls:'ok',    tag:'组合通解', log:'三阶方程三个任意常数，线性组合成通解', count:4 },
+    { cls:'done',  tag:'完成',     log:'结论：y = C₁ + eˣ(C₂cos2x + C₃sin2x)', count:5, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    for(var j=0;j<this._lines.length;j++){
+      var L = this._lines[j];
+      L.style.opacity = j<=i ? '1' : '0.28';
+      L.style.borderLeftColor = (j===i) ? '#d97706' : (j<i ? '#16a34a' : 'transparent');
+      L.style.background = (j===i) ? '#fef3c7' : 'transparent';
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '$y=C_1+\\mathrm{e}^{x}(C_2\\cos2x+C_3\\sin2x)$',
+    html: '记忆锚点：<b>单实根 $r\\to\\mathrm{e}^{rx}$；复根 $\\alpha\\pm\\beta\\mathrm{i}\\to\\mathrm{e}^{\\alpha x}(\\cos\\beta x,\\ \\sin\\beta x)$</b>。易错：$r=0$ 也是根（常数解 $C_1$）别漏；指数上放实部 $1$、三角函数里放虚部 $2$，不要装反。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

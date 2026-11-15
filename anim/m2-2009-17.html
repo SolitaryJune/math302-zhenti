@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2009 数二第 17 题 · 多元复合函数全微分与二阶混合偏导（交互动画）</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+AW.init({
+  title: "2009·17　$z=f(x+y,\\,x-y,\\,xy)$：求 $\\mathrm{d}z$ 与 $\\dfrac{\\partial^2 z}{\\partial x\\partial y}$",
+  subtitle: "考点：多元链式法则 · <b>$f_i'$ 仍是复合函数</b>，二阶偏导要再走一遍链",
+  counterLabel: '已完成',
+  ribbonTitle: '推导进度（✓ 完成）',
+  intro: "点击「▶ 播放」或「下一步」，先求全微分，再攻二阶混合偏导。",
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var inner = AW.el('div', '');
+    inner.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>：当前行亮琥珀色，已完成的行变绿'));
+    var LINES = [
+      "<b>导数表：</b>中间变量 $u=x+y,\\ v=x-y,\\ w=xy$；$u_x=u_y=1$，$v_x=1,\\ v_y=-1$，$w_x=y,\\ w_y=x$",
+      "$$\\frac{\\partial z}{\\partial x}=f_1'+f_2'+yf_3'$$",
+      "$$\\frac{\\partial z}{\\partial y}=f_1'-f_2'+xf_3'$$",
+      "<b>第一问答案：</b>$$\\mathrm{d}z=\\big(f_1'+f_2'+yf_3'\\big)\\mathrm{d}x+\\big(f_1'-f_2'+xf_3'\\big)\\mathrm{d}y$$",
+      "<b>关键提醒：</b>$f_1',\\ f_2',\\ f_3'$ 仍是 $u,v,w$ 的函数（还是复合函数），对 $y$ 求导必须<b>再走一遍链式法则</b>：对任意 $g=g(u,v,w)$ 有 $\\dfrac{\\partial g}{\\partial y}=g_u-g_v+xg_w$",
+      "<b>链式展开：</b>$\\dfrac{\\partial f_1'}{\\partial y}=f_{11}''-f_{12}''+xf_{13}''$；$\\dfrac{\\partial f_2'}{\\partial y}=f_{21}''-f_{22}''+xf_{23}''$；$\\dfrac{\\partial f_3'}{\\partial y}=f_{31}''-f_{32}''+xf_{33}''$",
+      "<b>乘积项：</b>$\\dfrac{\\partial\\big(yf_3'\\big)}{\\partial y}=f_3'+y\\big(f_{31}''-f_{32}''+xf_{33}''\\big)$ —— 乘积法则<b>多出一个独立的一阶项 $f_3'$</b>",
+      "<b>合并：</b>三项相加，用 $f_{12}''=f_{21}''$、$f_{13}''=f_{31}''$、$f_{23}''=f_{32}''$（连续则混合偏导可交换）：$-f_{12}''+f_{21}''=0$ 相消；$xf_{13}''$ 与 $yf_{31}''$ 合成 $(x+y)f_{13}''$；$xf_{23}''$ 与 $-yf_{32}''$ 合成 $(x-y)f_{23}''$",
+      "$$\\frac{\\partial^2 z}{\\partial x\\partial y}=f_{11}''-f_{22}''+(x+y)f_{13}''+(x-y)f_{23}''+xyf_{33}''+f_3'$$"
+    ];
+    this._rows = [];
+    for (var i = 0; i < LINES.length; i++){
+      var r = AW.el('div', 'aw-stepcard', LINES[i]);
+      inner.appendChild(r);
+      this._rows.push(r);
+    }
+    wrap.appendChild(inner);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step',  tag:'审题',   log:'外层函数有三个自变元，先列好三个中间变量和它们对 x、y 的导数表', count:0, ribbon:{k:1, ok:true} },
+    { cls:'step',  tag:'对 x',   log:'x 走三条链：u、v 各贡献一，w 贡献 y', count:1, ribbon:{k:2, ok:true} },
+    { cls:'step',  tag:'对 y',   log:'y 走三条链：u 贡献一，v 贡献负一，w 贡献 x', count:2, ribbon:{k:3, ok:true} },
+    { cls:'ok',    tag:'全微分', log:'两个一阶偏导拼成全微分，第一问完成', count:3, ribbon:{k:4, ok:true} },
+    { cls:'shift', tag:'提醒',   log:'进入第二问：偏导数记号本身还是复合函数，求导要再过一遍链式法则', count:4, ribbon:{k:5, ok:true} },
+    { cls:'step',  tag:'链式',   log:'三个一阶偏导对 y 求导，全部按同一套链式公式展开', count:5, ribbon:{k:6, ok:true} },
+    { cls:'shift', tag:'乘积',   log:'y 乘第三个偏导这一项要用乘积法则：多出一个独立的一阶偏导项', count:6, ribbon:{k:7, ok:true} },
+    { cls:'step',  tag:'合并',   log:'把三块加起来，利用二阶混合偏导的对称性合并同类项', count:7, ribbon:{k:8, ok:true} },
+    { cls:'ok',    tag:'结果',   log:'交叉项相消，x 项与 y 项按同下标合并，得出最终结果', count:8, ribbon:{k:9, ok:true} },
+    { cls:'done',  tag:'完成',   log:'结论：全微分与二阶混合偏导都求出，注意别漏乘积法则带来的那一项', count:9, ribbon:{k:10, ok:true}, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    var rows = this._rows;
+    for (var j = 0; j < rows.length; j++){
+      rows[j].className = 'aw-stepcard' + (j < i ? ' good' : (j === i ? ' key' : ''));
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: "$\\mathrm{d}z=(f_1'+f_2'+yf_3')\\mathrm{d}x+(f_1'-f_2'+xf_3')\\mathrm{d}y$",
+    html: "第二问：$$\\frac{\\partial^2 z}{\\partial x\\partial y}=f_{11}''-f_{22}''+(x+y)f_{13}''+(x-y)f_{23}''+xyf_{33}''+f_3'$$记忆锚点：<b>$f_i'$ 仍是复合函数</b>，二阶要再走一遍链式法则；$yf_3'$ 的乘积法则多出独立项 $f_3'$，最易漏写。交叉项 $-f_{12}''+f_{21}''$ 因连续而相消。",
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

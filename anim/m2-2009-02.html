@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2009·02 等价无穷小定参</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改 AW.init 区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [];   // 推导板的持久 DOM 行
+
+var LINES = [
+  "<p><b>目标</b>：$x\\to0$ 时 $f(x)=x-\\sin ax$ 与 $g(x)=x^2\\ln(1-bx)$ 等价，求 $a,\\ b$。等价 = <b>同阶</b> + <b>系数相等</b>，先做泰勒展开。</p>",
+  "<p>展开 $g$（$\\ln(1-bx)=-bx+o(x)$）：$$g(x)=x^2\\big(-bx+o(x)\\big)=-b\\,x^3+o(x^3)$$是三阶无穷小（$b\\neq0$）。</p>",
+  "<p>展开 $f$（$\\sin ax=ax-\\dfrac{a^3}{6}x^3+o(x^3)$）：$$f(x)=(1-a)x+\\frac{a^3}{6}x^3+o(x^3)$$</p>",
+  "<p><b>阶匹配</b>：$g$ 是三阶，$f$ 的一次项必须消失：$1-a=0\\ \\Longrightarrow\\ a=1$。</p>",
+  "<p><b>系数匹配</b>：$a=1$ 时 $f\\sim\\dfrac{1}{6}x^3$，而 $g\\sim -b\\,x^3$，令 $\\dfrac{1}{6}=-b\\ \\Longrightarrow\\ b=-\\dfrac{1}{6}$。</p>",
+  "<p><b>验证</b>：$\\dfrac{f}{g}\\to\\dfrac{1/6}{1/6}=1$，确为等价无穷小。$\\;a=1,\\ b=-\\dfrac{1}{6}$，<b>选 A</b>。</p>"
+];
+
+AW.init({
+  title: '等价无穷小定参数：$x-\\sin ax$ 与 $x^2\\ln(1-bx)$',
+  subtitle: '考点：无穷小比较 · 方法：泰勒展开，先对齐阶、再对齐系数',
+  counterLabel: '步数',
+  intro: '点击「▶ 播放」逐步演示每一步推导。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    ROWS.length = 0;
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    for(var k = 0; k < LINES.length; k++){
+      var d = AW.el('div', '', LINES[k]);
+      d.style.cssText = 'margin:8px 0;padding:9px 14px;border-left:3px solid #e2e8f0;background:#f8fafc;border-radius:0 12px 12px 0;font-size:14.5px;line-height:1.9;display:none;';
+      board.appendChild(d);
+      ROWS.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  render: function(stage, sn){
+    for(var k = 0; k < ROWS.length; k++){
+      var r = ROWS[k];
+      if(k >= sn.show){ r.style.display = 'none'; continue; }
+      r.style.display = 'block';
+      if(k === sn.show - 1 && !sn.done){
+        r.style.borderLeftColor = '#d97706';
+        r.style.background = '#fffbeb';
+      } else {
+        r.style.borderLeftColor = '#16a34a';
+        r.style.background = '#f8fafc';
+      }
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  snaps: [
+    { cls:'shift', tag:'审题',   log:'等价无穷小要求同阶加同系数，用泰勒展开到最低非零阶', show:1, count:0 },
+    { cls:'step',  tag:'展开 g', log:'对数展开后乘 x 的平方：g 是三阶无穷小', show:2, count:1 },
+    { cls:'step',  tag:'展开 f', log:'正弦展到三次项，一次项与三次项系数现形', show:3, count:2 },
+    { cls:'ok',    tag:'定 a',   log:'一次项必须消失，解出 a = 1', show:4, count:3 },
+    { cls:'ok',    tag:'定 b',   log:'三阶系数相等，解出 b = −1/6', show:5, count:4 },
+    { cls:'done',  tag:'完成',   log:'验证比值趋于 1，答案选 A', show:6, count:5, done:true },
+  ],
+
+  result: {
+    big: 'a = 1，b = −1/6（选 A）',
+    html: '记忆锚点：<b>先对齐阶，再对齐系数</b>。$g$ 的首项是 $-b\\,x^3$，$b$ 必为负；若 $a\\neq1$，$f$ 只是一阶无穷小，与三阶的 $g$ 不同阶，C、D 直接排除。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

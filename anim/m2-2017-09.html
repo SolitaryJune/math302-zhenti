@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2017·09 斜渐近线方程</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改 AW.init 区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [];
+
+var LINES = [
+  "<p><b>套路先行</b>：斜渐近线 $y=ax+b$ 用固定两步求 $$a=\\lim_{x\\to\\infty}\\frac{y}{x},\\qquad b=\\lim_{x\\to\\infty}(y-ax).$$ 本题 $y=x\\left(1+\\arcsin\\dfrac{2}{x}\\right)$，且 $x\\to\\infty$ 时 $\\dfrac{2}{x}\\to0$，等价无穷小 $\\arcsin u\\sim u\\ (u\\to0)$ 随时可用。</p>",
+  "<p><b>第一步：求斜率 $a$</b>$$a=\\lim_{x\\to\\infty}\\frac{y}{x}=\\lim_{x\\to\\infty}\\left(1+\\arcsin\\frac{2}{x}\\right)=1+\\arcsin 0=1.$$</p>",
+  "<p><b>第二步：求截距 $b$</b>$$b=\\lim_{x\\to\\infty}(y-x)=\\lim_{x\\to\\infty}x\\left(1+\\arcsin\\frac{2}{x}\\right)-x=\\lim_{x\\to\\infty}x\\arcsin\\frac{2}{x}.$$ 这是 $\\infty\\cdot0$ 型，正好用等价无穷小化掉。</p>",
+  "<p><b>第三步：等价无穷小收尾</b>。令 $u=\\dfrac{2}{x}\\to0$，$\\arcsin u\\sim u$：$$b=\\lim_{x\\to\\infty}x\\cdot\\frac{2}{x}=2.$$</p>",
+  "<p><b>第四步：写结论并查方向</b>。斜渐近线为 $$y=x+2.$$ $x\\to+\\infty$ 与 $x\\to-\\infty$ 两个方向都有 $\\dfrac{2}{x}\\to0$，算出的 $a=1$、$b=2$ 一致，故只有这一条斜渐近线（等价写法 $y-x-2=0$）。</p>",
+  "<p><b>易错对照</b>：只求 $a$ 忘求 $b$ 得不出完整答案；把 $\\arcsin u$ 的等价写成 $u^2$ 会得 $b=0$，错成 $y=x$。</p>"
+];
+
+AW.init({
+  title: '曲线 $y=x\\left(1+\\arcsin\\dfrac{2}{x}\\right)$ 的斜渐近线',
+  subtitle: '考点：渐近线 · 方法：a=lim y/x，b=lim(y−ax)，arcsin u ~ u (u→0)',
+  counterLabel: '已执行',
+  intro: '点击「▶ 播放」逐步演示每一步推导。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    ROWS.length = 0;
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    for(var k = 0; k < LINES.length; k++){
+      var d = AW.el('div', '', LINES[k]);
+      d.style.cssText = 'margin:8px 0;padding:9px 14px;border-left:3px solid #e2e8f0;background:#f8fafc;border-radius:0 12px 12px 0;font-size:14.5px;line-height:1.9;display:none;';
+      board.appendChild(d);
+      ROWS.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  render: function(stage, sn){
+    for(var k = 0; k < ROWS.length; k++){
+      var r = ROWS[k];
+      if(k >= sn.show){ r.style.display = 'none'; continue; }
+      r.style.display = 'block';
+      if(k === sn.show - 1 && !sn.done){
+        r.style.borderLeftColor = '#d97706';
+        r.style.background = '#fffbeb';
+      } else {
+        r.style.borderLeftColor = '#16a34a';
+        r.style.background = '#f8fafc';
+      }
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  snaps: [
+    { cls:'shift', tag:'审题',  log:'斜渐近线两步走：先斜率后截距；2/x 趋于 0，等价无穷小就位', show:1, count:0 },
+    { cls:'step',  tag:'求 a',  log:'y/x = 1 + arcsin(2/x)，代 arcsin 0 = 0，得 a = 1', show:2, count:1 },
+    { cls:'step',  tag:'求 b',  log:'y − x 剩下 x·arcsin(2/x)，∞·0 型', show:3, count:2 },
+    { cls:'ok',    tag:'化简',  log:'arcsin(2/x) 等价于 2/x，b = x·2/x = 2', show:4, count:3 },
+    { cls:'done',  tag:'完成',  log:'斜渐近线 y = x + 2；两个方向 a、b 一致，仅此一条', show:5, count:4, done:true },
+    { cls:'step',  tag:'易错',  log:'只求 a 不够；arcsin u ~ u 别写成 u²', show:6, count:5, done:true },
+  ],
+
+  result: {
+    big: '斜渐近线 $y=x+2$',
+    html: '记忆锚点：<b>斜渐近线 = 两个极限</b>：$a=\\lim\\dfrac{y}{x}$、$b=\\lim(y-ax)$。$\\arcsin u\\sim u$（$u\\to0$）负责把 $\\infty\\cdot0$ 型化简；两个方向 $x\\to\\pm\\infty$ 都要核一致。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

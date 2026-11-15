@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学·概念/分析类动画：可逆矩阵 P 的列与对角元配对</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+function card(n, cls, title, body){
+  return '<div class="aw-stepcard ' + (cls || '') + '"><h4><span class="n">' + n +
+         '</span>' + title + '</h4>' + body + '</div>';
+}
+
+var STEPS = [
+  { title: '审题眼：列与对角元一一对应',
+    cls: 'key',
+    log: 'AP = PΛ 逐列比较：第 1、3 列属 1，第 2 列属 -1',
+    body: '<p>$P^{-1}AP=\\Lambda\\iff AP=P\\Lambda$，逐列比较：$$Ap_1=1\\cdot p_1,\\quad Ap_2=-1\\cdot p_2,\\quad Ap_3=1\\cdot p_3.$$ 即 $P$ 的<b>第 1、3 列要属于特征值 $1$，第 2 列要属于 $-1$</b>，且三列线性无关。</p>' },
+  { title: '盘点可用向量，拉响警报',
+    cls: 'step',
+    log: '同特征值可组合；α1+α3 是异特征值之和，废',
+    body: '<p>特征值 $1$：$\\alpha_1$、$\\alpha_2$ 及非零组合 $\\alpha_1+\\alpha_2$ 都可用；特征值 $-1$：$\\alpha_3$ 与 $-\\alpha_3$ 可用。<b>警报</b>：$\\alpha_1+\\alpha_3$ 是不同特征值向量之和，$A(\\alpha_1+\\alpha_3)=\\alpha_1-\\alpha_3$ 不是它的倍数——它<b>不是特征向量</b>。</p>' },
+  { title: '选项 A：第 1 列废 + 第 2 列错位',
+    cls: 'bad',
+    log: 'A：α1+α3 不是特征向量，α2 站错 -1 位',
+    ribbon: {k:1, ok:false},
+    body: '<p>$(\\alpha_1+\\alpha_3,\\;\\alpha_2,\\;-\\alpha_3)$：第 1 列 $\\alpha_1+\\alpha_3$ 不是特征向量；第 2 列 $\\alpha_2$ 属于 $1$，却站在对角元 $-1$ 的位置。<b>A 错</b>。</p>' },
+  { title: '选项 B：向量都合格，但位置错',
+    cls: 'bad',
+    log: 'B：α1+α2 对，但 α2 站在第 2 列要属 -1',
+    ribbon: {k:2, ok:false},
+    body: '<p>$(\\alpha_1+\\alpha_2,\\;\\alpha_2,\\;-\\alpha_3)$：第 1 列 $\\alpha_1+\\alpha_2$ 属于 $1$（对），但第 2 列 $\\alpha_2$ 属于 $1\\ne-1$，位置不匹配。<b>B 错</b>。</p>' },
+  { title: '选项 C：一废毁全列',
+    cls: 'bad',
+    log: 'C：第 1 列 α1+α3 不是特征向量，整列报废',
+    ribbon: {k:3, ok:false},
+    body: '<p>$(\\alpha_1+\\alpha_3,\\;-\\alpha_3,\\;\\alpha_2)$：第 2 列 $-\\alpha_3$、第 3 列 $\\alpha_2$ 都对，但第 1 列 $\\alpha_1+\\alpha_3$ 不是特征向量，$Ap_1\\ne p_1$，整组报废。<b>C 错</b>。</p>' },
+  { title: '选项 D：位置全对 + 可逆性验证',
+    cls: 'good',
+    log: 'D 三列分别属 1,-1,1，且线性无关，P 可逆',
+    ribbon: {k:4, ok:true},
+    body: '<p>$(\\alpha_1+\\alpha_2,\\;-\\alpha_3,\\;\\alpha_2)$：三列分别属于 $1,-1,1$，位置全对。再验无关性：$$c_1(\\alpha_1+\\alpha_2)-c_2\\alpha_3+c_3\\alpha_2=c_1\\alpha_1+(c_1+c_3)\\alpha_2-c_2\\alpha_3=0,$$ 由 $\\alpha_1,\\alpha_2,\\alpha_3$ 线性无关（不同特征值的特征向量无关）得 $c_1=c_2=c_3=0$，$P$ 可逆。<b>D 对</b>。</p>' },
+  { title: '结论',
+    cls: 'good',
+    log: '选 D：列与对角元一一对应',
+    body: '<p>答案 <b>D</b>。记忆锚点：<b>$P$ 的列与 $\\Lambda$ 的对角元一一对应</b>；只有<b>同一</b>特征值的特征向量的线性组合才仍是该特征值的特征向量。</p>' },
+];
+
+var snaps = STEPS.map(function(s, i){
+  var cls;
+  if(i === STEPS.length - 1){ cls = 'done'; }
+  else if(s.ribbon){ cls = s.ribbon.ok ? 'ok' : 'miss'; }
+  else { cls = 'step'; }
+  return {
+    cls: cls,
+    tag: '第 ' + (i + 1) + ' 步',
+    log: s.log,
+    count: i + 1,
+    ribbon: s.ribbon,
+    html: STEPS.slice(0, i + 1).map(function(x, j){
+      return card(j + 1, x.cls, x.title, x.body);
+    }).join(''),
+    done: i === STEPS.length - 1,
+  };
+});
+
+AW.init({
+  title: '$P^{-1}AP=\\mathrm{diag}(1,-1,1)$：四个候选 $P$ 谁合格',
+  subtitle: '考点：相似对角化 · 方法：$AP=P\\Lambda$ 逐列配对 + 可逆性验证',
+  counterLabel: '推理步',
+  ribbonTitle: '选项判定（✓ 合格 / ✗ 不合格）',
+  intro: '点击「▶ 播放」逐项检验候选矩阵 P。',
+  render: function(stage, sn){
+    if(sn.html != null) stage.innerHTML = sn.html;
+    renderMathAfterSnap(stage);
+  },
+  snaps: snaps,
+  result: {
+    big: '答案 D：$P=(\\alpha_1+\\alpha_2,\\,-\\alpha_3,\\,\\alpha_2)$',
+    html: '记忆锚点：<b>列与对角元一一对应</b>：$1,-1,1$ 依次放 $\\alpha_1+\\alpha_2,\\,-\\alpha_3,\\,\\alpha_2$。两类硬伤：$\\alpha_1+\\alpha_3$ 是异特征值之和不是特征向量（A、C）；向量合格但站错位置（B 的第 2 列）。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

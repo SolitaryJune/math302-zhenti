@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2011 数二第 6 题 · 三个定积分比大小</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+// 一张推理卡片（body 里可写 $..$ / $$..$$ 公式）
+function card(n, cls, title, body){
+  return '<div class="aw-stepcard ' + (cls || '') + '"><h4><span class="n">' + n +
+         '</span>' + title + '</h4>' + body + '</div>';
+}
+
+// 推理链：每一步的完整内容（引擎按步数截取显示）
+var STEPS = [
+  { title: '审题眼：保序性，不算积分',
+    cls: 'key',
+    body: '<p>$I$、$J$、$K$ 三个积分的区间同为 $\\left(0,\\dfrac\\pi4\\right)$。定积分<b>保序</b>：被积函数逐点小者积分小——所以不必算积分值，只比 $\\ln\\sin x$、$\\ln\\cos x$、$\\ln\\cot x$ 的大小。</p>' },
+  { title: '先排 sin 与 cos',
+    cls: 'key',
+    body: '<p>$0<x<\\dfrac\\pi4$ 时（两者的分界在 $\\dfrac\\pi4$）：$$0<\\sin x<\\cos x<1,$$ 故 $\\ln\\sin x<\\ln\\cos x<0$，两个都是负的。</p>' },
+  { title: '再看 cot：它是正的',
+    cls: 'key',
+    body: '<p>$\\cot x=\\dfrac{\\cos x}{\\sin x}$：分子大、分母小，故 $\\cot x>1$，于是 $\\ln\\cot x>0$。</p>' },
+  { title: '连成一条链',
+    cls: 'step',
+    body: '<p>$\\ln$ 单调递增，把三条信息接起来：$$\\ln\\sin x<\\ln\\cos x<0<\\ln\\cot x.$$</p>' },
+  { title: '保序性出结论',
+    cls: 'good',
+    body: '<p>逐点不等号严格且不恒等，积分后保持：$$I=\\int_0^{\\frac\\pi4}\\ln\\sin x\\,\\mathrm dx<K=\\int_0^{\\frac\\pi4}\\ln\\cos x\\,\\mathrm dx<J=\\int_0^{\\frac\\pi4}\\ln\\cot x\\,\\mathrm dx,$$ 即 $I<K<J$，对应选项 B。</p>' },
+  { title: '干扰项剖析',
+    cls: 'bad',
+    body: '<p>A（$I<J<K$）把 $\\cot$ 的位置记反——$\\cot x>1$ 才有 $\\ln\\cot x>0$；C、D 同样败在符号排序。硬算 $\\int\\ln\\sin x$ 更是死路：它不是初等积分。</p>' },
+];
+
+var snaps = STEPS.map(function(s, i){
+  return {
+    cls: i === STEPS.length - 1 ? 'done' : 'step',
+    tag: '第 ' + (i + 1) + ' 步',
+    log: s.title,
+    count: i,
+    html: STEPS.slice(0, i + 1).map(function(x, j){
+      return card(j + 1, x.cls, x.title, x.body);
+    }).join(''),
+    done: i === STEPS.length - 1,
+  };
+});
+
+AW.init({
+  title: '第 6 题 · $I$、$J$、$K$ 三个定积分的大小关系',
+  subtitle: '考点：定积分保序性 · 方法：比较被积函数',
+  intro: '点击「▶ 播放」逐步展开推理链：保序原则 → 排被积函数 → 出结论。',
+  render: function(stage, sn){
+    if(sn.html != null) stage.innerHTML = sn.html;
+    renderMathAfterSnap(stage);
+  },
+  snaps: snaps,
+  result: {
+    big: '答案 B：I < K < J',
+    html: '记忆锚点：<b>同区间比积分＝比被积函数</b>。$(0,\\frac\\pi4)$ 上 $\\ln\\sin x<\\ln\\cos x<0<\\ln\\cot x$，故 $I<K<J$。易错：$(0,1)$ 上的对数为负、大于 $1$ 的对数为正——$J$ 排最后全靠这个符号差。',
+  },
+});
+</script>
+</body>
+</html>

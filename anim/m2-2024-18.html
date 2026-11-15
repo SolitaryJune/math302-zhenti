@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2024·18 欧拉方程 + 定积分凑微分</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+<style>
+.mb-line{border:1px solid #e2e8f0;border-radius:12px;padding:10px 14px;margin:8px 0;background:#fff;font-size:14.5px;line-height:1.9;transition:all .25s}
+.mb-line.act{border-color:#d97706;background:#fffbeb;box-shadow:0 2px 8px rgba(217,119,6,.14)}
+.mb-line.past{opacity:.7}
+.mb-title{font-size:12.5px;color:#64748b;font-weight:700;margin-bottom:2px}
+.mb-part{display:inline-block;font-size:11.5px;font-weight:700;color:#fff;border-radius:999px;padding:1px 9px;margin-left:6px;background:#64748b;vertical-align:2px}
+.mb-part.q1{background:#2563eb}
+.mb-part.q2{background:#059669}
+</style>
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+var SECS = [
+  { t: '第(1)问 · 审题：欧拉方程',
+    h: '<p>方程 $x^2y\'\'+xy\'-9y=0$，系数是 $x$ 的幂 → <b>欧拉方程</b>。令 $x=\\mathrm e^t$（即 $t=\\ln x$），初值 $y|_{x=1}=2,\\ y\'|_{x=1}=6$。</p>' },
+  { t: '第(1)问 · 一阶导数变换',
+    h: '<p>由 $\\dfrac{\\mathrm dt}{\\mathrm dx}=\\dfrac1x$（链式法则）：</p>' +
+       '$$y\'=\\frac{\\mathrm dy}{\\mathrm dx}=\\frac{\\mathrm dy}{\\mathrm dt}\\cdot\\frac{\\mathrm dt}{\\mathrm dx}=\\frac{\\dot y}{x}$$' },
+  { t: '第(1)问 · 二阶导数变换',
+    h: '$$y\'\'=\\frac{\\mathrm d}{\\mathrm dx}\\Big(\\frac{\\dot y}{x}\\Big)=\\frac1x\\cdot\\frac{\\ddot y-\\dot y}{x}=\\frac{\\ddot y-\\dot y}{x^2}$$' +
+       '<p>注意分子里的 $-\\dot y$，这是最容易漏的一项。</p>' },
+  { t: '第(1)问 · 代入化简',
+    h: '$$x^2\\cdot\\frac{\\ddot y-\\dot y}{x^2}+x\\cdot\\frac{\\dot y}{x}-9y=\\ddot y-\\dot y+\\dot y-9y=\\ddot y-9y=0$$' +
+       '<p>$-\\dot y$ 与 $+\\dot y$ 恰好相消，变系数方程变成<b>常系数</b>方程。</p>' },
+  { t: '第(1)问 · 特征根与通解',
+    h: '<p>特征方程 $r^2-9=0$，根 $r=\\pm3$：</p>' +
+       '$$y=C_1\\mathrm e^{3t}+C_2\\mathrm e^{-3t}=C_1x^3+C_2x^{-3}$$' },
+  { t: '第(1)问 · 初值定常数',
+    h: '<p>$y(1)=2$：$C_1+C_2=2$；又 $y\'=3C_1x^2-3C_2x^{-4}$，$y\'(1)=6$：$3(C_1-C_2)=6$。</p>' +
+       '<p>两式相加减：$C_1=2,\\ C_2=0$。</p>' },
+  { t: '第(1)问 · 结论',
+    h: '$$y(x)=2x^3$$' +
+       '<p>回验：$y\'=6x^2$，$x^2\\cdot6x+x\\cdot6x^2-9\\cdot2x^3=12x^3-18x^3+6x^3=0$ ✓</p>' },
+  { t: '第(2)问 · 凑微分换元',
+    h: '<p>求 $\\displaystyle\\int_1^2 2x^3\\sqrt{4-x^2}\\,\\mathrm dx$。令 $u=4-x^2$：$\\mathrm du=-2x\\,\\mathrm dx$，$x^2=4-u$；$x:1\\to2$ 对应 $u:3\\to0$。</p>' +
+       '<p>拆 $2x^3\\,\\mathrm dx=2x^2\\cdot x\\,\\mathrm dx=(4-u)\\cdot(-\\mathrm du)$。</p>' },
+  { t: '第(2)问 · 化为幂函数积分',
+    h: '$$\\int_1^2 2x^3\\sqrt{4-x^2}\\,\\mathrm dx=\\int_0^3(4-u)\\sqrt u\\,\\mathrm du=\\int_0^3\\big(4u^{1/2}-u^{3/2}\\big)\\,\\mathrm du$$' },
+  { t: '第(2)问 · 牛顿—莱布尼茨',
+    h: '$$\\Big[\\frac83u^{3/2}-\\frac25u^{5/2}\\Big]_0^3=\\frac83\\cdot3\\sqrt3-\\frac25\\cdot9\\sqrt3=8\\sqrt3-\\frac{18\\sqrt3}5$$' +
+       '<p>（$3^{3/2}=3\\sqrt3,\\ 3^{5/2}=9\\sqrt3$。）</p>' },
+  { t: '结论',
+    h: '<p>通分合并：$8\\sqrt3-\\dfrac{18\\sqrt3}5=\\dfrac{40-18}{5}\\sqrt3$：</p>' +
+       '$$\\int_1^2 y(x)\\sqrt{4-x^2}\\,\\mathrm dx=\\frac{22\\sqrt3}{5}$$' },
+];
+
+var snaps = [
+  { cls:'step',  tag:'审题', log:'方程系数是 x 的幂，认出欧拉方程，令 x 等于 e 的 t 次方', count:0 },
+  { cls:'step',  tag:'变换', log:'链式法则给出一阶导：等于 y 对 t 的导数除以 x', count:1 },
+  { cls:'shift', tag:'变换', log:'二阶导多出一项：分子是 y 二阶导减 y 一阶导，整体再除以 x 平方', count:2, ribbon:{k:1, ok:true} },
+  { cls:'ok',    tag:'化简', log:'代入后正负一阶项相消，只剩常系数方程 y 二阶导减 9y 等于零', count:3, ribbon:{k:2, ok:true} },
+  { cls:'step',  tag:'求通解', log:'特征根正负 3，通解写成 x 的三次幂与负三次幂的组合', count:4 },
+  { cls:'step',  tag:'定常数', log:'两个初值给两个方程：和为 2、差为 2，解出常数 2 和 0', count:5 },
+  { cls:'ok',    tag:'完成', log:'第(1)问解出：y 等于 2 倍 x 立方', count:6, done:false, ribbon:{k:3, ok:true} },
+  { cls:'shift', tag:'换元', log:'第(2)问令 u 等于 4 减 x 平方，把 x 的 dx 凑成 du，上下限对调', count:7 },
+  { cls:'step',  tag:'展开', log:'被积式化成 4 倍根号 u 减 u 的二分之三次幂，从 0 积到 3', count:8 },
+  { cls:'step',  tag:'计算', log:'代入上限 3：得到 8 倍根号 3 减 18/5 倍根号 3', count:9, ribbon:{k:4, ok:true} },
+  { cls:'done',  tag:'完成', log:'通分合并，第(2)问结果为 22/5 倍根号 3', count:10, done:true, ribbon:{k:5, ok:true} },
+];
+
+AW.init({
+  title: '【2024·18】欧拉方程求 $y(x)$，再算 $\\int_1^2 y\\sqrt{4-x^2}\\,\\mathrm dx$',
+  subtitle: '考点：欧拉方程（$x=\\mathrm e^t$）· 定积分凑微分',
+  counterLabel: '已完成',
+  intro: '点击「▶ 播放」逐步演示两问的推导。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    this._board = AW.el('div', '');
+    wrap.appendChild(this._board);
+    stage.appendChild(wrap);
+  },
+
+  render: function(stage, sn, i){
+    var b = this._board;
+    b.innerHTML = '';
+    for(var k = 0; k <= i && k < SECS.length; k++){
+      var cur = (k === Math.min(i, SECS.length - 1));
+      var part = (k <= 6) ? '<span class="mb-part q1">问 (1)</span>' : '<span class="mb-part q2">问 (2)</span>';
+      b.appendChild(AW.el('div', 'mb-line' + (cur ? ' act' : ' past'),
+        '<div class="mb-title">' + SECS[k].t + part + '</div>' + SECS[k].h));
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  snaps: snaps,
+
+  result: {
+    big: '问(1) $y=2x^3$；问(2) $\\dfrac{22\\sqrt3}{5}$',
+    html: '<p>记忆锚点：欧拉方程 $x^2y\'\'+pxy\'+qy=0$ → 令 $x=\\mathrm e^t$，<b>$y\'=\\dot y/x$，$y\'\'=(\\ddot y-\\dot y)/x^2$</b>（负号必带）。</p>' +
+          '<p>易错：被积函数含 $\\sqrt{4-x^2}$ 与奇次幂 $x^3$ 时，拆 $x^3=x^2\\cdot x$ 凑 $u=4-x^2$；换元后 $u:3\\to0$ 反向，负号并入 $-\\mathrm du$。</p>',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

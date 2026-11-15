@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2009 数二第 23 题 · 二次型特征值分解与规范形定参（交互动画）</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+AW.init({
+  title: '2009·23　二次型 $f=ax_1^2+ax_2^2+(a-1)x_3^2+2x_1x_3-2x_2x_3$：特征值与规范形定参',
+  subtitle: '考点：交叉项系数折半写矩阵 · 提公因式 + 换元降次 · <b>规范形 = 惯性指数信息</b>',
+  counterLabel: '已完成',
+  ribbonTitle: '参数筛选（✓ 符合 / ✗ 排除）',
+  intro: '点击「▶ 播放」或「下一步」，先分解特征多项式，再用规范形筛出参数。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var inner = AW.el('div', '');
+    inner.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>：当前行亮琥珀色，已完成的行变绿'));
+    var LINES = [
+      '<b>① 写矩阵：</b>$$A=\\begin{pmatrix}a&0&1\\\\0&a&-1\\\\1&-1&a-1\\end{pmatrix}$$（$2x_1x_3\\Rightarrow A_{13}=A_{31}=1$；$-2x_2x_3\\Rightarrow A_{23}=A_{32}=-1$）',
+      '<b>② 展开特征多项式：</b>按第一行展开并提出公因子：$$|A-\\lambda E|=(a-\\lambda)\\big[(a-\\lambda)(a-1-\\lambda)-2\\big]$$',
+      '<b>③ 换元降次：</b>令 $u=a-\\lambda$，方括号内 $=u(u-1)-2=u^2-u-2=(u-2)(u+1)$',
+      '<b>④ 特征值：</b>$$|A-\\lambda E|=(a-\\lambda)(a-\\lambda-2)(a-\\lambda+1)\\ \\Rightarrow\\ \\lambda_1=a,\\ \\lambda_2=a+1,\\ \\lambda_3=a-2$$',
+      '<b>⑤ 验算：</b>$\\lambda_1+\\lambda_2+\\lambda_3=3a-1=a+a+(a-1)=\\operatorname{tr}A$，与迹吻合',
+      '<b>⑥ 规范形含义：</b>规范形为 $y_1^2+y_2^2$ $\\iff$ 正惯性指数 $=2$、秩 $=2$ $\\iff$ 特征值恰为「两正一零」',
+      '<b>⑦ 逐一检验：</b>$a=0$：特征值 $\\{0,\\,1,\\,-2\\}$ 含负，排除；$a=-1$：$\\{-1,\\,0,\\,-3\\}$ 两负，排除',
+      '<b>⑧ 唯一解：</b>$a=2$：特征值 $\\{2,\\,3,\\,0\\}$，两正一零，符合'
+    ];
+    this._rows = [];
+    for (var i = 0; i < LINES.length; i++){
+      var r = AW.el('div', 'aw-stepcard', LINES[i]);
+      inner.appendChild(r);
+      this._rows.push(r);
+    }
+    wrap.appendChild(inner);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step',  tag:'写矩阵', log:'先把二次型写成对称矩阵：平方项进对角线，交叉项系数折半', count:0, ribbon:{k:1, ok:true} },
+    { cls:'shift', tag:'展开',   log:'特征多项式按第一行展开，提出公因子 a 减拉姆达', count:1, ribbon:{k:2, ok:true} },
+    { cls:'step',  tag:'换元',   log:'方括号里换元后是二次三项式，十字相乘分解', count:2, ribbon:{k:3, ok:true} },
+    { cls:'ok',    tag:'因式',   log:'三个因式各给一个特征值：a、a 加一、a 减二', count:3, ribbon:{k:4, ok:true} },
+    { cls:'ok',    tag:'验算',   log:'用迹验算：三个特征值之和等于对角线之和，吻合', count:4, ribbon:{k:5, ok:true} },
+    { cls:'step',  tag:'规范形', log:'规范形只有两个正平方项：意味着两个正特征值加一个零', count:5, ribbon:{k:6, ok:true} },
+    { cls:'miss',  tag:'排除',   log:'让特征值轮流为零来试参数：a 取零混进负值、a 取负一全是非正，都排除', count:6, ribbon:{k:7, ok:false} },
+    { cls:'ok',    tag:'确认',   log:'a 取二：特征值为二、三、零，两正一零，符合', count:7, ribbon:{k:8, ok:true} },
+    { cls:'done',  tag:'完成',   log:'结论：特征值为 a、a 加一、a 减二；规范形要求给出 a 等于二', count:8, ribbon:{k:9, ok:true}, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    var rows = this._rows;
+    for (var j = 0; j < rows.length; j++){
+      rows[j].className = 'aw-stepcard' + (j < i ? ' good' : (j === i ? ' key' : ''));
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '(1) $\\lambda_1=a,\\ \\lambda_2=a+1,\\ \\lambda_3=a-2$；(2) $a=2$',
+    html: '记忆锚点：特征多项式<b>先提公因子再换元降次</b>；规范形 $y_1^2+y_2^2$ $\\iff$ <b>正惯性指数 2 + 秩 2</b> $\\iff$ 特征值「两正一零」。易错：交叉项 $2x_1x_3$、$-2x_2x_3$ 进矩阵要<b>折半</b>，写成 $\\pm1$ 而不是 $\\pm2$。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

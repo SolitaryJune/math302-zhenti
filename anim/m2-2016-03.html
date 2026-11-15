@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2016·03 反常积分敛散性：奇点在 0 的哪一侧</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改题目专属区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+// 推导板各行：与 snaps 一一对应（build 建立、render 按 i 点亮）
+var ROWS = [
+  { label: '第 0 步 · 审题',
+    h: '<p>两个积分被积函数同为 $\\dfrac{1}{x^2}\\mathrm e^{1/x}$，差别只在区间：$(1)$ 在 $(-\\infty,0)$、$(2)$ 在 $(0,+\\infty)$。策略：先求原函数，再看<b>奇点端点的极限</b>。</p>' },
+  { label: '第 1 步 · 凑微分求原函数',
+    h: '<p>$\\dfrac{1}{x^2}\\mathrm e^{1/x}\\mathrm dx=-\\mathrm e^{1/x}\\,\\mathrm d\\!\\left(\\dfrac1x\\right)$，故 $$\\int \\frac{1}{x^2}\\mathrm e^{\\frac1x}\\mathrm dx=-\\mathrm e^{\\frac1x}+C.$$</p>' },
+  { label: '第 2 步 · 端点行为：关键在 e 的指数',
+    h: '<table style="border-collapse:collapse;margin:6px 0;font-size:14px">' +
+       '<tr><th style="border:1px solid #cbd5e1;padding:4px 10px">极限过程</th><th style="border:1px solid #cbd5e1;padding:4px 10px">$\\frac1x$ 趋向</th><th style="border:1px solid #cbd5e1;padding:4px 10px">$\\mathrm e^{1/x}$ 趋向</th><th style="border:1px solid #cbd5e1;padding:4px 10px">$-\\mathrm e^{1/x}$</th></tr>' +
+       '<tr><td style="border:1px solid #cbd5e1;padding:4px 10px">$x\\to0^-$</td><td style="border:1px solid #cbd5e1;padding:4px 10px">$-\\infty$</td><td style="border:1px solid #cbd5e1;padding:4px 10px;color:#15803d"><b>$0$</b></td><td style="border:1px solid #cbd5e1;padding:4px 10px">$0$</td></tr>' +
+       '<tr><td style="border:1px solid #cbd5e1;padding:4px 10px">$x\\to-\\infty$</td><td style="border:1px solid #cbd5e1;padding:4px 10px">$0^-$</td><td style="border:1px solid #cbd5e1;padding:4px 10px">$1$</td><td style="border:1px solid #cbd5e1;padding:4px 10px">$-1$</td></tr>' +
+       '<tr><td style="border:1px solid #cbd5e1;padding:4px 10px">$x\\to0^+$</td><td style="border:1px solid #cbd5e1;padding:4px 10px">$+\\infty$</td><td style="border:1px solid #cbd5e1;padding:4px 10px;color:#b91c1c"><b>$+\\infty$</b></td><td style="border:1px solid #cbd5e1;padding:4px 10px">$-\\infty$</td></tr>' +
+       '<tr><td style="border:1px solid #cbd5e1;padding:4px 10px">$x\\to+\\infty$</td><td style="border:1px solid #cbd5e1;padding:4px 10px">$0^+$</td><td style="border:1px solid #cbd5e1;padding:4px 10px">$1$</td><td style="border:1px solid #cbd5e1;padding:4px 10px">$-1$</td></tr></table>' },
+  { label: '第 3 步 · 判 (1)：奇点 x→0⁻，温和',
+    h: '<p>$$\\int_{-\\infty}^0\\frac{1}{x^2}\\mathrm e^{\\frac1x}\\mathrm dx=\\Big[-\\mathrm e^{\\frac1x}\\Big]_{-\\infty}^{0^-}=(0)-(-1)=1,$$ 上限处 $\\mathrm e^{1/x}\\to0$、下限处 $\\to1$，极限存在，<b style="color:#15803d">收敛</b>。</p>' },
+  { label: '第 4 步 · 判 (2)：奇点 x→0⁺，爆炸',
+    h: '<p>$$\\Big[-\\mathrm e^{\\frac1x}\\Big]_{0^+}^{+\\infty}：\\ x\\to0^+\\ \\text{时}\\ \\mathrm e^{\\frac1x}\\to+\\infty,$$ 下限项无界，极限不存在，<b style="color:#b91c1c">发散</b>。</p>' },
+  { label: '第 5 步 · 结论',
+    h: '<p>$(1)$ 收敛、$(2)$ 发散，<b>选 B</b>。分水岭就一句话：奇点在 0 的哪一侧，决定了 $\\mathrm e^{1/x}$ 是归零还是爆炸。</p>' },
+];
+
+var rowEls = [];
+
+AW.init({
+  title: '反常积分敛散性：$\\int\\frac{1}{x^2}\\mathrm e^{1/x}\\mathrm dx$ 的两个区间',
+  subtitle: '考点：反常积分敛散 · 方法：求原函数 → 端点（奇点）极限',
+  counterLabel: '步骤',
+  intro: '点击「▶ 播放」逐步演示推导板上的六步判断。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    rowEls = [];
+    var wrap = AW.el('div', 'aw-scroll');
+    ROWS.forEach(function(r){
+      var d = AW.el('div', '');
+      d.style.cssText = 'padding:9px 14px;margin:8px 0;border-left:4px solid transparent;border-radius:10px;opacity:.15;transition:opacity .35s,background .35s,border-color .35s;';
+      d.innerHTML = '<div style="font-size:12.5px;color:#64748b;font-weight:700;margin-bottom:2px">' + r.label + '</div>' + r.h;
+      wrap.appendChild(d);
+      rowEls.push(d);
+    });
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step', tag:'审题',   log:'被积函数相同，奇点都在 x=0，差别是区间在 0 的哪一侧', count:0 },
+    { cls:'step', tag:'凑微分', log:'1/x² 配 e^(1/x) 正好凑成 −e^(1/x) 的导数', count:1 },
+    { cls:'step', tag:'端点表', log:'四个极限过程里 e^(1/x) 的走向：0⁻ 端归零、0⁺ 端爆炸', count:2 },
+    { cls:'ok',   tag:'判(1)',  log:'x→0⁻ 端 e^(1/x)→0，上限有限、下限有限，积分等于 1，收敛', count:3 },
+    { cls:'miss', tag:'判(2)',  log:'x→0⁺ 端 e^(1/x)→+∞，下限无界，发散', count:4 },
+    { cls:'done', tag:'完成',   log:'(1) 收敛、(2) 发散，选 B', count:5, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    rowEls.forEach(function(d, j){
+      d.style.opacity = j <= i ? '1' : '.15';
+      d.style.borderLeftColor = j < i ? '#16a34a' : (j === i ? '#d97706' : 'transparent');
+      d.style.background = j === i ? '#fffbeb' : (j < i ? '#f6fef9' : 'transparent');
+    });
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '(1) 收敛，(2) 发散（选 B）',
+    html: '记忆锚点：<b>同一个 $\\mathrm e^{1/x}$，奇点侧的符号定生死</b>——$x\\to0^-$ 时 $\\frac1x\\to-\\infty$、指数归零，收敛；$x\\to0^+$ 时 $\\frac1x\\to+\\infty$、指数爆炸，发散。原函数 $-\\mathrm e^{1/x}$ 一求，端点一代就出结论。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

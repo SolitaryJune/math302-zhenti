@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学·算法类动画：隐函数 z 的二阶偏导 z_xx</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+AW.init({
+  title: '$\\mathrm e^z+xz=2x-y$ 在 $(1,1)$ 处的 $\\dfrac{\\partial^2 z}{\\partial x^2}$',
+  subtitle: '考点：隐函数求导 · 方法：先定点 z → 一阶 z_x → 乘积等式再求导',
+  counterLabel: '推导步',
+  intro: '点击「▶ 播放」逐步演示：定点、一阶、二阶、代值。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    var lines = [
+      '<b>第一步：定点</b>：$(x,y)=(1,1)$ 代入方程：$$\\mathrm e^z+z=2-1=1$$ 显然 $z=0$（$\\mathrm e^0+0=1$），故 $z(1,1)=0$',
+      '<b>第二步：一阶</b>：两边对 $x$ 求导（$z$ 是 $z(x,y)$）：$$\\mathrm e^z z_x+z+xz_x=2\\quad\\Longrightarrow\\quad z_x=\\frac{2-z}{\\mathrm e^z+x}$$',
+      '<b>第三步：代值求 z_x</b>：$z=0,\\ x=1$ 代入：$$z_x=\\frac{2-0}{\\mathrm e^0+1}=\\frac22=1$$',
+      '<b>第四步：二阶</b>：保留 $z_x(\\mathrm e^z+x)=2-z$ 的乘积形状，两边再对 $x$ 求导（右端 $-z_x$，左端乘积法则、$\\mathrm e^z$ 的导数带链式 $\\mathrm e^zz_x$）：$$z_{xx}(\\mathrm e^z+x)+z_x\\bigl(\\mathrm e^z z_x+1\\bigr)=-z_x$$',
+      '<b>第五步：代值结算</b>：$z=0,\\ z_x=1,\\ \\mathrm e^z+x=2$：$$2z_{xx}+1\\cdot(1+1)=-1\\ \\Longrightarrow\\ 2z_{xx}=-3\\ \\Longrightarrow\\ z_{xx}=-\\frac32$$',
+    ];
+    this._lines = [];
+    for(var i=0;i<lines.length;i++){
+      var d = AW.el('div', '', lines[i]);
+      d.style.cssText = 'padding:9px 14px;margin:7px 0;border-left:3px solid transparent;border-radius:10px;transition:all .35s;opacity:.28;font-size:15px;line-height:1.9;';
+      board.appendChild(d);
+      this._lines.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step',  tag:'定点',   log:'代 x=y=1，方程变成 e^z + z = 1，z 为 0', count:0 },
+    { cls:'shift', tag:'一阶',   log:'两边对 x 求导，z 的项都要带 z_x，解出 z_x 表达式', count:1 },
+    { cls:'ok',    tag:'代值',   log:'z=0、x=1 代入，z_x 等于 1', count:2 },
+    { cls:'shift', tag:'二阶',   log:'保留乘积形状再求导，右端出现负的 z_x，指数项带链式', count:3 },
+    { cls:'done',  tag:'完成',   log:'结论：2z_xx + 2 = −1，z_xx = −3/2', count:4, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    for(var j=0;j<this._lines.length;j++){
+      var L = this._lines[j];
+      L.style.opacity = j<=i ? '1' : '0.28';
+      L.style.borderLeftColor = (j===i) ? '#d97706' : (j<i ? '#16a34a' : 'transparent');
+      L.style.background = (j===i) ? '#fef3c7' : 'transparent';
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '$\\left.\\dfrac{\\partial^2 z}{\\partial x^2}\\right|_{(1,1)}=-\\dfrac32$',
+    html: '记忆锚点：<b>隐函数高阶偏导三步走：定点 $z$ → 一阶 $z_x$ → 对乘积等式再求导</b>。易错：忘先求 $z(1,1)=0$；$\\mathrm e^z$ 对 $x$ 求导是 $\\mathrm e^z z_x$（链式），二阶右端是 $-z_x$ 不是 0。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

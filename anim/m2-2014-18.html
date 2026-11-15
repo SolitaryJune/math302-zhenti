@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2014·18 复合函数偏导反解 f(u)</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改 AW.init 区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [];
+
+var LINES = [
+  "<p><b>审题</b>：$z=f\\bigl(e^x\\cos y\\bigr)$，记 $u=e^x\\cos y$。目标：把 $z_{xx}+z_{yy}$ 用 $f'(u)$、$f''(u)$ 表出，再对照题设右边 $\\bigl(4z+e^x\\cos y\\bigr)e^{2x}$。</p>",
+  "<p><b>一阶偏导</b>（链式法则，$u_x=e^x\\cos y$，$u_y=-e^x\\sin y$）：$$z_x=f'(u)\\,e^x\\cos y,\\qquad z_y=-f'(u)\\,e^x\\sin y.$$</p>",
+  "<p><b>$z_{xx}$</b>：对 $x$ 再求导，两项都来（$u$ 的因子也要求导）：$$z_{xx}=f''(u)\\,e^{2x}\\cos^2y+f'(u)\\,e^x\\cos y.$$</p>",
+  "<p><b>$z_{yy}$</b>：对 $y$ 再求导：$$z_{yy}=f''(u)\\,e^{2x}\\sin^2y-f'(u)\\,e^x\\cos y.$$</p>",
+  "<p><b>相加</b>：$f'(u)\\,e^x\\cos y$ 一正一负<b>恰好抵消</b>，$\\cos^2y+\\sin^2y=1$：$$z_{xx}+z_{yy}=f''(u)\\,e^{2x}.$$</p>",
+  "<p><b>化成常微分方程</b>：题设 $=\\bigl(4f(u)+u\\bigr)e^{2x}$（因 $z=f(u)$、$e^x\\cos y=u$），约去 $e^{2x}>0$：$$f''(u)-4f(u)=u.$$</p>",
+  "<p><b>齐次解</b>：特征方程 $r^2-4=0$，$r=\\pm2$：$$f_h=C_1e^{2u}+C_2e^{-2u}.$$</p>",
+  "<p><b>特解</b>：右端是一次多项式，设 $f^*=au+b$，代入得 $-4(au+b)=u$，比较系数：$a=-\\dfrac14,\\ b=0$。</p>",
+  "<p><b>定常数</b>：$f(0)=0\\Rightarrow C_1+C_2=0$；$f'(0)=0\\Rightarrow 2C_1-2C_2-\\dfrac14=0$，即 $C_1-C_2=\\dfrac18$。解得 $C_1=\\dfrac1{16},\\ C_2=-\\dfrac1{16}$。</p>",
+  "<p><b>验算收尾</b>：$$f(u)=\\frac{1}{16}\\bigl(e^{2u}-e^{-2u}\\bigr)-\\frac u4,\\qquad f''-4f=u\\ \\checkmark$$ 且 $f(0)=0$、$f'(0)=0$ 均满足。</p>"
+];
+
+AW.init({
+  title: "二阶偏导相加，凑出常微分方程 $f''-4f=u$",
+  subtitle: "考点：多元复合函数求导 · 二阶常系数线性微分方程（2014 年数学二第 18 题）",
+  counterLabel: "推导步",
+  ribbonTitle: "关键节点（✓ 已完成）",
+  intro: "点击「▶ 播放」逐步演示从偏导数到常微分方程的全过程。",
+
+  build: function(stage){
+    stage.innerHTML = '';
+    ROWS.length = 0;
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    for(var k = 0; k < LINES.length; k++){
+      var d = AW.el('div', '', LINES[k]);
+      d.style.cssText = 'margin:8px 0;padding:9px 14px;border-left:3px solid #e2e8f0;background:#f8fafc;border-radius:0 12px 12px 0;font-size:14.5px;line-height:1.9;display:none;';
+      board.appendChild(d);
+      ROWS.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  render: function(stage, sn){
+    for(var k = 0; k < ROWS.length; k++){
+      var r = ROWS[k];
+      if(k >= sn.show){ r.style.display = 'none'; continue; }
+      r.style.display = 'block';
+      if(k === sn.show - 1 && !sn.done){
+        r.style.borderLeftColor = '#d97706';
+        r.style.background = '#fffbeb';
+      } else {
+        r.style.borderLeftColor = '#16a34a';
+        r.style.background = '#f8fafc';
+      }
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  snaps: [
+    { cls:"shift", tag:"审题",   log:"设中间变量，目标是把两个二阶偏导加起来看剩下什么", show:1, count:0 },
+    { cls:"step",  tag:"一阶导", log:"链式法则分别对 x 和 y 求一阶偏导", show:2, count:1 },
+    { cls:"step",  tag:"对 x 再导", log:"对 x 求二阶偏导，出现平方余弦和带一阶导数的项", show:3, count:2 },
+    { cls:"step",  tag:"对 y 再导", log:"对 y 求二阶偏导，出现平方正弦和带一阶导数的项", show:4, count:3 },
+    { cls:"ok",    tag:"相加",   log:"带一阶导数的两项一正一负抵消，平方项凑成 1，只剩二阶导数", show:5, count:4, ribbon:{k:1, ok:true} },
+    { cls:"ok",    tag:"化方程", log:"约去公因子后得到二阶常系数方程，右端是 u", show:6, count:5, ribbon:{k:2, ok:true} },
+    { cls:"step",  tag:"齐次解", log:"特征根正负 2，齐次解是两个指数的线性组合", show:7, count:6 },
+    { cls:"step",  tag:"特解",   log:"设一次多项式试特解，解出系数负四分之一", show:8, count:7 },
+    { cls:"ok",    tag:"定常数", log:"两个初始条件解出两个组合系数，各为正负十六分之一", show:9, count:8, ribbon:{k:3, ok:true} },
+    { cls:"done",  tag:"完成",   log:"代回方程与初值全部吻合", show:10, count:9, done:true },
+  ],
+
+  result: {
+    big: "$f(u)=\\dfrac{1}{16}\\bigl(e^{2u}-e^{-2u}\\bigr)-\\dfrac{u}{4}$",
+    html: "记忆锚点：<b>$z_{xx}+z_{yy}=f''(u)\\,e^{2x}$——一阶项自动抵消（$\\cos^2y+\\sin^2y=1$）</b>。代回题设约去 $e^{2x}$ 得 $f''-4f=u$；特解 $-\\frac u4$，初值给出 $C_1=\\frac1{16}$、$C_2=-\\frac1{16}$。易错：$z_{yy}$ 漏掉 $-f'(u)e^x\\cos y$ 项导致一阶项不抵消；$f'(0)=0$ 给出 $2C_1-2C_2=\\frac14$ 别算错。",
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

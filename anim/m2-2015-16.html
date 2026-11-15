@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2015 数二第 16 题 · 旋转体体积定参数 A（交互动画）</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  /* stage 同步渲染；结论卡/标题/副标题由引擎在 render 返回后才写入或只写一次，
+     用 setTimeout(0) 兜底渲染（后台标签页 setTimeout 仍会触发） */
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+AW.init({
+  title: '2015·16　$V_1=V_2$，求 $A$：$y=A\\sin x\\,(0\\le x\\le\\frac\\pi2)$ 旋转体',
+  subtitle: '考点：定积分应用 · <b>圆盘法 + 柱壳法</b>',
+  counterLabel: '已完成',
+  ribbonTitle: '推导进度（✓ 完成）',
+  intro: '点击「▶ 播放」或「下一步」，看两个体积如何各自算出再列方程。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var inner = AW.el('div', '');
+    inner.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>：当前行亮琥珀色，已完成的行变绿'));
+    var LINES = [
+      '$$D:\\ y=A\\sin x\\ \\Bigl(0\\le x\\le\\tfrac\\pi2\\Bigr),\\ y=0,\\ x=\\tfrac\\pi2;\\qquad V_1\\ \\text{绕}\\ x\\ \\text{轴},\\quad V_2\\ \\text{绕}\\ y\\ \\text{轴}$$',
+      '<b>① 绕 $x$ 轴圆盘法：</b>$V_1=\\pi\\int_0^{\\pi/2}(A\\sin x)^2\\,\\mathrm dx=\\pi A^2\\int_0^{\\pi/2}\\sin^2x\\,\\mathrm dx$',
+      '<b>② 降幂收口：</b>$\\int_0^{\\pi/2}\\sin^2x\\,\\mathrm dx=\\dfrac12\\cdot\\dfrac\\pi2=\\dfrac\\pi4\\ \\Rightarrow\\ V_1=\\dfrac{\\pi^2A^2}4$',
+      '<b>③ 绕 $y$ 轴柱壳法（免反函数）：</b>$V_2=2\\pi\\int_0^{\\pi/2}x\\cdot A\\sin x\\,\\mathrm dx$',
+      '<b>④ 分部积分：</b>$\\int_0^{\\pi/2}x\\sin x\\,\\mathrm dx=\\bigl[-x\\cos x+\\sin x\\bigr]_0^{\\pi/2}=1\\ \\Rightarrow\\ V_2=2\\pi A$',
+      '<b>⑤ 列方程：</b>$V_1=V_2\\ \\Longleftrightarrow\\ \\dfrac{\\pi^2A^2}4=2\\pi A$',
+      '<b>⑥ 两边除以 $\\pi A$（$A>0$ 保证合法）：</b>$\\dfrac{\\pi A}4=2$',
+      '<b>⑦ 解得：</b>$A=\\dfrac8\\pi$',
+      '<b>⑧ 验算：</b>$V_1=\\dfrac{\\pi^2}4\\cdot\\dfrac{64}{\\pi^2}=16,\\quad V_2=2\\pi\\cdot\\dfrac8\\pi=16$ ✓'
+    ];
+    this._rows = [];
+    for (var i = 0; i < LINES.length; i++){
+      var r = AW.el('div', 'aw-stepcard', LINES[i]);
+      inner.appendChild(r);
+      this._rows.push(r);
+    }
+    wrap.appendChild(inner);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step',  tag:'审题',   log:'区域是正弦曲线下一块带边界的图形，绕 x 轴与绕 y 轴各算一个体积', count:0, ribbon:{k:1, ok:true} },
+    { cls:'ok',    tag:'圆盘',   log:'绕 x 轴用圆盘法：截面半径就是曲线高度，平方后积分', count:1, ribbon:{k:2, ok:true} },
+    { cls:'ok',    tag:'降幂',   log:'正弦平方在零到二分之派上积分等于八分之派乘二，体积出一派平方乘 A 方', count:2, ribbon:{k:3, ok:true} },
+    { cls:'shift', tag:'柱壳',   log:'绕 y 轴不解反函数，改用柱壳法：对 x 直接积分', count:3, ribbon:{k:4, ok:true} },
+    { cls:'ok',    tag:'分部',   log:'x 乘正弦用分部积分，边界代入后恰好剩 1，第二个体积是二派 A', count:4, ribbon:{k:5, ok:true} },
+    { cls:'ok',    tag:'方程',   log:'令两个体积相等，得到 A 的方程', count:5, ribbon:{k:6, ok:true} },
+    { cls:'ok',    tag:'约简',   log:'A 大于零，两边除以派 A，方程化为一派 A 等于八', count:6, ribbon:{k:7, ok:true} },
+    { cls:'ok',    tag:'求解',   log:'解得 A 等于八除以派', count:7, ribbon:{k:8, ok:true} },
+    { cls:'done',  tag:'完成',   log:'验算：两个体积都等于 16，相等成立', count:8, ribbon:{k:9, ok:true}, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    var rows = this._rows;
+    for (var j = 0; j < rows.length; j++){
+      rows[j].className = 'aw-stepcard' + (j < i ? ' good' : (j === i ? ' key' : ''));
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '$A=\\dfrac8\\pi\\quad(V_1=V_2=16)$',
+    html: '记忆锚点：<b>绕 $y$ 轴先想柱壳法</b> $2\\pi\\int x\\,|y|\\,\\mathrm dx$，避免解反函数；绕 $x$ 轴圆盘法 $\\pi\\int y^2\\,\\mathrm dx$。易错：两边除以 $A$ 前要用题设 $A>0$ 排除伪根 $A=0$；$\\int_0^{\\pi/2}\\sin^2x\\,\\mathrm dx=\\frac\\pi4$（不是 $\\frac\\pi2$）。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

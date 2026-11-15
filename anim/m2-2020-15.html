@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2020-15 斜渐近线 · 逐步推导</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域 ================== */
+var rows = [];   // 推导板行（build 填充，render 控制）
+
+AW.init({
+  title: '求 $y=\\dfrac{x^{1+x}}{(1+x)^x}$（$x>0$）的斜渐近线',
+  subtitle: '考点：斜渐近线 · 方法：$k=\\lim\\frac yx$、$b=\\lim(y-kx)$ + 一阶泰勒展开',
+  counterLabel: '已推进',
+  intro: '点击「▶ 播放」逐步推导斜渐近线 $y=kx+b$。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    rows = [];
+    var wrap = AW.el('div', 'aw-scroll');
+    wrap.appendChild(AW.el('div', 'aw-row-label',
+      '<b>推导板</b>：目标 $y=kx+b$，其中 $k=\\lim_{x\\to+\\infty}\\dfrac yx$，$b=\\lim_{x\\to+\\infty}(y-kx)$'));
+    var ROWS = [
+      '$$y=\\frac{x^{1+x}}{(1+x)^x}=x\\left(\\frac{x}{1+x}\\right)^{x}=x\\left(1+\\frac1x\\right)^{-x}$$',
+      '$$k=\\lim_{x\\to+\\infty}\\frac yx=\\lim_{x\\to+\\infty}\\left(1+\\frac1x\\right)^{-x}=e^{-1}=\\frac1e$$',
+      '$$b=\\lim_{x\\to+\\infty}\\left(y-\\frac xe\\right)=\\lim_{t\\to0^+}\\frac{(1+t)^{-1/t}-e^{-1}}{t}\\quad\\left(t=\\frac1x\\right)$$',
+      '$$\\frac{\\ln(1+t)}{t}=1-\\frac t2+o(t)\\ \\Longrightarrow\\ (1+t)^{-1/t}=e^{-1}\\left(1+\\frac t2+o(t)\\right)$$',
+      '$$b=\\lim_{t\\to0^+}\\frac{e^{-1}\\cdot\\frac t2+o(t)}{t}=\\frac{1}{2e}$$',
+      '$$\\boxed{y=\\frac xe+\\frac{1}{2e}}$$'
+    ];
+    ROWS.forEach(function(html){
+      var row = AW.el('div', 'derive-row', html);
+      row.style.cssText = 'padding:6px 14px;margin:8px 0;border-radius:8px;' +
+        'border-left:4px solid #cbd5e1;background:#f8fafc;opacity:0;' +
+        'transform:translateY(8px);transition:all .35s ease;';
+      wrap.appendChild(row);
+      rows.push(row);
+    });
+    stage.appendChild(wrap);
+  },
+
+  render: function(stage, sn, i){
+    rows.forEach(function(row, j){
+      var vis = j < i;
+      var cur = vis && j === i - 1;
+      row.style.opacity = vis ? '1' : '0';
+      row.style.transform = vis ? 'translateY(0)' : 'translateY(8px)';
+      row.style.borderLeftColor = cur ? '#f59e0b' : (vis ? '#10b981' : '#cbd5e1');
+      row.style.background = cur ? '#fffbeb' : (vis ? '#f0fdf4' : '#f8fafc');
+    });
+    renderMathAfterSnap(stage);
+  },
+
+  snaps: [
+    { cls:'shift', tag:'审题', log:'斜渐近线两步走：先求 k，再求 b', count:0 },
+    { cls:'step',  tag:'化简', log:'把 y 拆成 x 乘上 (1+1/x) 的负 x 次幂', count:1 },
+    { cls:'ok',    tag:'求 k', log:'y/x 就是 (1+1/x) 的负 x 次幂，用重要极限得 1/e', count:2 },
+    { cls:'step',  tag:'设 b', log:'b 是 y 减 kx 的极限，换元 t=1/x 化成标准型', count:3 },
+    { cls:'step',  tag:'展开', log:'对指数取对数展开，必须保留 t 的一次项', count:4 },
+    { cls:'ok',    tag:'定 b', log:'一阶项系数留下，极限得 1/(2e)', count:5 },
+    { cls:'done',  tag:'结论', log:'斜渐近线：y = x/e + 1/(2e)', count:6, done:true },
+  ],
+
+  result: {
+    big: '$y=\\dfrac1e x+\\dfrac{1}{2e}$',
+    html: '正确答案：<b>$y=\\dfrac1e x+\\dfrac{1}{2e}$</b>。记忆点：求 $k$ 用 $(1+\\frac1x)^x\\to e$；求 $b$ 必须展开到一阶——$(1+t)^{-1/t}=e^{-1}\\left(1+\\frac t2+o(t)\\right)$，只留 $e^{-1}(1+o(1))$ 会算不出 $b$。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

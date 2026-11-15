@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2016 数二第 18 题 · 二重积分对称性化简 + 极坐标（交互动画）</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  /* stage 同步渲染；结论卡/标题/副标题由引擎在 render 返回后才写入或只写一次，
+     用 setTimeout(0) 兜底渲染（后台标签页 setTimeout 仍会触发） */
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+AW.init({
+  title: '2016·18　$\\iint_{D}\\frac{x^{2}-xy-y^{2}}{x^{2}+y^{2}}\\,\\mathrm{d}x\\,\\mathrm{d}y$，$D$ 由 $y=1,\\ y=\\pm x$ 围成',
+  subtitle: '考点：二重积分 · 方法：<b>对称性消奇函数项 + 极坐标</b>',
+  counterLabel: '已完成',
+  ribbonTitle: '推导进度（✓ 完成）',
+  intro: '点击「▶ 播放」或「下一步」，看奇函数项如何归零、二倍角如何一次积完。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var inner = AW.el('div', '');
+    inner.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>：当前行亮琥珀色，已完成的行变绿'));
+    var LINES = [
+      '<b>区域（文字描述）：</b>$D$ 由 $y=1$（上边）与 $y=x$、$y=-x$（两侧）围成，顶点 $(0,0)$、$(1,1)$、$(-1,1)$，<b>关于 $y$ 轴对称</b>',
+      '<b>① 拆项用对称：</b>$\\frac{x^{2}-xy-y^{2}}{x^{2}+y^{2}}=\\frac{x^{2}-y^{2}}{x^{2}+y^{2}}-\\frac{xy}{x^{2}+y^{2}}$，第二项是 $x$ 的奇函数，积分为 $0$',
+      '<b>② 转极坐标：</b>$\\frac{x^{2}-y^{2}}{x^{2}+y^{2}}=\\cos 2\\theta$；$\\theta\\in\\Bigl[\\frac{\\pi}{4},\\frac{3\\pi}{4}\\Bigr]$，$0\\le r\\le\\frac{1}{\\sin\\theta}$（上边 $y=1$ 即 $r\\sin\\theta=1$）',
+      '<b>③ 先积 $r$：</b>$\\int_{0}^{1/\\sin\\theta}r\\,\\mathrm{d}r=\\frac{1}{2\\sin^{2}\\theta}$，被积函数成 $\\frac{\\cos 2\\theta}{2\\sin^{2}\\theta}$',
+      '<b>④ 拆项：</b>$\\cos 2\\theta=1-2\\sin^{2}\\theta\\ \\Rightarrow\\ \\frac{\\cos 2\\theta}{2\\sin^{2}\\theta}=\\frac{1}{2}\\csc^{2}\\theta-1$',
+      '<b>⑤ 积出并代端点：</b>$\\Bigl[-\\frac{1}{2}\\cot\\theta-\\theta\\Bigr]_{\\pi/4}^{3\\pi/4}=\\Bigl(\\frac{1}{2}-\\frac{3\\pi}{4}\\Bigr)-\\Bigl(-\\frac{1}{2}-\\frac{\\pi}{4}\\Bigr)$',
+      '<b>⑥ 结论：</b>原积分 $=1-\\frac{\\pi}{2}$'
+    ];
+    this._rows = [];
+    for (var i = 0; i < LINES.length; i++){
+      var r = AW.el('div', 'aw-stepcard', LINES[i]);
+      inner.appendChild(r);
+      this._rows.push(r);
+    }
+    wrap.appendChild(inner);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step',  tag:'认区域', log:'顶点在原点的三角形，上边是水平线 y 等于 1，左右两边对称，整体关于 y 轴对称', count:0, ribbon:{k:1, ok:true} },
+    { cls:'ok',    tag:'拆对称', log:'拆成两项：xy 那项对 x 是奇函数，对称区域上直接归零', count:1, ribbon:{k:2, ok:true} },
+    { cls:'shift', tag:'极坐标', log:'极坐标下分子分母的 r 平方消掉，被积函数变成二倍角余弦；角度从四分之π到四分之三π', count:2, ribbon:{k:3, ok:true} },
+    { cls:'ok',    tag:'积 r',  log:'先对 r 积分，得到二分之一乘 sin 平方分之一', count:3, ribbon:{k:4, ok:true} },
+    { cls:'ok',    tag:'拆项',  log:'用降幂公式拆成余割平方的一半减一，原函数一眼可见', count:4, ribbon:{k:5, ok:true} },
+    { cls:'ok',    tag:'代端点', log:'代入两端角度：大端是二分之一减四分之三π，小端是负二分之一减四分之π', count:5, ribbon:{k:6, ok:true} },
+    { cls:'done',  tag:'完成',  log:'相减合并，最终结果一减二分之π', count:6, ribbon:{k:7, ok:true}, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    var rows = this._rows;
+    for (var j = 0; j < rows.length; j++){
+      rows[j].className = 'aw-stepcard' + (j < i ? ' good' : (j === i ? ' key' : ''));
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '$1-\\dfrac{\\pi}{2}$',
+    html: '记忆锚点：<b>先对称性归零奇函数项，再极坐标消 $r^{2}$</b>；面积元 $r\\,\\mathrm{d}r\\,\\mathrm{d}\\theta$ 别忘乘 $r$。易错：角度范围写成 $\\bigl[-\\frac{\\pi}{4},\\frac{\\pi}{4}\\bigr]$（那是 $y=\\pm x$ 之间靠 $x$ 轴的另一块区域）。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

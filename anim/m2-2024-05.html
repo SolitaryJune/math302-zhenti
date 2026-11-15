@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2024·05 原点处可微但偏导不连续</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_concept_template.html，只改题目专属区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+// 一张推理卡片（body 里可写 $..$ / $$..$$ 公式）
+function card(n, cls, title, body){
+  return '<div class="aw-stepcard ' + (cls || '') + '"><h4><span class="n">' + n +
+         '</span>' + title + '</h4>' + body + '</div>';
+}
+
+// 推理链：每一步的完整内容（引擎按步数截取显示）
+var STEPS = [
+  { title: '审题眼：原点处一切用定义判',
+    cls: 'key',
+    tag: '策略',
+    body: '<p>$f(x,y)=(x^2+y^2)\\sin\\dfrac1{xy}$（$xy\\neq0$），$f=0$（$xy=0$）。要在 $(0,0)$ 处回答两件事：$f_x$ 是否连续、$f$ 是否可微。顺序：<b>先按定义算偏导 → 夹逼判可微 → 沿路径查 $f_x$ 的连续性</b>。跳震荡因子 $\\sin\\frac1{xy}$ 不能用求导公式直接处理原点。</p>',
+    log: '定义算偏导 → 夹逼判可微 → 路径查连续' },
+  { title: '按定义：fₓ(0,0) = f_y(0,0) = 0',
+    cls: 'step',
+    tag: '偏导',
+    body: '<p>沿坐标轴函数值恒为 $0$（$xy=0$ 走第二段定义）：$f(h,0)\\equiv0$，$$f_x(0,0)=\\lim_{h\\to0}\\frac{f(h,0)-f(0,0)}{h}=0,\\qquad f_y(0,0)=0.$$ 偏导在原点<b>存在且全为零</b>。</p>',
+    log: 'f(h,0)≡0，故两个偏导都是 0' },
+  { title: '夹逼判可微：残差被 ρ 压住',
+    cls: 'good',
+    tag: '可微 ✓',
+    ribbon: {k:1, ok:true},
+    body: '<p>可微看残差比是否趋于 $0$：$$\\frac{f(x,y)-0-0\\cdot x-0\\cdot y}{\\sqrt{x^2+y^2}}=\\sqrt{x^2+y^2}\\,\\Big|\\sin\\frac1{xy}\\Big|\\le\\sqrt{x^2+y^2}\\to0.$$ （$xy=0$ 时分子本来就是 $0$。）由夹逼，$f$ 在 $(0,0)$ <b>可微</b>，且 $\\mathrm df=0$——线性主部为零。直觉：$\\sin\\frac1{xy}$ 再疯跳也被系数压住。</p>',
+    log: '残差比 ≤ √(x²+y²)→0，f 可微' },
+  { title: 'xy ≠ 0 处求出 fₓ 的表达式',
+    cls: 'step',
+    tag: 'fₓ 公式',
+    body: '<p>离开原点后按法则求导：$$f_x=2x\\sin\\frac1{xy}+(x^2+y^2)\\cos\\frac1{xy}\\cdot\\Big(-\\frac1{x^2y}\\Big).$$ 第二项带因子 $\\dfrac1{x^2y}$——是潜在的无界源。</p>',
+    log: 'fₓ 第二项含 1/(x²y)，可能有危险' },
+  { title: '沿 y = x 检验：fₓ 无界 → 不连续',
+    cls: 'bad',
+    tag: '不连续 ✗',
+    ribbon: {k:2, ok:true},
+    body: '<p>沿 $y=x$（$x>0$）：$$f_x(x,x)=2x\\sin\\frac1{x^2}-\\frac2x\\cos\\frac1{x^2}.$$ 取 $x_n=\\dfrac1{\\sqrt{2n\\pi}}$，则 $\\cos\\dfrac1{x_n^2}=1$，第二项 $=-\\dfrac2{x_n}=-2\\sqrt{2n\\pi}\\to-\\infty$。$\\lim f_x$ 不存在，更不等于 $f_x(0,0)=0$：<b>$f_x$ 在原点不连续</b>。</p>',
+    log: '取 xₙ=1/√(2nπ)，fₓ→−∞，不连续' },
+  { title: '对照选项：不连续 + 可微 = C',
+    cls: 'good',
+    tag: '定答案',
+    body: '<p>两个结论合起来：$f_x$ <b>不连续</b>、$f$ <b>可微</b>——选 <b>C</b>。这正是"可微不必偏导连续"的名场面。</p>',
+    log: 'fₓ 不连续且 f 可微，选 C' },
+  { title: '干扰项复盘',
+    cls: 'bad',
+    tag: '防坑',
+    body: '<p><b>A</b>：断言 $f_x$ 连续——沿 $y=x$ 它无界，明显错。<b>B/D</b>：断言不可微——残差比被 $\\sqrt{x^2+y^2}$ 压住，夹逼给出可微，判断依据用错了对象。<b>概念锚点</b>：连续可微（$C^1$）⟹ 偏导连续；但"可微"本身只比"偏导存在"强一档，<b>允许偏导不连续</b>。</p>',
+    log: 'A 偏导连续错，B/D 可微判错' },
+];
+
+var snaps = STEPS.map(function(s, i){
+  return {
+    cls: i === STEPS.length - 1 ? 'done' : 'step',
+    tag: s.tag || ('第 ' + (i + 1) + ' 步'),
+    log: s.log || s.title,
+    count: i,
+    ribbon: s.ribbon,
+    html: STEPS.slice(0, i + 1).map(function(x, j){
+      return card(j + 1, x.cls, x.title, x.body);
+    }).join(''),
+    done: i === STEPS.length - 1,
+  };
+});
+
+AW.init({
+  title: '$f(x,y)=(x^2+y^2)\\sin\\dfrac1{xy}$ 在 $(0,0)$ 处的可微性与偏导连续性',
+  subtitle: '考点：多元微分概念 · 方法：定义算偏导 → 夹逼判可微 → 路径爆连续',
+  counterLabel: '推理步',
+  ribbonTitle: '判定（✓ 已证 / ✗ 已否）',
+  intro: '点击「▶ 播放」逐步展开推理链。',
+  render: function(stage, sn){
+    if(sn.html != null) stage.innerHTML = sn.html;
+    renderMathAfterSnap(stage);
+  },
+  snaps: snaps,
+  result: {
+    big: '答案 C（fₓ 不连续，f 可微）',
+    html: '记忆锚点：可微 $\\Rightarrow$ 偏导存在，但<b>不必偏导连续</b>（连续可微才推出偏导连续）。判可微看残差比：$\\sqrt{x^2+y^2}\\,\\lvert\\sin\\frac1{xy}\\rvert\\to0$；判连续沿 $y=x$ 取 $x_n=\\frac1{\\sqrt{2n\\pi}}$ 让 $f_x\\to-\\infty$。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2011 数二第 11 题 · 变限积分曲线的弧长</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（与模板一致，勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+var LINES = [
+  '<p><b>题面：</b>曲线 $y=\\int_0^x\\tan t\\,\\mathrm dt$（$0\\le x\\le\\dfrac\\pi4$），求弧长 $s$。</p>',
+  '<p><b>变限积分求导：</b>$$y\'=\\tan x.$$（不必先积出 $-\\ln\\cos x$ 再求导。）</p>',
+  '<p><b>弧长公式：</b>$$s=\\int_0^{\\frac\\pi4}\\sqrt{1+(y\')^2}\\,\\mathrm dx=\\int_0^{\\frac\\pi4}\\sqrt{1+\\tan^2x}\\,\\mathrm dx.$$</p>',
+  '<p><b>开方化简：</b>由 $1+\\tan^2x=\\sec^2x$，且区间上 $\\sec x>0$，$$s=\\int_0^{\\frac\\pi4}\\sec x\\,\\mathrm dx.$$</p>',
+  '<p><b>原函数：</b>$$\\int\\sec x\\,\\mathrm dx=\\ln\\lvert\\sec x+\\tan x\\rvert+C.$$</p>',
+  '<p><b>代上下限：</b>$$s=\\ln\\bigl(\\sec\\tfrac\\pi4+\\tan\\tfrac\\pi4\\bigr)-\\ln 1=\\ln(\\sqrt2+1).$$</p>',
+  '<p><b>结论：</b>弧长 $s=\\ln(1+\\sqrt2)$。</p>'
+];
+
+var lineEls = [];
+
+AW.init({
+  title: '第 11 题 · 曲线 $y=\\int_0^x\\tan t\\,\\mathrm dt$ 的弧长',
+  subtitle: '考点：变限积分求导 + 弧长公式 · 方法：被开方量凑完全平方',
+  counterLabel: '推导步',
+  intro: '点击「▶ 播放」逐步演示：求导 → 弧长公式 → 开方化简 → 积 sec x。',
+  ribbonTitle: '推导进度（✓ 完成）',
+  build: function(stage){
+    stage.innerHTML = '';
+    lineEls = [];
+    var wrap = AW.el('div', 'aw-scroll');
+    wrap.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>（每步揭示一行，公式由 KaTeX 渲染）'));
+    LINES.forEach(function(h){
+      var d = AW.el('div', 'aw-stepcard', h);
+      d.style.display = 'none';
+      wrap.appendChild(d);
+      lineEls.push(d);
+    });
+    stage.appendChild(wrap);
+  },
+  snaps: [
+    { cls:'step',  tag:'审题', count:0, reveal:1 },
+    { cls:'shift', tag:'求导', log:'变限积分上限求导，y′ = tan x 一步到位', count:1, reveal:2, hl:1, ribbon:{k:1, ok:true} },
+    { cls:'step',  tag:'公式', log:'代入弧长公式 s = ∫√(1+y′²) dx', count:2, reveal:3, hl:2, ribbon:{k:3, ok:true} },
+    { cls:'step',  tag:'开方', log:'1 + tan²x = sec²x，区间上 sec x 为正，开方得 sec x', count:3, reveal:4, hl:3, ribbon:{k:3, ok:true} },
+    { cls:'step',  tag:'原函数', log:'sec x 的原函数是 ln|sec x + tan x|', count:4, reveal:5, hl:4, ribbon:{k:4, ok:true} },
+    { cls:'step',  tag:'代限', log:'上限处 √2 + 1，下限处 ln1 = 0', count:5, reveal:6, hl:5, ribbon:{k:5, ok:true} },
+    { cls:'done',  tag:'结论', log:'结论：弧长 s = ln(1+√2)', count:6, reveal:7, hl:6, good:true, done:true, ribbon:{k:6, ok:true} },
+  ],
+  render: function(stage, sn){
+    for(var j = 0; j < lineEls.length; j++){
+      lineEls[j].style.display = (j < (sn.reveal || 0)) ? '' : 'none';
+      lineEls[j].className = 'aw-stepcard' + (sn.hl === j ? (sn.good ? ' good' : ' key') : '');
+    }
+    renderMathAfterSnap(stage);
+  },
+  result: {
+    big: '填 ln(1+√2)',
+    html: '链条：<b>$y\'=\\tan x$（变限积分求导）→ $\\sqrt{1+\\tan^2x}=\\sec x$ → $\\int\\sec x\\,\\mathrm dx=\\ln\\lvert\\sec x+\\tan x\\rvert$ → $s=\\ln(1+\\sqrt2)$</b>。易错：开平方要靠 $\\sec x>0$ 去掉绝对值；sec 的原函数记成「减号」会差一个负号。',
+  },
+});
+</script>
+</body>
+</html>

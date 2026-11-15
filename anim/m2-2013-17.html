@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2013·17 三角形区域上 x² 的二重积分</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改 AW.init 区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [];
+
+var LINES = [
+  "<p><b>审题</b>：$D$ 由 $x=3y$（即 $y=\\dfrac x3$）、$y=3x$、$x+y=8$ 围成。两条过原点的直线斜率一缓一陡，$x+y=8$ 是斜截线。</p>",
+  "<p><b>求顶点</b>：$y=3x$ 与 $x+y=8$ 联立得 $4x=8$，交点 $(2,6)$；$y=\\dfrac x3$ 与 $x+y=8$ 联立得 $\\dfrac{4x}{3}=8$，交点 $(6,2)$；两条直线交于原点。$D$ 是顶点为 $(0,0),(2,6),(6,2)$ 的三角形。</p>",
+  "<p><b>X 型分段</b>：被积函数只含 $x$，先对 $y$ 积分。下边界恒为 $y=\\dfrac x3$；上边界在 $x=2$ 处从 $y=3x$ 切换成 $y=8-x$（切换点就是顶点 $(2,6)$ 的横坐标）。</p>",
+  "<p><b>写出累次积分</b>：$$\\iint_Dx^2\\,\\mathrm d\\sigma=\\int_0^2x^2\\Big(3x-\\frac x3\\Big)\\mathrm dx+\\int_2^6x^2\\Big(8-x-\\frac x3\\Big)\\mathrm dx$$</p>",
+  "<p><b>第一段 $\\displaystyle\\int_0^2$</b>：$$\\int_0^2x^2\\cdot\\frac{8x}{3}\\,\\mathrm dx=\\frac83\\cdot\\frac{x^4}{4}\\Big|_0^2=\\frac83\\cdot4=\\frac{32}{3}$$</p>",
+  "<p><b>第二段 $\\displaystyle\\int_2^6$</b>：$$\\int_2^6\\Big(8x^2-\\frac43x^3\\Big)\\mathrm dx$$</p>",
+  "<p><b>第二段求值</b>：$$\\frac83\\big(216-8\\big)-\\frac43\\cdot\\frac{1296-16}{4}=\\frac{1664}{3}-\\frac{1280}{3}=128$$</p>",
+  "<p><b>合计</b>：$$\\frac{32}{3}+128=\\frac{32+384}{3}=\\frac{416}{3}$$</p>",
+  "<p><b>结论</b>：$$\\boxed{\\;\\iint_Dx^2\\,\\mathrm d\\sigma=\\frac{416}{3}\\;}$$</p>"
+];
+
+AW.init({
+  title: '三角形区域上的 $\\iint x^2\\,\\mathrm d\\sigma$：先定顶点，再分段积分',
+  subtitle: '考点：二重积分（X 型区域分段） · 方法：先 $y$ 后 $x$，上边界在 $x=2$ 处切换',
+  counterLabel: '推导步',
+  ribbonTitle: '两段积分（✓ 已完成）',
+  intro: '点击「▶ 播放」逐步演示顶点、分段与两段积分。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    ROWS.length = 0;
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    for(var k = 0; k < LINES.length; k++){
+      var d = AW.el('div', '', LINES[k]);
+      d.style.cssText = 'margin:8px 0;padding:9px 14px;border-left:3px solid #e2e8f0;background:#f8fafc;border-radius:0 12px 12px 0;font-size:14.5px;line-height:1.9;display:none;';
+      board.appendChild(d);
+      ROWS.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  render: function(stage, sn){
+    for(var k = 0; k < ROWS.length; k++){
+      var r = ROWS[k];
+      if(k >= sn.show){ r.style.display = 'none'; continue; }
+      r.style.display = 'block';
+      if(k === sn.show - 1 && !sn.done){
+        r.style.borderLeftColor = '#d97706';
+        r.style.background = '#fffbeb';
+      } else {
+        r.style.borderLeftColor = '#16a34a';
+        r.style.background = '#f8fafc';
+      }
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  snaps: [
+    { cls:'shift', tag:'审题',   log:'三条边界：两条过原点的直线加一条斜截线，围出一个三角形', show:1, count:0 },
+    { cls:'step',  tag:'顶点',   log:'逐对联立：得 (0,0)、(2,6)、(6,2) 三个顶点', show:2, count:1 },
+    { cls:'key',   tag:'分段',   log:'先积 y：下边界固定，上边界在 x=2 处换线（顶点 (2,6) 的横坐标），必须分两段', show:3, count:2 },
+    { cls:'step',  tag:'列式',   log:'两段累次积分相加，内层上下限分别是 3x 与 8−x', show:4, count:3 },
+    { cls:'ok',    tag:'第一段', log:'x 从 0 到 2：内层高度 8x/3，积出 32/3', show:5, count:4, ribbon:{k:1, ok:true} },
+    { cls:'step',  tag:'第二段', log:'x 从 2 到 6：内层高度 8−x−x/3，整理成 8x²−(4/3)x³', show:6, count:5 },
+    { cls:'ok',    tag:'第二段', log:'原函数代 6 和 2，得 1664/3 − 1280/3 = 128', show:7, count:6, ribbon:{k:2, ok:true} },
+    { cls:'ok',    tag:'合计',   log:'32/3 加 128 等于 416/3', show:8, count:7 },
+    { cls:'done',  tag:'完成',   log:'结论：二重积分等于 416/3', show:9, count:8, done:true },
+  ],
+
+  result: {
+    big: '$\\dfrac{416}{3}$',
+    html: '记忆锚点：<b>上边界换线处（顶点横坐标）必须分段</b>。本题：$0\\le x\\le2$ 上界 $y=3x$，$2\\le x\\le6$ 上界 $y=8-x$，下界恒为 $y=\\frac x3$；两段各积一次再相加。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学·概念类动画：一正两负特征值的参数条件</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+function card(n, cls, title, body){
+  return '<div class="aw-stepcard ' + (cls || '') + '"><h4><span class="n">' + n +
+         '</span>' + title + '</h4>' + body + '</div>';
+}
+
+var STEPS = [
+  { title: '审题眼：分块对角拆特征值',
+    cls: 'key',
+    log: '实对称分块对角：特征值 = 二阶块两个特征值 ∪ {b}',
+    body: '<p>$M=\\begin{pmatrix}1&2&0\\\\2&a&0\\\\0&0&b\\end{pmatrix}$ 是实对称分块对角阵，特征值 = 左上二阶块 $\\begin{pmatrix}1&2\\\\2&a\\end{pmatrix}$ 的 $\\lambda_1,\\lambda_2$ 并上 $b$。二阶块符号用迹与行列式读：$$\\lambda_1\\lambda_2=\\det=a-4,\\qquad \\lambda_1+\\lambda_2=\\operatorname{tr}=1+a$$</p>' },
+  { title: '符号约束：乘积必为正',
+    cls: 'key',
+    log: '一正两负 ⇒ (a−4)b > 0，a−4 与 b 同号',
+    body: '<p>三个特征值一正两负，乘积 $(+)(-)(-)>0$：$$(a-4)\\,b>0,$$ 即 $a-4$ 与 $b$ 同号。下面对 $b$ 分两种情况讨论。</p>' },
+  { title: '假设 b>0：二阶块须两根皆负 → 矛盾',
+    cls: 'bad',
+    log: '两根皆负需 a>4 且 a<−1，打架无解',
+    ribbon: {k:1, ok:true},
+    body: '<p>$b>0$ 是唯一正根，则二阶块两根须皆负：需 $\\lambda_1\\lambda_2=a-4>0\\Rightarrow a>4$，且 $\\lambda_1+\\lambda_2=1+a<0\\Rightarrow a<-1$——<b>互相矛盾，无解</b> ✗。</p>' },
+  { title: '假设 b<0：二阶块须一正一负 → 可行',
+    cls: 'good',
+    log: '两根异号只需积 a−4<0，即 a<4；b 当负根，恰好一正两负',
+    ribbon: {k:2, ok:true},
+    body: '<p>$b<0$ 是一个负根，则二阶块须一正一负，判据就是积为负：$$\\lambda_1\\lambda_2=a-4<0\\ \\Longrightarrow\\ a<4.$$ 此时 $b$ 补上第二个负根，恰好一正两负 ✓（异号时迹 $1+a$ 的正负无约束）。</p>' },
+  { title: '数值验算：a=0, b=−1',
+    cls: 'key',
+    log: '二阶块特征值 (1±√17)/2 ≈ 2.56 与 −1.56，加 b=−1 一正两负',
+    body: '<p>取 $a=0,\\,b=-1$：二阶块 $\\begin{pmatrix}1&2\\\\2&0\\end{pmatrix}$ 的特征值 $\\dfrac{1\\pm\\sqrt{17}}{2}\\approx2.56,\\,-1.56$ 一正一负，加 $b=-1$ 共一正两负，结论成立；且 $(a-4)b=(-4)(-1)>0$ 与乘积约束吻合。</p>' },
+  { title: '结论',
+    cls: 'good',
+    log: 'a<4 且 b<0，选 D',
+    body: '<p>$a<4$ 且 $b<0$，答案选 <b>D</b>。</p>' },
+];
+
+var snaps = STEPS.map(function(s, i){
+  var cls;
+  if(i === STEPS.length - 1){ cls = 'done'; }
+  else if(s.ribbon){ cls = s.ribbon.ok ? 'ok' : 'miss'; }
+  else { cls = 'step'; }
+  return {
+    cls: cls,
+    tag: '第 ' + (i + 1) + ' 步',
+    log: s.log,
+    count: i + 1,
+    ribbon: s.ribbon,
+    html: STEPS.slice(0, i + 1).map(function(x, j){
+      return card(j + 1, x.cls, x.title, x.body);
+    }).join(''),
+    done: i === STEPS.length - 1,
+  };
+});
+
+AW.init({
+  title: '矩阵 $\\begin{pmatrix}1&2&0\\\\2&a&0\\\\0&0&b\\end{pmatrix}$ 一正两负特征值：求 $a,\\,b$ 条件',
+  subtitle: '考点：分块对角特征值 · 迹与行列式定符号 · 分类讨论',
+  counterLabel: '推理步',
+  ribbonTitle: '情形裁决（✓ 收口 / ✗ 排除）',
+  intro: '点击「▶ 播放」逐步展开推理链。',
+  render: function(stage, sn){
+    if(sn.html != null) stage.innerHTML = sn.html;
+    renderMathAfterSnap(stage);
+  },
+  snaps: snaps,
+  result: {
+    big: '答案 D（$a<4,\\ b<0$）',
+    html: '记忆锚点：<b>二阶块两根皆负 = 积正且迹负（两条缺一不可）；两根异号 = 积负</b>。$b>0$ 逼出 $a>4$ 且 $a<-1$ 矛盾，所以 $b$ 只能当负根、$a<4$。乘积约束 $(a-4)b>0$ 可秒验答案。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

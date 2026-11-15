@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2018·14 由像的坐标求实特征值</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改 AW.init 区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [];
+
+var LINES = [
+  "<p><b>第一步：把像的坐标按列拼成基下矩阵</b>$$A\\alpha_1=2\\alpha_1+\\alpha_2+\\alpha_3,\\quad A\\alpha_2=\\alpha_2+2\\alpha_3,\\quad A\\alpha_3=-\\alpha_2+\\alpha_3$$ $$\\Longrightarrow\\ A(\\alpha_1,\\alpha_2,\\alpha_3)=(\\alpha_1,\\alpha_2,\\alpha_3)\\underbrace{\\begin{pmatrix}2&0&0\\\\1&1&-1\\\\1&2&1\\end{pmatrix}}_{B}$$ 第 $j$ 列就是 $A\\alpha_j$ 的坐标。</p>",
+  "<p><b>第二步：相似过渡</b>$\\alpha_1,\\alpha_2,\\alpha_3$ 线性无关 ⇒ $P=(\\alpha_1,\\alpha_2,\\alpha_3)$ 可逆，$AP=PB$ 即 $A=PBP^{-1}$：$$A\\sim B\\quad\\Longrightarrow\\ \\text{特征值完全相同}$$ 抽象矩阵的特征值问题落到了具体数字矩阵 $B$ 上。</p>",
+  "<p><b>第三步：算 $B$ 的特征多项式</b>$B-\\lambda E$ 第一行只有一个非零元，按第一行展开：$$\\det(B-\\lambda E)=\\begin{vmatrix}2-\\lambda&0&0\\\\1&1-\\lambda&-1\\\\1&2&1-\\lambda\\end{vmatrix}=(2-\\lambda)\\left[(1-\\lambda)^2+2\\right].$$</p>",
+  "<p><b>第四步：解根</b>$$2-\\lambda=0\\ \\Longrightarrow\\ \\lambda=2;$$ $$(1-\\lambda)^2=-2\\ \\Longrightarrow\\ \\lambda=1\\pm\\sqrt2\\,\\mathrm i\\quad(\\text{判别式 } 4-12<0,\\ \\text{共轭复根})$$</p>",
+  "<p><b>第五步：挑出实根</b>$1\\pm\\sqrt2\\,\\mathrm i$ 是复根，题目只要「实特征值」——只剩 $$\\lambda=2.$$</p>",
+  "<p><b>排错</b>：坐标按行排（规范写法按列，第 $j$ 列对应 $A\\alpha_j$）；把复根也写进答案——题目限定实特征值；不说明 $P$ 可逆就写 $A\\sim B$——相似过渡的合法性全靠 $\\alpha$ 组线性无关。</p>",
+  "<p><b>结论</b>$$A\\ \\text{的实特征值为}\\ \\lambda=2\\quad(\\text{填空答案})$$</p>"
+];
+
+AW.init({
+  title: '$A\\alpha_1=2\\alpha_1+\\alpha_2+\\alpha_3,\\ A\\alpha_2=\\alpha_2+2\\alpha_3,\\ A\\alpha_3=-\\alpha_2+\\alpha_3$，求 $A$ 的实特征值',
+  subtitle: '考点：基下矩阵 · 相似不变量 · 特征多项式',
+  counterLabel: '推导步',
+  intro: '点击「▶ 播放」：写 B → 相似过渡 → 特征多项式 → 挑实根。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    ROWS.length = 0;
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    for(var k = 0; k < LINES.length; k++){
+      var d = AW.el('div', '', LINES[k]);
+      d.style.cssText = 'margin:8px 0;padding:9px 14px;border-left:3px solid #e2e8f0;background:#f8fafc;border-radius:0 12px 12px 0;font-size:14.5px;line-height:1.9;display:none;';
+      board.appendChild(d);
+      ROWS.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  render: function(stage, sn){
+    for(var k = 0; k < ROWS.length; k++){
+      var r = ROWS[k];
+      if(k >= sn.show){ r.style.display = 'none'; continue; }
+      r.style.display = 'block';
+      if(k === sn.show - 1 && !sn.done){
+        r.style.borderLeftColor = '#d97706';
+        r.style.background = '#fffbeb';
+      } else {
+        r.style.borderLeftColor = '#16a34a';
+        r.style.background = '#f8fafc';
+      }
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  snaps: [
+    { cls:'shift', tag:'写 B',     log:'像的坐标按列排：B 第 j 列 = Aα_j 的系数', show:1, count:0, ribbon:{k:1, ok:true} },
+    { cls:'step',  tag:'相似过渡', log:'α 组线性无关 ⇒ P 可逆，A∼B，特征值相同', show:2, count:1, ribbon:{k:2, ok:true} },
+    { cls:'step',  tag:'特征多项式', log:'按第一行展开：(2−λ)[(1−λ)²+2]', show:3, count:2, ribbon:{k:3, ok:true} },
+    { cls:'step',  tag:'解根',     log:'λ=2；λ=1±√2 i（复根）', show:4, count:3 },
+    { cls:'ok',    tag:'挑实根',   log:'复根舍去，实特征值只有 2', show:5, count:4, ribbon:{k:4, ok:true} },
+    { cls:'miss',  tag:'排错',     log:'坐标按行排、复根混入、漏证 P 可逆', show:6, count:5 },
+    { cls:'done',  tag:'完成',     log:'填空答案：2', show:7, count:6, done:true, ribbon:{k:5, ok:true} },
+  ],
+
+  result: {
+    big: '填空答案：$2$',
+    html: '记忆锚点：<b>「像的坐标按列拼 = 基下矩阵」</b>，$AP=PB$ 且 $P$ 可逆 ⇒ $A\\sim B$。特征多项式 $(2-\\lambda)\\left[(1-\\lambda)^2+2\\right]$ 里，$\\lambda=2$ 是实根，$\\lambda=1\\pm\\sqrt2\\,\\mathrm i$ 是共轭复根——题目只要实根，只填 $2$。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

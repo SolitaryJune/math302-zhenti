@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2018·15 根式换元 + 分部积分求不定积分</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+AW.init({
+  title: '2018·15　求 $\\displaystyle\\int \\mathrm{e}^{2x}\\arctan\\sqrt{\\mathrm{e}^{x}-1}\\,\\mathrm{d}x$',
+  subtitle: '考点：不定积分 · 方法：根式换元消根号 → 分部积分 → 有理函数积分',
+  counterLabel: '已完成',
+  ribbonTitle: '推导进度（✓ 完成）',
+  intro: '点击「▶ 播放」或「下一步」，看根号与 arctan 如何被逐步消化。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var inner = AW.el('div', '');
+    inner.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>：当前行亮琥珀色，已完成的行变绿'));
+    var LINES = [
+      "$$I=\\int \\mathrm{e}^{2x}\\,\\arctan\\sqrt{\\mathrm{e}^{x}-1}\\,\\mathrm{d}x \\qquad \\text{（根式 + 反三角，先换元消根号）}$$",
+      "<b>① 换元：</b>令 $t=\\sqrt{\\mathrm{e}^{x}-1}\\ (t\\ge0)$：$\\mathrm{e}^{x}=t^{2}+1$，$\\mathrm{e}^{2x}=(t^{2}+1)^{2}$，$\\mathrm{d}x=\\dfrac{2t}{t^{2}+1}\\,\\mathrm{d}t$",
+      "<b>② 代入：</b>$I=\\displaystyle\\int(t^{2}+1)^{2}\\arctan t\\cdot\\dfrac{2t}{t^{2}+1}\\,\\mathrm{d}t=\\int(2t^{3}+2t)\\arctan t\\,\\mathrm{d}t$",
+      "<b>③ 分部：</b>先积多项式 $\\displaystyle\\int(2t^{3}+2t)\\,\\mathrm{d}t=\\dfrac{1}{2}t^{4}+t^{2}$，$I=\\left(\\dfrac{1}{2}t^{4}+t^{2}\\right)\\arctan t-\\displaystyle\\int\\dfrac{\\frac{1}{2}t^{4}+t^{2}}{1+t^{2}}\\,\\mathrm{d}t$",
+      "<b>④ 拆分：</b>因 $t^{4}+2t^{2}=(t^{2}+1)^{2}-1$，$\\dfrac{\\frac{1}{2}t^{4}+t^{2}}{1+t^{2}}=\\dfrac{1}{2}\\left(t^{2}+1-\\dfrac{1}{1+t^{2}}\\right)$",
+      "<b>⑤ 积出：</b>$\\dfrac{1}{2}\\left(\\dfrac{t^{3}}{3}+t-\\arctan t\\right)=\\dfrac{t^{3}}{6}+\\dfrac{t}{2}-\\dfrac{1}{2}\\arctan t$",
+      "<b>⑥ 并 arctan 项：</b>$\\left(\\dfrac{1}{2}t^{4}+t^{2}+\\dfrac{1}{2}\\right)\\arctan t=\\dfrac{1}{2}(t^{2}+1)^{2}\\arctan t=\\dfrac{1}{2}\\mathrm{e}^{2x}\\arctan\\sqrt{\\mathrm{e}^{x}-1}$",
+      "<b>⑦ 并多项式项：</b>$-\\dfrac{t^{3}}{6}-\\dfrac{t}{2}=-\\dfrac{t\\,(t^{2}+3)}{6}=-\\dfrac{1}{6}(\\mathrm{e}^{x}+2)\\sqrt{\\mathrm{e}^{x}-1}$",
+      "<b>⑧ 结论：</b>$$I=\\dfrac{1}{2}\\mathrm{e}^{2x}\\arctan\\sqrt{\\mathrm{e}^{x}-1}-\\dfrac{1}{6}(\\mathrm{e}^{x}+2)\\sqrt{\\mathrm{e}^{x}-1}+C$$"
+    ];
+    this._rows = [];
+    for (var i = 0; i < LINES.length; i++){
+      var r = AW.el('div', 'aw-stepcard', LINES[i]);
+      inner.appendChild(r);
+      this._rows.push(r);
+    }
+    wrap.appendChild(inner);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step',  tag:'审题', log:'被积函数里既有根号又有 arctan，先设根号为 t，把 e 的 x 次方也换掉', count:0, ribbon:{k:1, ok:true} },
+    { cls:'shift', tag:'换元', log:'根号设成 t 后，e 的 x 次方变成 t 方加一，微分也一起换', count:1, ribbon:{k:2, ok:true} },
+    { cls:'ok',    tag:'代入', log:'约去一个 t 方加一，被积函数化成 t 的三次多项式乘 arctan t', count:2, ribbon:{k:3, ok:true} },
+    { cls:'ok',    tag:'分部', log:'多项式先积分作为新的 v，arctan 落到求导位置，剩下一个分式积分', count:3, ribbon:{k:4, ok:true} },
+    { cls:'ok',    tag:'拆分', log:'分子凑成完全平方减一，分式拆成二次式减一个可积的反三角', count:4, ribbon:{k:5, ok:true} },
+    { cls:'ok',    tag:'积出', log:'逐项积分，得到三次项、一次项和一个 arctan 项', count:5, ribbon:{k:6, ok:true} },
+    { cls:'ok',    tag:'合并', log:'两个 arctan 项系数相加，恰好凑成完全平方的一半，回代成 e 的 2x 次方', count:6, ribbon:{k:7, ok:true} },
+    { cls:'ok',    tag:'回代', log:'剩下的多项式提出公因式，用 t 方等于 e 的 x 次方减一收尾', count:7, ribbon:{k:8, ok:true} },
+    { cls:'done',  tag:'完成', log:'结论：原不定积分等于二分之一 e 的 2x 次方乘 arctan 根号，减六分之一 e 的 x 次方加二乘根号，加 C', count:8, ribbon:{k:9, ok:true}, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    var rows = this._rows;
+    for (var j = 0; j < rows.length; j++){
+      rows[j].className = 'aw-stepcard' + (j < i ? ' good' : (j === i ? ' key' : ''));
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '$I=\\dfrac{1}{2}\\mathrm{e}^{2x}\\arctan\\sqrt{\\mathrm{e}^{x}-1}-\\dfrac{1}{6}(\\mathrm{e}^{x}+2)\\sqrt{\\mathrm{e}^{x}-1}+C$',
+    html: '记忆锚点：<b>根式换元 → 分部积分 → 有理式拆分</b>三连。易错：不换元硬分部；分部时让多项式去求导（方向反了）；回代时漏并新生成的 $-\\frac{1}{2}\\arctan t$ 项。检验手段：对结果求导应还原被积函数。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

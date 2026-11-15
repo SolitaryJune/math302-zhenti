@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2022·21 凸性充要条件证明</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+// 一张推理卡片（body 里可写 $..$ / $$..$$ 公式）
+function card(n, cls, title, body){
+  return '<div class="aw-stepcard ' + (cls || '') + '"><h4><span class="n">' + n +
+         '</span>' + title + '</h4>' + body + '</div>';
+}
+
+// 推理链：每一步的完整内容（引擎按步数截取显示）
+var STEPS = [
+  { title: '审题眼：双向箭头要分开证',
+    cls: 'key',
+    body: '<p>要证 $f\'\'(x)\\ge0\\iff f\\Big(\\frac{a+b}{2}\\Big)\\le\\dfrac{1}{b-a}\\int_a^b f(x)\\,\\mathrm{d}x$（对任意 $a\\ne b$）。' +
+          '不妨设 $a<b$（互换时 $b-a$ 与积分同变号，两端关系不变），记中点 $c=\\frac{a+b}{2}$。正向用泰勒展开，反向用反证法。</p>' },
+  { title: '两件全程要用的武器',
+    cls: 'key',
+    body: '<p>① 在 $c$ 处的泰勒公式（拉格朗日余项）：$f(x)=f(c)+f\'(c)(x-c)+\\frac12 f\'\'(\\xi)(x-c)^2$；' +
+          '② 中点性质 $\\int_a^b (x-c)\\,\\mathrm{d}x=0$——一次项积分后<b>自动消失</b>。</p>' },
+  { title: '必要性①：$f\'\'\\ge0$ 给出切线不等式',
+    cls: 'step',
+    body: '<p>余项 $\\frac12 f\'\'(\\xi)(x-c)^2\\ge0$，故对一切 $x$：</p>' +
+          '<p>$$f(x)\\ \\ge\\ f(c)+f\'(c)(x-c).$$</p>' +
+          '<p>几何意义：<b>凸曲线整体在切线上方</b>。</p>' },
+  { title: '必要性②：积分一次项归零',
+    cls: 'good',
+    body: '<p>两边在 $[a,b]$ 上积分，并用 $\\int_a^b(x-c)\\,\\mathrm{d}x=0$：</p>' +
+          '<p>$$\\int_a^b f(x)\\,\\mathrm{d}x\\ \\ge\\ f(c)(b-a)+f\'(c)\\cdot0,$$</p>' +
+          '<p>除以 $b-a>0$：$f\\Big(\\frac{a+b}{2}\\Big)\\le\\dfrac{1}{b-a}\\int_a^b f$。<b>必要性成立</b>。</p>' },
+  { title: '充分性①：反证假设 + 连续性保号',
+    cls: 'bad',
+    body: '<p>反设存在 $x_0$ 使 $f\'\'(x_0)<0$。因 $f\'\'$ <b>连续</b>，存在 $\\delta>0$ 使 $|x-x_0|<\\delta$ 时 $f\'\'(x)<0$——先圈出一整片「下凹口袋」。</p>' },
+  { title: '充分性②：对称小区间造反例',
+    cls: 'step',
+    body: '<p>取 $a=x_0-h,\\ b=x_0+h$（$0<h<\\delta$），中点恰为 $x_0$。区间内 $x\\ne x_0$ 时余项严格为负：</p>' +
+          '<p>$$f(x)=f(x_0)+f\'(x_0)(x-x_0)+\\tfrac12 f\'\'(\\xi)(x-x_0)^2\\ <\\ f(x_0)+f\'(x_0)(x-x_0).$$</p>' },
+  { title: '充分性③：积分与题设矛盾',
+    cls: 'good',
+    body: '<p>积分（除一点外严格小且连续 ⇒ 积分严格小），再一次项归零：</p>' +
+          '<p>$$\\int_a^b f(x)\\,\\mathrm{d}x\\ <\\ f(x_0)(b-a)\\ \\Rightarrow\\ \\dfrac{1}{b-a}\\int_a^b f< f\\Big(\\frac{a+b}{2}\\Big),$$</p>' +
+          '<p>与题设不等式<b>矛盾</b>。故处处 $f\'\'(x)\\ge0$。</p>' },
+  { title: '结论：充要性证毕',
+    cls: 'good',
+    body: '<p>两个方向合拢：$f\'\'(x)\\ge0\\iff$ 中点值不超过积分平均。</p>' +
+          '<p><b>锚点</b>：切线不等式 + 中点一次项积分为零（正向）；$f\'\'$ 连续保号邻域内取对称小区间（反向）。</p>' },
+];
+
+var snaps = STEPS.map(function(s, i){
+  return {
+    cls: i === STEPS.length - 1 ? 'done' : 'step',
+    tag: '第 ' + (i + 1) + ' 步',
+    log: s.title.replace(/\$[^$]*\$/g, '公式'),
+    html: STEPS.slice(0, i + 1).map(function(x, j){
+      return card(j + 1, x.cls, x.title, x.body);
+    }).join(''),
+    done: i === STEPS.length - 1,
+  };
+});
+
+AW.init({
+  title: '2022·21　凸性充要条件：中点值 vs 积分平均',
+  subtitle: '考点：泰勒公式（拉格朗日余项）· 中点积分性质 · 反证法',
+  intro: '点击「▶ 播放」逐步展开证明链：先证必要性（凸 ⇒ 不等式），再反证充分性。',
+  /* 统一 render：复刻引擎默认的 sn.html 行为，再对舞台做公式渲染 */
+  render: function(stage, sn){
+    if(sn.html != null) stage.innerHTML = sn.html;
+    renderMathAfterSnap(stage);
+  },
+  snaps: snaps,
+  result: {
+    big: '$f\'\'\\ge0\\iff f\\Big(\\frac{a+b}{2}\\Big)\\le\\dfrac{1}{b-a}\\int_a^b f\\,\\mathrm{d}x$（证毕）',
+    html: '记忆锚点：<b>「切线不等式 + 一次项积分为零」是凸函数积分类证明的万能起手式</b>；反向必须借 $f\'\'$ 连续性取保号邻域、取以可疑点为中点的对称小区间来制造矛盾。易错：不写「不妨设 $a<b$」；严格不等号缺少「除一点外 + 连续」的交代。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>m2-2010-15 含参变限积分的单调区间与极值</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+/* 每一步推导板内容（下标与 snaps 对齐） */
+var PAGES = [
+  "<p>被积函数 $\\int_1^{x^2}(x^2-t)\\,\\mathrm e^{-t^2}\\,\\mathrm dt$ 里混着参数 $x$——它不是积分变量，直接套变限求导公式是陷阱。</p>",
+  "<p>把 $x^2$ 提出积分号，拆成两个变限积分：</p>$$f(x)=x^2\\int_1^{x^2}\\mathrm e^{-t^2}\\,\\mathrm dt-\\int_1^{x^2}t\\,\\mathrm e^{-t^2}\\,\\mathrm dt$$",
+  "<p>求导：第一项用「乘积法则 + 变限求导」，第二项直接变限求导：</p>$$f'(x)=2x\\int_1^{x^2}\\mathrm e^{-t^2}\\,\\mathrm dt+x^2\\mathrm e^{-x^4}\\cdot2x-x^2\\mathrm e^{-x^4}\\cdot2x$$",
+  "<p>后两块正好相消，只剩一个干净的结构：</p>$$f'(x)=2x\\,g(x),\\qquad g(x)=\\int_1^{x^2}\\mathrm e^{-t^2}\\,\\mathrm dt$$",
+  "<p>$\\mathrm e^{-t^2}>0$ 恒成立，$g$ 的符号由上下限决定：</p><p>$|x|>1\\iff g>0$；　$|x|<1\\iff g<0$；　$g(\\pm1)=0$。</p>",
+  "<p>$x<-1$：$2x<0$，$g>0$，故 $f'(x)<0$ —— <b>单调减少</b></p>",
+  "<p>$-1<x<0$：$2x<0$，$g<0$，故 $f'(x)>0$ —— <b>单调增加</b></p>",
+  "<p>$0<x<1$：$2x>0$，$g<0$，故 $f'(x)<0$ —— <b>单调减少</b></p>",
+  "<p>$x>1$：$2x>0$，$g>0$，故 $f'(x)>0$ —— <b>单调增加</b></p>",
+  "<p>$x=\\pm1$：减转增，极小值 $f(\\pm1)=0$；$x=0$：增转减，</p>$$f(0)=\\int_1^{0}(0-t)\\mathrm e^{-t^2}\\mathrm dt=\\int_0^{1}t\\,\\mathrm e^{-t^2}\\mathrm dt=\\frac12\\Big(1-\\frac1{\\mathrm e}\\Big)$$"
+];
+
+AW.init({
+  title: "2010·15　含参变限积分：$f(x)=\\int_1^{x^2}(x^2-t)\\mathrm e^{-t^2}\\mathrm dt$ 的单调区间与极值",
+  subtitle: "考点：变限积分求导 · 先分离参数 · 导数符号表 · 极值判定",
+  counterLabel: "步数",
+  intro: "点击「▶ 播放」逐步演示：分离参数 → 求导相消 → 符号表 → 极值。",
+
+  build: function(stage){
+    stage.innerHTML = "";
+    var wrap = AW.el("div", "aw-scroll");
+    wrap.appendChild(AW.el("div", "aw-row-label", "<b>推导板</b>：$f(x)=\\int_1^{x^2}(x^2-t)\\mathrm e^{-t^2}\\mathrm dt$"));
+    this._board = AW.el("div", "", "");
+    wrap.appendChild(this._board);
+    this._sign = AW.el("div", "", "");
+    wrap.appendChild(this._sign);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:"shift", tag:"审题", log:"被积函数里混着参数 x，不能直接套变限求导公式——先把 x² 挪出积分号", count:0 },
+    { cls:"step", tag:"分离参数", log:"拆成两个变限积分：x² 乘上 e^{-t²} 的积分，减去 t·e^{-t²} 的积分", count:1 },
+    { cls:"step", tag:"求导", log:"第一项按乘积法则加变限求导，第二项直接变限求导，冒出两块相同的 x²·e^{-x⁴}", count:2 },
+    { cls:"ok", tag:"相消", log:"两块 e^{-x⁴} 项正负相抵，导数简化为 f′ = 2x · g(x)", count:3 },
+    { cls:"step", tag:"g 的符号", log:"被积函数恒正：|x|>1 时 g>0；|x|<1 时 g<0；g(±1)=0", count:4 },
+    { cls:"ok", tag:"区间 x<−1", log:"2x 为负、g 为正，f′<0，函数单调减少", count:5, ribbon:{k:1, ok:true} },
+    { cls:"ok", tag:"区间 −1<x<0", log:"2x 为负、g 为负，f′>0，函数单调增加", count:6, ribbon:{k:2, ok:true} },
+    { cls:"ok", tag:"区间 0<x<1", log:"2x 为正、g 为负，f′<0，函数单调减少", count:7, ribbon:{k:3, ok:true} },
+    { cls:"ok", tag:"区间 x>1", log:"2x 为正、g 为正，f′>0，函数单调增加", count:8, ribbon:{k:4, ok:true} },
+    { cls:"done", tag:"极值", log:"x=±1 处由减转增取极小值 0；x=0 处由增转减取极大值 ½(1−1/e)", count:9, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    this._board.innerHTML = PAGES[i];
+    this._sign.innerHTML = "";
+    if(i >= 4){
+      this._sign.appendChild(AW.el("div", "aw-row-label",
+        "四个区间上 $f'=2x\\,g$ 的符号（填充格 = 当前讨论的区间；+ 为增，− 为减）"));
+      var cls;
+      if(i === 4)      cls = ["", "", "", ""];
+      else if(i === 5) cls = ["miss", "dim", "dim", "dim"];
+      else if(i === 6) cls = ["dim", "hit", "dim", "dim"];
+      else if(i === 7) cls = ["dim", "dim", "miss", "dim"];
+      else if(i === 8) cls = ["dim", "dim", "dim", "hit"];
+      else             cls = ["miss", "hit", "miss", "hit"];
+      this._sign.appendChild(AW.cellRow(["−", "+", "−", "+"], cls, null, 0));
+      this._sign.appendChild(AW.el("div", "aw-row-label",
+        "从左到右对应区间：$x<-1$、$-1<x<0$、$0<x<1$、$x>1$"));
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: "极小值 f(±1) = 0，极大值 f(0) = ½(1 − 1/e)",
+    html: "单调减少：$(-\\infty,-1]$ 与 $[0,1]$；单调增加：$[-1,0]$ 与 $[1,+\\infty)$。<br>" +
+          "记忆点：<b>含参变限积分先分离参数再求导</b>；本题 $f'(x)=2x\\int_1^{x^2}\\mathrm e^{-t^2}\\mathrm dt$，两个因子分别变号，列表即得全部结论。",
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

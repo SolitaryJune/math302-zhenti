@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学·概念类动画：分段函数的原函数判定</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+function card(n, cls, title, body){
+  return '<div class="aw-stepcard ' + (cls || '') + '"><h4><span class="n">' + n +
+         '</span>' + title + '</h4>' + body + '</div>';
+}
+
+var STEPS = [
+  { title: '审题眼：原函数要过两关',
+    cls: 'key',
+    log: '判据：逐段 F\'=f，且分段点 x=0 处连续（不连续必不可导）',
+    body: '<p>$F$ 是 $f$ 的原函数 $\\iff$ 每段上 $F\'=f$，<b>且</b> $F$ 在分段点 $x=0$ 处<b>连续</b>（不连续必不可导）。四个选项都是两段结构，逐段验导数、再用连续性定常数。</p>' },
+  { title: '验 x≤0 段：砍掉 A、B',
+    cls: 'bad',
+    log: 'ln(√(1+x²)+x) 求导正确；带减号的那支导数是负的，A、B 出局',
+    ribbon: {k:1, ok:true},
+    body: '<p>$\\dfrac{\\mathrm d}{\\mathrm dx}\\ln\\bigl(\\sqrt{1+x^2}+x\\bigr)=\\dfrac{\\dfrac{x}{\\sqrt{1+x^2}}+1}{\\sqrt{1+x^2}+x}=\\dfrac1{\\sqrt{1+x^2}}$ ✓；而 $\\ln\\bigl(\\sqrt{1+x^2}-x\\bigr)$ 求导得 $-\\dfrac1{\\sqrt{1+x^2}}$，符号相反——<b>A、B 出局</b>。</p>' },
+  { title: '验 x>0 段：分部积分',
+    cls: 'good',
+    log: '(x+1)cos x 积出来是 (x+1)sin x + cos x，剩 C、D',
+    ribbon: {k:2, ok:true},
+    body: '<p>$\\displaystyle\\int(x+1)\\cos x\\,\\mathrm dx=(x+1)\\sin x-\\int\\sin x\\,\\mathrm dx=(x+1)\\sin x+\\cos x$，故剩 <b>C、D</b>。（A、B 的 $(x+1)\\cos x-\\sin x$ 求导是 $-(x+1)\\sin x$，也不对。）</p>' },
+  { title: 'C、D 只差常数 1 → 看连续性',
+    cls: 'key',
+    log: '右极限是 1，左值是 ln1=0，差一个常数',
+    body: '<p>右极限 $\\lim\\limits_{x\\to0^+}\\bigl[(x+1)\\sin x+\\cos x\\bigr]=1$；左值 $\\ln(\\sqrt1+0)=\\ln1=0$。要连续必须给左段<b>补常数 1</b>。</p>' },
+  { title: '裁决：C 间断，D 连续',
+    cls: 'good',
+    log: 'C 左值 0 ≠ 右值 1，跳跃间断必不是原函数；D 连续，选 D',
+    ribbon: {k:3, ok:true},
+    body: '<p>C 在 $x=0$ 处左值 $0\\neq$ 右值 $1$，<b>跳跃间断 → 不可导 → 不是原函数</b>；D 左值 $0+1=1$ 与右极限相等，连续，符合。选 <b>D</b>。</p>' },
+];
+
+var snaps = STEPS.map(function(s, i){
+  var cls;
+  if(i === STEPS.length - 1){ cls = 'done'; }
+  else if(s.ribbon){ cls = s.ribbon.ok ? 'ok' : 'miss'; }
+  else { cls = 'step'; }
+  return {
+    cls: cls,
+    tag: '第 ' + (i + 1) + ' 步',
+    log: s.log,
+    count: i + 1,
+    ribbon: s.ribbon,
+    html: STEPS.slice(0, i + 1).map(function(x, j){
+      return card(j + 1, x.cls, x.title, x.body);
+    }).join(''),
+    done: i === STEPS.length - 1,
+  };
+});
+
+AW.init({
+  title: '分段函数的原函数：逐段求导 + 分段点连续',
+  subtitle: '考点：原函数与连续性 · 选项逐项推演',
+  counterLabel: '判定步',
+  ribbonTitle: '验证关卡（✓ 通过 / ✗ 卡壳）',
+  intro: '点击「▶ 播放」逐步展开推理链。',
+  render: function(stage, sn){
+    if(sn.html != null) stage.innerHTML = sn.html;
+    renderMathAfterSnap(stage);
+  },
+  snaps: snaps,
+  result: {
+    big: '答案 D',
+    html: '记忆锚点：<b>分段函数验原函数 = 逐段求导 + 分段点连续，两关缺一不可</b>；$\\int\\frac{\\mathrm dx}{\\sqrt{1+x^2}}=\\ln\\bigl(x+\\sqrt{1+x^2}\\bigr)+C$，带减号的那支导数是负的。C 的死穴：$x=0$ 处左 0 右 1，跳跃间断必不可导。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

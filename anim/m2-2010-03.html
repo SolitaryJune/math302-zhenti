@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学·算法/过程类动画</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+/* 推导板：所有推导行在 build 时建好（含公式），render 按 i 逐行点亮。
+   行状态：未揭示（半透明）/ 当步揭示（琥珀高亮）/ 已揭示（普通）/ 末步结论（绿色） */
+var rows = [];
+function drow(html, at, green){
+  var d = AW.el('div', '', html);
+  d.style.cssText = 'margin:10px 0;padding:10px 16px;border-left:4px solid #cbd5e1;' +
+    'background:#f8fafc;border-radius:8px;font-size:15.5px;line-height:1.9;' +
+    'opacity:0.15;transform:translateX(-10px);transition:all .4s;';
+  rows.push({el: d, at: at, green: !!green});
+  return d;
+}
+
+AW.init({
+  title: '2010 数学二 第3题 · 曲线 $y=x^2$ 与 $y=a\\ln x$ 相切，求 $a$',
+  subtitle: '考点：导数的几何意义 · 方法：过同点 + 斜率相同，双条件联立',
+  counterLabel: '已推导',
+  intro: '点击「▶ 播放」逐步演示相切条件的联立求解。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var inner = AW.el('div', '');
+    inner.appendChild(AW.el('div', 'aw-row-label',
+      '<b>推导板</b>：相切 $=$ 函数值相等 $+$ 切线斜率相等（两条件缺一不可）'));
+    inner.appendChild(drow(
+      '<b>设切点</b>：横坐标 $x_0\\gt0$（$\\ln x$ 的定义域），两曲线在 $x_0$ 处相切', 1));
+    inner.appendChild(drow(
+      '<b>斜率相等</b>：$(x^2)\'=2x$，$(a\\ln x)\'=\\dfrac{a}{x}$，令 $2x_0=\\dfrac{a}{x_0}$' +
+      '$\\ \\Longrightarrow\\ a=2x_0^2$', 2));
+    inner.appendChild(drow(
+      '<b>函数值相等</b>：$x_0^2=a\\ln x_0$', 3));
+    inner.appendChild(drow(
+      '<b>消元</b>：把 $a=2x_0^2$ 代入，$x_0^2=2x_0^2\\ln x_0$，约去 $x_0^2\\neq0$ 得' +
+      '$\\ \\ln x_0=\\dfrac12$', 4));
+    inner.appendChild(drow(
+      '<b>解出切点</b>：$x_0=\\mathrm e^{1/2}=\\sqrt{\\mathrm e}$（取正根，因 $x_0\\gt0$）', 5));
+    inner.appendChild(drow(
+      '<b>回代</b>：$a=2x_0^2=2\\cdot\\mathrm e=2\\,\\mathrm e$ —— 验证：切点 $(\\sqrt{\\mathrm e},\\,\\mathrm e)$ 处两曲线斜率同为 $2\\sqrt{\\mathrm e}$ ✓', 6, true));
+    wrap.appendChild(inner);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls: 'step',  tag: '审题',     log: '相切要同时满足：过同一个点、切线斜率相同。设切点横坐标 x0，对数函数要求 x0 大于 0', count: 1 },
+    { cls: 'shift', tag: '斜率方程', log: '两条曲线分别求导，令导数相等，解出 a 等于 2 倍 x0 的平方', count: 2 },
+    { cls: 'step',  tag: '值方程',   log: '切点处两条曲线的纵坐标相等，得到第二条方程', count: 3 },
+    { cls: 'shift', tag: '消元',     log: '把 a 的表达式代入函数值方程，约去 x0 的平方，得到 ln x0 等于二分之一', count: 4 },
+    { cls: 'ok',    tag: '解切点',   log: '解出 x0 等于根号 e，切点在第一象限', count: 5 },
+    { cls: 'done',  tag: '完成',     log: '回代求出 a 等于 2e，答案选 C', count: 6, done: true },
+  ],
+
+  render: function(stage, sn, i){
+    for(var k = 0; k < rows.length; k++){
+      var r = rows[k];
+      var revealed = i >= r.at;
+      var active = revealed && r.at === i && !sn.done;
+      var green = sn.done && r.green;
+      r.el.style.opacity = revealed ? '1' : '0.15';
+      r.el.style.transform = revealed ? 'none' : 'translateX(-10px)';
+      r.el.style.background = green ? '#ecfdf3' : (active ? '#fff7e0' : '#f8fafc');
+      r.el.style.borderLeftColor = green ? '#16a34a' : (active ? '#f59e0b' : '#cbd5e1');
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '答案 C：$a=2\\,\\mathrm e$',
+    html: '记忆锚点：<b>相切 $=$ 过同点 $+$ 斜率相同</b>，两条方程联立消元。易错：只用斜率相等（$a$ 与 $x_0$ 都不定）；把 $(x^2)\'$ 的系数 2 丢了会得到错误的倍数。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

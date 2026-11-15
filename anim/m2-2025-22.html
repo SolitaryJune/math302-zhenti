@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>m2-2025-22 · 合同定参数，正交相似求 Q</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+AW.init({
+  title: '$A$ 与 $B=\\mathrm{diag}(k,6,0)$ 合同 · 求 $a,k$ 与正交矩阵 $Q$',
+  subtitle: '考点：合同 $\\Rightarrow$ 秩与惯性指数相同；正交 $\\Rightarrow$ 相似 $\\Rightarrow$ 特征值相同',
+  counterLabel: '已完成',
+  intro: '点击「▶ 播放」逐步演示：定 a → 定 k 范围 → 迹定 k → 特征向量 → 拼 Q。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var head = AW.el('div', '',
+      '<p>$$A=\\begin{pmatrix}4&1&-2\\\\1&1&1\\\\-2&1&a\\end{pmatrix},\\qquad B=\\begin{pmatrix}k&0&0\\\\0&6&0\\\\0&0&0\\end{pmatrix}$$</p>');
+    stage.appendChild(head);
+    this._board = AW.el('div', '');
+    stage.appendChild(this._board);
+  },
+
+  snaps: [
+    { cls:'shift', tag:'审题', log:'合同只看两件事：秩相等、正负惯性指数相同；B 带零主元，秩最多为 2', count:1,
+      board: '<div class="aw-row-label"><b>第 1 步 · 合同的判定定理</b></div>'
+        + '<p>实对称矩阵合同 $\\iff$ <b>秩相等且正、负惯性指数相同</b>。$B=\\mathrm{diag}(k,6,0)$ 含零主元，$r(B)\\le2$，故 $A$ 必须降秩。</p>' },
+    { cls:'step', tag:'定 a', log:'按第一行展开算 A 的行列式，等于 3a 减 12，令它为零解出 a 等于 4', count:2,
+      ribbon:{k:1, ok:true},
+      board: '<div class="aw-row-label"><b>第 2 步 · 行列式定 $a$</b></div>'
+        + '<p>$$\\det A=4\\begin{vmatrix}1&1\\\\1&a\\end{vmatrix}-1\\begin{vmatrix}1&1\\\\-2&a\\end{vmatrix}+(-2)\\begin{vmatrix}1&1\\\\-2&1\\end{vmatrix}=4(a-1)-(a+2)-6=3a-12$$</p>'
+        + '<p>$$\\det A=0\\ \\Longrightarrow\\ a=4$$</p>' },
+    { cls:'ok', tag:'定 k 范围', log:'a 等于 4 后前两个顺序主子式全正：正惯性指数是 2，所以 k 必须大于零', count:3,
+      ribbon:{k:2, ok:true},
+      board: '<div class="aw-row-label"><b>第 3 步 · 惯性指数定 $k$（第 (1) 问完）</b></div>'
+        + '<p>$a=4$：顺序主子式 $4>0$、$\\begin{vmatrix}4&1\\\\1&1\\end{vmatrix}=3>0$、$\\det A=0$ $\\Rightarrow$ $r(A)=2$，$p=2$，$q=0$。$B$ 的特征值为 $k,6,0$，需 $k>0$。</p>'
+        + '<p>$$\\boxed{a=4,\\quad k>0}$$</p>' },
+    { cls:'shift', tag:'升级', log:'第 2 问条件更强：Q 正交意味着转置等于逆，合同升级成相似，特征值必须完全相同', count:4,
+      board: '<div class="aw-row-label"><b>第 4 步 · 正交 $\\Rightarrow$ 相似</b></div>'
+        + '<p>$Q$ 正交时 $Q^{\\mathrm T}=Q^{-1}$，故 $Q^{\\mathrm T}AQ=B$ 也是相似变换：$A$ 的特征值 $=$ $B$ 的对角元集合 $\\{k,6,0\\}$。</p>' },
+    { cls:'ok', tag:'迹定 k', log:'特征值之和等于主对角线之和：4 加 1 加 4 等于 k 加 6，解出 k 等于 3', count:5,
+      ribbon:{k:3, ok:true},
+      board: '<div class="aw-row-label"><b>第 5 步 · 迹相等定 $k$</b></div>'
+        + '<p>$$\\mathrm{tr}\\,A=4+1+4=9=k+6+0\\ \\Longrightarrow\\ \\boxed{k=3}$$</p>'
+        + '<p>$A$ 的特征值：$\\lambda_1=3,\\ \\lambda_2=6,\\ \\lambda_3=0$。</p>' },
+    { cls:'step', tag:'λ=3', log:'解 A 减 3 倍单位阵的零空间：三个分量相等，取全 1 向量', count:6,
+      ribbon:{k:4, ok:true},
+      board: '<div class="aw-row-label"><b>第 6 步 · $\\lambda_1=3$ 的特征向量</b></div>'
+        + '<p>$$A-3I=\\begin{pmatrix}1&1&-2\\\\1&-2&1\\\\-2&1&1\\end{pmatrix}\\ \\Rightarrow\\ x_1=x_2=x_3$$</p>'
+        + '<p>$$\\xi_1=(1,1,1)^{\\mathrm T},\\qquad \\text{验：三行均 } 1+1-2=0\\ \\checkmark$$</p>' },
+    { cls:'step', tag:'λ=6', log:'A 减 6 倍单位阵：第二分量为零、第一第三互为相反数', count:7,
+      ribbon:{k:5, ok:true},
+      board: '<div class="aw-row-label"><b>第 7 步 · $\\lambda_2=6$ 的特征向量</b></div>'
+        + '<p>$$A-6I=\\begin{pmatrix}-2&1&-2\\\\1&-5&1\\\\-2&1&-2\\end{pmatrix}\\ \\Rightarrow\\ x_2=0,\\ x_1=-x_3$$</p>'
+        + '<p>$$\\xi_2=(1,0,-1)^{\\mathrm T}$$</p>' },
+    { cls:'step', tag:'λ=0', log:'解齐次方程组 Ax 等于零：取 1、负 2、1，代回三行全为零', count:8,
+      ribbon:{k:6, ok:true},
+      board: '<div class="aw-row-label"><b>第 8 步 · $\\lambda_3=0$ 的特征向量</b></div>'
+        + '<p>$$Ax=0\\ \\Rightarrow\\ x_1=x_3,\\ x_2=-2x_1\\ \\Longrightarrow\\ \\xi_3=(1,-2,1)^{\\mathrm T}$$</p>'
+        + '<p>验：$A\\xi_3=(4-2-2,\\ 1-2+1,\\ -2-2+4)^{\\mathrm T}=\\mathbf 0\\ \\checkmark$。三者两两内积为零（实对称阵不同特征值自动正交）。</p>' },
+    { cls:'step', tag:'拼 Q', log:'三个向量各自除以长度根号 3、根号 2、根号 6，按 3、6、0 的顺序排成 Q 的列', count:9,
+      board: '<div class="aw-row-label"><b>第 9 步 · 单位化并按 $\\mathrm{diag}(3,6,0)$ 排列</b></div>'
+        + '<p>$$\\eta_1=\\tfrac1{\\sqrt3}(1,1,1)^{\\mathrm T},\\quad \\eta_2=\\tfrac1{\\sqrt2}(1,0,-1)^{\\mathrm T},\\quad \\eta_3=\\tfrac1{\\sqrt6}(1,-2,1)^{\\mathrm T}$$</p>'
+        + '<p>$$Q=(\\eta_1,\\eta_2,\\eta_3)=\\begin{pmatrix}\\frac1{\\sqrt3}&\\frac1{\\sqrt2}&\\frac1{\\sqrt6}\\\\[3pt]\\frac1{\\sqrt3}&0&-\\frac2{\\sqrt6}\\\\[3pt]\\frac1{\\sqrt3}&-\\frac1{\\sqrt2}&\\frac1{\\sqrt6}\\end{pmatrix}$$</p>' },
+    { cls:'done', tag:'完成', log:'验算：Q 转置乘 Q 是单位阵，Q 转置 A Q 恰为对角 3、6、0', count:10, done:true,
+      ribbon:{k:7, ok:true},
+      board: '<div class="aw-row-label"><b>第 10 步 · 验算与结论</b></div>'
+        + '<p>$$Q^{\\mathrm T}AQ=\\mathrm{diag}(3,6,0)=B\\ \\checkmark\\qquad Q^{\\mathrm T}Q=I\\ \\checkmark$$</p>'
+        + '<p>（$Q$ 不唯一：每个特征向量可整体变号，但列与对角元 $(3,6,0)$ 的对应不能乱。）</p>' },
+  ],
+
+  render: function(stage, sn, i){
+    this._board.innerHTML = sn.board || '';
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '(1) a=4, k>0　(2) k=3 与 Q',
+    html: '结论：(1) $a=4$，$k>0$；(2) $k=3$，'
+      + '$$Q=\\begin{pmatrix}\\frac1{\\sqrt3}&\\frac1{\\sqrt2}&\\frac1{\\sqrt6}\\\\[3pt]\\frac1{\\sqrt3}&0&-\\frac2{\\sqrt6}\\\\[3pt]\\frac1{\\sqrt3}&-\\frac1{\\sqrt2}&\\frac1{\\sqrt6}\\end{pmatrix},\\quad Q^{\\mathrm T}AQ=\\mathrm{diag}(3,6,0)$$'
+      + '记忆点：<b>合同看秩与惯性（$\\det A=0$ 定 $a$，惯性定 $k$ 范围）；正交相似看特征值（迹最快定 $k$）；实对称阵不同特征值的特征向量自动正交，只需单位化</b>。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

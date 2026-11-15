@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2021·13 隐函数求偏导 z_x|(0,2)</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改题目专属区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [
+  "<b>① 审题：</b>$(x+1)z+y\\ln z-\\arctan 2xy=1$ 确定 $z=z(x,y)$，求 $\\left.\\dfrac{\\partial z}{\\partial x}\\right|_{(0,2)}$——隐函数求导，先把点的 $z$ 值摸清",
+  "<b>② 定 $z$：</b>代 $x=0,y=2$：$z+2\\ln z=1$；$z=1$ 满足，且 $g(z)=z+2\\ln z$ 满足 $g\'=1+\\frac2z>0$ 严格增，$z=1$ 唯一",
+  "<b>③ 两边对 $x$ 求偏导：</b>$(x+1)z$ 用乘积法则得 $z+(x+1)z_x$；$y\\ln z$ 得 $\\dfrac{y}{z}z_x$；$\\arctan2xy$ 得 $\\dfrac{2y}{1+4x^2y^2}$（$y$ 视为常数）",
+  "<b>④ 完整方程：</b>$$z+(x+1)\\frac{\\partial z}{\\partial x}+\\frac{y}{z}\\frac{\\partial z}{\\partial x}-\\frac{2y}{1+4x^2y^2}=0$$",
+  "<b>⑤ 代点：</b>$x=0,\\ y=2,\\ z=1$：$1+z_x+2z_x-\\dfrac{4}{1+0}=0$",
+  "<b>⑥ 解出：</b>$3z_x=3\\ \\Longrightarrow\\ \\left.\\dfrac{\\partial z}{\\partial x}\\right|_{(0,2)}=1$",
+  "<b>⑦ 结论：</b>所求偏导为 $1$"
+];
+
+AW.init({
+  title: '2021·13　隐函数 $\\left.\\dfrac{\\partial z}{\\partial x}\\right|_{(0,2)}$',
+  subtitle: '考点：隐函数求偏导 · 先定指定点的 $z$ 值 · 链式与乘积法则',
+  counterLabel: '已推导',
+  ribbonTitle: '推导进度（✓ 完成）',
+  intro: '点击「▶ 播放」或「下一步」，定 z → 求导 → 代点 → 解出。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var inner = AW.el('div', '');
+    inner.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>：当前行亮琥珀色，已完成的行变绿'));
+    this._rows = [];
+    for (var i = 0; i < ROWS.length; i++){
+      var r = AW.el('div', 'aw-stepcard', ROWS[i]);
+      inner.appendChild(r);
+      this._rows.push(r);
+    }
+    wrap.appendChild(inner);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step',  tag:'审题',   log:'方程里解不出 z 的显式表达，直接对方程两边求偏导', count:0, ribbon:{k:1, ok:true} },
+    { cls:'shift', tag:'定 z',   log:'代零和二进方程得 z 加二 ln z 等于一，观察得 z 等于一且唯一', count:1, ribbon:{k:2, ok:true} },
+    { cls:'ok',    tag:'逐项求导', log:'乘积法则、对数链式、反正切内层，三项各就各位', count:2, ribbon:{k:3, ok:true} },
+    { cls:'ok',    tag:'写方程', log:'整理出含 z x 的完整偏导方程', count:3, ribbon:{k:4, ok:true} },
+    { cls:'ok',    tag:'代点',   log:'代定点后三项系数并成一加三，常数项一减四', count:4, ribbon:{k:5, ok:true} },
+    { cls:'ok',    tag:'解出',   log:'三倍 z x 等于三，偏导等于一', count:5, ribbon:{k:6, ok:true} },
+    { cls:'done',  tag:'完成',   log:'结论：偏导值为一', count:6, ribbon:{k:7, ok:true}, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    var rows = this._rows;
+    for (var j = 0; j < rows.length; j++){
+      rows[j].className = 'aw-stepcard' + (j < i ? ' good' : (j === i ? ' key' : ''));
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '$\\left.\\dfrac{\\partial z}{\\partial x}\\right|_{(0,2)}=1$',
+    html: '记忆锚点：<b>隐函数求偏导三步：先定点的 $z$ → 两边求导（$z$ 是函数）→ 代点解系数</b>。易错：跳过定 $z$ 这步没法代点；$\\arctan 2xy$ 对 $x$ 的分子是 $2y$ 不是 $2x$；$\\ln z$ 对 $x$ 求导漏 $\\frac{1}{z}z_x$。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

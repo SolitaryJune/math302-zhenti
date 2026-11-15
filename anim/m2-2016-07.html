@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2016·07 相似关系的保持性：哪条会断</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_concept_template.html，只改题目专属区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+// 一张推理卡片（body 里可写 $..$ / $$..$$ 公式）
+function card(n, cls, title, body){
+  return '<div class="aw-stepcard ' + (cls || '') + '"><h4><span class="n">' + n +
+         '</span>' + title + '</h4>' + body + '</div>';
+}
+
+// 推理链：每一步的完整内容（引擎按步数截取显示）
+var STEPS = [
+  { title: '审题眼：同一副「眼镜」P',
+    cls: 'key',
+    tag: '审题',
+    body: '<p>$A\\sim B$ 即存在可逆 $P$ 使 $A=P^{-1}BP$。判断每条结论，就看能否用<b>一个</b>可逆矩阵把两边连起来。注意题目问的是「<b>错误的</b>」结论。</p>',
+    log: '核心问题：变形后还能不能共用一个可逆矩阵' },
+  { title: '选项 A：转置 → 换成 Pᵀ，仍相似 ✓',
+    cls: 'good',
+    tag: 'A ✓',
+    ribbon: {k:1, ok:true},
+    body: '<p>$A^{T}=(P^{-1}BP)^{T}=P^{T}B^{T}(P^{T})^{-1}$。取 $Q=(P^{T})^{-1}$，则 $A^{T}=Q^{-1}B^{T}Q$：虽然矩阵从 $P$ 换成了 $Q$，但<b>总归存在</b>一个，相似成立。</p>',
+    log: 'A^T 与 B^T 相似（用 Q=(Pᵀ)⁻¹）' },
+  { title: '选项 B：取逆 → 同一个 P ✓',
+    cls: 'good',
+    tag: 'B ✓',
+    ribbon: {k:2, ok:true},
+    body: '<p>$A^{-1}=(P^{-1}BP)^{-1}=P^{-1}B^{-1}P$，眼镜都不用换，$A^{-1}\\sim B^{-1}$ 成立。</p>',
+    log: 'A⁻¹ = P⁻¹B⁻¹P，同一 P，相似' },
+  { title: '选项 C：转置混进来 → 配不成对 ✗',
+    cls: 'bad',
+    tag: 'C ✗',
+    ribbon: {k:3, ok:false},
+    body: '<p>$$A+A^{T}=\\underbrace{P^{-1}BP}_{\\text{配 }P}+\\underbrace{P^{T}B^{T}(P^{T})^{-1}}_{\\text{配 }(P^{T})^{-1}}$$ 两块用的矩阵一般<b>不相同</b>，提不出公因子，一般不相似。</p>',
+    log: 'P 与 (Pᵀ)⁻¹ 一般不同，合并不了' },
+  { title: '选项 D：多项式组合 → 同一个 P ✓',
+    cls: 'good',
+    tag: 'D ✓',
+    ribbon: {k:4, ok:true},
+    body: '<p>$A+A^{-1}=P^{-1}BP+P^{-1}B^{-1}P=P^{-1}(B+B^{-1})P$：两块都用 $P$，直接提出，$A+A^{-1}\\sim B+B^{-1}$ 成立。</p>',
+    log: 'A + A⁻¹ 用同一 P 提出，相似' },
+  { title: '反例坐实 C',
+    cls: 'bad',
+    tag: '反例',
+    body: '<p>取 $B=\\mathrm{diag}(1,2)$，$P=\\begin{pmatrix}1&1\\\\0&1\\end{pmatrix}$，$A=P^{-1}BP=\\begin{pmatrix}1&-1\\\\0&2\\end{pmatrix}$。则 $\\det(A+A^{T})=2\\cdot4-(-1)^2=7$，而 $\\det(B+B^{T})=2\\cdot4=8$。相似必须同行列式，$7\\ne8$，确不相似。</p>',
+    log: '行列式 7 ≠ 8，C 的说法被反例击穿' },
+  { title: '结论',
+    cls: 'good',
+    tag: '完成',
+    body: '<p>错误结论是 <b>C</b>。记忆锚点：<b>取逆、幂、多项式组合都用同一个 $P$；一碰转置就换成 $P^{T}$，混搭便合不拢</b>。</p>',
+    log: '答案选 C' },
+];
+
+var snaps = STEPS.map(function(s, i){
+  return {
+    cls: i === STEPS.length - 1 ? 'done' : 'step',
+    tag: s.tag || ('第 ' + (i + 1) + ' 步'),
+    log: s.log || s.title,
+    count: i + 1,
+    ribbon: s.ribbon,
+    html: STEPS.slice(0, i + 1).map(function(x, j){
+      return card(j + 1, x.cls, x.title, x.body);
+    }).join(''),
+    done: i === STEPS.length - 1,
+  };
+});
+
+AW.init({
+  title: '$A\\sim B$ 时，$A^{T},\\ A^{-1},\\ A+A^{-1},\\ A+A^{T}$ 谁不相似于对应物',
+  subtitle: '考点：矩阵相似的定义与运算保持性 · 方法：同一 $P$ 能否贯穿',
+  counterLabel: '推理步',
+  ribbonTitle: '选项判定（✓ 相似 / ✗ 不相似）',
+  intro: '点击「▶ 播放」逐项推演 A、B、C、D。',
+  render: function(stage, sn){
+    if(sn.html != null) stage.innerHTML = sn.html;
+    renderMathAfterSnap(stage);
+  },
+  snaps: snaps,
+  result: {
+    big: '答案 C（A + Aᵀ 一般不相似于 B + Bᵀ）',
+    html: '记忆锚点：<b>多项式组合共享 $P$，转置把 $P$ 换成 $P^{T}$</b>——所以 $A^{-1},\\ A+A^{-1}$ 都相似，唯独 $A+A^{T}$ 里 $P$ 与 $(P^{T})^{-1}$ 配不成对；反例 $\\det 7\\ne\\det 8$ 坐实。题目问「错误的」，别顺手选成正确项。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

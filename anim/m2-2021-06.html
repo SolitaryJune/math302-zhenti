@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2021·06 由复合恒等式求 df(1,1)</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改题目专属区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [
+  "<b>① 审题：</b>目标 $\\mathrm{d}f(1,1)=f_x(1,1)\\,\\mathrm{d}x+f_y(1,1)\\,\\mathrm{d}y$——要把 $f_x(1,1),f_y(1,1)$ 从两个恒等式里解出来",
+  "<b>② 挑 $x$：</b>恒等式必须在内层命中 $(1,1)$ 才可用：$f(x+1,\\mathrm{e}^x)$ 取 $x=0$；$f(x,x^2)$ 取 $x=1$",
+  "<b>③ 第一式求导：</b>链式法则 $f_x+f_y\\cdot\\mathrm{e}^x=(x+1)^2+2x(x+1)=(x+1)(3x+1)$",
+  "<b>④ 代 $x=0$：</b>$f_x(1,1)+f_y(1,1)=1$　……方程 (1)",
+  "<b>⑤ 第二式求导：</b>$f_x+f_y\\cdot2x=4x\\ln x+2x$",
+  "<b>⑥ 代 $x=1$：</b>$f_x(1,1)+2f_y(1,1)=4\\cdot1\\cdot0+2=2$　……方程 (2)",
+  "<b>⑦ 联立：</b>(2)$-$(1) 得 $f_y(1,1)=1$，回代 (1) 得 $f_x(1,1)=0$",
+  "<b>⑧ 结论：</b>$\\mathrm{d}f(1,1)=0\\cdot\\mathrm{d}x+1\\cdot\\mathrm{d}y=\\mathrm{d}y$，选 C"
+];
+
+AW.init({
+  title: '2021·06　两个复合恒等式夹出 $\\mathrm{d}f(1,1)$',
+  subtitle: '考点：多元复合函数链式法则 · 代入使内层命中指定点 · 解二元方程组',
+  counterLabel: '已推导',
+  ribbonTitle: '推导进度（✓ 完成）',
+  intro: '点击「▶ 播放」或「下一步」，两个恒等式各供一个方程，联立解出偏导。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    var wrap = AW.el('div', 'aw-scroll');
+    var inner = AW.el('div', '');
+    inner.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>：当前行亮琥珀色，已完成的行变绿'));
+    this._rows = [];
+    for (var i = 0; i < ROWS.length; i++){
+      var r = AW.el('div', 'aw-stepcard', ROWS[i]);
+      inner.appendChild(r);
+      this._rows.push(r);
+    }
+    wrap.appendChild(inner);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'step',  tag:'审题',   log:'全微分由两个偏导数拼成，目标就是解出它们在一点一的值', count:0, ribbon:{k:1, ok:true} },
+    { cls:'shift', tag:'挑代入点', log:'第一式取 x 为零、第二式取 x 为一，让内层都恰好路过一一', count:1, ribbon:{k:2, ok:true} },
+    { cls:'ok',    tag:'链式求导', log:'第一式两边对 x 求导，右端整理成 x 加一乘三 x 加一', count:2, ribbon:{k:3, ok:true} },
+    { cls:'ok',    tag:'得方程一', log:'代入得第一个方程：两偏导之和等于一', count:3, ribbon:{k:4, ok:true} },
+    { cls:'ok',    tag:'链式求导', log:'第二式求导，右端是四 x ln x 加二 x', count:4, ribbon:{k:5, ok:true} },
+    { cls:'ok',    tag:'得方程二', log:'代入得第二个方程：x 偏导加两倍 y 偏导等于二', count:5, ribbon:{k:6, ok:true} },
+    { cls:'ok',    tag:'联立',   log:'两式相减得 y 偏导为一，回代得 x 偏导为零', count:6, ribbon:{k:7, ok:true} },
+    { cls:'done',  tag:'完成',   log:'结论：全微分等于 dy，选 C', count:7, ribbon:{k:8, ok:true}, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    var rows = this._rows;
+    for (var j = 0; j < rows.length; j++){
+      rows[j].className = 'aw-stepcard' + (j < i ? ' good' : (j === i ? ' key' : ''));
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '选 C　$\\mathrm{d}f(1,1)=\\mathrm{d}y$　（$f_x(1,1)=0,\\ f_y(1,1)=1$）',
+    html: '记忆锚点：<b>复合恒等式两边求导 + 让内层命中目标点 = 两个线性方程</b>。易错：第二式代 $x=0$ 会落点 $(0,0)$ 还遇 $\\ln 0$；链式法则漏乘内层导数（$\\mathrm{e}^x$、$2x$）方程就错。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

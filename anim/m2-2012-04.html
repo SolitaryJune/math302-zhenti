@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2012·04 三个积分 I₁, I₂, I₃ 的大小</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_algo_template.html，只改 AW.init 区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+var ROWS = [];   // 推导板的持久 DOM 行
+
+var LINES = [
+  "<p><b>切段</b>：记 $J_m=\\int_{m\\pi}^{(m+1)\\pi}\\mathrm{e}^{x^{2}}\\sin x\\,\\mathrm{d}x$，则 $$I_1=J_0,\\qquad I_2=J_0+J_1,\\qquad I_3=J_0+J_1+J_2.$$相邻半周期上 $\\sin x$ 变号，而 $\\mathrm{e}^{x^{2}}$ 严格增。</p>",
+  "<p><b>第一段 $[0,\\pi]$</b>：$\\sin x\\ge0$，故 $J_0>0$，即 $I_1>0$。</p>",
+  "<p><b>第二段 $[\\pi,2\\pi]$</b>：$\\sin x\\le0$，故 $J_1<0$，于是 $I_2=I_1+J_1<I_1$。</p>",
+  "<p><b>比幅度</b>：换元 $x=t+\\pi$，$$|J_1|=\\int_{0}^{\\pi}\\mathrm{e}^{(t+\\pi)^{2}}\\sin t\\,\\mathrm{d}t.$$因 $(t+\\pi)^{2}>t^{2}$，被积函数处处压过 $J_0$ 的，故 $|J_1|>J_0$。</p>",
+  "<p><b>推论</b>：$I_2=J_0+J_1<0$——$I_2$ 不只是最小，它干脆是<b>负的</b>：$I_2<0<I_1$。</p>",
+  "<p><b>第三段 $[2\\pi,3\\pi]$</b>：$\\sin x\\ge0$，$J_2>0$；同理 $|J_2|>|J_1|$（$\\mathrm{e}^{x^{2}}$ 在更后段更大）。</p>",
+  "<p><b>比较 $I_3$ 与 $I_1$</b>：$$I_3-I_1=J_1+J_2>0\\ \\Longrightarrow\\ I_3>I_1.$$</p>",
+  "<p><b>结论</b>：$I_2<I_1<I_3$，<b>选 D</b>。（数值旁证：$I_1\\approx5.7\\times10^{2}$，$I_2\\approx-9.1\\times10^{14}$，$I_3\\approx1.1\\times10^{36}$。）</p>"
+];
+
+AW.init({
+  title: '积分大小比较：$I_k=\\int_{0}^{k\\pi}\\mathrm{e}^{x^{2}}\\sin x\\,\\mathrm{d}x$',
+  subtitle: '考点：定积分性质 · 方法：按半周期切段，符号 + 幅度两头夹',
+  counterLabel: '已推演',
+  intro: '点击「▶ 播放」逐步演示每一步推导。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    ROWS.length = 0;
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    for(var k = 0; k < LINES.length; k++){
+      var d = AW.el('div', '', LINES[k]);
+      d.style.cssText = 'margin:8px 0;padding:9px 14px;border-left:3px solid #e2e8f0;background:#f8fafc;border-radius:0 12px 12px 0;font-size:14.5px;line-height:1.9;display:none;';
+      board.appendChild(d);
+      ROWS.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  render: function(stage, sn){
+    for(var k = 0; k < ROWS.length; k++){
+      var r = ROWS[k];
+      if(k >= sn.show){ r.style.display = 'none'; continue; }
+      r.style.display = 'block';
+      if(k === sn.show - 1 && !sn.done){
+        r.style.borderLeftColor = '#d97706';
+        r.style.background = '#fffbeb';
+      } else {
+        r.style.borderLeftColor = '#16a34a';
+        r.style.background = '#f8fafc';
+      }
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  snaps: [
+    { cls:'shift', tag:'切段',   log:'按 sin x 的半周期切成 J₀、J₁、J₂ 三段，I_k 是前缀和', show:1, count:0 },
+    { cls:'ok',    tag:'J₀ 为正', log:'[0,π] 上 sin x ≥ 0，J₀ > 0，即 I₁ > 0', show:2, count:1 },
+    { cls:'step',  tag:'J₁ 为负', log:'[π,2π] 上 sin x ≤ 0，J₁ < 0，把 I₂ 拖到 I₁ 之下', show:3, count:2 },
+    { cls:'step',  tag:'比幅度',  log:'平移 π 后被积函数的 e 指数更大，|J₁| > J₀', show:4, count:3 },
+    { cls:'miss',  tag:'I₂ 为负', log:'J₀ 抵不过 |J₁|，I₂ = J₀ + J₁ < 0，它是最小的', show:5, count:4 },
+    { cls:'ok',    tag:'J₂ 为正', log:'[2π,3π] 上 sin x ≥ 0，J₂ > 0，且幅度又压过 |J₁|', show:6, count:5 },
+    { cls:'ok',    tag:'I₃ 反超', log:'I₃ − I₁ = J₁ + J₂ > 0，所以 I₃ > I₁', show:7, count:6 },
+    { cls:'done',  tag:'完成',   log:'结论：I₂ < I₁ < I₃，选 D', show:8, count:7, done:true },
+  ],
+
+  result: {
+    big: 'I₂ < I₁ < I₃（选 D）',
+    html: '记忆锚点：<b>符号看 $\\sin$、幅度看 $\\mathrm{e}^{x^{2}}$</b>。每平移一个 $\\pi$，段上 $\\mathrm{e}^{x^{2}}$ 暴增，后一段的绝对值碾压前一段：$|J_1|>J_0$ 使 $I_2<0$，$J_2>|J_1|$ 使 $I_3>I_1$。别默认三个积分单调递增（A 错因）。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

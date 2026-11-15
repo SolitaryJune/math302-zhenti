@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2011 数二第 9 题 · 1^∞ 型极限</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（与模板一致，勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+var LINES = [
+  '<p><b>题面：</b>求 $$\\lim_{x\\to0}\\Bigl(\\frac{1+2^x}{2}\\Bigr)^{\\frac1x}.$$</p>',
+  '<p><b>定型：</b>底数 $\\dfrac{1+2^x}{2}\\to1$、指数 $\\dfrac1x\\to\\infty$，是 $1^\\infty$ 型。设原极限为 $A$，取对数 $$\\ln A=\\lim_{x\\to0}\\frac1x\\ln\\frac{1+2^x}{2}.$$</p>',
+  '<p><b>第一步替换：</b>令 $u=\\dfrac{2^x-1}{2}\\to0$，则 $$\\ln\\frac{1+2^x}{2}=\\ln(1+u)\\sim u=\\frac{2^x-1}{2}.$$</p>',
+  '<p><b>第二步替换：</b>$2^x-1=e^{x\\ln2}-1\\sim x\\ln2$，故 $$\\ln\\frac{1+2^x}{2}\\sim\\frac{x\\ln2}{2}.$$</p>',
+  '<p><b>求 ln A：</b>$$\\ln A=\\lim_{x\\to0}\\frac1x\\cdot\\frac{x\\ln2}{2}=\\frac{\\ln2}{2}.$$</p>',
+  '<p><b>还原指数：</b>$$A=e^{\\frac{\\ln2}{2}}=2^{\\frac12}=\\sqrt2.$$</p>'
+];
+
+var lineEls = [];
+
+AW.init({
+  title: '第 9 题 · $\\lim\\limits_{x\\to0}\\left(\\dfrac{1+2^x}{2}\\right)^{\\frac1x}$',
+  subtitle: '考点：$1^\\infty$ 型极限 · 方法：取对数 + 等价无穷小',
+  counterLabel: '推导步',
+  intro: '点击「▶ 播放」逐步演示：定型 → 取对数 → 两次等价替换 → 还原指数。',
+  ribbonTitle: '推导进度（✓ 完成）',
+  build: function(stage){
+    stage.innerHTML = '';
+    lineEls = [];
+    var wrap = AW.el('div', 'aw-scroll');
+    wrap.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>（每步揭示一行，公式由 KaTeX 渲染）'));
+    LINES.forEach(function(h){
+      var d = AW.el('div', 'aw-stepcard', h);
+      d.style.display = 'none';
+      wrap.appendChild(d);
+      lineEls.push(d);
+    });
+    stage.appendChild(wrap);
+  },
+  snaps: [
+    { cls:'step',  tag:'审题', count:0, reveal:1 },
+    { cls:'shift', tag:'定型', log:'底数趋于 1、指数趋于无穷，是 1 的无穷次方型，先取对数', count:1, reveal:2, hl:1, ribbon:{k:1, ok:true} },
+    { cls:'step',  tag:'替换一', log:'对数里是 ln(1+u) 形状，用 ln(1+u) 与 u 等价', count:2, reveal:3, hl:2, ribbon:{k:2, ok:true} },
+    { cls:'step',  tag:'替换二', log:'2 的 x 次方减 1 与 x·ln2 等价，分子分母同时化简', count:3, reveal:4, hl:3, ribbon:{k:3, ok:true} },
+    { cls:'step',  tag:'求对数', log:'lnA 算出等于 ln2 的一半', count:4, reveal:5, hl:4, ribbon:{k:4, ok:true} },
+    { cls:'done',  tag:'结论', log:'结论：A = e^(ln2/2) = √2', count:5, reveal:6, hl:5, good:true, done:true, ribbon:{k:5, ok:true} },
+  ],
+  render: function(stage, sn){
+    for(var j = 0; j < lineEls.length; j++){
+      lineEls[j].style.display = (j < (sn.reveal || 0)) ? '' : 'none';
+      lineEls[j].className = 'aw-stepcard' + (sn.hl === j ? (sn.good ? ' good' : ' key') : '');
+    }
+    renderMathAfterSnap(stage);
+  },
+  result: {
+    big: '填 √2',
+    html: '记忆锚点：$1^\\infty$ 型 ⇒ 取对数 $\\ln A=\\lim\\limits_{x\\to0}\\frac1x\\ln\\frac{1+2^x}{2}$，再用 $\\ln(1+t)\\sim t$ 与 $2^x-1\\sim x\\ln2$，得 $\\ln A=\\frac{\\ln2}{2}\\Rightarrow A=\\sqrt2$。易错：算完 $\\ln A$ 别忘了<b>还原成指数</b>；$a^x-1\\sim x\\ln a$ 别记成 $x$。',
+  },
+});
+</script>
+</body>
+</html>

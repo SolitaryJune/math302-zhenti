@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学二 2015·01 反常积分敛散性判别</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<!-- 复制自 tools/anim_math_concept_template.html，只改题目专属区域 -->
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+// 一张推理卡片（body 里可写 $..$ / $$..$$ 公式）
+function card(n, cls, title, body){
+  return '<div class="aw-stepcard ' + (cls || '') + '"><h4><span class="n">' + n +
+         '</span>' + title + '</h4>' + body + '</div>';
+}
+
+// 推理链：每一步的完整内容（引擎按步数截取显示）
+var STEPS = [
+  { title: '审题：同一题型，备好工具箱',
+    cls: 'key',
+    body: '<p>四个选项都是 $\\int_2^{+\\infty}$ 上的无穷限反常积分，逐个判敛。工具：幂函数用 $p$-积分 $\\int^{+\\infty}\\dfrac{\\mathrm{d}x}{x^p}$（$p>1$ 收敛）；带对数先换元 $t=\\ln x$；指数型看衰减速度。</p>',
+    log: '四个无穷限积分，逐项判敛散' },
+  { title: 'A 项：$p=\\tfrac12$ 的 $p$-积分',
+    cls: 'bad',
+    body: '<p>$\\displaystyle\\int_2^{+\\infty}x^{-1/2}\\,\\mathrm{d}x=\\Big[2\\sqrt{x}\\Big]_2^{+\\infty}=+\\infty$：$p=\\tfrac12<1$，<b>发散</b>。$p$-积分只有 $p>1$ 才收敛。</p>',
+    ribbon: {k:1, ok:false},
+    log: 'A：p=1/2<1，原函数趋于无穷，发散' },
+  { title: 'B 项：分子带对数，衰减更慢',
+    cls: 'bad',
+    body: '<p>$\\displaystyle\\int_2^{+\\infty}\\frac{\\ln x}{x}\\,\\mathrm{d}x=\\Big[\\frac{(\\ln x)^2}{2}\\Big]_2^{+\\infty}=+\\infty$，<b>发散</b>。别把它当成 $\\frac1x$ 型——多乘 $\\ln x$ 反而让衰减更慢。</p>',
+    ribbon: {k:2, ok:false},
+    log: 'B：原函数 (ln x)²/2 → +∞，发散' },
+  { title: 'C 项：换元后是 p=1',
+    cls: 'bad',
+    body: '<p>令 $t=\\ln x$（$\\mathrm{d}t=\\frac{\\mathrm{d}x}{x}$）：$\\displaystyle\\int_2^{+\\infty}\\frac{\\mathrm{d}x}{x\\ln x}=\\int_{\\ln 2}^{+\\infty}\\frac{\\mathrm{d}t}{t}=\\Big[\\ln t\\Big]\\to+\\infty$，<b>发散</b>。它是 $p=1$ 的对数修正版，衰减比 $\\frac1x$ 还慢。</p>',
+    ribbon: {k:3, ok:false},
+    log: 'C：换元 t=ln x 后是 ∫dt/t，发散' },
+  { title: 'D 项：指数压制，分部积分验证',
+    cls: 'good',
+    body: '<p>$\\displaystyle\\int_2^{+\\infty}x\\,\\mathrm{e}^{-x}\\,\\mathrm{d}x=\\Big[-(x+1)\\mathrm{e}^{-x}\\Big]_2^{+\\infty}=0-\\big(-3\\mathrm{e}^{-2}\\big)=3\\mathrm{e}^{-2}$，极限有限，<b>收敛</b>。$\\mathrm{e}^{-x}$ 的衰减压倒 $x$ 的一次增长。</p>',
+    ribbon: {k:4, ok:true},
+    log: 'D：分部积分得 3e⁻²，有限，收敛' },
+  { title: '结论',
+    cls: 'good',
+    body: '<p>A、B、C 全发散，D 收敛——答案选 <b>D</b>。记忆锚点：<b>$\\dfrac{x}{\\mathrm{e}^x}$ 型（指数压制幂）必收敛</b>；$\\dfrac{\\ln x}{x^p}$ 型在 $p\\le1$ 时必发散。</p>',
+    log: '选 D：只有指数压制型收敛' },
+];
+
+var snaps = STEPS.map(function(s, i){
+  return {
+    cls: i === STEPS.length - 1 ? 'done' : 'step',
+    tag: '第 ' + (i + 1) + ' 步',
+    log: s.log || s.title,
+    count: i + 1,
+    ribbon: s.ribbon,
+    html: STEPS.slice(0, i + 1).map(function(x, j){
+      return card(j + 1, x.cls, x.title, x.body);
+    }).join(''),
+    done: i === STEPS.length - 1,
+  };
+});
+
+AW.init({
+  title: '哪个反常积分收敛：$\\int_2^{+\\infty}$ 上的四个候选',
+  subtitle: '考点：反常积分敛散 · 方法：p-积分 / 对数换元 / 指数压制 逐项判别',
+  counterLabel: '判敛进度',
+  ribbonTitle: '选项判定（✓ 收敛 / ✗ 发散）',
+  intro: '点击「▶ 播放」逐项判别四个反常积分的敛散性。',
+  render: function(stage, sn){
+    if(sn.html != null) stage.innerHTML = sn.html;
+    renderMathAfterSnap(stage);
+  },
+  snaps: snaps,
+  result: {
+    big: '答案 D（收敛，值 3e⁻²）',
+    html: '记忆锚点：<b>指数压制</b>——$x\\to+\\infty$ 时 $\\mathrm{e}^{-x}$ 衰减压倒任何幂增长，故 $\\dfrac{x}{\\mathrm{e}^x}$ 型必收敛；而对数只会拖慢衰减：$\\dfrac{\\ln x}{x}$、$\\dfrac{1}{x\\ln x}$ 都发散。干扰项全靠「把发散的 p 型看成收敛」设坑。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>

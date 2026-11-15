@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学·过程动画：周期奇函数求 f(7)（2014 年第 10 题）</title>
+<link rel="stylesheet" href="../assets/anim.css">
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="aw"></div>
+<script src="../assets/anim-engine.js"></script>
+<script src="../assets/katex/katex.min.js"></script>
+<script src="../assets/katex/contrib/auto-render.min.js"></script>
+<script>
+/* ================== KaTeX 逐步渲染（勿改） ================== */
+function renderMath(el){
+  if(window.renderMathInElement && el){
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$',  right: '$',  display: false}
+      ],
+      throwOnError: false
+    });
+  }
+}
+function renderMathAfterSnap(stage){
+  renderMath(stage);
+  setTimeout(function(){
+    var root = document.querySelector('.aw');
+    renderMath(document.getElementById('awResult'));
+    renderMath(root.querySelector('h1'));
+    renderMath(root.querySelector('.sub'));
+  }, 0);
+}
+/* ================== 题目专属区域（只改这里） ================== */
+
+var CARDS = [
+  { cls: 'key', title: '审题：三件套',
+    body: '<p>周期 $T=4$、$f$ 是奇函数、$f\'(x)=2(x-1)$ 只在 $[0,2]$ 给出。求 $f(7)$：先用导数还原 $f$，再用周期搬运、奇性折返。</p>' },
+  { cls: '', title: '积分还原 $f$',
+    body: '<p>$$f\'(x)=2(x-1)\\ \\Longrightarrow\\ f(x)=x^{2}-2x+C,\\qquad x\\in[0,2].$$</p>' },
+  { cls: 'ok', title: '奇函数定常数',
+    body: '<p>奇函数在原点有定义则 $f(0)=0$，代入得 $C=0$：</p>' +
+          '<p>$$f(x)=x^{2}-2x,\\qquad x\\in[0,2].$$</p>' },
+  { cls: 'shift', title: '周期搬运 $7\\to3\\to-1$',
+    body: '<p>周期为 $4$，连减两次：</p><p>$$f(7)=f(3)=f(-1).$$</p>' +
+          '<p>$3$ 不在 $[0,2]$ 内，继续减一次到 $-1$。</p>' },
+  { cls: 'step', title: '奇性折返到 $f(1)$',
+    body: '<p>$$f(-1)=-f(1),\\qquad f(1)=1^{2}-2\\cdot1=-1.$$</p>' },
+  { cls: 'good', title: '收口',
+    body: '<p>$$f(7)=f(-1)=-f(1)=-(-1)=1.$$</p>' },
+];
+
+AW.init({
+  title: '【2014 数二·10】周期为 4 的奇函数求 $f(7)$',
+  subtitle: '考点：函数性质综合 · 方法：积分还原 + 周期搬运 + 奇性折返',
+  counterLabel: '已执行',
+  ribbonTitle: '关键节点',
+  intro: '点击「▶ 播放」逐步演示三件套接力。',
+
+  build: function(stage){
+    stage.innerHTML = '';
+    stage.appendChild(AW.el('div', 'aw-row-label', '<b>推导板</b>：每步点亮一张卡'));
+    var wrap = AW.el('div', 'aw-scroll');
+    var board = AW.el('div', '');
+    this._cards = [];
+    for(var k = 0; k < CARDS.length; k++){
+      var d = AW.el('div', 'aw-stepcard ' + (CARDS[k].cls || ''),
+        '<h4><span class="n">' + (k + 1) + '</span>' + CARDS[k].title + '</h4>' + CARDS[k].body);
+      d.style.display = 'none';
+      board.appendChild(d);
+      this._cards.push(d);
+    }
+    wrap.appendChild(board);
+    stage.appendChild(wrap);
+  },
+
+  snaps: [
+    { cls:'shift', tag:'审题', log:'周期 4 + 奇函数 + [0,2] 上的导数，三个条件三步用', count:0 },
+    { cls:'step',  tag:'积分', log:'f\' = 2(x−1) 积分得 x²−2x+C', count:1, ribbon:{k:1, ok:true} },
+    { cls:'ok',    tag:'定常数', log:'奇函数给 f(0)=0，C=0', count:2 },
+    { cls:'shift', tag:'搬运', log:'周期 4：f(7)=f(3)=f(−1)，注意要减两次', count:3, ribbon:{k:2, ok:true} },
+    { cls:'step',  tag:'折返', log:'奇函数 f(−1)=−f(1)=−(−1)', count:4 },
+    { cls:'done',  tag:'完成', log:'f(7)=1', count:5, ribbon:{k:3, ok:true}, done:true },
+  ],
+
+  render: function(stage, sn, i){
+    for(var k = 0; k < this._cards.length; k++){
+      this._cards[k].style.display = (k <= i) ? '' : 'none';
+    }
+    renderMathAfterSnap(stage);
+  },
+
+  result: {
+    big: '答案 f(7) = 1',
+    html: '记忆锚点：<b>还原（$f(0)=0\\Rightarrow C=0$）→ 搬运（$7\\to3\\to-1$）→ 折返（$f(-1)=-f(1)$）</b>。易错：只减一次周期停在 $f(3)$；奇偶符号弄反得 $-1$。',
+  },
+});
+/* ================== 题目专属区域结束 ================== */
+</script>
+</body>
+</html>
