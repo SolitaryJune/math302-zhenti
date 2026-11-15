@@ -994,6 +994,10 @@ def katex_foot(rel: str) -> str:
         '</script>')
 
 
+ASSET_VER = "20261115a"
+
+ASSET_VER_KEEP = None
+
 def page_head(title: str, rel: str, mode: str = "", year: str = "",
               focus_qid: str | None = None, cur_qid: str | None = None,
               katex: bool = False) -> str:
@@ -1004,7 +1008,7 @@ def page_head(title: str, rel: str, mode: str = "", year: str = "",
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{esc(title)} · 数学二真题档案</title>
-<link rel="stylesheet" href="{rel}assets/style.css">
+<link rel="stylesheet" href="{rel}assets/style.css?v={ASSET_VER}">
 {katex_head(rel) if katex else ""}
 </head>
 <body data-mode="{mode}" data-year="{year}">
@@ -1238,7 +1242,7 @@ def build(meta: dict, years: list[int], all_q: list[dict], counts: dict) -> None
 <div class="section-title">按年份浏览</div>
 <div class="year-grid">{{cards}}</div>
 <footer><div class="wrap">{{footer}}</div></footer>
-<script src="assets/app.js"></script></body></html>""".format(
+<script src="assets/app.js?v=" + ASSET_VER + "></script></body></html>""".format(
         cards="".join(
             f'<a class="year-card" href="year/{y}/"><b>{y} 年</b>'
             f'<span>{counts.get(y, {}).get("n", 0)} 题 · {counts.get(y, {}).get("pts", 150)} 分</span></a>'
@@ -1267,7 +1271,7 @@ def build(meta: dict, years: list[int], all_q: list[dict], counts: dict) -> None
 </div>"""
         page = (head + hero + f'<div class="paper-body">{cards}</div>' + sheet_trigger(len(qs))
                 + f'<footer><div class="wrap">{FOOTER_TXT}</div></footer>'
-                + '<script src="../../assets/app.js"></script>'
+                + '<script src="../../assets/app.js?v=' + ASSET_VER + '"></script>'
                 + katex_foot("../../") + '</body></html>')
         (ydir / "index.html").write_text(page, encoding="utf-8")
 
@@ -1300,7 +1304,7 @@ def build(meta: dict, years: list[int], all_q: list[dict], counts: dict) -> None
             page = (head + hero + f'<div class="paper-body" style="padding-top:14px">{render_card(q, "../../", focus=True)}</div>'
                     + nav + sheet_trigger(len(qs))
                     + f'<footer><div class="wrap">{FOOTER_TXT}</div></footer>'
-                    + '<script src="../../assets/app.js"></script>'
+                    + '<script src="../../assets/app.js?v=' + ASSET_VER + '"></script>'
                     + katex_foot("../../") + '</body></html>')
             (qdir / "index.html").write_text(page, encoding="utf-8")
 
@@ -1322,7 +1326,7 @@ def build(meta: dict, years: list[int], all_q: list[dict], counts: dict) -> None
                   f'<small>（{len(ids)} 题）</small></summary><div style="margin-top:8px">{items}</div></details>')
     kn.append("</div>"
               f'<footer><div class="wrap">{FOOTER_TXT}</div></footer></div>'
-              '<script src="../assets/app.js"></script></body></html>')
+              '<script src="../assets/app.js?v=' + ASSET_VER + '"></script></body></html>')
     (root / "knowledge").mkdir(exist_ok=True)
     (root / "knowledge" / "index.html").write_text("\n".join(kn), encoding="utf-8")
 
@@ -1343,7 +1347,7 @@ def build(meta: dict, years: list[int], all_q: list[dict], counts: dict) -> None
 </div>
 <footer><div class="wrap">{FOOTER_TXT}</div></footer>
 </div>
-<script src="../assets/app.js"></script></body></html>"""
+<script src="../assets/app.js?v=" + ASSET_VER + ""></script></body></html>"""
     (root / "search").mkdir(exist_ok=True)
     (root / "search" / "index.html").write_text(sp, encoding="utf-8")
 
@@ -1380,7 +1384,7 @@ def build(meta: dict, years: list[int], all_q: list[dict], counts: dict) -> None
 </script>
 <footer><div class="wrap">{FOOTER_TXT}</div></footer>
 </div>
-<script src="../assets/app.js"></script></body></html>"""
+<script src="../assets/app.js?v=" + ASSET_VER + ""></script></body></html>"""
     (root / "wrongbook").mkdir(exist_ok=True)
     (root / "wrongbook" / "index.html").write_text(wp, encoding="utf-8")
 
