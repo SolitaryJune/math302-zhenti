@@ -156,3 +156,22 @@ body{
 .aw-qmeta{margin-top:8px;font-size:12.5px;color:#586e72}
 .aw-qmeta b{color:#e63946}
 .aw-qtag{display:inline-block;background:#e07a2f1c;color:#e07a2f;border-radius:999px;padding:1px 8px;margin-left:4px;font-size:11px;font-weight:600}
+
+/* ===== 宽屏布局重设计（全屏/大屏利用率） ===== */
+.aw{max-width:96vw;padding-left:10px;padding-right:10px}
+.aw-grid{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:14px;align-items:start}
+.aw-side{display:flex;flex-direction:column;gap:12px;position:sticky;top:10px}
+.aw-side .aw-result{margin-bottom:0}
+.aw-side .aw-result .big{font-size:28px}
+.aw-side .aw-controls{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.aw-side .aw-controls button{width:100%}
+.aw-side .aw-speed{grid-column:1/-1;justify-content:center}
+.aw-side .aw-counter{grid-column:1/-1;margin-left:0;text-align:center}
+.aw-sidecard #awLog{max-height:300px}
+.aw-sidecard .aw-ribbon{margin-bottom:10px}
+.aw-stage-card{min-height:420px;display:flex;flex-direction:column}
+.aw-stage-card .aw-stage{flex:1}
+@media (max-width:1080px){
+  .aw-grid{grid-template-columns:1fr}
+  .aw-side{position:static}
+}

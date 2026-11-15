@@ -131,7 +131,9 @@
         }
         var tags = (q.tags || []).map(function(t){ return '<span class="aw-qtag">' + t + '</span>'; }).join(' ');
         var ansTxt = q.answerLetter ? ('<b>' + q.answerLetter + '</b>') :
-          (q.answer && q.answer !== '略' ? '<b>' + String(q.answer).slice(0, 40) + '</b>' : '见下方结论卡');
+          (q.answer && q.answer !== '略'
+            ? '<b>' + (/[\\^_{}]/.test(String(q.answer)) ? '$' + String(q.answer).slice(0, 60) + '$' : String(q.answer).slice(0, 40)) + '</b>'
+            : '见下方结论卡');
         var box = document.createElement('details');
         box.className = 'aw-question';
         box.open = true;
@@ -163,29 +165,37 @@
     E.cur = 0; E.timer = null;
 
     var root = document.querySelector('.aw');
-    loadQuestionHeader(root);
     root.innerHTML =
       '<h1>' + (cfg.title || '') + '</h1>' +
       '<div class="sub">' + (cfg.subtitle || '') + '</div>' +
-      '<div id="awResult" class="aw-result"><div class="big"></div><div class="desc"></div></div>' +
-      '<div class="aw-card">' +
-        '<div class="aw-stage" id="awStage"></div>' +
-        '<div class="aw-status" id="awStatus"></div>' +
-        '<div class="aw-hint">快捷键：← 上一步　→ 下一步　空格 播放/暂停</div>' +
-      '</div>' +
-      '<div class="aw-card aw-controls">' +
-        '<button id="awReset" class="warn">⏮ 重置</button>' +
-        '<button id="awPrev">◀ 上一步</button>' +
-        '<button id="awPlay" class="primary">▶ 播放</button>' +
-        '<button id="awNext">下一步 ▶</button>' +
-        '<button id="awEnd" class="warn">⏭ 看结果</button>' +
-        '<div class="aw-speed"><span>慢</span><input type="range" id="awSpeed" min="1" max="5" value="3" step="1"><span>快</span></div>' +
-        '<div class="aw-counter" id="awCount"></div>' +
-      '</div>' +
-      '<div class="aw-card aw-bottom">' +
-        '<div><div class="aw-panel-title">过程日志</div><div id="awLog"></div></div>' +
-        '<div><div class="aw-panel-title" id="awRibbonTitle">序号（✓ 对 / ✗ 错）</div><div class="aw-ribbon" id="awRibbon"></div></div>' +
+      '<div class="aw-grid">' +
+        '<div class="aw-main">' +
+          '<div class="aw-card aw-stage-card">' +
+            '<div class="aw-stage" id="awStage"></div>' +
+            '<div class="aw-status" id="awStatus"></div>' +
+            '<div class="aw-hint">快捷键：← 上一步　→ 下一步　空格 播放/暂停</div>' +
+          '</div>' +
+        '</div>' +
+        '<aside class="aw-side">' +
+          '<div id="awResult" class="aw-result"><div class="big"></div><div class="desc"></div></div>' +
+          '<div class="aw-card aw-controls">' +
+            '<button id="awReset" class="warn">⏮ 重置</button>' +
+            '<button id="awPrev">◀ 上一步</button>' +
+            '<button id="awPlay" class="primary">▶ 播放</button>' +
+            '<button id="awNext">下一步 ▶</button>' +
+            '<button id="awEnd" class="warn">⏭ 看结果</button>' +
+            '<div class="aw-speed"><span>慢</span><input type="range" id="awSpeed" min="1" max="5" value="3" step="1"><span>快</span></div>' +
+            '<div class="aw-counter" id="awCount"></div>' +
+          '</div>' +
+          '<div class="aw-card aw-sidecard">' +
+            '<div class="aw-panel-title" id="awRibbonTitle">序号（✓ 对 / ✗ 错）</div>' +
+            '<div class="aw-ribbon" id="awRibbon"></div>' +
+            '<div class="aw-panel-title" style="margin-top:12px">过程日志</div>' +
+            '<div id="awLog"></div>' +
+          '</div>' +
+        '</aside>' +
       '</div>';
+    loadQuestionHeader(root);
 
     E.stage = $('awStage'); E.status = $('awStatus'); E.log = $('awLog');
     E.ribbon = $('awRibbon'); E.count = $('awCount'); E.resultBox = $('awResult');
