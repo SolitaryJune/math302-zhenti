@@ -30,11 +30,37 @@
     return d;
   }
 
+  /* 只转义「不像合法 HTML 标签」的裸 <。题面/推理文本里常出现 (-1<x<1)、$x<0$ 这类
+   * 数学式，直接 innerHTML 会被浏览器当标签解析，整段内容被吞。真标签
+   * （<b>、</p>、<img src="…">、<!--…-->）原样保留；转义后的 &lt; 在 DOM 文本里
+   * 还原为 <，KaTeX auto-render 读的是文本节点，公式照常渲染。 */
+  function safeHtml(s){
+    return String(s == null ? '' : s).replace(/</g, function(m, off, str){
+      var rest = str.slice(off);
+      if (/^<\/?[a-zA-Z][a-zA-Z0-9-]*(?:\s[^<>]*)?\/?>/.test(rest) || /^<!/.test(rest)) return m;
+      return '&lt;';
+    });
+  }
+
+  /* 对节点做 KaTeX 渲染（页面未加载 auto-render 时静默跳过）。
+   * 用于日志/状态栏/标题/结果卡等引擎自绘区域，snaps[].log 里的 $x\ge0$ 不再裸显。 */
+  function texify(node){
+    if (node && window.renderMathInElement) {
+      try {
+        window.renderMathInElement(node, {
+          delimiters: [{ left: '$$', right: '$$', display: true }, { left: '$', right: '$', display: false }],
+          throwOnError: false,
+        });
+      } catch (e) {}
+    }
+  }
+
   function render(cur, animate){
     var sn = E.snaps[cur];
     if(!animate){ E.stage.classList.add('notrans'); }
     if(E.render){ E.render(E.stage, sn, cur, animate); }
-    else if(sn.html != null){ E.stage.innerHTML = sn.html; }
+    else if(sn.html != null){ E.stage.innerHTML = safeHtml(sn.html); }
+    texify(E.stage);
     if(!animate){ void E.stage.offsetWidth; E.stage.classList.remove('notrans'); }
 
     E.count.innerHTML = E.counterLabel + ' <span>' + (sn.count != null ? sn.count : cur) + '</span>';
@@ -43,15 +69,17 @@
     } else {
       var cls = sn.cls || 'step';
       var tag = sn.tag ? '<span class="tag t-' + cls + '">' + sn.tag + '</span>' : '';
-      E.status.innerHTML = tag + (sn.log || '');
+      E.status.innerHTML = tag + safeHtml(sn.log || '');
+      texify(E.status);
     }
     // 日志
     if(cur === 0){
       E.log.innerHTML = '<div class="aw-log-line">（尚未开始）</div>';
       E.ribbon.innerHTML = '<span style="font-size:12.5px;color:#94a3b8">随演示逐个点亮…</span>';
     } else {
-      var d = el('div', 'aw-log-line ' + (sn.cls || 'step'), sn.log || '');
+      var d = el('div', 'aw-log-line ' + (sn.cls || 'step'), safeHtml(sn.log || ''));
       E.log.appendChild(d);
+      texify(d);
       E.log.scrollTop = E.log.scrollHeight;
       if(sn.ribbon){
         var c = el('div', 'aw-chip pop ' + (sn.ribbon.ok ? 'ok' : 'miss'));
@@ -63,8 +91,9 @@
     }
     if(sn.done && E.result){
       E.big.textContent = E.result.big;
-      E.desc.innerHTML = E.result.html;
+      E.desc.innerHTML = safeHtml(E.result.html);
       E.resultBox.classList.add('show');
+      texify(E.resultBox);
     }
     if(cur >= E.snaps.length - 1) stopPlay();
   }
@@ -116,41 +145,63 @@
         var q = null;
         for (var i = 0; i < qs.length; i++) if (qs[i].id === id) { q = qs[i]; break; }
         if (!q) return;
-        var fixImg = function(h){
+        // 题库 stem/options 里有两种历史写法：HTML 的 <img src="images/…">（含 content-images/）
+        // 与 markdown 的 ![](images/…png)。统一转成路径改写到 ../images/ 的 <img>。
+        // 最后过一道 safeHtml：题干数学式里的裸 <（如 (-1<x<1)）不再破坏 DOM 结构。
+        var fixHtml = function(h){
           var s = String(h || '');
+          s = s.replace(/!\[([^\]]*)\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g, function(_, alt, src){
+            return '<img src="' + src.replace(/"/g, '%22') + '" alt="' + alt.replace(/"/g, '&quot;') + '">';
+          });
           s = s.replace(/src=["'](\/?content-images\/)/g, 'src="../images/');
           s = s.replace(/src=["'](images\/)/g, 'src="../images/');
-          return s;
+          return safeHtml(s);
         };
         var opts = '';
         if (q.options && q.options.length) {
           opts = '<div class="aw-qopts">' + q.options.map(function(o){
             return '<div class="aw-qopt"><span class="aw-qletter">' + o.letter +
-              '</span><span class="aw-qtext">' + fixImg(o.html || '') + '</span></div>';
+              '</span><span class="aw-qtext">' + fixHtml(o.html || '') + '</span></div>';
           }).join('') + '</div>';
         }
         var tags = (q.tags || []).map(function(t){ return '<span class="aw-qtag">' + t + '</span>'; }).join(' ');
-        var ansTxt = q.answerLetter ? ('<b>' + q.answerLetter + '</b>') :
-          (q.answer && q.answer !== '略'
-            ? '<b>' + (/[\\^_{}]/.test(String(q.answer)) ? '$' + String(q.answer).slice(0, 60) + '$' : String(q.answer).slice(0, 40)) + '</b>'
-            : '见下方结论卡');
+        // 参考答案：裸 TeX 公式必须整体进 $…$，绝不能按字符数截断——
+        // 截断会把 \mathrm/\mathcal 切成 \math 残片，KaTeX 失败后原样露码。
+        var ansRaw = String(q.answer == null ? '' : q.answer).trim().replace(/\r\n?/g, ' ');
+        var ansTxt;
+        if (q.answerLetter) {
+          ansTxt = '<b>' + q.answerLetter + '</b>';
+        } else if (!ansRaw || ansRaw === '略') {
+          ansTxt = '见下方结论卡';
+        } else if (ansRaw.indexOf('$') >= 0) {
+          ansTxt = '<b>' + safeHtml(ansRaw) + '</b>';          // 题库已带 $…$ 定界符：原样交给渲染
+        } else if (/[\\^_{}]/.test(ansRaw)) {
+          ansTxt = '<b>$' + ansRaw + '$</b>';                  // 裸 TeX：整体包裹
+        } else {
+          ansTxt = '<b>' + safeHtml(ansRaw.length > 80 ? ansRaw.slice(0, 80) + '…' : ansRaw) + '</b>';
+        }
         var box = document.createElement('details');
         box.className = 'aw-question';
-        box.open = true;
+        // 站点规范：高屏（舞台卡锁视口高的同一断点）下题目卡默认折叠，避免把舞台顶出首屏
+        box.open = !(window.matchMedia &&
+          window.matchMedia('(min-width: 1200px) and (min-height: 860px)').matches);
         box.innerHTML = '<summary>📋 题目与选项 · ' + id + '（全屏时也在）</summary>' +
           '<div class="aw-qbody">' +
-          '<div class="aw-qstem">' + fixImg(q.stemHtml || q.stem || '') + '</div>' + opts +
+          '<div class="aw-qstem">' + fixHtml(q.stemHtml || q.stem || '') + '</div>' + opts +
           '<div class="aw-qmeta">参考答案：' + ansTxt + (tags ? '　' + tags : '') + '</div>' +
           '</div>';
         root.insertBefore(box, root.firstChild);
-        if (window.renderMathInElement) {
-          try {
-            window.renderMathInElement(box, {
-              delimiters: [{ left: '$$', right: '$$', display: true }, { left: '$', right: '$', display: false }],
-              throwOnError: false,
-            });
-          } catch (e) {}
+        // 图片加载失败（图源缺失）时换成占位说明，不显示破图图标
+        var imgs = box.querySelectorAll('img');
+        for (var im = 0; im < imgs.length; im++) {
+          imgs[im].addEventListener('error', function(){
+            var ph = document.createElement('span');
+            ph.className = 'aw-img-missing';
+            ph.textContent = '（配图缺失：' + (this.getAttribute('src') || '') + '）';
+            if (this.parentNode) this.parentNode.replaceChild(ph, this);
+          });
         }
+        texify(box);
       }).catch(function(){ /* file:// 打开或离线时静默跳过 */ });
     } catch (e) {}
   }
@@ -203,6 +254,9 @@
     E.speed = $('awSpeed'); E.playBtn = $('awPlay');
     E.introText = cfg.intro || '点击「▶ 播放」或「下一步」开始演示。';
     if(cfg.ribbonTitle) $('awRibbonTitle').textContent = cfg.ribbonTitle;
+    // 标题/副标题常含 $…$ 公式（如 m2-2012-20 的标题），引擎负责渲染
+    texify(root.querySelector('h1'));
+    texify(root.querySelector('.sub'));
 
     $('awNext').onclick = function(){ stopPlay(); goto(E.cur + 1); };
     $('awPrev').onclick = function(){ stopPlay(); goto(E.cur - 1); };
