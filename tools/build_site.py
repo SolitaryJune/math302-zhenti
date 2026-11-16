@@ -55,8 +55,8 @@ def type_key(raw: str) -> str:
 def imgfix(html: str, rel: str) -> str:
     """把题面里的本地图片引用改写为带层级前缀的相对路径（深度 2 页面需 ../../）。"""
     return (html
-            .replace('src="/content-images/', f'src="{rel}images/')
-            .replace('src="content-images/', f'src="{rel}images/')
+            .replace("/content-images/", rel + "images/")
+            .replace("content-images/", rel + "images/")
             .replace('src="/images/', f'src="{rel}images/')
             .replace('src="images/', f'src="{rel}images/')
             .replace('href="/images/', f'href="{rel}images/')

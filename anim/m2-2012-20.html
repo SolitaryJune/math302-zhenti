@@ -80,11 +80,8 @@ AW.init({
   title: '证明 $x\\ln\\dfrac{1+x}{1-x}+\\cos x\\ge 1+\\dfrac{x^2}{2}$',
   subtitle: '考点：不等式证明 · 拆块放缩 · 偶性延拓',
   intro: '点击「▶ 播放」逐步展开推理链。',
-  /* 统一 render：复刻引擎默认的 sn.html 行为，再对舞台做公式渲染 */
-  render: function(stage, sn){
-    if(sn.html != null) stage.innerHTML = sn.html;
-    renderMathAfterSnap(stage);
-  },
+  /* 引擎默认 render 已包含：safeHtml 防 (-1<x<1) 类裸 < 吞内容 + 舞台 KaTeX 渲染，
+   * 此处不再自定义 render（自定义会绕过引擎的转义注入）。 */
   snaps: snaps,
   result: {
     big: '不等式成立，等号仅 $x=0$',
