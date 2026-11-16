@@ -193,3 +193,7 @@ body{
 @media (min-height: 860px) and (min-width: 1200px){
   .aw-side{max-height: calc(100vh - 200px); overflow-y: auto}
 }
+
+/* ===== 图片防拉伸（height:auto 保持宽高比） ===== */
+.question-body img, .answer-content img, .ref-answer img, .explain img,
+.qstem img, .aw-qstem img{max-width:100%; height:auto;}

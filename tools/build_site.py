@@ -994,7 +994,7 @@ def katex_foot(rel: str) -> str:
         '</script>')
 
 
-ASSET_VER = "20261115a"
+ASSET_VER = "20261116a"
 
 ASSET_VER_KEEP = None
 
