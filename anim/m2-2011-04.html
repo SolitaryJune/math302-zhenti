@@ -91,5 +91,27 @@ AW.init({
   },
 });
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：非齐次特解形式——为什么撞上特征根要乘 x</h2>
+<p>答案：C</p>
+<h3>第一步：先懂机制——指数函数是求导算子的「特征函数」</h3>
+<p>对常系数算子 $L[y]=y''-\lambda^2y$，代入 $y=\mathrm e^{\mu x}$ 只是把函数「原样吐出再乘个系数」：</p>
+<p>$$L\bigl[\mathrm e^{\mu x}\bigr]=(\mu^2-\lambda^2)\,\mathrm e^{\mu x}.$$</p>
+<p>这就是特解总往 $\mathrm e^{\mu x}$ 形状上猜的原因。但若右端的 $\mu$ 恰好是特征方程 $r^2-\lambda^2=0$ 的根，系数 $\mu^2-\lambda^2=0$——<strong>不管前面乘多大的常数，输出永远是 $0$</strong>，平衡不了右端。这就是「共振」，出路是换试探函数 $x\,\mathrm e^{\mu x}$。直接求导可算出</p>
+<p>$$L\bigl[x\,\mathrm e^{\lambda x}\bigr]=2\lambda\,\mathrm e^{\lambda x},\qquad L\bigl[x\,\mathrm e^{-\lambda x}\bigr]=-2\lambda\,\mathrm e^{-\lambda x},$$</p>
+<p>输出非零且正比于右端项——正好能匹配。所以「指数是几重特征根就乘几个 $x$」不是口诀，而是「常数失效、一次生效」的必然。</p>
+<h3>第二步：先解特征方程，再逐项对号</h3>
+<p>齐次方程 $y''-\lambda^2y=0$ 的特征方程 $r^2-\lambda^2=0$，两根 $r=\pm\lambda$（$\lambda&gt;0$，相异单根）。右端按叠加原理拆成两项，各自对号：</p>
+<table><thead><tr><th>右端项</th><th>指数</th><th>与特征根关系</th><th>特解形状</th></tr></thead><tbody><tr><td>$\mathrm e^{\lambda x}$</td><td>$\lambda$</td><td>恰为单根，共振</td><td>$ax\,\mathrm e^{\lambda x}$</td></tr><tr><td>$\mathrm e^{-\lambda x}$</td><td>$-\lambda$</td><td>恰为单根，共振</td><td>$bx\,\mathrm e^{-\lambda x}$</td></tr></tbody></table>
+<h3>第三步：叠加合并——为什么系数必须 $a$、$b$ 分开</h3>
+<p>$$y^*=ax\,\mathrm e^{\lambda x}+bx\,\mathrm e^{-\lambda x}=x\bigl(a\,\mathrm e^{\lambda x}+b\,\mathrm e^{-\lambda x}\bigr),$$</p>
+<p>即选项 C。系数不能合并：由第一步的计算，匹配右端要求 $2\lambda a=1$ 且 $-2\lambda b=1$，解得 $a=\frac{1}{2\lambda},\ b=-\frac{1}{2\lambda}$，甚至一正一负；若强行共用一个系数，两个方程不可能同时满足。</p>
+<h3>易错点</h3>
+<ul><li><strong>不乘 $x$（误选 A）</strong>：两项都与特征根共振，$L\bigl[a\,\mathrm e^{\pm\lambda x}\bigr]=0$，代入后左端输出为零，无法平衡右端。</li><li><strong>乘 $x^2$（误选 D）</strong>：升幂次数等于特征根的<strong>重数</strong>；$x^2$ 是二重根才用的，这里 $\pm\lambda$ 都只是单根，过度升幂。</li><li><strong>系数合并（误选 A、B）</strong>：$\mathrm e^{\lambda x}$ 与 $\mathrm e^{-\lambda x}$ 线性无关，比较系数时必须分开设 $a$、$b$，共用一个系数连方程都凑不平。</li></ul>
+<blockquote>结论：选 <strong>C</strong>。共振时「常数失效、乘 $x$ 生效」，升幂个数 = 特征根重数，两个指数各自配各自的系数。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

@@ -106,5 +106,28 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：特征值全相同的矩阵判相似——用秩 $r(B-E)$ 比几何重数</h2>
+<p>答案：A</p>
+<h3>第一步：先懂机制——特征值筛不动时，秩是裁判</h3>
+<p>目标矩阵 $A=\begin{pmatrix}1&amp;1&amp;0\\0&amp;1&amp;1\\0&amp;0&amp;1\end{pmatrix}$ 与四个选项都是对角线全 $1$ 的上三角矩阵，特征值全是三重 $\lambda=1$——<strong>比特征值毫无区分度</strong>。相似还有一道必过的关卡：<strong>线性无关特征向量的个数（几何重数）必须相同</strong>。</p>
+<p>为什么相似就锁定了 $r(B-E)$？若 $B=P^{-1}AP$，则</p>
+<p>$$B-E=P^{-1}(A-E)P,$$</p>
+<p>可逆矩阵左右乘不改变秩，故 $r(A-E)$ 是<strong>相似不变量</strong>。而齐次方程组 $(A-E)x=0$ 的解空间维数 $=3-r(A-E)$，正是属于 $\lambda=1$ 的特征向量个数——秩通过"解空间维数"这个桥梁控制几何重数。于是本题判据就一条：</p>
+<p>$$A\sim B\ \Longleftrightarrow\ r(B-E)=r(A-E)\quad(\text{本题情形}).$$</p>
+<p>（用约当块的语言说：三重特征值 $1$ 下，$r(B-E)=2,1,0$ 分别对应一个 3 阶块、一个 2 阶块加一个 1 阶块、三个 1 阶块——秩相同则块结构相同，所以本题情形下这条判据是充要的。）</p>
+<h3>第二步：算出标尺 $r(A-E)=2$</h3>
+<p>$$A-E=\begin{pmatrix}0&amp;1&amp;0\\0&amp;0&amp;1\\0&amp;0&amp;0\end{pmatrix},\qquad r(A-E)=2,\qquad \text{几何重数}=3-2=1.$$</p>
+<p>候选必须同样满足 $r(B-E)=2$：即属于 $\lambda=1$ 的线性无关特征向量也只有一个（"同样亏损"）。</p>
+<h3>第三步：逐个算 $r(B-E)$ 对号入座</h3>
+<table><thead><tr><th>选项</th><th>$B-E$ 的非零结构</th><th>秩</th><th>判定</th></tr></thead><tbody><tr><td>A</td><td>$(0,1,-1)$ 与 $(0,0,1)$，首非零元错列</td><td>$2$</td><td>✓ 与标尺一致</td></tr><tr><td>B</td><td>$(0,0,-1)$ 与 $(0,0,1)$，成比例</td><td>$1$</td><td>✗</td></tr><tr><td>C</td><td>只有 $(0,1,-1)$ 一行</td><td>$1$</td><td>✗</td></tr><tr><td>D</td><td>只有 $(0,0,-1)$ 一行</td><td>$1$</td><td>✗</td></tr></tbody></table>
+<p>只有 A 的 $r(B-E)=2$：几何重数同为 $1$，与 $A$ 结构一致；B、C、D 的几何重数为 $2$，特征向量比 $A$ 多，不可能相似。</p>
+<h3>易错点</h3>
+<ul><li><strong>误选 B</strong>：看到 $B-E$ 有两行非零就报秩 $2$——两行 $(0,0,-1)$、$(0,0,1)$ 成比例，秩只有 $1$，几何重数 $2\ne1$。</li><li><strong>误选 C、D</strong>：以为对角元相同就相似——特征值（代数重数）相同只是必要条件，本题真正的坎在几何重数。</li><li><strong>只用 $\det(B-\lambda E)$ 验证</strong>：本题四个矩阵特征值完全一样，这一步什么也筛不出来，等于没做。</li></ul>
+<blockquote>结论：特征值全相同 ⇒ 相似判据退化为相似不变量 $r(B-E)$；标尺 $r(A-E)=2$（几何重数 $1$），只有 A 对号，选 A。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

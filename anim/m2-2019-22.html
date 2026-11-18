@@ -99,5 +99,27 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：向量组等价的判定（秩的口径 + 临界值讨论）</h2>
+<p><strong>答案</strong>：向量组 I 与 II 等价当且仅当 $a\ne-1$；此时 $\boldsymbol\beta_3=\boldsymbol\alpha_1-\boldsymbol\alpha_2+\boldsymbol\alpha_3$。</p>
+<h3>第一步：等价的判据与满秩情形</h3>
+<p>等价 $\iff$ 互相可线性表示 $\iff$ $r(\text{I})=r(\text{II})=r(\text{I},\text{II})$。三阶情形先算行列式定满秩：</p>
+<p>$$\lvert\alpha_1,\alpha_2,\alpha_3\rvert=1-a^2\ (\text{第三行减第一行的}\ 4\ \text{倍后展开}),\qquad \lvert\beta_1,\beta_2,\beta_3\rvert=2(a^2-1).$$</p>
+<p>$a\ne\pm1$ 时两个行列式都非零，两组都是 $\mathbb R^3$ 的基，必等价——先拿下主体情形。</p>
+<h3>第二步：临界值 a = ±1 逐个验</h3>
+<p>注意 $\alpha_3$ 的第三个分量只含 $a^2$，故 $a=1$ 与 $a=-1$ 时向量组 I 完全相同，差别全在 II：</p>
+<ul><li><strong>$a=1$</strong>：$\alpha_3=(1,2,4)^{\mathsf T}=2\alpha_1-\alpha_2$，$r(\text{I})=2$，$\mathrm{span}(\text{I})=\{(u,v,4u)^{\mathsf T}\}$。此时 $\beta_1=(1,1,4)^{\mathsf T}$、$\beta_2=(0,2,0)^{\mathsf T}$、$\beta_3=(1,3,4)^{\mathsf T}$ 全部落入该平面，且 $\alpha_2=\beta_1-\tfrac12\beta_2$ 也落在 $\mathrm{span}(\text{II})$ 内——两个 2 维空间相同，<strong>等价</strong>。</li><li><strong>$a=-1$</strong>：$\beta_1=(1,1,2)^{\mathsf T}$，第三分量 $2$ 不满足平面规律（$2\ne4\cdot1$），故 $\beta_1\notin\mathrm{span}(\text{I})$，$r(\text{I},\text{II})=3\ne2$，<strong>不等价</strong>。</li></ul>
+<p>结论：等价 $\iff a\ne-1$。</p>
+<h3>第三步：解 $\beta_3$ 的表示式</h3>
+<p>设 $k_1\alpha_1+k_2\alpha_2+k_3\alpha_3=\beta_3$，按分量比较：</p>
+<p>$$\begin{cases}k_1+k_2+k_3=1,\\ k_1+2k_3=3,\\ 4k_1+4k_2+(a^2+3)k_3=a^2+3.\end{cases}$$</p>
+<p>第三式减第一式的 4 倍：$(a^2-1)k_3=a^2-1$，$a\ne\pm1$ 时 $k_3=1$；代回第二式 $k_1=3-2=1$；再由第一式 $k_2=-1$。验证：$\alpha_1-\alpha_2+\alpha_3=(1,\ 3,\ a^2+3)^{\mathsf T}=\beta_3$，对一切 $a$ 成立；$a=1$ 时表示不唯一，但这一组依然有效。</p>
+<h3>易错点</h3>
+<ul><li><strong>算完 $a\ne\pm1$ 就收工</strong>：临界值必须单独讨论；正确答案是"$a\ne-1$"，不是"$a\ne\pm1$"。</li><li><strong>用 $r(\text{I})=r(\text{II})$ 就判等价</strong>：秩相等不代表张成空间相同——$a=-1$ 时两组秩都是 $2$ 却不等价。</li><li><strong>表示式只在满秩时宣称</strong>：$\alpha_1-\alpha_2+\alpha_3=\beta_3$ 与 $a$ 无关，$a=1$ 时同样成立，别把结论写窄。</li></ul>
+<blockquote>结论：$a\ne-1$ 时两向量组等价；$\boldsymbol\beta_3=\boldsymbol\alpha_1-\boldsymbol\alpha_2+\boldsymbol\alpha_3$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

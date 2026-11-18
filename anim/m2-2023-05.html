@@ -110,5 +110,24 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：含 |t| 的参数方程——先分段消参，再逐级验导</h2>
+<p>答案：C</p>
+<h3>第一步：分段消参得显式 f(x)</h3>
+<ul><li>$t\ge0$：$|t|=t$，$x=2t+t=3t$，$y=t\sin t$，代入 $t=\dfrac x3$ 得 $f(x)=\dfrac x3\sin\dfrac x3$（$x\ge0$）。</li><li>$t&lt;0$：$|t|=-t$，$x=t$，$y=-t\sin t$，得 $f(x)=-x\sin x$（$x&lt;0$）。</li></ul>
+<p>两段在 $x=0$ 处函数值都是 0，$f$ 连续。</p>
+<h3>第二步：f'(0) 存在，且 f'(x) 连续</h3>
+<p>$x&gt;0$ 时 $f'(x)=\dfrac13\sin\dfrac x3+\dfrac x9\cos\dfrac x3\to0$；$x&lt;0$ 时 $f'(x)=-\sin x-x\cos x\to0$。再用定义确认 $f'(0)$：差商 $\dfrac{f(x)-f(0)}x$ 右侧为 $\dfrac{\sin(x/3)}3\to0$，左侧为 $-\sin x\to0$，故 $f'(0)=0$ 存在。又 $\lim\limits_{x\to0}f'(x)=0=f'(0)$，所以 $f'(x)$ 在 $x=0$ 处连续。</p>
+<h3>第三步：f''(0) 用导数定义的左右极限判</h3>
+<p>$$\lim_{x\to0^+}\frac{f'(x)-f'(0)}x=\lim_{x\to0^+}\Bigl(\frac{\sin(x/3)}{3x}+\frac{\cos(x/3)}9\Bigr)=\frac19+\frac19=\frac29,$$</p>
+<p>$$\lim_{x\to0^-}\frac{f'(x)-f'(0)}x=\lim_{x\to0^-}\Bigl(-\frac{\sin x}x-\cos x\Bigr)=-1-1=-2.$$</p>
+<p>$\dfrac29\neq-2$，$f''(0)$ 不存在。</p>
+<h3>易错点</h3>
+<ul><li><strong>跳过消参直接对 t 用公式</strong>：$x=2t+|t|$ 在 $t=0$ 处 $\dfrac{\mathrm dx}{\mathrm dt}$ 左 1 右 3，参数求导公式失效，必须回到分段显式表达式。</li><li><strong>用 $\lim f''(x)$ 代替定义判 $f''(0)$</strong>：本题两侧极限恰好不等、结论碰巧一致，但规范做法是对 $f'$ 用定义取左右极限。</li></ul>
+<blockquote>一句话结论：$f'$ 存在且连续、$f''(0)$ 左右不等不存在，选 C。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

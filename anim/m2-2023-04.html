@@ -117,5 +117,24 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：全部解有界的二阶常系数方程——特征根逐类筛查</h2>
+<p>答案：C</p>
+<h3>第一步：翻译条件</h3>
+<p>方程 $y''+ay'+by=0$ 的通解由特征方程 $r^2+ar+b=0$ 的根决定。「所有解在 $(-\infty,+\infty)$ 上有界」要求每个基本解都两头不炸，逐类筛查根型。</p>
+<h3>第二步：实根全部出局</h3>
+<ul><li>两相异实根：解含 $\mathrm e^{r_1x},\mathrm e^{r_2x}$，只要有一个根非零，$\mathrm e^{rx}$ 必在一端爆掉（两根全零与「相异」矛盾）。</li><li>二重实根 $r$：解含 $\mathrm e^{rx},\ x\mathrm e^{rx}$；即使 $r=0$，幂因子 $x$ 在 $\mathbb R$ 上照样无界。</li></ul>
+<p>结论：特征根<strong>不能是实数</strong>。</p>
+<h3>第三步：复根的情形</h3>
+<p>共轭复根 $\alpha\pm\beta\mathrm i$（$\beta\neq0$）：基本解为 $\mathrm e^{\alpha x}\cos\beta x,\ \mathrm e^{\alpha x}\sin\beta x$。振幅因子 $\mathrm e^{\alpha x}$ 在全轴有界 $\iff\alpha=0$，即<strong>纯虚根</strong> $\pm\beta\mathrm i$，此时 $y=C_1\cos\beta x+C_2\sin\beta x$ 有界。</p>
+<h3>第四步：纯虚根翻译回 a、b</h3>
+<p>韦达定理：$r_1+r_2=-a=0\Rightarrow a=0$；$r_1r_2=b=\beta^2&gt;0\Rightarrow b&gt;0$。即 $a=0,\ b&gt;0$，选 C。</p>
+<h3>易错点</h3>
+<ul><li><strong>选 B（$a&gt;0,b&gt;0$）</strong>：$x\to+\infty$ 衰减没问题，但 $x\to-\infty$ 时 $\mathrm e^{-\frac a2x}\to\infty$，「整条数轴」要求两端都有界。</li><li><strong>选 D（$a=0,b&lt;0$）</strong>：特征方程 $r^2=-b&gt;0$ 给出非零实根 $\pm\sqrt{-b}$，回到第二步出局。</li><li><strong>漏掉幂因子</strong>：重根情形即使指数有界，$x\mathrm e^{rx}$ 中的 $x$ 也会破坏有界性。</li></ul>
+<blockquote>一句话结论：全轴有界 $\iff$ 纯虚根 $\iff a=0$ 且 $b&gt;0$，选 C。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

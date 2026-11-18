@@ -101,5 +101,26 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：$y=\ln\cos x$ 的弧长——根号里化成完全平方才算快</h2>
+<p>答案：$\dfrac12\ln3$（即 $\ln\sqrt3$）</p>
+<h3>第一步：套弧长公式，先求导</h3>
+<p>$$s=\int_0^{\frac{\pi}{6}}\sqrt{1+y'^2}\,\mathrm{d}x,\qquad y'=\frac{-\sin x}{\cos x}=-\tan x.$$</p>
+<p>公式的来历是微元：把曲线切成小段，每段长 $\mathrm{d}s=\sqrt{(\mathrm{d}x)^2+(\mathrm{d}y)^2}$，代入 $\mathrm{d}y=y'\,\mathrm{d}x$ 即得 $\mathrm{d}s=\sqrt{1+y'^2}\,\mathrm{d}x$——根号里的 $1+y'^2$ 就是"横走 $1$、纵走 $y'$"的勾股和。</p>
+<h3>第二步：根号内化简</h3>
+<p>$$1+y'^2=1+\tan^2x=\sec^2x\ \Longrightarrow\ \sqrt{1+y'^2}=\sec x.$$</p>
+<p>最后一步去根号用了 $[0,\dfrac{\pi}{6}]$ 上 $\cos x&gt;0$、$\sec x&gt;0$，绝对值直接脱落。</p>
+<h3>第三步：用 $\int\sec x\,\mathrm{d}x$ 的现成公式</h3>
+<p>$$s=\int_0^{\frac{\pi}{6}}\sec x\,\mathrm{d}x=\Big[\ln\lvert\sec x+\tan x\rvert\Big]_0^{\frac{\pi}{6}}.$$</p>
+<p>公式来历：被积式同乘 $\dfrac{\sec x+\tan x}{\sec x+\tan x}$，分子恰为 $(\sec x+\tan x)'=\sec x\tan x+\sec^2x$，对数积分一步到位。</p>
+<p>上限处 $\sec\dfrac{\pi}{6}=\dfrac{2}{\sqrt3},\ \tan\dfrac{\pi}{6}=\dfrac{1}{\sqrt3}$，相加得 $\dfrac{3}{\sqrt3}=\sqrt3$；下限处 $\sec0+\tan0=1$，$\ln1=0$。故</p>
+<p>$$s=\ln\sqrt3=\frac12\ln3.$$</p>
+<h3>易错点</h3>
+<ul><li><strong>$\int\sec x\,\mathrm{d}x$ 公式没背</strong>：它是 $\ln\lvert\sec x+\tan x\rvert+C$，考场现场推导（同乘 $\dfrac{\sec x+\tan x}{\sec x+\tan x}$）很费时间。</li><li><strong>去根号不讨论符号</strong>：区间上 $\cos x&gt;0$ 才能直接写 $\sec x$；若区间跨过 $\dfrac{\pi}{2}$ 就得拆段处理。</li><li><strong>弧长公式记错</strong>：根号内是 $1+y'^2$，写成 $\int\sqrt{1+y'}\,\mathrm{d}x$ 就全错了。</li></ul>
+<blockquote>一句话结论：$y'=-\tan x$ 使 $1+y'^2=\sec^2x$，弧长 $s=\int_0^{\pi/6}\sec x\,\mathrm{d}x=\ln\sqrt3=\dfrac12\ln3$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

@@ -101,5 +101,26 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：两个二次积分合并区域 + 对称性消项化成面积</h2>
+<p>答案：C（$\dfrac73$）</p>
+<h3>第一步：先懂机制——为什么先"拼区域"再"用对称"</h3>
+<p>两个二次积分的被积函数同为 $1-xy$、上限同为 $y=2-x^2$，只有下限不同。注意到 $x\in[-1,0]$ 时 $-x=|x|$、$x\in[0,1]$ 时 $x=|x|$，两块下限其实同为 $|x|$——拼成一个整体区域之后，才谈得上"区域关于 $y$ 轴对称"，而对称性正是本题省算力的全部来源：</p>
+<p>$$D:\ -1\le x\le1,\quad |x|\le y\le2-x^2,\qquad I=\iint_D(1-xy)\,dx\,dy.$$</p>
+<p>（区域非空：$2-x^2\ge|x|\iff x^2+|x|-2\le0\iff|x|\le1$，与 $x$ 的范围吻合。）</p>
+<h3>第二步：对称性为什么能把 $xy$ 项清零</h3>
+<p>$D$ 关于 $y$ 轴对称：把 $x$ 换成 $-x$，上下限 $2-x^2$、$|x|$ 都不变，区域原地不动。而被积函数里的 $xy$ 满足 $(-x)y=-xy$，是 $x$ 的奇函数——<strong>对称区域内点成对出现 $(x,y)$ 与 $(-x,y)$，$xy$ 一正一负恰好抵消</strong>，故</p>
+<p>$$\iint_Dxy\,dx\,dy=0,\qquad I=\iint_D1\,dx\,dy=S(D).$$</p>
+<p>问题退化为求面积，计算量骤减。</p>
+<h3>第三步：算面积（对称性再省一半）</h3>
+<p>$D$ 与被积函数 $1$ 都左右对称，右半算一遍乘 $2$ 即可：</p>
+<p>$$S(D)=\int_{-1}^{1}\left[(2-x^2)-|x|\right]dx=2\int_0^1(2-x^2-x)\,dx=2\left(2-\frac13-\frac12\right)=2\times\frac76=\frac73.$$</p>
+<h3>易错点</h3>
+<ul><li><strong>误选 D（$\dfrac76$）</strong>：恰是只积右半 $x\in[0,1]$ 的值——对称区间要"算一半、乘 $2$"补全左半。</li><li><strong>误选 A、B（$\dfrac53$）</strong>：恰是 $\int_0^1(2-x^2)\,dx=2-\dfrac13$，即把区域下边界当成 $x$ 轴、忘了减去 $|x|$ 下方那部分——下边界是曲线 $y=|x|$，不是 $x$ 轴。</li><li><strong>硬算 $xy$ 项</strong>：先积 $\iint xy$ 再相减能得到同样结果但繁得多；看出奇对称后整项为零。</li><li><strong>区域拼错</strong>：把下限统一当成 $x$ 或 $-x$（不分正负半轴），会拼出不再关于 $y$ 轴对称的区域，对称性随之失效。</li></ul>
+<blockquote>结论：合并成 $D:\ |x|\le y\le2-x^2$；$xy$ 关于 $x$ 是奇函数、区域关于 $y$ 轴对称 ⇒ 该项为零；$I=S(D)=2\times\dfrac76=\dfrac73$，选 C。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

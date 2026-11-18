@@ -102,5 +102,28 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：拐点判定——$y''=0$ 只是候选，凹凸性真的变号才作数</h2>
+<p>答案：B（拐点为 $(\pi,-2)$）</p>
+<h3>第一步：先立机制——拐点是什么，为什么盯住 $y''$ 的符号</h3>
+<p>拐点是<strong>凹凸性发生改变的分界点</strong>，而凹凸性由 $y''$ 的符号决定：$y''&lt;0$ 凸（往下弯）、$y''&gt;0$ 凹（往上弯）。所以判定流程固定两拍：解 $y''=0$ 拿<strong>候选</strong>，再验两侧符号是否真的互换。</p>
+<p><strong>为什么 $y''=0$ 只是必要条件？</strong> $y''$ 连续时符号要变必须先穿过 $0$，故变号点必满足 $y''=0$；但反过来 $y''=0$ 不强求变号——$y=x^4$ 在 $x=0$ 处 $y''=0$ 却两侧都凹，曲线只是"直了一下"。</p>
+<h3>第二步：算 $y''$，锁定候选横坐标</h3>
+<p>$$y'=x\cos x-\sin x,\qquad y''=-x\sin x.$$</p>
+<p>在开区间 $\left(-\dfrac{\pi}{2},\,2\pi\right)$ 内令 $y''=0$，得候选点 $x=0$ 与 $x=\pi$。</p>
+<h3>第三步：逐点验证两侧凹凸性是否互换</h3>
+<p>$y''=-x\sin x$ 的符号由 $x$ 与 $\sin x$ 共同决定。关键观察：$0$ 附近 $x$ 与 $\sin x$ <strong>同号</strong>（$x&lt;0$ 时 $\sin x&lt;0$，$x&gt;0$ 时 $\sin x&gt;0$），故乘积 $x\sin x$ 恒正：</p>
+<table><thead><tr><th>候选点</th><th>左侧 $y''$</th><th>右侧 $y''$</th><th>是否变号</th><th>判定</th></tr></thead><tbody><tr><td>$x=0$</td><td>$-$</td><td>$-$</td><td>不变号，两侧都凸</td><td>淘汰</td></tr><tr><td>$x=\pi$</td><td>$-$（$\sin x&gt;0$）</td><td>$+$（$\sin x&lt;0$）</td><td>变号</td><td><strong>入选</strong></td></tr></tbody></table>
+<p>$x=0$ 正是本题埋的陷阱：它像 $x^4$ 的二阶导那样"路过零点"，凹凸性没有换向，所以 $(0,2)$ 不是拐点。</p>
+<h3>第四步：算纵坐标，并排掉 C、D</h3>
+<p>$y(\pi)=\pi\sin\pi+2\cos\pi=0-2=-2$，故拐点为 $(\pi,-2)$，选 B。</p>
+<p>C、D 两点连候选资格都没有：$y''\left(\dfrac{\pi}{2}\right)=-\dfrac{\pi}{2}$、$y''\left(\dfrac{3\pi}{2}\right)=\dfrac{3\pi}{2}$，都不满足 $y''=0$ 这条必要条件——它们只是曲线上的普通点，错在只看"点在曲线上"而没查必要条件。</p>
+<h3>易错点</h3>
+<ul><li><strong>只解 $y''=0$ 不验变号</strong>：会误选 A。$y''=0$ 是必要而非充分条件，凹凸性必须真的互换。</li><li><strong>把 $(0,2)$ 当拐点</strong>：$x=0$ 两侧 $y''$ 同为负，与 $y=x^4$ 的 $x=0$ 同款陷阱。</li><li><strong>忽视定义域</strong>：区间是 $-\dfrac{\pi}{2}&lt;x&lt;2\pi$，端点不在讨论范围内。</li></ul>
+<blockquote>一句话结论：$y''=-x\sin x$；$x=0$ 两侧不变号淘汰（$x$ 与 $\sin x$ 同号），$x=\pi$ 两侧由凸变凹入选，拐点 $(\pi,-2)$，选 B。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

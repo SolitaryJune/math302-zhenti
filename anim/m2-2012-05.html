@@ -110,5 +110,23 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：偏导定方向，增量公式定"稳不稳"</h2>
+<p>答案：D</p>
+<h3>第一步：把偏导符号翻译成单调方向</h3>
+<p>$\dfrac{\partial f}{\partial x}&gt;0$：固定 $y$，$f$ 随 $x$ 增大而增大；$\dfrac{\partial f}{\partial y}&lt;0$：固定 $x$，$f$ 随 $y$ 增大而<strong>减小</strong>。目标 $f(x_1,y_1)&lt;f(x_2,y_2)$ 说白了是"从点 1 走到点 2 时 $f$ <strong>必定</strong>上升"——注意"必定"二字：要求对所有满足偏导条件的 $f$ 都成立，不是碰运气。</p>
+<h3>第二步：增量公式拆两项，符号要同向</h3>
+<p>$$f(x_2,y_2)-f(x_1,y_1)=f_x(\xi,y_1)(x_2-x_1)+f_y(x_2,\eta)(y_2-y_1).$$</p>
+<p>系数符号恒定（$f_x&gt;0$，$f_y&lt;0$），要差值对一切 $f$ 稳定为正，必须两项同时为正：$x_2-x_1&gt;0$ 且 $y_2-y_1&lt;0$，即 $x_1&lt;x_2$ 且 $y_1&gt;y_2$。</p>
+<p><strong>为什么两项打架就不行？</strong> 偏导条件只给符号、不给大小，正项可能压不过负项。用合规的函数 $f(x,y)=x-y$（$f_x=1&gt;0$，$f_y=-1&lt;0$）做特例验证：B 的条件（$x_1&gt;x_2,\ y_1&gt;y_2$）下，点 $1=(10,1)$、点 $2=(1,0)$ 给 $f_1=9&gt;f_2=1$；换点 $1=(2,10)$、点 $2=(1,1)$ 给 $f_1=-8&lt;f_2=0$——同一个 $f$ 两种结局都有。C 的条件（$x_1&lt;x_2,\ y_1&lt;y_2$）同理：点 $1=(1,0)$、点 $2=(2,5)$ 给 $f_1=1&gt;f_2=-3$；点 $1=(1,0)$、点 $2=(10,1)$ 给 $f_1=1&lt;f_2=9$。都不充分。</p>
+<h3>第三步：逐项排查</h3>
+<table><thead><tr><th>选项</th><th>$x$ 方向贡献</th><th>$y$ 方向贡献</th><th>能保证 $f$ 升吗</th></tr></thead><tbody><tr><td>A（$x_1&gt;x_2,\ y_1&lt;y_2$）</td><td>负</td><td>负</td><td>反而保证降</td></tr><tr><td>B（$x_1&gt;x_2,\ y_1&gt;y_2$）</td><td>负</td><td>正</td><td>打架，特例见上</td></tr><tr><td>C（$x_1&lt;x_2,\ y_1&lt;y_2$）</td><td>正</td><td>负</td><td>打架，特例见上</td></tr><tr><td>D（$x_1&lt;x_2,\ y_1&gt;y_2$）</td><td>正</td><td>正</td><td><strong>双保险，必升</strong></td></tr></tbody></table>
+<h3>易错点</h3>
+<ul><li><strong>一个方向占优就够了</strong>：另一坐标反向变动足以翻转结果，B、C 都不保证（特例已演示两种结局）。</li><li><strong>把 $f_y&lt;0$ 记反</strong>：$y$ 增大 $f$ 减小，想让 $f$ 变大必须 $y$ 变小，即 $y_1&gt;y_2$。</li><li><strong>只代特例找正例</strong>：找到一个函数、一组点使不等式成立，不等于"充分"；增量公式两项定号才是依据。</li></ul>
+<blockquote>一句话结论：$f$ 随 $x$ 增、随 $y$ 减，双正向变化是 $x_1&lt;x_2,\ y_1&gt;y_2$，选 D。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

@@ -102,5 +102,22 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：二重和式极限化二重积分（定积分定义的二维版）</h2>
+<p>答案：D</p>
+<h3>第一步：把通项凑成 $\dfrac{1}{n^2}f\big(\tfrac in,\tfrac jn\big)$</h3>
+<p>$$\frac{n}{(n+i)(n^2+j^2)}=\frac{n}{n\big(1+\tfrac in\big)\cdot n^2\big(1+\big(\tfrac jn\big)^2\big)}=\frac{1}{n^2}\cdot\frac{1}{\big(1+\tfrac in\big)\big(1+\big(\tfrac jn\big)^2\big)}.$$</p>
+<p>因子 $\dfrac1{n^2}=\Delta x\,\Delta y$ 是单位正方形均分 $n\times n$ 份时每格的面积，网格点为 $\big(\tfrac in,\tfrac jn\big)$，被积函数为 $f(x,y)=\dfrac{1}{(1+x)(1+y^2)}$。</p>
+<h3>第二步：确定积分区域</h3>
+<p>$i$ 与 $j$ 各自独立地从 $1$ 取到 $n$，对应 $x$ 与 $y$ 独立跑遍 $[0,1]$，两个累加之间没有任何 $y\le x$ 型的耦合，积分区域是正方形而不是三角形：</p>
+<p>$$\lim_{n\to\infty}\sum_{i=1}^{n}\sum_{j=1}^{n}\frac{n}{(n+i)(n^2+j^2)}=\int_0^1\mathrm dx\int_0^1\frac{\mathrm dy}{(1+x)(1+y^2)}.$$</p>
+<p>选 <strong>D</strong>。</p>
+<h3>易错点</h3>
+<ul><li><strong>把内层上限写成 $x$</strong>：那是把求和区域当成 $0\le y\le x$ 的三角形；本题 $i,j$ 完全独立，不存在耦合（A、B 的陷阱）。</li><li><strong>把 $n^2+j^2$ 配成 $1+y$</strong>：提因子时 $n^2+j^2=n^2\big(1+\big(\tfrac jn\big)^2\big)$，对应 $1+y^2$ 而非 $1+y$（C 的陷阱）。</li></ul>
+<blockquote>二重和式极限三步：通项凑成 $\Delta x\Delta y\cdot f\big(\tfrac in,\tfrac jn\big)$、读被积函数、读区域。选 <strong>D</strong>。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

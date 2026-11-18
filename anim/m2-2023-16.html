@@ -106,5 +106,29 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：超定方程组有解 ⟹ 增广行列式为零——一次展开直接出结果</h2>
+<p>答案：$8$</p>
+<h3>第一步：读条件的含义</h3>
+<p>方程组 4 个方程、3 个未知量。前三个方程的系数行列式恰为题给的</p>
+<p>$$D=\begin{vmatrix}a&amp;0&amp;1\\1&amp;a&amp;1\\1&amp;2&amp;a\end{vmatrix}=4\neq0,$$</p>
+<p>故整个方程组的系数矩阵（$4\times3$）秩为 3，达到满列秩。</p>
+<h3>第二步：把「有解」翻译成秩的语言</h3>
+<p>有解 $\iff$ 增广矩阵的秩也是 3。增广矩阵是 $4\times4$ 的，秩为 3 $\iff$ 其行列式为零：</p>
+<p>$$\Delta=\begin{vmatrix}a&amp;0&amp;1&amp;1\\1&amp;a&amp;1&amp;0\\1&amp;2&amp;a&amp;0\\a&amp;b&amp;0&amp;2\end{vmatrix}=0.$$</p>
+<h3>第三步：按最后一列展开</h3>
+<p>末列只有两个非零元：第 1 行的 $1$ 与第 4 行的 $2$。</p>
+<ul><li>元素 $1$（第 1 行第 4 列）：贡献 $1\cdot(-1)^{1+4}M_{14}$，而 $M_{14}=\begin{vmatrix}1&amp;a&amp;1\\1&amp;2&amp;a\\a&amp;b&amp;0\end{vmatrix}=T$ 恰是目标行列式；</li><li>元素 $2$（第 4 行第 4 列）：贡献 $2\cdot(-1)^{4+4}M_{44}$，而 $M_{44}=D=4$。</li></ul>
+<p>于是 $\Delta=-T+2D=0$。</p>
+<h3>第四步：结算与验算</h3>
+<p>$$T=2D=2\times4=8.$$</p>
+<p>复核：$D=a^3-3a+2=4$ 给 $a=-1$ 或 $a=2$；由相容条件分别解得 $b=\dfrac72$ 或 $b=-4$；把两组 $(a,b)$ 代回目标行列式，结果都是 8。</p>
+<h3>易错点</h3>
+<ul><li><strong>非要解出 a、b 再硬算</strong>：没必要，秩条件加一次展开就够；真去解还容易在展开时漏符号。</li><li><strong>代数余子式符号错</strong>：$(-1)^{1+4}=-1$，这一负号正是 $-T$ 的来源。</li><li><strong>把 4 阶行列式当方程组的解</strong>：这里是对增广矩阵用秩的条件，不是克拉默法则。</li></ul>
+<blockquote>一句话结论：有解 + 系数满秩 $\Rightarrow$ 4 阶增广行列式为 0，按末列展开得 $T=2D=8$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

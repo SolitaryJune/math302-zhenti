@@ -92,5 +92,36 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：已知一解就降阶——代 $y=u\,\mathrm e^x$ 把二阶方程降为一阶</h2>
+<p><strong>答案：$u(x)=-(2x+1)\mathrm e^{-x}$；通解 $y=C_1\mathrm e^x+C_2(2x+1)$。</strong></p>
+<h3>第 0 步：为什么设 $y=u\mathrm e^x$——降阶的机制</h3>
+<p>二阶方程已有解 $y_1=\mathrm e^x$，要找第二个解。把它写成「已知解 × 待定修正因子」$y=u(x)\,\mathrm e^x$ 不是拍脑袋：任何 $y=u\,y_1$ 代入 $ay''+by'+cy=0$，按 $u''$、$u'$、$u$ 归类后，$u$ 的系数恰为 $L[y_1]$——而 $y_1$ 是解，这一项注定消失，方程只剩 $u'$、$u''$，二阶降一阶（刘维尔公式同源）。本题可先验掉：$L[\mathrm e^x]=(2x-1)-(2x+1)+2=0$。</p>
+<h3>第一步：代入并整理</h3>
+<p>$y^{\prime}=(u^{\prime}+u)\mathrm e^x$，$y^{\prime\prime}=(u^{\prime\prime}+2u^{\prime}+u)\mathrm e^x$，代入 $(2x-1)y^{\prime\prime}-(2x+1)y^{\prime}+2y=0$ 并约去 $\mathrm e^x$：</p>
+<p>$$(2x-1)(u^{\prime\prime}+2u^{\prime}+u)-(2x+1)(u^{\prime}+u)+2u=0.$$</p>
+<h3>第二步：$u$ 的系数恰好为零——降为一阶</h3>
+<p>逐项整理系数：</p>
+<table><thead><tr><th>项</th><th>系数</th></tr></thead><tbody><tr><td>$u^{\prime\prime}$</td><td>$2x-1$</td></tr><tr><td>$u^{\prime}$</td><td>$2(2x-1)-(2x+1)=2x-3$</td></tr><tr><td>$u$</td><td>$(2x-1)-(2x+1)+2=0$</td></tr></tbody></table>
+<p>$u$ 的系数为零正是第 0 步预告的回报。于是方程降为</p>
+<p>$$(2x-1)u^{\prime\prime}+(2x-3)u^{\prime}=0.$$</p>
+<h3>第三步：令 $p=u^{\prime}$，分离变量</h3>
+<p>方程缺 $u$，正是「可降阶」的标志：令 $p=u^{\prime}$，</p>
+<p>$$(2x-1)p^{\prime}+(2x-3)p=0\ \Rightarrow\ \frac{p^{\prime}}{p}=-1+\frac{2}{2x-1}\ \Rightarrow\ p=u^{\prime}=C(2x-1)\mathrm e^{-x}.$$</p>
+<h3>第四步：再积分一次，用条件定常数</h3>
+<p>分部积分：$\displaystyle\int(2x-1)\mathrm e^{-x}\,\mathrm dx=-(2x-1)\mathrm e^{-x}-2\mathrm e^{-x}=-(2x+1)\mathrm e^{-x}$，故</p>
+<p>$$u(x)=-C(2x+1)\mathrm e^{-x}+D.$$</p>
+<p><strong>为什么恰好两个条件</strong>：$u'$ 满足一阶方程，积分出一个常数 $C$；再积一次又出一个 $D$——两个积分常数，正好被 $u(0)=-1$、$u(-1)=\mathrm e$ 两个条件钉死。代条件：$u(0)=-C+D=-1$；$u(-1)=C\mathrm e+D=\mathrm e$。两式相减得 $C=1$，$D=0$，所以</p>
+<p>$$u(x)=-(2x+1)\mathrm e^{-x}.$$</p>
+<h3>第五步：为什么通解是这两个解的叠加</h3>
+<p>$y_2=u\mathrm e^x=-(2x+1)$，即 $2x+1$ 是方程的解。二阶齐次线性方程的解空间是二维的，通解 = 两个<strong>线性无关</strong>解的任意线性叠加；判线性无关看比值：$\dfrac{2x+1}{\mathrm e^x}$ 不是常数，故无关。通解</p>
+<p>$$y=C_1\mathrm e^x+C_2(2x+1).$$</p>
+<h3>易错点</h3>
+<ul><li><strong>系数整理出错</strong>：$u^{\prime}$ 的系数 $2(2x-1)-(2x+1)=2x-3$，符号连错一步全盘皆输；$u$ 的系数若不为零，说明代错或抄错方程。</li><li><strong>分部积分丢负号</strong>：$\int(2x-1)\mathrm e^{-x}\mathrm dx=-(2x+1)\mathrm e^{-x}$，求导回验：$[-(2x+1)\mathrm e^{-x}]'=(2x-1)\mathrm e^{-x}$ ✓。</li><li><strong>条件代错位置</strong>：$u(-1)=\mathrm e$ 给在 $x=-1$ 处，代成 $u(1)$ 则 $C,D$ 全错。</li><li><strong>通解缺一项</strong>：只写 $C_1\mathrm e^x$ 是漏解；两个线性无关解一个都不能少。</li></ul>
+<blockquote>结论：$u=-(2x+1)\mathrm e^{-x}$，第二个解为 $2x+1$，通解 $y=C_1\mathrm e^x+C_2(2x+1)$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

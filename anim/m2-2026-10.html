@@ -90,5 +90,25 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：伪装的完全平方——$(A-B)^2=O$ 的幂零推理链</h2>
+<p>答案：D</p>
+<h3>第零步：机制——幂零矩阵是什么、它管住什么</h3>
+<p>数里 $(a-b)^2=a^2-2ab+b^2$；矩阵乘法不可交换，$A$ 与 $B$ 交叉时中项<strong>不合并</strong>，$(A-B)^2=A^2-AB-BA+B^2$——恰好与题设移项后的结果一字不差。记 $C=A-B$，题设就是 $C^2=O$ 且 $C\ne O$（因 $A\ne B$）。$C^2=O$ 的直译是"<strong>任何被 $C$ 作用过的向量，再过一遍 $C$ 必得零</strong>"——输出全部落在核里。一条"作用两次必归零"的算子，特征值、秩、特征向量个数全被它管住，四个选项由此展开。</p>
+<h3>第一步：A、B 成立</h3>
+<p>$C^3=C\cdot C^2=O$，A 成立。若 $C\xi=\lambda\xi$，则 $O=C^2\xi=\lambda^2\xi$，故 $\lambda=0$——特征值只能全零，B 成立。</p>
+<h3>第二步：C 成立</h3>
+<p>若 $A,B$ 都是对角矩阵，则 $C=A-B$ 也是对角矩阵；对角阵平方为零必须每个对角元的平方为零，即 $C=O$，与 $A\ne B$ 矛盾。故 C 成立。</p>
+<h3>第三步：D 错在个数</h3>
+<p>$C^2=O$ 说明 $\operatorname{Im}C\subseteq\ker C$（$C$ 的任何输出再过 $C$ 都归零），于是 $2\operatorname{rank}C\le3$；又 $C\ne O$ 排除秩 $0$，得 $\operatorname{rank}C=1$。零特征值对应的特征向量就是 $C\xi=0$ 的解——即齐次方程组 $Cx=0$ 的解空间，其维数是几何重数</p>
+<p>$$\dim\ker C=3-\operatorname{rank}C=2,$$</p>
+<p>即 $A-B$ 有 <strong>2 个</strong>线性无关的特征向量，"只有一个"不成立——D 是错误结论。</p>
+<h3>易错点</h3>
+<ul><li><strong>展开 $(A-B)^2$ 漏掉 $-BA$</strong>：不可交换时中项是 $-AB-BA$ 两项，缺一就凑不出题设条件。</li><li><strong>由特征值全零断言只有一个特征向量</strong>：特征值个数与线性无关特征向量个数是两回事，中间隔着秩与几何重数（$\dim\ker=n-\operatorname{rank}$）。</li><li><strong>忘了用 $C\ne O$ 压下界</strong>：没有它定不出 $\operatorname{rank}C=1$，个数就悬空。</li></ul>
+<blockquote>一句话结论：条件即 $(A-B)^2=O$；幂零 ⟹ 特征值全零、$\operatorname{Im}\subseteq\ker$ ⟹ 秩 $1$、几何重数 $=3-1=2$，说"只有一个"的 D 错。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

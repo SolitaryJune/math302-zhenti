@@ -91,5 +91,31 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：隐函数二阶求导 + 曲率半径</h2>
+<p>答案：$4$</p>
+<h3>第零步：机制——曲率半径公式的长相从哪来</h3>
+<p>曲率 $K$ 量的是"<strong>沿弧长每走一寸，切线方向转多少</strong>"。$y''$ 是方向变化对 $x$ 的快慢，但弧长 $ds$ 比 $dx$ 长 $\sqrt{1+y'^2}$ 倍，换算到"每单位弧长"要把这个倍数除进去，于是</p>
+<p>$$K=\frac{\lvert y''\rvert}{(1+y'^2)^{3/2}},\qquad R=\frac1K=\frac{(1+y'^2)^{3/2}}{\lvert y''\rvert}.$$</p>
+<p>直观校验：直线 $y''=0$ 时 $R=\infty$（不弯）；半径 $\rho$ 的圆处处 $K=1/\rho$，$R$ 恰等于圆的半径——所以 $R$ 就是"最密切圆"的半径，<strong>弯得越急（$\lvert y''\rvert$ 大）半径越小</strong>。本题任务只有两件事：在 $(0,1)$ 处求 $y'$、$y''$。曲线是隐式的，策略是逐阶求导、<strong>每求完一阶立即代值</strong>，二阶方程会大幅简化。</p>
+<h3>第一步：一阶导数</h3>
+<p>方程 $x^2+2\sqrt3\,xy+y^2=1$ 两边对 $x$ 求导（$y$ 是 $x$ 的函数，$xy$ 用乘积法则）：</p>
+<p>$$x+\sqrt3\,(y+xy')+yy'=0.$$</p>
+<p>代入 $(0,1)$：</p>
+<p>$$\sqrt3+y'=0\ \Longrightarrow\ y'=-\sqrt3.$$</p>
+<h3>第二步：二阶导数</h3>
+<p>对上式再求导一次（$\sqrt3xy'$ 与 $yy'$ 都是乘积，各出两项）：</p>
+<p>$$1+2\sqrt3\,y'+\sqrt3\,x\,y''+(y')^2+y\,y''=0.$$</p>
+<p>代入 $x=0,\ y=1,\ y'=-\sqrt3$（含 $x$ 的项自动消失）：</p>
+<p>$$1-6+3+y''=0\ \Longrightarrow\ y''=2.$$</p>
+<h3>第三步：代入曲率半径公式</h3>
+<p>$$R=\frac{(1+y'^2)^{3/2}}{\lvert y''\rvert}=\frac{(1+3)^{3/2}}{\lvert2\rvert}=\frac{4^{3/2}}{2}=\frac82=4.$$</p>
+<h3>易错点</h3>
+<ul><li><strong>二阶求导漏项</strong>：$\sqrt3xy'$ 与 $yy'$ 都是乘积，各出两项；最常漏的是 $(y')^2$——$yy'$ 求导时 $y'$ 自己也在变。</li><li><strong>不代值硬解 $y''$</strong>：保留 $x,y,y'$ 的表达式又繁又易错，每步立即代值是稳法。</li><li><strong>忘取绝对值</strong>：曲率半径非负，公式里是 $\lvert y''\rvert$。</li></ul>
+<blockquote>一句话结论：$y'=-\sqrt3$，$y''=2$，$R=\dfrac{(1+3)^{3/2}}{2}=4$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

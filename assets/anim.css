@@ -197,3 +197,28 @@ body{
 /* ===== 图片防拉伸（height:auto 保持宽高比） ===== */
 .question-body img, .answer-content img, .ref-answer img, .explain img,
 .qstem img, .aw-qstem img{max-width:100%; height:auto;}
+
+/* ===== 动画页内嵌文字讲解（构建期由 build_site.py 注入） ===== */
+.aw-explain{max-width:900px;margin:16px auto 0;background:#fbf3da;border:1px solid #1b3a4b26;
+  border-radius:16px;box-shadow:0 1px 3px rgba(15,23,42,.08),0 8px 24px rgba(15,23,42,.05);overflow:hidden}
+.aw-explain summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  padding:14px 18px;font-weight:700;color:#1b3a4b;user-select:none}
+.aw-explain summary::-webkit-details-marker{display:none}
+.aw-explain summary::before{content:'▸';color:#5a7d8c;transition:transform .15s}
+.aw-explain[open] summary::before{transform:rotate(90deg)}
+.aw-explain-title{font-size:15px}
+.aw-explain-sub{font-size:12px;font-weight:500;color:#586e72}
+.aw-explain-body{padding:2px 18px 18px;font-size:14px;line-height:1.8;color:#1b3a4b;border-top:1px dashed #1b3a4b1a}
+.aw-explain-body h2,.aw-explain-body h3,.aw-explain-body h4{margin:14px 0 6px;font-size:15px;color:#213e48}
+.aw-explain-body h2{font-size:17px}
+.aw-explain-body p{margin:0 0 10px}
+.aw-explain-body ul,.aw-explain-body ol{margin:6px 0 8px 22px}
+.aw-explain-body blockquote{border-left:3px solid #e07a2f;background:#efa15c17;padding:8px 12px;
+  border-radius:8px;margin:8px 0;color:#213e48}
+.aw-explain-body code{background:#1b3a4b14;padding:1px 6px;border-radius:6px;
+  font-family:"SF Mono",Menlo,Consolas,monospace;font-size:13px}
+.aw-explain-body pre{background:#213e48;color:#f5e6b8;border-radius:10px;padding:12px;overflow-x:auto;margin:8px 0}
+.aw-explain-body pre code{background:none;color:inherit}
+.aw-explain-body table{border-collapse:collapse;margin:8px 0;width:100%}
+.aw-explain-body td,.aw-explain-body th{border:1px solid #1b3a4b26;padding:6px 9px;font-size:13px;text-align:left}
+.aw-explain-body th{background:#1b3a4b14;font-weight:700}

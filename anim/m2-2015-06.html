@@ -102,5 +102,28 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：双曲线扇形区域——极坐标为什么一步到位</h2>
+<p>答案：<strong>B</strong>。</p>
+<h3>第 0 步：先立机制——选坐标系的标准是"让边界变简单"</h3>
+<p>两条直线 $y=x,\ y=\sqrt3x$ 过原点——极坐标下 $\theta=$ 常数；两条曲线 $2xy=1,\ 4xy=1$ 是"乘积为常数"的双曲线——极坐标下 $r$ 只依赖 $\theta$。直角坐标里这个区域对 $x$、对 $y$ 都不是简单型（固定 $x$ 时下界要在 $y=x$ 与 $y=\frac1{4x}$ 之间切换，需分段），而极坐标下 $\theta$ 一段区间、$r$ 一段区间就完事。<strong>选极坐标不是偏好，是边界形状逼的。</strong></p>
+<h3>第 1 步：射线定 $\theta$——为什么直线变成"竖直界"</h3>
+<p>$y=x\Rightarrow\tan\theta=1\Rightarrow\theta=\dfrac\pi4$；$y=\sqrt3x\Rightarrow\tan\theta=\sqrt3\Rightarrow\theta=\dfrac\pi3$。第一象限内夹在两射线之间：$\theta\in\big[\dfrac\pi4,\dfrac\pi3\big]$。</p>
+<h3>第 2 步：双曲线定 $r$——核心恒等式与内外顺序</h3>
+<p>代入 $x=r\cos\theta,\ y=r\sin\theta$，用倍角公式 $\sin2\theta=2\sin\theta\cos\theta$ 得</p>
+<p>$$xy=r^2\cos\theta\sin\theta=\frac{r^2}{2}\sin2\theta.$$</p>
+<ul><li>$2xy=1\Rightarrow r^2\sin2\theta=1\Rightarrow r=\dfrac{1}{\sqrt{\sin2\theta}}$；</li><li>$4xy=1\Rightarrow 2r^2\sin2\theta=1\Rightarrow r=\dfrac{1}{\sqrt{2\sin2\theta}}$。</li></ul>
+<p>为什么 $4xy=1$ 在内侧：固定 $\theta$ 时 $xy=\frac{r^2}2\sin2\theta$ 随 $r$ 单调增大，$4xy=1$ 只要求 $xy=\frac14$（更小），故 $r$ 更小、更靠原点——它是 $r$ 的<strong>下限</strong>。为什么别忘开平方：解出的是 $r^2$，$r&gt;0$ 取正根。</p>
+<h3>第 3 步：为什么凭空多出一个 $r$——面积元的几何</h3>
+<p>换元不是白换：极坐标下的小面积元是"径向长 $\mathrm{d}r$ × 横向弧长 $r\,\mathrm{d}\theta$"——离原点越远纬线越长，所以 $\mathrm{d}x\,\mathrm{d}y=r\,\mathrm{d}r\,\mathrm{d}\theta$，这个 $r$（Jacobian）漏掉就是 C、D 的错。组装：</p>
+<p>$$\iint_D f\,\mathrm{d}x\mathrm{d}y=\int_{\pi/4}^{\pi/3}\mathrm{d}\theta\int_{1/\sqrt{2\sin2\theta}}^{1/\sqrt{\sin2\theta}}f(r\cos\theta,r\sin\theta)\,r\,\mathrm{d}r,$$</p>
+<p>正是选项 <strong>B</strong>。</p>
+<h3>易错点</h3>
+<ul><li><strong>选 A/C</strong>：把 $r^2\sin2\theta=1$ 解成 $r=\frac1{\sin2\theta}$，漏开平方，$r$ 限整体错。</li><li><strong>选 C/D</strong>：面积微元丢 $r$——二重积分换元最高频的失分点。</li><li><strong>内外限颠倒</strong>：$xy$ 越小越靠原点，$4xy=1$ 是下限。</li></ul>
+<blockquote>记忆锚点：射线给 $\theta$、双曲线给 $r$；$xy=\frac{r^2}2\sin2\theta$；微元 $r\,\mathrm{d}r\,\mathrm{d}\theta$ 一个都不能少。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

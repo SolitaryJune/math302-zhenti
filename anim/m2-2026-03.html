@@ -89,5 +89,26 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：隐函数求偏导——用原方程整体替换指数项</h2>
+<p>答案：A</p>
+<h3>第零步：机制——替换为什么合法、结果为什么是常数</h3>
+<p>方程 $x-az=e^{y+az}$ 两端是<strong>同一个数</strong>的两种写法，所以求导的任何环节都可以把 $e^{y+az}$ 换成 $x-az$（反之亦然）——这不是近似，是恒等代换。记 $E=e^{y+az}=x-az$，替换的好处立刻显现：两个偏导都会带出同一个因子 $(1+E)$，相减时恰好约干净，剩下常数 $\dfrac1a$。四个选项按"组合取 $+$ 还是 $-$、符号正负"设计，所以策略就是<strong>分别求出 $z_x,z_y$，再看哪种组合是常数</strong>。</p>
+<h3>第一步：对 $x$ 求偏导（$y$ 不动）</h3>
+<p>左边 $1-az_x$；右边链式：指数里 $az$ 对 $x$ 的导数是 $az_x$，得 $E\cdot az_x$：</p>
+<p>$$1-a z_x=E\,a z_x\ \Longrightarrow\ 1=a z_x(1+E)\ \Longrightarrow\ z_x=\frac{1}{a(1+E)}.$$</p>
+<h3>第二步：对 $y$ 求偏导（$x$ 不动）</h3>
+<p>左边 $-az_y$；右边链式有两条：$y$ 本身给 $1$、$az$ 给 $az_y$，故 $E(1+az_y)$：</p>
+<p>$$-a z_y=E(1+a z_y)\ \Longrightarrow\ -a z_y(1+E)=E\ \Longrightarrow\ z_y=\frac{-E}{a(1+E)}.$$</p>
+<h3>第三步：相减见分晓</h3>
+<p>$$z_x-z_y=\frac{1}{a(1+E)}+\frac{E}{a(1+E)}=\frac{1+E}{a(1+E)}=\frac1a,$$</p>
+<p>是常数——选 <strong>A</strong>。而 $z_x+z_y=\dfrac{1-E}{a(1+E)}$ 仍含 $E$、不是常数，凡带 $+$ 的 B、D 都不对。</p>
+<h3>易错点</h3>
+<ul><li><strong>求 $z_y$ 漏掉链式里的 $az_y$</strong>：右端对 $y$ 求导是 $E\cdot(1+az_y)$，内层 $az$ 也在变。</li><li><strong>不敢用 $E=x-az$ 替换</strong>：保留 $e^{y+az}$ 硬算也能做，但凑不出 $(1+E)$ 公因子，符号上极易翻车；替换合法的原因就是"等号两端本来就是同一个数"。</li><li><strong>默认差值为负</strong>：C 是把 $\dfrac1a$ 取反了；注意 $z_x&gt;0$、$z_y&lt;0$，相减必然为正。</li></ul>
+<blockquote>一句话结论：替换 $E=x-az$ 后 $z_x=\dfrac{1}{a(1+E)}$、$z_y=\dfrac{-E}{a(1+E)}$，相减分子凑成 $1+E$，得 $\dfrac1a$，选 A。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

@@ -104,5 +104,29 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：非齐次方程解的结构——"解之差"洗出齐次解</h2>
+<p><strong>答案：$y=\mathrm e^{3x}-\mathrm e^{x}-x\mathrm e^{2x}$</strong></p>
+<h3>第一步：作差拆出齐次解</h3>
+<p>非齐次线性方程的两个解之差必是对应齐次方程的解。为什么？把方程写成线性算子形式 $L[y]=y''+py'+qy=f(x)$，$L$ 的线性性给出 $L[y_1-y_3]=L[y_1]-L[y_3]=f(x)-f(x)=0$——两解相减时右端的 $f(x)$ 恰好抵消，差被"洗"成齐次解。这是<strong>叠加原理</strong>的直接应用，也是"给若干解反求通解"类题的通用起手式：</p>
+<p>$$y_1-y_3=\big(\mathrm e^{3x}-x\mathrm e^{2x}\big)-\big(-x\mathrm e^{2x}\big)=\mathrm e^{3x},\qquad y_2-y_3=\mathrm e^{x}.$$</p>
+<p>二者之比 $\frac{\mathrm e^{3x}}{\mathrm e^{x}}=\mathrm e^{2x}$ 不恒为常数，线性无关——恰好构成二阶齐次方程的基础解系。</p>
+<h3>第二步：写出通解</h3>
+<p>剩下的 $y_3=-x\mathrm e^{2x}$ 本身就是一个非齐次特解，故</p>
+<p>$$y=C_1\mathrm e^{3x}+C_2\mathrm e^{x}-x\mathrm e^{2x}.$$</p>
+<h3>第三步：初始条件定常数</h3>
+<p>代入 $x=0$：$y(0)=C_1+C_2=0$。求导：</p>
+<p>$$y'=3C_1\mathrm e^{3x}+C_2\mathrm e^{x}-\mathrm e^{2x}-2x\mathrm e^{2x},$$</p>
+<p>代入 $x=0$：$3C_1+C_2-1=1$，即 $3C_1+C_2=2$。两式相减得 $2C_1=2$，故 $C_1=1,\ C_2=-1$。</p>
+<h3>第四步：回代并验算</h3>
+<p>$$y=\mathrm e^{3x}-\mathrm e^{x}-x\mathrm e^{2x}.$$</p>
+<p>验算：$y(0)=1-1-0=0$ ✓；$y'(0)=3-1-1=1$ ✓。</p>
+<h3>易错点</h3>
+<ul><li><strong>把 $y_1,y_2$ 直接当齐次解</strong>：它们都是<strong>非齐次</strong>方程的解，背着特解成分 $-x\mathrm e^{2x}$；必须作差才能"洗掉"它。</li><li><strong>忘了检验线性无关</strong>：两个齐次解要构成基础解系需比值非常数，本题 $\mathrm e^{2x}$ 显然满足。</li><li><strong>对 $-x\mathrm e^{2x}$ 求导丢项</strong>：$(-x\mathrm e^{2x})'=-\mathrm e^{2x}-2x\mathrm e^{2x}$，乘积法则两项都不能少。</li></ul>
+<blockquote>一句话结论：$y=\mathrm e^{3x}-\mathrm e^{x}-x\mathrm e^{2x}$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

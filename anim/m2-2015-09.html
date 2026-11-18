@@ -99,5 +99,29 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：参数方程求二阶导——为什么必须"再除一次"</h2>
+<p>答案：<strong>48</strong>。</p>
+<h3>第 0 步：先立机制——"对 $x$ 求导"必须经 $t$ 中转</h3>
+<p>$x,y$ 都是 $t$ 的函数，"$\frac{\mathrm d}{\mathrm dx}$"这个算符没有独立通道，任何对 $x$ 的求导都要经过 $t$ 中转：</p>
+<p>$$\frac{\mathrm d}{\mathrm dx}=\frac{\mathrm dt}{\mathrm dx}\cdot\frac{\mathrm d}{\mathrm dt}=\frac{1}{\mathrm dx/\mathrm dt}\cdot\frac{\mathrm d}{\mathrm dt}.$$</p>
+<p>一阶导 $\frac{\mathrm dy}{\mathrm dx}=\frac{y'(t)}{x'(t)}$ 算出来后是 $t$ 的函数；要它<strong>再对 $x$</strong> 求导，还得再过一次中转——这就是公式</p>
+<p>$$\frac{\mathrm d^2y}{\mathrm dx^2}=\frac{\dfrac{\mathrm d}{\mathrm dt}\Big(\dfrac{\mathrm dy}{\mathrm dx}\Big)}{\dfrac{\mathrm dx}{\mathrm dt}}$$</p>
+<p>的来历。<strong>漏掉最后一步，等于把"对 $t$ 求导"冒充"对 $x$ 求导"。</strong></p>
+<h3>第 1 步：一阶导——为什么这么整齐</h3>
+<p>$x'(t)=\dfrac{1}{1+t^2}$（$\arctan t$ 的导数）；$y'(t)=3+3t^2=3(1+t^2)$。一个带 $\dfrac{1}{1+t^2}$、一个是 $3(1+t^2)$，相除恰好约干净：</p>
+<p>$$\frac{\mathrm dy}{\mathrm dx}=\frac{3(1+t^2)}{1/(1+t^2)}=3(1+t^2)^2.$$</p>
+<h3>第 2 步：二阶导——先对 $t$ 求导，再除 $x'(t)$</h3>
+<p>$$\frac{\mathrm d}{\mathrm dt}\Big[3(1+t^2)^2\Big]=3\cdot2(1+t^2)\cdot2t=12t(1+t^2),$$</p>
+<p>（链式：外层导 $2(1+t^2)$、内层导 $2t$，系数 $3\times2\times2=12$。）再除以 $x'(t)=\dfrac1{1+t^2}$：</p>
+<p>$$\frac{\mathrm d^2y}{\mathrm dx^2}=12t(1+t^2)\cdot(1+t^2)=12t(1+t^2)^2.$$</p>
+<p>代 $t=1$：$12\times1\times4=48$。<strong>为什么不中途代值</strong>：二阶导表达式仍是 $t$ 的函数，代早了后续求导就没了对象。</p>
+<h3>易错点</h3>
+<ul><li><strong>忘记再除 $\dfrac{\mathrm dx}{\mathrm dt}$</strong>：得到 $12t(1+t^2)$，代 $t=1$ 得 $24$——把对 $t$ 的导数当成了对 $x$ 的。</li><li><strong>链式漏内层因子 $2t$</strong>：$(1+t^2)^2$ 的导数是 $2(1+t^2)\cdot2t$。</li><li><strong>过早代入 $t=1$</strong>：先保住含 $t$ 的一般表达式，最后一步才代值。</li></ul>
+<blockquote>记忆锚点：参数二阶导 = 一阶导对 $t$ 求导后<strong>再除一次</strong> $x'(t)$；本题答案 $48$，漏除得 $24$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

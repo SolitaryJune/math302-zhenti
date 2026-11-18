@@ -99,5 +99,29 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：特征值相同为何还不相似——几何重数说了算</h2>
+<p>答案：<strong>B</strong>（$A$ 与 $C$ 相似，$B$ 与 $C$ 不相似）。</p>
+<h3>第 0 步：为什么"特征值相同"只是入场券</h3>
+<p>相似矩阵共享一切相似不变量（特征多项式、特征值、秩、迹……），但反过来特征值相同<strong>推不出</strong>相似：相似还要求每个特征值的<strong>线性无关特征向量个数（几何重数）</strong>对得上。$C=\mathrm{diag}(1,2,2)$ 是对角阵，由相似的传递性与对称性，"谁与 $C$ 相似"等价于"谁可对角化"。而 $\lambda$ 的线性无关特征向量就是方程 $(\lambda E-M)x=0$ 的解，个数 = 解空间维数 $=n-r(\lambda E-M)$——这就是秩判据的来历。二重特征值 $\lambda=2$ 要有 $2$ 个，即要求 $r(2E-M)=3-2=1$。</p>
+<h3>第 1 步：三个矩阵的特征值</h3>
+<p>$A$、$B$ 上三角、$C$ 对角，特征值都从对角线读出：都是 $1,2,2$。入场券三家都有，胜负全在 $\lambda=2$ 的几何重数上。</p>
+<h3>第 2 步：判 $A$——那个"1"连接的是不同特征值</h3>
+<p>$$2E-A=\begin{pmatrix}0&amp;0&amp;0\\0&amp;0&amp;-1\\0&amp;0&amp;1\end{pmatrix}\ \Longrightarrow\ r(2E-A)=1,$$</p>
+<p>（第 2、3 行成比例。）$\lambda=2$ 有 $3-1=2$ 个无关特征向量，等于代数重数，$A$ 可对角化，$A\sim\mathrm{diag}(1,2,2)\sim C$——<strong>$A$ 与 $C$ 相似</strong>。</p>
+<p>机制上看：$A$ 中非对角元 $1$ 位于 $(2,3)$，连接坐标 $2$（属 $\lambda=2$）与坐标 $3$（属 $\lambda=1$）。解 $(2E-A)x=0$ 时它只强迫 $x_3=0$，$x_1,x_2$ 依然自由——耦合落在<strong>不同特征值</strong>的方向之间，不损耗 $\lambda=2$ 的特征空间。</p>
+<h3>第 3 步：判 $B$——那个"1"把两条同特征值方向串成一条链</h3>
+<p>$$2E-B=\begin{pmatrix}0&amp;-1&amp;0\\0&amp;0&amp;0\\0&amp;0&amp;1\end{pmatrix}\ \Longrightarrow\ r(2E-B)=2,$$</p>
+<p>（第 1、3 行独立。）$\lambda=2$ 只有 $3-2=1$ 个无关特征向量，小于代数重数 $2$，$B$ <strong>不可对角化</strong>，与对角阵 $C$ 不相似。</p>
+<p>机制上看：$B$ 中非对角元 $1$ 位于 $(1,2)$，连接的坐标 $1$ 与坐标 $2$ <strong>都属 $\lambda=2$</strong>。方程第 1 行强迫 $x_2=0$、第 3 行强迫 $x_3=0$，只剩 $x_1$ 一维——两条同特征值的方向被这一个 $1$ 串成一条链，几何重数掉到 $1$。数字相同、位置不同，结论就相反。</p>
+<h3>第 4 步：汇总</h3>
+<p>$A$ 与 $C$ 相似、$B$ 与 $C$ 不相似，选 <strong>B</strong>。</p>
+<h3>易错点</h3>
+<ul><li><strong>只对特征值就下结论</strong>（误选 A）：特征值相同是必要条件而非充分条件，二重根必须验几何重数。</li><li><strong>秩算错</strong>：$r(2E-B)=2$ 不是 $1$——$B$ 的 $(1,2)$ 处的 $1$ 使第 1 行给出约束 $x_2=0$，多压掉一维。</li><li><strong>结论看反</strong>（误选 C）：可对角化的是 $A$ 不是 $B$。</li></ul>
+<blockquote>记忆锚点：上三角对角线读特征值；与对角阵相似 ⟺ 可对角化；二重根看 $r(\lambda E-M)$ 是否等于 $n-$ 重数；非对角元把"同特征值"方向串成链，几何重数就减一。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

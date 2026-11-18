@@ -107,5 +107,21 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：一点处的导数信息能否控制邻域性态</h2>
+<p>答案：B</p>
+<h3>第一步：抓住题眼条件</h3>
+<p>「$f$ 在 $x_0$ 处<strong>有二阶导数</strong>」意味着：$f'$ 在 $x_0$ 的某邻域内存在，且 $f'$ 在 $x_0$ 处可导，从而 $f'$ 在 $x_0$ 处<strong>连续</strong>。这是连接「点信息」与「邻域性态」的唯一桥梁。</p>
+<h3>第二步：B 为什么对（点 → 邻域，可行）</h3>
+<p>$f'(x_0)&gt;0$ 且 $f'$ 在 $x_0$ 连续，由连续函数的局部保号性，存在 $\delta&gt;0$ 使 $|x-x_0|&lt;\delta$ 时 $f'(x)&gt;0$，于是 $f$ 在 $(x_0-\delta,x_0+\delta)$ 内单调增加。</p>
+<h3>第三步：三个方向都会被反例破坏（邻域 → 点不行）</h3>
+<ul><li><strong>A 错</strong>：$f(x)=x^3$ 在 $0$ 的任何邻域单调增，但 $f'(0)=0$。邻域单调增只能保证 $f'(x_0)\ge0$。</li><li><strong>C 错</strong>：$f(x)=x^4$ 在 $0$ 邻域是凹函数（$f''=12x^2\ge0$），但 $f''(0)=0$。邻域凹只能保证 $f''(x_0)\ge0$。</li><li><strong>D 错</strong>：$f''(x_0)&gt;0$ 只是点处信息，不保证 $f''$ 在邻域内存在或为正。反例 $f(x)=x^2\left(2+\sin\dfrac1x\right)$（$f(0)=0$），可算得 $f''(0)=4&gt;0$，但 $f''$ 在 $0$ 附近剧烈变号，$f$ 在任何含 $0$ 的邻域内都不是凹函数。</li></ul>
+<h3>易错点</h3>
+<ul><li><strong>把「邻域单调增」与「$f'(x_0)&gt;0$」划等号</strong>：临界点可以让导数恰好为 $0$（$x^3$）。</li><li><strong>以为 $f''(x_0)&gt;0$ 就邻域凹</strong>：需要 $f''$ 在邻域内连续为正才行，题设只给了一点处的二阶导数。</li></ul>
+<blockquote>一句话结论：由 $f'(x_0)&gt;0$ 经 $f'$ 在 $x_0$ 连续可推邻域增（B 对）；反向推理与凹性方向都被反例否定。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

@@ -138,5 +138,23 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：速度曲线的面积与追及条件（定积分应用）</h2>
+<p>答案：C（$t_0=25$）</p>
+<h3>第一步：把追上翻译成面积方程</h3>
+<p>速度曲线下的面积就是路程。设 $g(t)$ 为乙比甲<strong>多跑</strong>的路程：$g(t)=\displaystyle\int_0^t\bigl(v_2-v_1\bigr)\,\mathrm{d}\tau$，它等于两条速度曲线之间<strong>带符号的面积</strong>——乙快（虚线在上）时取正，甲快（实线在上）时取负。起跑时甲在乙前方 $10$ m，所以<strong>追上 ⟺ $g(t_0)=10$</strong>。</p>
+<h3>第二步：逐块累计带符号面积</h3>
+<p>三块阴影依次记面积 $S_1=10,\ S_2=20,\ S_3=3$，按图形次序先是甲快、再乙快、再甲快：</p>
+<table><thead><tr><th>阶段</th><th>谁快</th><th>对 $g$ 的贡献</th><th>累计 $g$</th><th>净落后（含初始 10 m）</th></tr></thead><tbody><tr><td>第一块</td><td>甲</td><td>$-10$</td><td>$-10$</td><td>$20$</td></tr><tr><td>第二块</td><td>乙</td><td>$+20$</td><td>$-10+20=10$</td><td>$20-20=0$</td></tr><tr><td>第三块</td><td>甲</td><td>$-3$</td><td>$10-3=7$</td><td>乙反超 $3$ m</td></tr></tbody></table>
+<p>第二块结束时累计 $g$ 恰好达到 $10$——乙正好补回初始的 $10$ m 差距，追上时刻就是两曲线第二次相交处，即 $t_0=25$。</p>
+<h3>第三步：逐项排除</h3>
+<ul><li><strong>A（$t_0=10$）</strong>：还在第一块甲快段，$g&lt;0$，乙越落越远，不可能追上。</li><li><strong>B（$15&lt;t_0&lt;20$）</strong>：在第二块内部，$g$ 还没从 $-10$ 累计到 $+10$，差距未补平。</li><li><strong>D（$t_0&gt;25$）</strong>：过了 $25$ 进入甲快段，$g$ 从 $10$ 开始<strong>减小</strong>，追上条件不会再度成立。</li></ul>
+<h3>易错点</h3>
+<ul><li><strong>忘了初始 $10$ m</strong>：把第一块面积 $10$ 当成"追上条件"，会误选 A；追上条件是累计 $g=10$，不是 $g=0$。</li><li><strong>面积符号弄混</strong>：甲快段对 $g$ 是<strong>负</strong>贡献，直接把 $10+20+3$ 加起来就全错了。</li><li><strong>忽视第三块的位置</strong>：它发生在追上<strong>之后</strong>，只说明之后甲又领先 $3$ m，与 $t_0$ 无关。</li></ul>
+<blockquote>结论：追上 ⟺ 带符号面积累计到 $10$，恰在第二块结束（$t=25$）发生，选 C。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

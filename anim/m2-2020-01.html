@@ -111,5 +111,28 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：变限积分无穷小的阶——积分升 1 阶，再乘上限的阶</h2>
+<p>答案：D</p>
+<h3>第一步：先把"升阶公式"的道理讲透</h3>
+<p>设 $t\to0^+$ 时被积函数 $f(t)\sim Ct^{\alpha}$（$\alpha&gt;-1$），上限 $u(x)\to0$。为什么积分会把阶抬高 1？因为无穷小的"阶"就是幂次，而幂函数积分一次幂次加一：</p>
+<p>$$\int_0^{u}Ct^{\alpha}\,\mathrm{d}t=\frac{C}{\alpha+1}\,u^{\alpha+1}.$$</p>
+<p>可以放心用等价替换：$f(t)-Ct^{\alpha}$ 是比 $t^{\alpha}$ 更高阶的无穷小，从 $0$ 积到 $u$ 后只贡献比 $u^{\alpha+1}$ 更高阶的量，不改变主部。于是</p>
+<p>$$\int_0^{u(x)}f(t)\,\mathrm{d}t\sim\frac{C}{\alpha+1}\,[u(x)]^{\alpha+1}.$$</p>
+<p>再答"上限的阶为什么要乘进去"：若 $u(x)\sim cx^{m}$，代入即 $[u(x)]^{\alpha+1}\sim c^{\alpha+1}x^{m(\alpha+1)}$——幂的复合是指数相乘，所以总阶 $=(\alpha+1)\times m$，口诀"被积阶加 1，再乘上限的阶"由此而来。</p>
+<p>最后明确"最高阶"的含义：阶数越大，$x\to0^+$ 时趋于零越快，故比的是阶数最大者。</p>
+<h3>第二步：逐项定阶（都在 $x\to0^+$ 下）</h3>
+<p>有了公式，每个选项只做两件事：读被积函数的阶、读上限的阶。</p>
+<table><thead><tr><th>选项</th><th>被积函数</th><th>被积阶</th><th>上限</th><th>上限阶</th><th>积分阶</th></tr></thead><tbody><tr><td>A</td><td>$e^{t^2}-1\sim t^2$</td><td>$2$</td><td>$x$</td><td>$1$</td><td>$2+1=3$（$\sim\frac{x^3}{3}$）</td></tr><tr><td>B</td><td>$\ln(1+\sqrt{t^3})\sim t^{3/2}$</td><td>$\frac32$</td><td>$x$</td><td>$1$</td><td>$\frac52$（$\sim\frac25x^{5/2}$）</td></tr><tr><td>C</td><td>$\sin t^2\sim t^2$</td><td>$2$</td><td>$\sin x\sim x$</td><td>$1$</td><td>$3$（$\sim\frac{x^3}{3}$）</td></tr><tr><td>D</td><td>$\sqrt{\sin^3t}\sim t^{3/2}$</td><td>$\frac32$</td><td>$1-\cos x\sim\frac{x^2}{2}$</td><td>$2$</td><td>$\frac52\times2=5$</td></tr></tbody></table>
+<p>D 项验算：$\displaystyle\int_0^{1-\cos x}\sqrt{\sin^3t}\,\mathrm{d}t\sim\frac25\,(1-\cos x)^{5/2}\sim\frac25\left(\frac{x^2}{2}\right)^{5/2}$，确是 $x^5$ 量级。</p>
+<h3>第三步：排序收口</h3>
+<p>阶数比较：$B\left(\frac52\right)&lt;A=C\,(3)&lt;D\,(5)$，D 趋于零最快，是最高阶无穷小，选 D。</p>
+<h3>易错点</h3>
+<ul><li><strong>漏乘上限的阶</strong>：D 的上限 $1-\cos x$ 自己就是 2 阶无穷小，忘乘 2 会把 D 判成 $\frac52$ 阶、与 B 混同——"乘"字最容易丢。</li><li><strong>$\sqrt{t^3}$ 看成 $t^3$</strong>：$\sqrt{t^3}=t^{3/2}$，指数是 $\frac32$ 不是 3，B、D 的被积阶都靠它。</li><li><strong>以为换上限会改被积函数的阶</strong>：C 换成 $\sin x$ 只影响上限的阶（$\sin x\sim x$ 仍是 1 阶），被积阶由被积变量 $t$ 的等价决定。</li></ul>
+<blockquote>一句话结论：积分把被积阶加 1 再乘上限的阶——A、C 是 3 阶，B 是 $\frac52$ 阶，只有 D 靠 $1-\cos x$ 的 2 阶冲到 5 阶，选 D。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

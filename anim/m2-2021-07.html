@@ -103,5 +103,26 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：黎曼和三要素——分几份、取哪个点、每份多宽</h2>
+<p>答案：B</p>
+<h3>第一步：写出定义作为检验标准</h3>
+<p>定积分是「分割、取点、求和、取极限」：$\displaystyle\int_0^1f(x)\,\mathrm{d}x=\lim\sum_{k}f(\xi_k)\,\Delta x_k$。检验选项只看三件事是否<strong>自洽</strong>：分了多少份、$\xi_k$ 是否落在对应小区间内、每份宽度 $\Delta x_k$ 是否等于总长除以份数。</p>
+<h3>第二步：构造一套合法方案</h3>
+<p>对 $[0,1]$ 作 $n$ 等分：分点 $x_k=\dfrac{k}{n}$，第 $k$ 个小区间 $\left[\dfrac{k-1}{n},\dfrac{k}{n}\right]$，宽度 $\dfrac1n$。取中点</p>
+<p>$$\xi_k=\frac12\left(\frac{k-1}{n}+\frac{k}{n}\right)=\frac{2k-1}{2n}\in\left[\frac{k-1}{n},\frac{k}{n}\right].$$</p>
+<p>于是</p>
+<p>$$\int_0^1f(x)\,\mathrm{d}x=\lim_{n\to\infty}\sum_{k=1}^{n}f\!\left(\frac{2k-1}{2n}\right)\cdot\frac1n,$$</p>
+<p>这正是 B：$n$ 项、宽度 $\dfrac1n$、中点取点，三要素全部匹配。</p>
+<h3>第三步：逐项排错（核心口诀：宽度 = 总长 ÷ 项数）</h3>
+<table><thead><tr><th>选项</th><th>项数</th><th>取点</th><th>合法宽度</th><th>实际写的宽度</th><th>后果</th></tr></thead><tbody><tr><td>A</td><td>$n$</td><td>$\frac{2k-1}{2n}$（中点，合法）</td><td>$\frac1n$</td><td>$\frac{1}{2n}$</td><td>是正确值的一半</td></tr><tr><td>B</td><td>$n$</td><td>$\frac{2k-1}{2n}$（中点，合法）</td><td>$\frac1n$</td><td>$\frac1n$</td><td>正确</td></tr><tr><td>C</td><td>$2n$</td><td>$\frac{k-1}{2n}$（左端点，合法）</td><td>$\frac{1}{2n}$</td><td>$\frac1n$</td><td>正确值的两倍</td></tr><tr><td>D</td><td>$2n$</td><td>$\frac{k}{2n}$（右端点，合法）</td><td>$\frac{1}{2n}$</td><td>$\frac2n$</td><td>正确值的四倍</td></tr></tbody></table>
+<p>四个选项的取点都合法——坑全在<strong>宽度与项数不匹配</strong>上。</p>
+<h3>易错点</h3>
+<ul><li><strong>只检查取点</strong>：A、C、D 的取点都是真合法的，最隐蔽的错误藏在求和因子里。</li><li><strong>以为取点必须特殊</strong>：连续函数取左端点、右端点、中点、任意点极限都相同，错不在取点。</li><li><strong>忘记 $f$ 只是连续</strong>：这题考定义本身，不能靠找原函数验证。</li></ul>
+<blockquote>一句话结论：数出项数 $m$，宽度只能是 $\dfrac1m$；只有 B 做到「$n$ 项、宽 $\dfrac1n$、中点取点」自洽，选 B。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

@@ -99,5 +99,29 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：二阶常系数方程——特征法的机制与极值条件的翻译</h2>
+<p>答案：$y=\mathrm e^{-2x}+2\mathrm e^{x}$（即 $2\mathrm e^{x}+\mathrm e^{-2x}$，等价写法）。</p>
+<h3>第 0 步：先立机制——为什么"猜 $\mathrm e^{rx}$"就能解</h3>
+<p>常系数线性齐次方程 $y''+y'-2y=0$ 的核心事实：$\mathrm e^{rx}$ 求导不变身，只是乘常数——$y'=\mathrm e^{rx}r$，$y''=\mathrm e^{rx}r^2$。代入方程，公因子 $\mathrm e^{rx}\neq0$ 可除：</p>
+<p>$$(r^2+r-2)\,\mathrm e^{rx}=0\ \Longleftrightarrow\ r^2+r-2=0.$$</p>
+<p><strong>微分方程降级成代数方程</strong>——这就是特征方程法。$r^2+r-2=(r+2)(r-1)=0$，$r_1=1,\ r_2=-2$，通解</p>
+<p>$$y=C_1\mathrm e^{x}+C_2\mathrm e^{-2x}.$$</p>
+<p>（为什么线性组合也是解：方程线性齐次，解的叠加仍是解。）</p>
+<h3>第 1 步：把"在 $x=0$ 取得极值 3"翻译成两个方程</h3>
+<ul><li><strong>为什么极值 $\Rightarrow y'(0)=0$</strong>：$y$ 处处可导；若 $y'(0)&gt;0$，该点附近函数正在爬升，不可能取极值——可导点取极值必为驻点（费马引理）。</li><li><strong>为什么还给 $y(0)=3$</strong>："极值为 3"直接给出函数值。</li></ul>
+<p>一句话两个方程，恰好配平两个未知常数 $C_1,C_2$——条件个数与自由度正好匹配。</p>
+<h3>第 2 步：解出常数并验算</h3>
+<p>$y'=C_1\mathrm e^{x}-2C_2\mathrm e^{-2x}$，故</p>
+<p>$$\begin{cases}C_1-2C_2=0,\\ C_1+C_2=3\end{cases}\Longrightarrow C_1=2C_2,\ 3C_2=3\ \Longrightarrow\ C_1=2,\ C_2=1,$$</p>
+<p>$$y(x)=2\mathrm e^{x}+\mathrm e^{-2x}.$$</p>
+<p>验证：$y'(0)=2-2=0$；$y''=2\mathrm e^{x}+4\mathrm e^{-2x}$，$y''(0)=6&gt;0$，确为极小值，$y(0)=3$。题目只说"极值"，验一下极小属性可兜底。</p>
+<h3>易错点</h3>
+<ul><li><strong>只用一个条件</strong>："取得极值 3"含 $y'(0)=0$ 与 $y(0)=3$ 两个信息，丢一个就定不出两个常数。</li><li><strong>特征根与指数配错</strong>：$r=1,-2$ 对应 $\mathrm e^{x},\mathrm e^{-2x}$，别写成 $\mathrm e^{-x},\mathrm e^{2x}$。</li><li><strong>不解特征方程硬凑</strong>：丢掉"求导不变身"这条机制，猜都猜不到点子上。</li></ul>
+<blockquote>记忆锚点：特征法 = $\mathrm e^{rx}$ 求导不变身；"极值 3" = $y'(0)=0$ + $y(0)=3$ 两个方程。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

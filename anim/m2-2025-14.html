@@ -89,5 +89,28 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：参数方程求导——$y$ 由变限积分方程隐式确定</h2>
+<p>答案：$\mathrm e$</p>
+<h3>第一步：公式与路线</h3>
+<p>参数方程求导 $\dfrac{\mathrm dy}{\mathrm dx}=\dfrac{\mathrm dy/\mathrm dt}{\mathrm dx/\mathrm dt}$，全部在 $t=0$ 处取值。$y=y(t)$ 藏在方程 $2t-\displaystyle\int_1^{y+t^2}\mathrm e^{-u^2}\,\mathrm du=0$ 里，路线：先定 $y(0)$，再分别求 $x'(0)$ 与 $y'(0)$。</p>
+<h3>第二步：定 $y(0)$</h3>
+<p>代 $t=0$：$\displaystyle\int_1^{y}\mathrm e^{-u^2}\,\mathrm du=0$。被积函数 $\mathrm e^{-u^2}&gt;0$ 恒正，积分只能在上限等于下限时为零，故 $y\big|_{t=0}=1$。</p>
+<h3>第三步：求 $x'(0)$</h3>
+<p>$x=\ln(1+2t)$：$x'(t)=\dfrac{2}{1+2t}$，$x'(0)=2$。</p>
+<h3>第四步：对隐式方程两端求 $t$ 的导数</h3>
+<p>上限 $y+t^2$ 是 $t$ 的函数，变上限求导要乘上限的导数：</p>
+<p>$$2-\mathrm e^{-(y+t^2)^2}\cdot\big(y'(t)+2t\big)=0.$$</p>
+<p>代 $t=0$（此时 $y=1$，$y+t^2=1$）：</p>
+<p>$$2-\mathrm e^{-1}\cdot y'(0)=0\ \Longrightarrow\ y'(0)=2\mathrm e.$$</p>
+<h3>第五步：合成</h3>
+<p>$$\left.\frac{\mathrm dy}{\mathrm dx}\right|_{t=0}=\frac{y'(0)}{x'(0)}=\frac{2\mathrm e}{2}=\mathrm e.$$</p>
+<h3>易错点</h3>
+<ul><li><strong>不定 $y(0)$ 就求导</strong>：$y'(0)$ 要代入 $y+t^2$ 的具体值，先解出 $y(0)=1$ 是必经一步。</li><li><strong>变上限求导忘乘内层导数</strong>：$\dfrac{\mathrm d}{\mathrm dt}\displaystyle\int_1^{y+t^2}\mathrm e^{-u^2}\mathrm du=\mathrm e^{-(y+t^2)^2}\cdot(y'+2t)$，漏掉 $(y'+2t)$ 全盘皆错。</li><li><strong>把 $\dfrac{\mathrm dy}{\mathrm dx}$ 当成 $y'$</strong>：还要除以 $x'(0)=2$，别算成 $2\mathrm e$。</li></ul>
+<blockquote>一句话结论：$y(0)=1$，$x'(0)=2$，$y'(0)=2\mathrm e$，相除得 $\mathrm e$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

@@ -127,5 +127,33 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：二元极值——驻点 + $AC-B^2$ 判别（判别式的来历）</h2>
+<p>最终答案：$(1,0)$ 为极大值点，极大值 $f(1,0)=\mathrm e^{-1/2}$；$(-1,0)$ 为极小值点，极小值 $f(-1,0)=-\mathrm e^{-1/2}$。</p>
+<h3>第 0 步：先立机制——$AC-B^2$ 从哪来</h3>
+<p>驻点处一阶信息全部归零，函数的局部形状由二阶项决定：在驻点附近，$\Delta f\approx\frac12\big[A(\Delta x)^2+2B\,\Delta x\,\Delta y+C(\Delta y)^2\big]$，这是一个关于增量 $(\Delta x,\Delta y)$ 的二次型。对它配方（设 $A\neq0$）：</p>
+<p>$$A(\Delta x)^2+2B\,\Delta x\,\Delta y+C(\Delta y)^2
+=A\Big(\Delta x+\frac BA\Delta y\Big)^2+\frac{AC-B^2}{A}(\Delta y)^2.$$</p>
+<p>两个平方项的符号由 $A$ 与 $\dfrac{AC-B^2}{A}$ 把握：二者同号（即 $AC-B^2&gt;0$）时二次型定号——所有方向同时上弯或同时下弯，是极值；异号（$AC-B^2&lt;0$）时可正可负——有的方向升、有的方向降，是鞍点，不是极值。<strong>一元看 $f''$ 的符号，二元看整个二次型定号，$AC-B^2$ 就是定号的判据。</strong> 特例锚点：$x^2+y^2$（$AC-B^2=1&gt;0$，极小）、$x^2-y^2$（$=-1&lt;0$，鞍面）、$xy$（$A=C=0,B=1$，$=-1&lt;0$，鞍点）。</p>
+<h3>第一步：一阶偏导与驻点</h3>
+<p>记 $g=\mathrm e^{-\frac{x^2+y^2}{2}}&gt;0$。指数因子求导只产生 $\pm x$、$\pm y$ 的倍数，乘积法则后统一提出来：</p>
+<p>$$f_x=(1-x^2)g,\qquad f_y=-xy\,g.$$</p>
+<p><strong>为什么 $g&gt;0$ 可以直接约掉</strong>：$g$ 恒正，"$f_x=0$"等价于"$1-x^2=0$"，它既不产生根也不吞掉根，后面判别 $A,B,C$ 的符号时它也只充当正系数。令两式为零：$1-x^2=0$ 给 $x=\pm1$，$xy=0$ 结合 $x\neq0$ 给 $y=0$。<strong>为什么两个方程必须联立</strong>：$f_x=0$ 只保证沿 $x$ 方向平坦，还要 $f_y=0$ 保证沿 $y$ 方向也平坦——两个方向都平坦才可能是山顶或谷底。得驻点 $(1,0)$ 与 $(-1,0)$。</p>
+<h3>第二步：二阶偏导</h3>
+<p>再求一次导（$g_x=-xg$、$g_y=-yg$）：</p>
+<p>$$f_{xx}=(x^3-3x)g,\qquad f_{xy}=-y(1-x^2)g,\qquad f_{yy}=x(y^2-1)g.$$</p>
+<p>两个驻点都在 $x$ 轴上（$y=0$），故 $B=f_{xy}=0$——坐标轴恰好是主轴方向，沿 $x$、沿 $y$ 的弯曲互不混杂，判别起来更直观。</p>
+<h3>第三步：逐点判别（叙事先行，表格对号）</h3>
+<p>在 $(1,0)$：$A=-2\mathrm e^{-1/2}&lt;0$（沿 $x$ 方向下弯），$C=-\mathrm e^{-1/2}&lt;0$（沿 $y$ 方向也下弯），$AC-B^2=2\mathrm e^{-1}&gt;0$——两个主方向都下弯，且判别式保证<strong>所有方向</strong>都下弯，是山包顶，极大。在 $(-1,0)$：$A=2\mathrm e^{-1/2}&gt;0$，$C=\mathrm e^{-1/2}&gt;0$，$AC-B^2=2\mathrm e^{-1}&gt;0$——所有方向都上弯，谷底，极小。</p>
+<table><thead><tr><th>驻点</th><th>$A$</th><th>$B$</th><th>$C$</th><th>$AC-B^2$</th><th>判定</th></tr></thead><tbody><tr><td>$(1,0)$</td><td>$-2\mathrm e^{-1/2}$</td><td>$0$</td><td>$-\mathrm e^{-1/2}$</td><td>$2\mathrm e^{-1}&gt;0$</td><td>负定，极大</td></tr><tr><td>$(-1,0)$</td><td>$2\mathrm e^{-1/2}$</td><td>$0$</td><td>$\mathrm e^{-1/2}$</td><td>$2\mathrm e^{-1}&gt;0$</td><td>正定，极小</td></tr></tbody></table>
+<h3>第四步：回代求极值，并用对称性核验</h3>
+<p>$f(1,0)=1\cdot\mathrm e^{-1/2}=\mathrm e^{-1/2}$；$f(-1,0)=-\mathrm e^{-1/2}$。对称性检查：把 $x$ 换成 $-x$ 时 $f$ 整体变号（$f(-x,y)=-f(x,y)$），故两驻点关于 $y$ 轴对称、函数值互为相反数——结果与结构吻合。</p>
+<h3>易错点</h3>
+<ul><li><strong>漏掉乘积法则</strong>：$f_y=-xy\,\mathrm e^{-\frac{x^2+y^2}{2}}$，对指数因子求导的那一项不能丢。</li><li><strong>只解 $f_x=0$</strong>：两个方程要联立，$x^2=1$ 与 $xy=0$ 合起来才得 $y=0$。</li><li><strong>判别规则记反</strong>：先看 $AC-B^2$——大于 $0$ 才有极值（再看 $A$ 的正负定极大极小），小于 $0$ 是鞍点（如 $xy$ 在原点），不是极值。</li><li><strong>忽略 $g&gt;0$ 的角色</strong>：它恒正，求根时约去、判号时当正系数；把它当成"可能为零的因子"会多出假根。</li></ul>
+<blockquote>结论：极大值 $\mathrm e^{-1/2}$ 在 $(1,0)$，极小值 $-\mathrm e^{-1/2}$ 在 $(-1,0)$；$AC-B^2$ 的来历是驻点处二阶泰勒二次型的定号条件。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

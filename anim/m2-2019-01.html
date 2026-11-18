@@ -103,5 +103,25 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：用泰勒展开定无穷小的阶（$x-\tan x$ 到底是几阶）</h2>
+<p>答案：C（$k=3$）</p>
+<h3>第一步：把“同阶”翻译成极限语言</h3>
+<p>同阶无穷小的定义：存在 $k$ 使 $\lim_{x\to0}\dfrac{x-\tan x}{x^k}=C\neq0$（有限且非零）。所以本题本质是找 $x-\tan x$ 的<strong>最低次主部</strong>——主部是几次幂，它就是几阶无穷小。</p>
+<h3>第二步：展开 $\tan x$ 到三次项</h3>
+<p>$x-\tan x$ 是减法结构，等价无穷小在这里会失效（$\tan x\sim x$ 一减就成 $0$），必须上带皮亚诺余项的泰勒展开：</p>
+<p>$$\tan x=x+\frac{1}{3}x^3+o(x^3),$$</p>
+<p>相减把主部“减”了出来：</p>
+<p>$$x-\tan x=-\frac{1}{3}x^3+o(x^3).$$</p>
+<h3>第三步：逐个 $k$ 验证</h3>
+<table><thead><tr><th>$k$</th><th>$\lim_{x\to0}\dfrac{x-\tan x}{x^k}$</th><th>判定</th></tr></thead><tbody><tr><td>$1$</td><td>$0$</td><td>高阶，不同阶</td></tr><tr><td>$2$</td><td>$0$</td><td>高阶，不同阶</td></tr><tr><td>$3$</td><td>$-\dfrac13$（非零有限）</td><td><strong>同阶，命中</strong></td></tr><tr><td>$4$</td><td>$\infty$</td><td>低阶，不同阶</td></tr></tbody></table>
+<p>主部 $-\dfrac13x^3$ 一锤定音：除以 $x^3$ 剩 $-\dfrac13$，除以低于三次的幂趋于 $0$，除以高于三次的幂发散。</p>
+<h3>易错点</h3>
+<ul><li><strong>用 $\tan x\sim x$ 直接相减</strong>：得到 $x-\tan x\sim x-x=0$，荒谬。等价无穷小不能参与加减运算，减法必须泰勒展开。</li><li><strong>求出主部就收工</strong>：定阶的规范动作是回写极限 $\lim_{x\to0}\dfrac{x-\tan x}{x^3}=-\dfrac13$，确认有限非零。</li><li><strong>记混系数</strong>：$x-\tan x$ 的主部是 $-\dfrac13x^3$；别与 $x-\sin x$ 的 $-\dfrac16x^3$ 混为一谈。</li></ul>
+<blockquote>一句话结论：展开 $\tan x=x+\dfrac{x^3}{3}+o(x^3)$，主部 $-\dfrac{x^3}{3}$ 说明 $x-\tan x$ 是三阶无穷小，$k=3$，选 C。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

@@ -104,5 +104,31 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：变限积分极限——洛必达把"面积"降维成"增速"</h2>
+<p>答案：$\dfrac{1}{2}$。</p>
+<h3>第 0 步：先立机制——变限积分的极限到底在问什么</h3>
+<p>分子 $F(x)=\displaystyle\int_1^x\left[t^2\left(e^{1/t}-1\right)-t\right]\mathrm dt$ 是一块从 $1$ 铺到 $x$ 的"累积面积"。问 $\dfrac{F(x)}{x^2\ln(1+1/x)}$ 的极限，本质是问<strong>面积与分母谁长得快</strong>。洛必达法则在这里不是硬凑的技巧，而是<strong>降维工具</strong>：对 $F$ 求导（变限积分求导公式），面积问题瞬间退化成"瞬时增速"问题——</p>
+<p>$$F'(x)=x^2\left(e^{1/x}-1\right)-x,$$</p>
+<p>即被积函数在 $t=x$ 处的值。所以本题真正要算的只有一件事：$t\to\infty$ 时被积函数 $t^2(e^{1/t}-1)-t$ 的极限。机制立好，后面的每一步都在为这一件事服务。</p>
+<h3>第一步：判型——为什么洛必达合法</h3>
+<p>$x\to+\infty$ 时分母 $x^2\ln\left(1+\dfrac1x\right)=x^2\left(\dfrac1x-\dfrac{1}{2x^2}+o(\tfrac1{x^2})\right)=x-\dfrac12+o(1)\to+\infty$；分子被积函数的主部马上算出是 $\dfrac12&gt;0$，故分子 $\sim\dfrac x2\to+\infty$。这是 $\dfrac{\infty}{\infty}$ 型，洛必达的两个前提（都趋于同一方向的∞、导数比极限存在）都有保证。</p>
+<h3>第二步：展开被积函数——为什么必须展到二阶（本题题眼）</h3>
+<p>令 $u=\dfrac1x\to0^+$：</p>
+<p>$$t^2\left(e^{1/t}-1\right)-t\ \to\ \frac1{u^2}\left(u+\frac{u^2}{2}+o(u^2)\right)-\frac1u=\frac1u+\frac12-\frac1u+o(1)=\frac12+o(1).$$</p>
+<p><strong>为什么只用等价无穷小 $e^{1/t}-1\sim\dfrac1t$ 会全盘崩溃</strong>：那一替换给出 $t^2\cdot\dfrac1t-t=t-t=0$——两项的<strong>主部恰好相消</strong>，被积函数的"全部信息"都藏在次一阶的 $\dfrac{1}{2t}$ 里。等价无穷小只保留首阶，首阶一消它就交白卷；所以必须把 $e^u-1$ 展开到 $u^2$ 项，把 $\dfrac12$ 这个次主部显式带出来。这是"<strong>主部相消、看次主部</strong>"的典型局面。</p>
+<p>于是 $F'(x)\to\dfrac12$；顺带得到分子的粗略形状 $F(x)\approx\dfrac x2$。</p>
+<h3>第三步：分母为什么不硬求导</h3>
+<p>洛必达要对分母也求导：$\left(x^2\ln\left(1+\frac1x\right)\right)'=2x\ln\left(1+\frac1x\right)-\dfrac{x}{x+1}$，两项的极限分别是 $2x\cdot\dfrac1x=2$ 与 $1$，故分母导数 $\to1$。其实从第一步的主部 $x-\dfrac12+o(1)$ 就能直接看出导数趋于 $1$——<strong>先展主部再谈导数</strong>，比求导后重新展开省力且不易错。</p>
+<h3>第四步：收尾</h3>
+<p>$$\lim_{x\to+\infty}\frac{F(x)}{x^2\ln\left(1+\frac1x\right)}=\frac{\lim F'(x)}{\lim\left(\text{分母}\right)'}=\frac{1/2}{1}=\frac12.$$</p>
+<p><strong>捷径验证</strong>（同一机制的另一面）：分子 $\displaystyle\int_1^x\left(\frac12+o(1)\right)\mathrm dt\sim\frac x2$，分母 $\sim x$，比值直接 $\dfrac12$——洛必达做的事和"被积函数主部直接积分"完全等价，后者更快，前者更标准，考场写洛必达更稳。</p>
+<h3>易错点</h3>
+<ul><li><strong>对整个分子用等价无穷小</strong>：分子是积分，不能把 $e^{1/t}-1$ 换成 $\dfrac1t$ 再积——主部相消后积分里剩下的全是高阶细节，替换即失真。正确姿势是求导后对<strong>差式</strong> $t^2(e^{1/t}-1)-t$ 做泰勒。</li><li><strong>只展一阶</strong>：$e^{1/x}-1=\dfrac1x+o(\tfrac1x)$ 减 $x$ 后只剩 $o(1)\to0$，把 $\dfrac12$ 弄丢了。</li><li><strong>不判型就洛必达</strong>：先说明分子、分母都趋于 $+\infty$，否则法则前提缺失。</li><li><strong>在分母上求导后硬算到底</strong>：可行但绕远；主部 $x-\dfrac12+o(1)$ 一次到位。</li></ul>
+<blockquote>结论：极限为 $\dfrac12$。机制链条：变限积分求导脱掉积分号 → 主部相消必须展到二阶 → 洛必达交出 $\dfrac12$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

@@ -93,5 +93,32 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：二重积分为什么该走极坐标这条路</h2>
+<p><strong>答案：</strong> $I=4\sin\sqrt2-2\sqrt2$。</p>
+<h3>第一步：先看题目"长什么样"——两个信号同时指向极坐标</h3>
+<p>解法选择不是碰运气，极坐标 $(r,\theta)$ 用"离原点多远、朝什么方向"来定位点，所以有两类题换成极坐标会立刻变简单：<strong>边界是过原点的直线或以原点为心的圆弧</strong>（极坐标下都变成 $\theta=$ 常数、$r=$ 常数），<strong>被积函数含 $x^2+y^2$ 或 $\sqrt{x^2+y^2}$</strong>（极坐标下就是 $r$）。本题两条全中：</p>
+<ul><li>下界 $y=\lvert x\rvert$ 是两条过原点的 $45^\circ$ 射线，上界 $y=\sqrt{2-x^2}$ 是圆 $x^2+y^2=2$ 的上半弧——边界全是"射线 + 圆弧"；</li><li>被积函数 $y\sin\sqrt{x^2+y^2}$ 里就带着 $\sqrt{x^2+y^2}$。</li></ul>
+<p>这就是为什么直角坐标下 $y=\sqrt{2-x^2}$ 当上限、被积函数又带根号会算不动，而换极坐标后一切变成常数。</p>
+<h3>第二步：把区域翻译成极坐标不等式</h3>
+<p>$y=\lvert x\rvert$ 在第一象限是 $y=x$，即 $\tan\theta=1$ 的射线 $\theta=\dfrac{\pi}{4}$；在第二象限是 $y=-x$，即 $\theta=\dfrac{3\pi}{4}$。<strong>为什么 $y\ge\lvert x\rvert$ 夹出的是这个角度段</strong>：$y\ge\lvert x\rvert$ 的点都"贴着 $y$ 轴上方"，与 $x$ 轴正向的夹角落在 $45^\circ\sim135^\circ$ 之间。圆 $x^2+y^2=2$ 就是 $r=\sqrt2$。故</p>
+<p>$$D:\ \frac{\pi}{4}\le\theta\le\frac{3\pi}{4},\qquad 0\le r\le\sqrt2 .$$</p>
+<p>（自检：扇形内 $\lvert x\rvert=r\lvert\cos\theta\rvert\le\sqrt2\cdot\dfrac{\sqrt2}{2}=1$，恰与 $x\in[-1,1]$ 吻合。）</p>
+<h3>第三步：换元后为什么能拆成两个定积分的乘积</h3>
+<p>代入 $y=r\sin\theta$、$\sqrt{x^2+y^2}=r$，被积函数变成 $r\sin\theta\cdot\sin r$。这里要回答本题最容易被追问的问题——<strong>为什么 $dx\,dy$ 换成 $r\,dr\,d\theta$，多出来的 $r$ 是哪来的</strong>：极坐标下的小面积元是以原点为心、张角 $d\theta$、厚度 $dr$ 的一小条扇环，它的两条边长约 $r\,d\theta$ 与 $dr$，面积近似 $\;(r\,d\theta)\cdot dr$。$r$ 不是凭空多出的"雅可比系数"，几何意义是<strong>离原点越远，同样的小角度扫出的弧越长</strong>——面积元随 $r$ 放大。</p>
+<p>于是被积函数乘面积元得 $\sin\theta\cdot r^2\sin r$：$\theta$ 只住在一个因子、$r$ 只住在另一个，而极坐标下区域恰好是"角度段 × 半径段"的矩形，所以二重积分直接拆开：</p>
+<p>$$I=\int_{\pi/4}^{3\pi/4}\sin\theta\,d\theta\cdot\int_0^{\sqrt2}r^2\sin r\,dr,\qquad \int_{\pi/4}^{3\pi/4}\sin\theta\,d\theta=\Big[-\cos\theta\Big]_{\pi/4}^{3\pi/4}=\sqrt2 .$$</p>
+<h3>第四步：径向积分——为什么分部积分、为什么两次</h3>
+<p>$\int r^2\sin r\,dr$ 是"幂函数 × 三角函数"，分部积分的分工是：$u$ 取幂函数（求导降幂）、$dv$ 取三角函数（原函数好写）。$r^2$ 每分部一次降一次幂，$r^2\to 2r\to 2$，所以要<strong>连做两次</strong>才到底：</p>
+<p>$$\int r^2\sin r\,dr=-r^2\cos r+2r\sin r+2\cos r+C .$$</p>
+<p>代 $[0,\sqrt2]$：上限处 $r^2=2$，$-2\cos\sqrt2+2\cos\sqrt2$ 恰好相消，剩 $2\sqrt2\sin\sqrt2$；下限 $r=0$ 处值为 $2$。故径向积分 $=2\sqrt2\sin\sqrt2-2$，于是</p>
+<p>$$I=\sqrt2\,\big(2\sqrt2\sin\sqrt2-2\big)=4\sin\sqrt2-2\sqrt2 .$$</p>
+<h3>易错点</h3>
+<ul><li><strong>把 $y=\lvert x\rvert$ 当成一条线</strong>：它是两条射线，张角为 $\dfrac{\pi}{2}$ 而不是 $\dfrac{\pi}{4}$，角向范围写错则全错。</li><li><strong>漏雅可比因子 $r$</strong>：$y$ 换出 $r\sin\theta$，面积元再出一个 $r$，共 $r^2\sin r$；漏 $r$ 就变成 $r\sin r$。根源是忘了"弧长 $=r\,d\theta$"。</li><li><strong>分部积分只做一次</strong>：$r^2$ 要降两次幂才到常数，第二次对 $\int r\cos r\,dr$ 时符号别带错。</li><li><strong>角向上下限写反</strong>：$\theta$ 从 $\dfrac\pi4$ 到 $\dfrac{3\pi}4$ 是逆时针方向，$\sin\theta$ 在此区间为正，积分值 $\sqrt2&gt;0$ 可作符号自检。</li></ul>
+<blockquote>结论：两个信号（扇形边界 + $\sqrt{x^2+y^2}$）锁定极坐标 → 区域化成 $\theta\in[\frac\pi4,\frac{3\pi}4]$、$r\in[0,\sqrt2]$ → 拆成 $\sqrt2\times(2\sqrt2\sin\sqrt2-2)$ → $I=4\sin\sqrt2-2\sqrt2$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

@@ -111,5 +111,25 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：见 $f'-f$ 就除以 $e^x$——构造 $g=\frac{f}{e^x}$ 用单调性</h2>
+<p>答案：B</p>
+<h3>第一步：选构造</h3>
+<p>条件 $f'(x)&gt;f(x)&gt;0$ 同时出现 $f'$ 与 $f$，而四个选项全是 $\dfrac{f(b)}{f(a)}$ 与 $e^{b-a}$ 比较——这是构造 $g(x)=\dfrac{f(x)}{e^x}$ 的信号：</p>
+<p>$$g'(x)=\frac{f'(x)e^x-f(x)e^x}{e^{2x}}=\frac{f'(x)-f(x)}{e^x}&gt;0,$$</p>
+<p>故 $g$ 在 $[-2,2]$ 上严格递增。又 $f'&gt;0$ 说明 $f$ 本身严格递增且恒正。</p>
+<h3>第二步：把选项翻译成 $g$ 的两点比较</h3>
+<p>对 $b&gt;a$：$g(b)&gt;g(a)\iff\dfrac{f(b)}{e^b}&gt;\dfrac{f(a)}{e^a}\iff\dfrac{f(b)}{f(a)}&gt;e^{b-a}$（$f&gt;0$，除法不变号）。逐项核对：</p>
+<ul><li><strong>B</strong>：$g(0)&gt;g(-1)$ → $f(0)&gt;e\,f(-1)$ → $\dfrac{f(0)}{f(-1)}&gt;e$，成立。</li><li><strong>A</strong>：$f$ 递增 → $f(-2)&lt;f(-1)$ → 比值 $&lt;1$，不可能 $&gt;1$。</li><li><strong>C</strong>：$g(1)&gt;g(-1)$ → $f(1)&gt;e^2f(-1)$ → 比值 $&gt;e^2$，选项写 $&lt;e^2$，方向反了。</li><li><strong>D</strong>：$g(2)&gt;g(-1)$ → $f(2)&gt;e^3f(-1)$ → 比值 $&gt;e^3$，选项写 $&lt;e^3$，同样方向反。</li></ul>
+<p>只有 B 成立。</p>
+<h3>第三步：直观理解（为什么比值一定上升）</h3>
+<p>比较增长快慢要看<strong>相对增长率</strong>：$f$ 的是 $\dfrac{f'}{f}$，$e^x$ 的是 $\dfrac{(e^x)'}{e^x}=1$。条件 $f'&gt;f&gt;0$ 两边同除以 $f$，恰是 $\dfrac{f'}{f}&gt;1$——$f$ 在"百分比意义"下跑赢 $e^x$，所以比值 $g=\dfrac{f}{e^x}$ 一路上升。这也回答了"为什么偏偏除以 $e^x$"：$e^x$ 是相对增长率恒为 1 的标尺，$g$ 量出 $f$ 超出这条标尺的程度；$g$ 在任意两点的大小关系是硬信息，比任何具体函数例子都可靠。</p>
+<h3>易错点</h3>
+<ul><li><strong>只用 $f$ 递增</strong>：$f$ 递增只能否掉 A；C、D 的方向必须靠 $g$ 的单调性才能定。</li><li><strong>不等号方向记反</strong>：$g$ 增给出比值 $&gt;e^{b-a}$，C、D 恰把两个方向都写反。</li><li><strong>忽略 $f&gt;0$ 的作用</strong>：它是「除以 $f(a)$ 不变号」「比值有意义」的保障。</li></ul>
+<blockquote>一句话结论：$g=\frac{f}{e^x}$ 严格增，$g(b)&gt;g(a)\iff\frac{f(b)}{f(a)}&gt;e^{b-a}$：B 成立，A 的比值小于 1，C、D 方向全反。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

@@ -97,5 +97,36 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：扇环形区域上的极坐标二重积分</h2>
+<p><strong>答案</strong>：$\dfrac{\sqrt3\,\pi\ln 2}{24}$。</p>
+<h3>第 0 步：先立模型——为什么这道题「天生」适合极坐标</h3>
+<p>选坐标的依据要看两头：<strong>边界</strong>与<strong>被积函数</strong>。</p>
+<ul><li>边界：$x^2+y^2-xy=c$（$c=1,2$）是两条同型的、中心在原点的二次曲线；$y=0$ 与 $y=\sqrt3\,x$ 是过原点的两条射线。极坐标里「过原点的射线」就是 $\theta=$ 常数，二次曲线给出 $r$ 的上下限——区域是标准<strong>扇环</strong>；</li><li>被积函数：$\dfrac{1}{3x^2+y^2}$ 的分母是二次齐次式（每一项都是二次），代入 $x=r\cos\theta,\ y=r\sin\theta$ 后分母必写成 $r^2\times$（只含 $\theta$ 的因子），除以雅可比 $r$ 后，径向必出 $\displaystyle\int\frac{\mathrm dr}{r}$ 型。</li></ul>
+<p>两条线索都指向极坐标 $x=r\cos\theta,\ y=r\sin\theta$。射线 $y=\sqrt3x$ 即 $\tan\theta=\sqrt3$，故 $\theta\in\left[0,\dfrac\pi3\right]$。</p>
+<h3>第一步：两条边界在极坐标下的 r</h3>
+<p>$x^2+y^2-xy=r^2-r^2\cos\theta\sin\theta=r^2\Big(1-\dfrac12\sin2\theta\Big)$，中间用到 $xy=r^2\sin\theta\cos\theta=\dfrac12r^2\sin2\theta$。于是边界 $x^2+y^2-xy=c$ 即</p>
+<p>$$r^2=\frac{c}{1-\frac12\sin2\theta},\qquad r_1^2=\frac{1}{1-\frac12\sin2\theta},\qquad r_2^2=\frac{2}{1-\frac12\sin2\theta}.$$</p>
+<p><strong>几何直观</strong>：同一条射线 $\theta$ 上，内外两条边界的 $r^2$ 恰差常数倍 $2$——两条曲线互为「以原点为中心、缩放 $\sqrt2$ 倍」的相似曲线，扇环内外径之比 $r_2/r_1=\sqrt2$ 与 $\theta$ 无关。这个比值恒定，是后面能分离变量的全部伏笔。（顺带一提：$\theta\in\left[0,\frac\pi3\right]$ 上 $\frac12\sin2\theta\le\frac{\sqrt3}{4}&lt;1$，分母恒正，$r^2$ 表达式有效。）</p>
+<h3>第二步：分离径向与角向</h3>
+<p>分母 $3x^2+y^2=r^2(3\cos^2\theta+\sin^2\theta)=r^2(2\cos^2\theta+1)=r^2(1+2\cos^2\theta)$，代入 $\mathrm dx\,\mathrm dy=r\,\mathrm dr\,\mathrm d\theta$：</p>
+<p>$$\iint_D\frac{\mathrm dx\,\mathrm dy}{3x^2+y^2}
+=\int_0^{\pi/3}\frac{\mathrm d\theta}{1+2\cos^2\theta}\int_{r_1}^{r_2}\frac{\mathrm dr}{r}.$$</p>
+<p><strong>为什么径向积分能整体提出去</strong>：$\displaystyle\int_{r_1}^{r_2}\frac{\mathrm dr}{r}=\ln\frac{r_2}{r_1}=\frac12\ln\frac{r_2^2}{r_1^2}=\frac12\ln2$——上下限虽随 $\theta$ 变，但积分值只依赖<strong>比值</strong>，而比值恒为 $\sqrt2$，与 $\theta$ 无关，当然可以提到积分号外。</p>
+<h3>第三步：角向积分</h3>
+<p>分子分母同除 $\cos^2\theta$（$\theta\in\left[0,\frac\pi3\right]$ 上 $\cos\theta&gt;0$，除法合法），凑出 $\mathrm d(\tan\theta)=\sec^2\theta\,\mathrm d\theta$：</p>
+<p>$$\int_0^{\pi/3}\frac{\sec^2\theta\,\mathrm d\theta}{\tan^2\theta+3}
+\ \xrightarrow{\ t=\tan\theta\ }\ \int_0^{\sqrt3}\frac{\mathrm dt}{t^2+3}
+=\frac{1}{\sqrt3}\arctan\frac{t}{\sqrt3}\Big|_0^{\sqrt3}
+=\frac{1}{\sqrt3}\cdot\frac\pi4=\frac{\sqrt3\,\pi}{12}.$$</p>
+<h3>第四步：合并</h3>
+<p>$$\frac12\ln2\cdot\frac{\sqrt3\,\pi}{12}=\frac{\sqrt3\,\pi\ln2}{24}.$$</p>
+<h3>易错点</h3>
+<ul><li><strong>极径上下限写成常数</strong>：$r_{1,2}$ 都随 $\theta$ 变，必须带上分母 $1-\frac12\sin2\theta$；能提出去的是比值 $\ln\frac{r_2}{r_1}=\frac12\ln2$。</li><li><strong>丢雅可比 $r$</strong>：$\mathrm dx\,\mathrm dy=r\,\mathrm dr\,\mathrm d\theta$，漏掉 $r$ 后径向积分就配不成 $\frac{\mathrm dr}{r}$，分离随之瓦解。</li><li><strong>$\theta$ 上限记成 $\frac\pi4$</strong>：$y=\sqrt3x$ 的斜率是 $\sqrt3$，倾角为 $\frac\pi3$。</li><li><strong>角向积分硬凑失败</strong>：同除 $\cos^2\theta$ 化成 $\tan$ 是标准动作，末尾 $\arctan1=\frac\pi4$。</li></ul>
+<blockquote>一句话结论：边界是过原点的射线 + 同型二次曲线（扇环）、被积函数是二次齐次式的倒数，两重信号都指向极坐标；$r_2^2/r_1^2=2$ 恒定让径向出 $\frac12\ln2$，角向出 $\frac{\sqrt3\pi}{12}$，答案 $\dfrac{\sqrt3\,\pi\ln2}{24}$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

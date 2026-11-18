@@ -94,5 +94,33 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：周长怎么分最省面积——"边际面积相等"原理与拉格朗日乘数法</h2>
+<p>答案：<strong>存在最小值</strong>，最小值为 $f_{\min}=\dfrac{1}{\pi+4+3\sqrt{3}}\ (\mathrm{m}^{2})$（约 $0.081\ \mathrm{m}^{2}$）。</p>
+<h3>第一步：建模——面积是周长的二次函数</h3>
+<p>设围圆、正方形、正三角形的三段长为 $x,y,z&gt;0$，约束 $x+y+z=2$。每个图形走两步：周长给尺寸，尺寸给面积——圆的半径 $\dfrac{x}{2\pi}$、面积 $\pi\left(\dfrac{x}{2\pi}\right)^{2}=\dfrac{x^{2}}{4\pi}$；正方形边长 $\dfrac{y}{4}$、面积 $\dfrac{y^{2}}{16}$；正三角形边长 $\dfrac{z}{3}$、面积 $\dfrac{\sqrt3}{4}\left(\dfrac z3\right)^{2}=\dfrac{\sqrt3\,z^{2}}{36}$。对号入座：</p>
+<table><thead><tr><th>图形</th><th>尺寸</th><th>面积</th></tr></thead><tbody><tr><td>圆</td><td>半径 $\dfrac{x}{2\pi}$</td><td>$\dfrac{x^{2}}{4\pi}$</td></tr><tr><td>正方形</td><td>边长 $\dfrac{y}{4}$</td><td>$\dfrac{y^{2}}{16}$</td></tr><tr><td>正三角形</td><td>边长 $\dfrac{z}{3}$</td><td>$\dfrac{\sqrt3\,z^{2}}{36}$</td></tr></tbody></table>
+<p>目标：在 $x+y+z=2$ 下求 $f=\dfrac{x^{2}}{4\pi}+\dfrac{y^{2}}{16}+\dfrac{\sqrt3\,z^{2}}{36}$ 的最小值。</p>
+<h3>第二步：先想通机制——最优分配发生在"边际面积相等"处</h3>
+<p>面积对段长是"线性边际的二次增长"：多给圆一小段 $\mathrm{d}x$，面积约增加 $\dfrac{x}{2\pi}\mathrm{d}x$；三种图形的边际面积分别是 $\dfrac{x}{2\pi}$、$\dfrac{y}{8}$、$\dfrac{\sqrt3 z}{18}$。<strong>若三者的边际不相等</strong>，把一小段长度从"边际低"的图形挪给"边际高"的图形，总面积净减少——所以最优点必须三边际相等。约束下等式极值的一阶条件正是这个原理的代数化：这就是用<strong>拉格朗日乘数法</strong>的理由（也可代入 $z=2-x-y$ 消元，但乘数法保持三图形对称，且一阶条件直接读出"边际相等"）。</p>
+<p>令 $L=f+\lambda(x+y+z-2)$，偏导为零：</p>
+<p>$$\frac{x}{2\pi}+\lambda=0,\qquad \frac{y}{8}+\lambda=0,\qquad \frac{\sqrt3\,z}{18}+\lambda=0.$$</p>
+<p>三式即"边际面积 $=-\lambda$"。记 $k=-\lambda$，解得</p>
+<p>$$x=2\pi k,\qquad y=8k,\qquad z=6\sqrt3\,k.$$</p>
+<h3>第三步：代入约束解出 k</h3>
+<p>$$k\,(2\pi+8+6\sqrt3)=2\ \Longrightarrow\ k=\frac{1}{\pi+4+3\sqrt3}.$$</p>
+<p>驻点三分量均为正，落在可行域内部；三段长为 $x=\dfrac{2\pi}{\pi+4+3\sqrt3},\ y=\dfrac{8}{\pi+4+3\sqrt3},\ z=\dfrac{6\sqrt3}{\pi+4+3\sqrt3}$（米），比例 $2\pi:8:6\sqrt3$。</p>
+<h3>第四步：巧算最小值——面积 = 末端边际 × 段长 ÷ 2</h3>
+<p>每种图形的边际对段长都是线性的（比例依次为 $\dfrac{1}{2\pi},\dfrac18,\dfrac{\sqrt3}{18}$），面积是边际从 $0$ 积到段长：在驻点处末端边际都等于 $k$，故每块面积都等于 $\dfrac{k}{2}\times$ 段长（如 $\dfrac{x^{2}}{4\pi}=x\cdot\dfrac{x}{4\pi}=x\cdot\dfrac{k}{2}$）：</p>
+<p>$$f=\frac{k}{2}\,(x+y+z)=\frac{k}{2}\cdot2=k=\frac{1}{\pi+4+3\sqrt3}.$$</p>
+<h3>第五步：为什么是最小、为什么不在边界</h3>
+<p>存在性：可行集 $\{x,y,z\ge0,\ x+y+z=2\}$ 是有界闭集（三角形），$f$ 连续，必有最值；$f$ 是系数全正的正定二次型，内部无平坦方向。边界为什么不是最小：在 $z=0$ 处三角形的边际面积 $\dfrac{\sqrt3 z}{18}=0$，小于圆与正方形的正边际——按"挪一小段给边际高者"的机制，把一小段长度挪给三角形总面积<strong>严格下降</strong>；其余边界点同理（至少一个边际为正）。故最小值必在内部，唯一内部驻点就是最小值点。</p>
+<h3>易错点</h3>
+<ul><li><strong>正三角形面积丢 $\sqrt3$</strong>：边长 $z/3$，面积 $\dfrac{\sqrt3}{4}\left(\dfrac z3\right)^{2}=\dfrac{\sqrt3 z^{2}}{36}$。</li><li><strong>求出驻点就收工</strong>：必须交代"为什么是最小"——存在性（有界闭集 + 连续）与"边界更差"（边际论证或直接比较）缺一环都扣分。</li><li><strong>把 $k$ 当成 $\lambda$</strong>：由 $\dfrac{x}{2\pi}+\lambda=0$ 得 $x=-2\pi\lambda$，令 $k=-\lambda&gt;0$ 才与各分量皆正相容。</li><li><strong>硬把 $x,y,z$ 的表达式平方代回</strong>：用"面积 $=\dfrac{k}{2}\times$段长"一步得 $f=k$，比展开快且不易错。</li></ul>
+<blockquote>一句话结论：按边际面积相等的原理，三段按 $x:y:z=2\pi:8:6\sqrt3$ 分配，$k=\dfrac{1}{\pi+4+3\sqrt3}$；边界（砍掉某图形）处边际失衡必非最优，故 $f_{\min}=\dfrac{1}{\pi+4+3\sqrt3}\ \mathrm{m}^{2}$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

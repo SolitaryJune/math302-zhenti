@@ -92,5 +92,31 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：对称性消项 + 极坐标——二重积分先化简后计算</h2>
+<p><strong>答案：$\displaystyle\iint_D\frac{x^2-xy-y^2}{x^2+y^2}\,\mathrm{d}x\,\mathrm{d}y=1-\dfrac{\pi}{2}$。</strong></p>
+<h3>第一步：认清区域，用对称性砍掉一项</h3>
+<p>$D$ 由 $y=1$（上边）与 $y=x$、$y=-x$（两侧）围成，顶点为 $(0,0)$、$(1,1)$、$(-1,1)$，<strong>关于 $y$ 轴对称</strong>。被积函数拆开：</p>
+<p>$$\frac{x^2-xy-y^2}{x^2+y^2}=\frac{x^2-y^2}{x^2+y^2}-\frac{xy}{x^2+y^2}.$$</p>
+<p>第二项关于 $x$ 是<strong>奇函数</strong>，在对称区域上积分为 $0$；第一项是偶函数，保留。于是原积分只剩</p>
+<p>$$\iint_D\frac{x^2-y^2}{x^2+y^2}\,\mathrm{d}x\,\mathrm{d}y.$$</p>
+<h3>第二步：转极坐标——分子分母的 $r^2$ 恰好消掉</h3>
+<p>$x=r\cos\theta,\ y=r\sin\theta$：</p>
+<p>$$\frac{x^2-y^2}{x^2+y^2}=\frac{r^2(\cos^2\theta-\sin^2\theta)}{r^2}=\cos 2\theta.$$</p>
+<p>区域夹在 $y=x$ 与 $y=-x$ 之间的上方，故 $\theta\in\Bigl[\dfrac\pi4,\dfrac{3\pi}4\Bigr]$；上边界 $y=1$ 即 $r\sin\theta=1$，故 $0\le r\le\dfrac{1}{\sin\theta}$。</p>
+<h3>第三步：先积 $r$，再拆被积函数</h3>
+<p>$$\int_{\pi/4}^{3\pi/4}\cos 2\theta\,\mathrm{d}\theta\int_0^{1/\sin\theta}r\,\mathrm{d}r=\int_{\pi/4}^{3\pi/4}\frac{\cos 2\theta}{2\sin^2\theta}\,\mathrm{d}\theta.$$</p>
+<p>用降幂公式 $\cos 2\theta=1-2\sin^2\theta$ 拆项：</p>
+<p>$$\frac{\cos 2\theta}{2\sin^2\theta}=\frac12\csc^2\theta-1,$$</p>
+<p>原函数为 $-\dfrac12\cot\theta-\theta$。</p>
+<h3>第四步：代端点收尾</h3>
+<p>$$\Bigl[-\frac12\cot\theta-\theta\Bigr]_{\pi/4}^{3\pi/4}=\Bigl(\frac12-\frac{3\pi}{4}\Bigr)-\Bigl(-\frac12-\frac{\pi}{4}\Bigr)=1-\frac{\pi}{2}.$$</p>
+<h3>易错点</h3>
+<ul><li><strong>不拆对称性直接硬算</strong>：把 $\dfrac{xy}{x^2+y^2}$ 一起带进极坐标，计算量翻倍还容易算错。</li><li><strong>角度范围弄错</strong>：两条直线 $y=\pm x$ 在 $y$ 轴两侧向<strong>上</strong>张开，$\theta$ 从 $\dfrac\pi4$ 到 $\dfrac{3\pi}4$；写成 $\bigl[-\frac\pi4,\frac\pi4\bigr]$ 就是另一块区域。</li><li><strong>漏掉雅可比因子 $r$</strong>：极坐标面积元是 $r\,\mathrm{d}r\,\mathrm{d}\theta$，漏乘后答案面目全非。</li></ul>
+<blockquote>结论：奇函数项归零，$\cos 2\theta$ 配极坐标一次积完，积分 $=1-\dfrac\pi2$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

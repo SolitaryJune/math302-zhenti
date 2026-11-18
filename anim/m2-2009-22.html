@@ -91,5 +91,29 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：解两个非齐次方程组求通解，再用常值行列式证线性无关</h2>
+<p><strong>答案：</strong></p>
+<ul><li>$\boldsymbol{\xi}_2=\Big(\dfrac12k_1-\dfrac12,\ -\dfrac12k_1+\dfrac12,\ k_1\Big)^{\mathrm T}$（$k_1$ 为任意常数）；</li><li>$\boldsymbol{\xi}_3=\Big(-k_2-\dfrac12,\ k_2,\ k_3\Big)^{\mathrm T}$（$k_2,k_3$ 为任意常数）；</li><li>$\boldsymbol{\xi}_1,\boldsymbol{\xi}_2,\boldsymbol{\xi}_3$ 线性无关。</li></ul>
+<h3>第一步：解 $A\xi_2=\xi_1$——通解为什么长成"特解 + 齐次通解"</h3>
+<p>增广矩阵行变换（第 2 行加第 1 行相消，第 3 行除以 $-2$）：</p>
+<p>$$\left(\begin{array}{ccc|c}1&amp;-1&amp;-1&amp;-1\\-1&amp;1&amp;1&amp;1\\0&amp;-4&amp;-2&amp;-2\end{array}\right)\to\left(\begin{array}{ccc|c}1&amp;-1&amp;-1&amp;-1\\0&amp;2&amp;1&amp;1\\0&amp;0&amp;0&amp;0\end{array}\right).$$</p>
+<p>独立方程只剩 $r(A)=2$ 个，$n-r=3-2=1$ 个变量不受任何方程约束——<strong>自由元个数 $=$ 未知数个数减秩</strong>。取 $x_3=k_1$：$x_2=\dfrac{1-k_1}2$，$x_1=x_2+x_3-1=\dfrac{k_1}2-\dfrac12$。</p>
+<p>通解的结构有明确机制：若 $\eta$ 满足 $A\eta=\xi_1$、$\gamma$ 满足 $A\gamma=0$，则 $A(\eta+\gamma)=\xi_1$，故"齐次解可以随意叠加到特解上"；反过来，两个非齐次解之差必是齐次解，所以这个表示不漏不重。</p>
+<h3>第二步：先算 $A^2$，再解 $A^2\xi_3=\xi_1$——为什么带两个自由元</h3>
+<p>$$A^2=\begin{pmatrix}2&amp;2&amp;0\\-2&amp;-2&amp;0\\4&amp;4&amp;0\end{pmatrix},$$</p>
+<p>第三列全为零、秩为 $1$，只剩一个有效方程 $2x_1+2x_2=-1$。秩 $1$、$n=3$，自由元 $n-r=2$ 个：取 $x_2=k_2,\ x_3=k_3$，得 $x_1=-k_2-\dfrac12$。$\xi_2$ 带 1 个、$\xi_3$ 带 2 个任意常数，根源就是两个矩阵的秩不同。</p>
+<p>一个结构性观察：直接验算 $A\xi_1=0$——$\xi_1$ 恰是导出组 $Ax=0$ 的基础解系，$\xi_2$ 通解里的 $k_1$ 方向其实就是 $\xi_1$ 方向（齐次部分 $k_1\big(\tfrac12,-\tfrac12,1\big)^{\mathrm T}=-\tfrac{k_1}2\xi_1$）。这也说明"解带任意常数"是必然的，不是技巧。</p>
+<h3>第三步：证线性无关——为什么算行列式、而不是代入特值</h3>
+<p>三个向量恰好拼成 $3\times3$ 方阵的列，而方阵"列向量无关 ⇔ 满秩 ⇔ 行列式非零"，算一个行列式就够了；更关键的是，只要算出的值<strong>与参数 $k_1,k_2,k_3$ 无关且非零</strong>，就一次性覆盖了"任意向量 $\xi_2,\xi_3$"的全部取值——代特值只能验证个别情形。把 $\xi_1,\xi_2,\xi_3$ 按列拼成行列式，第 2 行加第 1 行：$\xi_2$ 的前两个分量互为相反数（特解部分对称、齐次部分反号），参数 $k_1,k_2$ 全部消去，第 2 行变为 $\Big(0,\ 0,\ -\dfrac12\Big)$；按第 2 行展开只剩一个二阶行列式：</p>
+<p>$$\det(\xi_1,\xi_2,\xi_3)=\frac12\Big[-k_1+(k_1-1)\Big]=-\frac12\neq0.$$</p>
+<p>行列式恒为 $-\dfrac12$，与任意常数的取值无关，故 $\xi_1,\xi_2,\xi_3$ 线性无关，证毕。</p>
+<h3>易错点</h3>
+<ul><li><strong>不解 $A^2$ 直接套 $\xi_2$ 的模式</strong>：$A^2$ 的第三列全零、秩为 1，决定了 $\xi_3$ 必须带两个自由元。</li><li><strong>取特值验证无关</strong>：代入具体的 $k$ 只验证了个别情形；必须论证行列式与参数无关地非零。</li><li><strong>自由元个数记错</strong>：自由元个数 $=n-r$，先算秩再挑自由元。</li></ul>
+<blockquote>结论：$\xi_2$ 带 1 个、$\xi_3$ 带 2 个任意常数（秩 2 与秩 1 的直接后果）；行列式恒等于 $-\dfrac12$，线性无关成立。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

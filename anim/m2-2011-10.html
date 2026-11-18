@@ -88,5 +88,27 @@ AW.init({
   },
 });
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：一阶线性方程——积分因子为什么是 e^x</h2>
+<p>答案：$y=e^{-x}\sin x$</p>
+<h3>第一步：先懂机制——积分因子是被「设计」出来的</h3>
+<p>一阶线性方程 $y'+P(x)y=Q(x)$ 的困难在左边不是任何函数的导数。积分因子的目标是找一个 $\mu(x)$，使 $\mu y'+\mu Py$ 恰好凑成 $(\mu y)'=\mu y'+\mu' y$。对比系数，只需</p>
+<p>$$\mu'=\mu P\quad\Longleftrightarrow\quad \frac{\mu'}{\mu}=P\quad\Longleftrightarrow\quad \mu=e^{\int P\,\mathrm dx}.$$</p>
+<p>所以「乘 $e^{\int P}$」不是口诀，而是解一个极简单的可分离方程的结果。本题 $P=1$，$\mu=e^x$——乘上去恰好把左边的 $y'+y$ 打包成 $(ye^x)'$。</p>
+<h3>第二步：乘 $\mu$ 后积分</h3>
+<p>两边乘 $e^x$，左边凑成导数：$(y\,e^{x})'=e^{x}\cdot e^{-x}\cos x=\cos x$，积分得</p>
+<p>$$y\,e^{x}=\sin x+C\ \Longrightarrow\ y=e^{-x}(\sin x+C).$$</p>
+<p>也可以换个视角看穿答案结构：右端 $e^{-x}\cos x$ 与齐次解同带 $e^{-x}$ 因子，试探 $y=e^{-x}z$，则 $y'+y=e^{-x}(z'-z)+e^{-x}z=e^{-x}z'$，方程变成 $e^{-x}z'=e^{-x}\cos x$，约去 $e^{-x}$ 得 $z'=\cos x$——两条路给出同一个 $z=\sin x+C$。</p>
+<h3>第三步：代初值定 C 并验算</h3>
+<p>$y(0)=0$：$e^0(\sin 0+C)=C=0$，故 $C=0$，特解为</p>
+<p>$$y=e^{-x}\sin x.$$</p>
+<p>验算：$y'+y=e^{-x}(\cos x-\sin x)+e^{-x}\sin x=e^{-x}\cos x$，且 $y(0)=0$，成立。</p>
+<h3>易错点</h3>
+<ul><li><strong>积分因子方向反了</strong>：应乘 $e^{+x}$ 而不是 $e^{-x}$——判据是 $\mu'=\mu P$：取 $\mu=e^{-x}$ 时 $\mu'=-\mu\ne\mu P$，左边凑不成全导数。</li><li><strong>丢常数 C 或忘定 C</strong>：通解必须带 $C$，给了初值就必须定值。</li><li><strong>结果不验算</strong>：求导回代一次即可确认，成本极低，别省。</li></ul>
+<blockquote>结论：填 $y=e^{-x}\sin x$。积分因子由 $\mu'=\mu P$ 反解出来；「右端与齐次解同因子」时换元 $y=e^{-x}z$ 同样一击即中。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

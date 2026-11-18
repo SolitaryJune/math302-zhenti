@@ -99,5 +99,26 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：斜渐近线——从几何定义推出两步极限</h2>
+<p>答案：$y=x+\dfrac{\pi}{2}$</p>
+<h3>第 0 步：先立机制——渐近线的定义如何变成两个极限</h3>
+<p>斜渐近线的几何含义：$x\to\infty$ 时曲线<strong>贴着直线 $y=kx+b$ 走</strong>，即 $y-(kx+b)\to0$。把定义拆开就得到标准流程：先两边除以 $x$，得 $k=\lim\limits_{x\to\infty}\dfrac yx$（直线的主导项）；再作差，得 $b=\lim\limits_{x\to\infty}(y-kx)$（截距修正项）。<strong>顺序不能反</strong>——$b$ 的算式里要用上已知的 $k$，$k$ 未定时 $y-kx$ 无从写起。</p>
+<h3>第一步：先拆分式，把 x 剥离出来</h3>
+<p>$$\frac{x^3}{1+x^2}=\frac{x(1+x^2)-x}{1+x^2}=x-\frac{x}{1+x^2},$$</p>
+<p>于是 $y=x-\dfrac{x}{1+x^2}+\arctan(1+x^2)$——主部 $x$ 单独站了出来，剩下两项都是趋零量级，$k$ 已经露面。拆分式的动机正在于此：不让 $x$ 埋在分式里。</p>
+<h3>第二步：定斜率 k</h3>
+<p>$$k=\lim_{x\to\infty}\frac yx=\lim_{x\to\infty}\Big(1-\frac{1}{1+x^2}+\frac{\arctan(1+x^2)}{x}\Big)=1-0+0=1.$$</p>
+<p>第三项为什么归零：分子有界（$\arctan$ 永远夹在 $\big(-\frac\pi2,\frac\pi2\big)$ 内），分母趋于无穷——"有界乘无穷小"。</p>
+<h3>第三步：定截距 b</h3>
+<p>$$b=\lim_{x\to\infty}(y-x)=\lim_{x\to\infty}\Big(-\frac{x}{1+x^2}+\arctan(1+x^2)\Big)=0+\frac{\pi}{2}=\frac{\pi}{2}.$$</p>
+<p>关键在 $\arctan$ 的参数是 $1+x^2$：<strong>与 $x$ 的正负无关</strong>，$x\to\pm\infty$ 时都趋于 $+\infty$，故两侧极限同为 $\dfrac{\pi}{2}$——双侧渐近线是同一条。这正是本题敢对 $x\to\infty$ 一步到位的底气；若换成 $\arctan x$，两侧就得分开讨论。</p>
+<h3>易错点</h3>
+<ul><li><strong>只验证 $x\to+\infty$ 一侧</strong>：本题两侧一致是"参数 $1+x^2$ 恒正"送来的，理由必须写明；含 $\arctan x$、$\mathrm e^x$ 的曲线两侧常不同。</li><li><strong>先求 b 后求 k</strong>：$b=\lim(y-kx)$ 里的 $k$ 是未知数，顺序颠倒两步都算不成。</li><li><strong>丢掉 $-\dfrac{x}{1+x^2}$</strong>：它先归零（分子比分母低两阶），但 $b$ 的算式里必须见它归零、再让 $\arctan$ 接管主项。</li></ul>
+<blockquote>结论：$k=1$，$b=\dfrac{\pi}{2}$，斜渐近线 $y=x+\dfrac{\pi}{2}$（等价写法：$y-x=\dfrac{\pi}{2}$）。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

@@ -106,5 +106,27 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：初等矩阵包围下的矩阵方程（左右乘 = 行列变换）</h2>
+<p>答案：C</p>
+<h3>第一步：认清 $\boldsymbol P$ 的身份</h3>
+<p>$\boldsymbol P=\begin{pmatrix}1&amp;0&amp;0\\0&amp;1&amp;0\\1&amp;0&amp;1\end{pmatrix}$ 是把单位阵作 $r_3+r_1$（第 1 行的 1 倍加到第 3 行）得到的初等矩阵。铁律：<strong>左乘 = 行变换，右乘 = 列变换</strong>；所求的是 $\boldsymbol A=(\boldsymbol P^{\mathrm T})^{-1}\boldsymbol B\,(\boldsymbol P^2)^{-1}$，其中 $\boldsymbol B$ 是题给的右端矩阵。</p>
+<h3>第二步：备好两个逆矩阵</h3>
+<table><thead><tr><th>矩阵</th><th>对应变换</th><th>作用位置</th></tr></thead><tbody><tr><td>$(\boldsymbol P^{\mathrm T})^{-1}=\begin{pmatrix}1&amp;0&amp;-1\\0&amp;1&amp;0\\0&amp;0&amp;1\end{pmatrix}$</td><td>行变换 $r_1-r_3$</td><td>左乘 $\boldsymbol B$</td></tr><tr><td>$(\boldsymbol P^2)^{-1}=\begin{pmatrix}1&amp;0&amp;0\\0&amp;1&amp;0\\-2&amp;0&amp;1\end{pmatrix}$</td><td>列变换 $c_1-2c_3$</td><td>右乘</td></tr></tbody></table>
+<p>其中 $\boldsymbol P^2=\begin{pmatrix}1&amp;0&amp;0\\0&amp;1&amp;0\\2&amp;0&amp;1\end{pmatrix}$（$r_3+2r_1$ 型），取逆即把加法换成减法。</p>
+<h3>第三步：两次变换解出 $\boldsymbol A$</h3>
+<p>先左乘（对 $\boldsymbol B$ 作 $r_1-r_3$）：</p>
+<p>$$\begin{pmatrix}a+2c-2c&amp;0&amp;c-c\\0&amp;b&amp;0\\2c&amp;0&amp;c\end{pmatrix}=\begin{pmatrix}a&amp;0&amp;0\\0&amp;b&amp;0\\2c&amp;0&amp;c\end{pmatrix}.$$</p>
+<p>再右乘（作 $c_1-2c_3$）：第 3 行首元 $2c-2c=0$，其余列不变：</p>
+<p>$$\boldsymbol A=\begin{pmatrix}a&amp;0&amp;0\\0&amp;b&amp;0\\0&amp;0&amp;c\end{pmatrix}.$$</p>
+<h3>第四步：回代验证</h3>
+<p>$\boldsymbol A\boldsymbol P^2=\begin{pmatrix}a&amp;0&amp;0\\0&amp;b&amp;0\\2c&amp;0&amp;c\end{pmatrix}$，再左乘 $\boldsymbol P^{\mathrm T}$（$r_1+r_3$）得 $\begin{pmatrix}a+2c&amp;0&amp;c\\0&amp;b&amp;0\\2c&amp;0&amp;c\end{pmatrix}$，与题给右端一致，选 <strong>C</strong>。</p>
+<h3>易错点</h3>
+<ul><li><strong>行列方向搞反</strong>：$(\boldsymbol P^{\mathrm T})^{-1}$ 是<strong>行</strong>变换 $r_1-r_3$，别当成列变换去改第 1、3 列——A/D 的对角元错序多源于此。</li><li><strong>忘了先求 $\boldsymbol P^2$</strong>：右乘的是 $(\boldsymbol P^2)^{-1}$（$c_1-2c_3$），不是 $\boldsymbol P^{-1}$（$c_1-c_3$），系数 $2$ 不能丢。</li><li><strong>不回代验证</strong>：矩阵方程题两分钟就能代回去查一遍，硬算错位得不偿失。</li></ul>
+<blockquote>一句话结论：左乘去 $\boldsymbol P^{\mathrm T}$（$r_1-r_3$）、右乘去 $\boldsymbol P^2$（$c_1-2c_3$），两步清洗后 $\boldsymbol A=\mathrm{diag}(a,b,c)$，选 C。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

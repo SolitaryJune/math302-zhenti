@@ -88,5 +88,28 @@ AW.init({
   },
 });
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：变限积分曲线的弧长——公式从微元勾股定理来</h2>
+<p>答案：$\ln(1+\sqrt 2)$</p>
+<h3>第一步：先懂机制——弧长公式在算什么</h3>
+<p>弧长公式 $s=\int\sqrt{1+(y')^2}\,\mathrm dx$ 不是要背的黑箱：把曲线切成小段，每小段用切线段近似，而切线段的长就是勾股定理</p>
+<p>$$\mathrm ds=\sqrt{(\mathrm dx)^2+(\mathrm dy)^2}=\sqrt{1+\Bigl(\frac{\mathrm dy}{\mathrm dx}\Bigr)^2}\,\mathrm dx.$$</p>
+<p>积分把所有小段拼回全长。所以套公式前唯一要准备的就是 $y'$。</p>
+<h3>第二步：变限积分直接求导</h3>
+<p>$y=\int_0^x\tan t\,\mathrm dt$，由变限积分求导定理（被积函数 $\tan t$ 在 $\left[0,\frac\pi4\right]$ 上连续）立刻得 $y'=\tan x$。不必先积出 $-\ln\cos x$ 再求导——那等于把刚做的积分原样拆掉。代入公式：</p>
+<p>$$s=\int_0^{\frac\pi4}\sqrt{1+\tan^2x}\,\mathrm dx.$$</p>
+<h3>第三步：被开方量凑完全平方</h3>
+<p>用 $1+\tan^2x=\sec^2x$——它来自 $\sin^2x+\cos^2x=1$ 两边同除以 $\cos^2x$。开方时注意 $\sqrt{\sec^2x}=\lvert\sec x\rvert$，而区间上 $\cos x&gt;0$，故 $\sec x&gt;0$，绝对值直接摘掉：</p>
+<p>$$s=\int_0^{\frac\pi4}\sec x\,\mathrm dx.$$</p>
+<h3>第四步：用 sec 的原函数收尾</h3>
+<p>$$s=\Bigl[\ln(\sec x+\tan x)\Bigr]_0^{\frac\pi4}=\ln(\sqrt2+1)-\ln 1=\ln(1+\sqrt2).$$</p>
+<p>（验证端点：$\sec\frac\pi4=\sqrt2$、$\tan\frac\pi4=1$；下限处 $\sec0+\tan0=1$，$\ln1=0$。）</p>
+<h3>易错点</h3>
+<ul><li><strong>先积出 $y$ 再求导</strong>：绕远路；变限积分上限求导一步到位，这也是题目把 $y$ 写成变限积分的用意。</li><li><strong>开平方丢绝对值</strong>：$\sqrt{\sec^2x}=\lvert\sec x\rvert$，本题靠 $\sec x&gt;0$ 才能直接开；换一个含 $\cos x&lt;0$ 的区间就必须讨论。</li><li><strong>$\sec x$ 原函数记错</strong>：$\int\sec x\,\mathrm dx=\ln\lvert\sec x+\tan x\rvert+C$；求导一遍即可自检，别凭印象写。</li></ul>
+<blockquote>结论：填 $\ln(1+\sqrt 2)$。弧长 = 微元勾股定理的积分；$1+\tan^2=\sec^2$ 把被开方量变成完全平方是本题的题眼。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

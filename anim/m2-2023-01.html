@@ -89,5 +89,25 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：斜渐近线的完整计算——求出 k 之后，b 才是胜负手</h2>
+<p>答案：B</p>
+<h3>第一步：定类型、算斜率</h3>
+<p>$x\to\infty$ 时 $\dfrac{1}{x-1}\to0$，$y$ 与 $x$ 同阶增长，必有斜渐近线 $y=kx+b$。先求</p>
+<p>$$k=\lim_{x\to\infty}\frac{y}{x}=\lim_{x\to\infty}\ln\Bigl(\mathrm e+\frac{1}{x-1}\Bigr)=\ln\mathrm e=1.$$</p>
+<h3>第二步：求截距 b——把「对数减常数」除进去凑 ln(1+t)</h3>
+<p>$$b=\lim_{x\to\infty}\bigl(y-x\bigr)=\lim_{x\to\infty}x\Bigl[\ln\Bigl(\mathrm e+\frac{1}{x-1}\Bigr)-1\Bigr].$$</p>
+<p>括号内是 $\ln(\text{接近 }\mathrm e\text{ 的量})-1$，硬套等价会出乱子，标准动作是除进去：</p>
+<p>$$\ln\Bigl(\mathrm e+\frac{1}{x-1}\Bigr)-1=\ln\Bigl(1+\frac{1}{\mathrm e(x-1)}\Bigr)\sim\frac{1}{\mathrm e(x-1)}.$$</p>
+<p>于是 $b=\lim\limits_{x\to\infty}x\cdot\dfrac{1}{\mathrm e(x-1)}=\dfrac1{\mathrm e}\lim\limits_{x\to\infty}\dfrac{x}{x-1}=\dfrac1{\mathrm e}$，渐近线 $y=x+\dfrac1{\mathrm e}$，选 B。</p>
+<h3>第三步：数值自检</h3>
+<p>取 $x=10^7$：$y-x\approx0.367879$，恰为 $1/\mathrm e\approx0.367879$，吻合。</p>
+<h3>易错点</h3>
+<ul><li><strong>算出 k=1 就选 C</strong>：$b=\lim(y-x)$ 并不为 0，漏掉截距是最常见丢分点。</li><li><strong>凑 ln(1+t) 时丢掉因子 1/e</strong>：分母的 $\mathrm e$ 必须一起除进去，否则误选 A。</li><li><strong>符号弄反选 D</strong>：$x\to+\infty$ 时 $\dfrac{1}{\mathrm e(x-1)}&gt;0$，$\ln(1+t)&gt;0$，$b$ 是正的。</li></ul>
+<blockquote>一句话结论：$k=1$、$b=1/\mathrm e$，斜渐近线 $y=x+1/\mathrm e$；另注意曲线在 $x\to1^+$ 处还有铅直渐近线 $x=1$，但四个选项给的都是斜渐近线形式，故选 B。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

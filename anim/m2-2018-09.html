@@ -99,5 +99,30 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：$\infty\cdot0$ 型极限——两个相近函数值之差用拉格朗日中值定理 + 夹逼</h2>
+<p>答案：$1$</p>
+<h3>第一步：识别类型</h3>
+<p>$x^2\to+\infty$，而 $\arctan(x+1)-\arctan x\to0$，是 $\infty\cdot0$ 型。两处 $\arctan$ 都趋于 $\dfrac\pi2$，谁也代替不了谁，必须<strong>定量</strong>处理这个"相邻函数值之差"。</p>
+<h3>第二步：拉格朗日中值定理化差为导数</h3>
+<p>对 $f(t)=\arctan t$（$f'(t)=\dfrac1{1+t^2}$）在区间 $[x,\,x+1]$ 上用中值定理：存在 $\xi\in(x,x+1)$ 使</p>
+<p>$$\arctan(x+1)-\arctan x=f'(\xi)\cdot\big[(x+1)-x\big]=\frac1{1+\xi^2}.$$</p>
+<p>区间长度恰为 $1$，差被化成一个带未知点 $\xi$ 的分式。</p>
+<h3>第三步：夹逼定值</h3>
+<p>由 $x&lt;\xi&lt;x+1$（$x&gt;0$）得 $1+x^2&lt;1+\xi^2&lt;1+(x+1)^2$，取倒数放大缩小：</p>
+<p>$$\frac{x^2}{1+(x+1)^2}&lt;\frac{x^2}{1+\xi^2}&lt;\frac{x^2}{1+x^2}.$$</p>
+<p>两端极限：$\dfrac{x^2}{1+x^2}\to1$；$\dfrac{x^2}{1+(x+1)^2}\to1$（分母最高次也是 $x^2$）。由夹逼定理，原极限 $=1$。</p>
+<h3>第四步：换个口径验算（等价无穷小）</h3>
+<p>用 $\arctan a-\arctan b=\arctan\dfrac{a-b}{1+ab}$：</p>
+<p>$$\arctan(x+1)-\arctan x=\arctan\frac1{1+x(x+1)}\sim\frac1{1+x^2+x},$$</p>
+<p>$$x^2\cdot\frac1{1+x^2+x}\longrightarrow1.$$</p>
+<p>两种方法结果一致。</p>
+<h3>易错点</h3>
+<ul><li><strong>用"都趋于 $\dfrac\pi2$，差为 $0$"草草了事</strong>：那只说明差趋于 $0$，本题还要乘上 $x^2\to\infty$，属于 $0\cdot\infty$ 待定型，必须算出精确阶。</li><li><strong>洛必达硬算</strong>：对 $x^2[\arctan(x+1)-\arctan x]$ 直接求导会越导越繁；中值定理一步到位。</li><li><strong>夹逼端点取错</strong>：放缩方向要对——$\xi$ 越大 $1+\xi^2$ 越大、分式越小，别把不等号写反。</li></ul>
+<blockquote>结论：差 $=\dfrac1{1+\xi^2}$（中值定理，$\xi\in(x,x+1)$），夹逼得 $x^2\cdot\dfrac1{1+\xi^2}\to1$，填 $1$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

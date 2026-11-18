@@ -108,5 +108,27 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：无极值点 + 有拐点——两个判别式各管一件事</h2>
+<p>答案：C</p>
+<h3>第一步：把判定翻译成符号问题</h3>
+<p>$\mathrm e^x&gt;0$ 恒正，$f'$、$f''$ 的符号完全由各自的二次因子决定：极值点是 $f'$ 的<strong>变号</strong>零点，拐点是 $f''$ 的<strong>变号</strong>零点。</p>
+<h3>第二步：「没有极值点」给 a 的下限</h3>
+<p>$f'(x)=(x^2+2x+a)\mathrm e^x$，不变号 $\iff$ 判别式</p>
+<p>$$\Delta_1=4-4a\le0\iff a\ge1.$$</p>
+<p>此时 $f'(x)\ge0$，$f$ 单调不减（个别点导数为零不影响单调性）。</p>
+<h3>第三步：「有拐点」给 a 的上限</h3>
+<p>$f''(x)=(x^2+4x+2+a)\mathrm e^x$，要变号 $\iff$ 二次因子有两个相异实根：</p>
+<p>$$\Delta_2=16-4(2+a)&gt;0\iff a&lt;2.$$</p>
+<h3>第四步：取交集、对照选项</h3>
+<p>$$a\in[1,2),$$</p>
+<p>选 C。A 中 $a&lt;1$ 时 $\Delta_1&gt;0$，反而出现极值点；B、D 让 $a\ge2$ 混进来，此时 $\Delta_2\le0$，曲线处处同凹凸、无拐点。</p>
+<h3>易错点</h3>
+<ul><li><strong>边界 a=1 不敢取</strong>：$a=1$ 时 $f'$ 在 $x=-1$ 有二重根，$f'$ 不变号，不算极值点，所以 $\Delta_1\le0$ 允许等号。</li><li><strong>拐点条件写成 $\Delta_2\ge0$</strong>：重根处 $f''$ 不变号（如 $y=x^4$ 的原点），不是拐点，必须严格大于。</li><li><strong>两个条件只满足其一</strong>：B 就是只管住了「无极值」却漏了「有拐点」。</li></ul>
+<blockquote>一句话结论：无极值 $\Rightarrow a\ge1$，有拐点 $\Rightarrow a&lt;2$，交集 $[1,2)$ 选 C。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

@@ -102,5 +102,34 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：由全微分还原原函数，再判极值</h2>
+<p><strong>答案</strong>：$f(x,y)=-x^2\mathrm{e}^{-y}+(y+2)\mathrm{e}^{-y}$；$f$ 有极大值 $f(0,-1)=\mathrm e$，无极小值。</p>
+<h3>第一步：偏积分还原（"积分常数"是待定函数）</h3>
+<p>$\mathrm df=P\,\mathrm dx+Q\,\mathrm dy$ 意味着 $f_x=P,\ f_y=Q$。<strong>为什么先对 $x$ 偏积分？</strong> 两个方向都能走，但 $f_x=-2x\mathrm e^{-y}$ 关于 $x$ 是一次式，积一次立刻出 $-x^2\mathrm e^{-y}$；若先对 $y$ 积 $Q=\mathrm e^{-y}(x^2-y-1)$ 则必带一次分部积分，多一处负号风险。选"好积的那一半"先做。于是对 $x$ 偏积分：</p>
+<p>$$f_x=-2x\mathrm{e}^{-y}\ \Longrightarrow\ f(x,y)=-x^2\mathrm{e}^{-y}+\varphi(y),$$</p>
+<p>其中 $\varphi(y)$ 是待定的一元函数——对 $x$ 积分时，与 $x$ 无关的部分都藏在它里面。</p>
+<h3>第二步：用 $f_y=Q$ 定出 $\varphi$</h3>
+<p>$$f_y=x^2\mathrm{e}^{-y}+\varphi'(y)\overset{\text{题设}}=x^2\mathrm{e}^{-y}-(y+1)\mathrm{e}^{-y}\ \Longrightarrow\ \varphi'(y)=-(y+1)\mathrm{e}^{-y}.$$</p>
+<p>分部积分一次：$\displaystyle\int(y+1)\mathrm{e}^{-y}\mathrm{d}y=-(y+1)\mathrm{e}^{-y}-\mathrm{e}^{-y}=-(y+2)\mathrm{e}^{-y}$，故</p>
+<p>$$\varphi(y)=(y+2)\mathrm{e}^{-y}+C,\qquad f(x,y)=-x^2\mathrm{e}^{-y}+(y+2)\mathrm{e}^{-y}+C.$$</p>
+<h3>第三步：初值定常数，写出 $f$</h3>
+<p>代入 $f(0,0)=2$：$0+(0+2)\cdot1+C=2$，得 $C=0$：</p>
+<p>$$f(x,y)=(y+2-x^2)\mathrm{e}^{-y}.$$</p>
+<h3>第四步：驻点与二阶判别</h3>
+<p>一阶条件：</p>
+<p>$$f_x=-2x\mathrm{e}^{-y}=0\Rightarrow x=0;\qquad f_y=\mathrm{e}^{-y}(x^2-y-1)=0\Rightarrow y=x^2-1=-1.$$</p>
+<p>$f_y=0$ 之所以能直接扔掉因子 $\mathrm e^{-y}$，依据是 $\mathrm e^{-y}&gt;0$ 恒成立——指数函数永不为零。唯一驻点 $(0,-1)$。二阶偏导：</p>
+<table><thead><tr><th>偏导</th><th>表达式</th><th>在 $(0,-1)$</th></tr></thead><tbody><tr><td>$A=f_{xx}$</td><td>$-2\mathrm{e}^{-y}$</td><td>$-2\mathrm{e}&lt;0$</td></tr><tr><td>$B=f_{xy}$</td><td>$2x\mathrm{e}^{-y}$</td><td>$0$</td></tr><tr><td>$C=f_{yy}$</td><td>$\mathrm{e}^{-y}(y-x^2)$</td><td>$-\mathrm e$</td></tr></tbody></table>
+<p><strong>为什么 $AC-B^2$ 与 $A$ 的符号能判极值？</strong> 驻点处泰勒展开的一阶项消失，只剩二阶主部 $\Delta f\approx\frac12\big(A\,\Delta x^2+2B\,\Delta x\,\Delta y+C\,\Delta y^2\big)$，这是关于增量 $(\Delta x,\Delta y)$ 的二次型。$AC-B^2&gt;0$ 迫使 $A,C$ 同号、二次型<strong>定号</strong>：$A&lt;0$ 时无论朝哪个方向走函数值都下降——四面低是山顶（极大）；$A&gt;0$ 四面高是谷底（极小）；$AC-B^2&lt;0$ 则有升有降，是鞍点。这与一元情形"$f''&lt;0$ 为极大"一脉相承。</p>
+<p>$AC-B^2=(-2\mathrm e)(-\mathrm e)-0=2\mathrm e^2&gt;0$ 且 $A&lt;0$，故 $(0,-1)$ 是<strong>极大值点</strong>，极大值 $f(0,-1)=(-1+2-0)\mathrm{e}^{1}=\mathrm e$。</p>
+<p><strong>为什么无极小值？</strong> 可微函数的极值点必是驻点（费马引理），而驻点方程组只有唯一解 $(0,-1)$，它已被判为极大——极值"名额"用完，故不存在极小值。</p>
+<h3>易错点</h3>
+<ul><li><strong>偏积分漏 $\varphi(y)$</strong>：对 $x$ 积分的"常数"是含 $y$ 的函数，写成常数 0 后面全部无解。</li><li><strong>$\varphi'$ 的双重负号</strong>：由 $f_y$ 比较得 $\varphi'(y)=-(y+1)\mathrm e^{-y}$，分部积分又出一个负号 $\int(y+1)\mathrm e^{-y}\mathrm dy=-(y+2)\mathrm e^{-y}$，两个负号相消才得到 $+(y+2)\mathrm e^{-y}$。</li><li><strong>$f_{yy}$ 漏乘积法则</strong>：$f_y=\mathrm e^{-y}(x^2-y-1)$ 对 $y$ 求导是两项 $-\mathrm e^{-y}(x^2-y-1)-\mathrm e^{-y}$，合并成 $\mathrm e^{-y}(y-x^2)$；只求一层就错了。</li><li><strong>只解驻点不判型</strong>：解出 $(0,-1)$ 不算完，必须算 $AC-B^2$ 与 $A$ 的符号；也别忘交代"为什么无极小值"——驻点唯一且为极大。</li></ul>
+<blockquote>一句话结论：偏积分得 $f=(y+2-x^2)\mathrm e^{-y}$，唯一驻点 $(0,-1)$ 处 $AC-B^2=2\mathrm e^2&gt;0$、$A&lt;0$，极大值 $\mathrm e$，无极小值。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

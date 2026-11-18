@@ -104,5 +104,26 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：行列式求值——插单位阵凑公因子，桥接两个「和」的行列式</h2>
+<p>答案：$\big|\boldsymbol A+\boldsymbol B^{-1}\big|=3$。</p>
+<h3>第 0 步：先立机制——为什么必须先因式分解，以及怎么想到 $\boldsymbol E+\boldsymbol A\boldsymbol B$</h3>
+<p>已知 $|\boldsymbol A|=3,\ |\boldsymbol B|=2,\ |\boldsymbol A^{-1}+\boldsymbol B|=2$，目标 $\big|\boldsymbol A+\boldsymbol B^{-1}\big|$。<strong>行列式对乘法友好、对加法完全不友好</strong>：$|\boldsymbol X\boldsymbol Y|=|\boldsymbol X||\boldsymbol Y|$，但 $|\boldsymbol X+\boldsymbol Y|$ 没有任何公式。所以全部希望都在把两个「和」各自分解成乘积。</p>
+<p>怎么想到公共因子？用<strong>「消化」</strong>的思路：要消灭 $\boldsymbol A^{-1}$，就左乘 $\boldsymbol A$（$\boldsymbol A\boldsymbol A^{-1}=\boldsymbol E$）；要消灭 $\boldsymbol B^{-1}$，就右乘 $\boldsymbol B$。两个「和」提公因子时恰好同时完成：</p>
+<p>$$\boldsymbol A^{-1}+\boldsymbol B=\boldsymbol A^{-1}\big(\boldsymbol E+\boldsymbol A\boldsymbol B\big),\qquad\boldsymbol A+\boldsymbol B^{-1}=\big(\boldsymbol E+\boldsymbol A\boldsymbol B\big)\boldsymbol B^{-1}.$$</p>
+<p><strong>展开验证</strong>（不怕 $\boldsymbol A\boldsymbol B\neq\boldsymbol B\boldsymbol A$，括号内是按乘法顺序拼出来的）：$\boldsymbol A^{-1}\boldsymbol E+\boldsymbol A^{-1}\boldsymbol A\boldsymbol B=\boldsymbol A^{-1}+\boldsymbol B$ ✓；$\boldsymbol E\boldsymbol B^{-1}+\boldsymbol A\boldsymbol B\boldsymbol B^{-1}=\boldsymbol B^{-1}+\boldsymbol A$ ✓。两个「和」共享同一块积木 $\boldsymbol E+\boldsymbol A\boldsymbol B$——它就是桥。</p>
+<h3>第一步：从已知一侧过桥，求出桥的行列式</h3>
+<p>$$\big|\boldsymbol A^{-1}+\boldsymbol B\big|=\big|\boldsymbol A^{-1}\big|\cdot\big|\boldsymbol E+\boldsymbol A\boldsymbol B\big|=\frac{\big|\boldsymbol E+\boldsymbol A\boldsymbol B\big|}{|\boldsymbol A|}=2,$$</p>
+<p>代 $|\boldsymbol A|=3$ 得 $\big|\boldsymbol E+\boldsymbol A\boldsymbol B\big|=6$。</p>
+<h3>第二步：从桥走向目标</h3>
+<p>$$\big|\boldsymbol A+\boldsymbol B^{-1}\big|=\big|\boldsymbol E+\boldsymbol A\boldsymbol B\big|\cdot\big|\boldsymbol B^{-1}\big|=\frac{6}{|\boldsymbol B|}=\frac62=3.$$</p>
+<p>（$|\boldsymbol A^{-1}|=\dfrac1{|\boldsymbol A|}$、$|\boldsymbol B^{-1}|=\dfrac1{|\boldsymbol B|}$：由 $|\boldsymbol X\boldsymbol Y|=|\boldsymbol X||\boldsymbol Y|$ 与 $\boldsymbol X\boldsymbol X^{-1}=\boldsymbol E$ 直接得 $\det(\boldsymbol X^{-1})=(\det\boldsymbol X)^{-1}$。）</p>
+<h3>易错点</h3>
+<ul><li><strong>把矩阵当数算</strong>：拿 $1/3+2$ 这类「标量代入」毫无意义——矩阵非交换、和的行列式没有加法公式，必须先因式分解成乘积，再用 $|\boldsymbol X\boldsymbol Y|=|\boldsymbol X||\boldsymbol Y|$ 串联。</li><li><strong>硬凑 $(\boldsymbol A+\boldsymbol B)$</strong>：$\boldsymbol A^{-1}+\boldsymbol B$ 与 $\boldsymbol A+\boldsymbol B^{-1}$ 之间没有直接互逆关系，正路是公共因子 $\boldsymbol E+\boldsymbol A\boldsymbol B$。</li><li><strong>乘法性质用错对象</strong>：$|\boldsymbol X\boldsymbol Y|=|\boldsymbol X||\boldsymbol Y|$ 要求同阶方阵；$|\boldsymbol A^{-1}|$ 是倒数关系而非负号。</li></ul>
+<blockquote>拆「和」必先凑「积」：左乘 $\boldsymbol A$ 消化 $\boldsymbol A^{-1}$、右乘 $\boldsymbol B$ 消化 $\boldsymbol B^{-1}$，公共因子 $\boldsymbol E+\boldsymbol A\boldsymbol B$ 串联两侧。本题答案 $3$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

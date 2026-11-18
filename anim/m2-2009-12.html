@@ -99,5 +99,29 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：隐函数在定点的二阶导数</h2>
+<p>答案：$-3$</p>
+<h3>第一步：定出切点的 $y$ 值</h3>
+<p>把 $x=0$ 代入 $xy+\mathrm e^y=x+1$：$\mathrm e^y=1\Rightarrow y=0$。</p>
+<h3>第二步：一阶求导（逐项求，不先解 $y'$）</h3>
+<p>对方程两边求导，$y$ 处处按 $y(x)$ 处理：</p>
+<p>$$y+xy'+\mathrm e^y\,y'=1.$$</p>
+<p>代入 $x=0,\ y=0$：$0+0+y'=1$，得 $y'(0)=1$。</p>
+<h3>第三步：二阶求导</h3>
+<p>再对上式求一次导，注意 $xy'$ 与 $\mathrm e^y\,y'$ 都是乘积，$\mathrm e^y$ 还要链式：</p>
+<p>$$y'+y'+xy''+\mathrm e^y(y')^2+\mathrm e^y\,y''=0,$$</p>
+<p>整理为</p>
+<p>$$2y'+xy''+\mathrm e^y\big[(y')^2+y''\big]=0.$$</p>
+<h3>第四步：一次代入全部已知值</h3>
+<p>把 $x=0,\ y=0,\ y'=1$ 一起代入：</p>
+<p>$$2\cdot1+0+1\cdot(1+y'')=0\ \Longrightarrow\ y''(0)=-3.$$</p>
+<h3>易错点</h3>
+<ul><li><strong>求 $y''$ 时漏乘积法则</strong>：$xy'$ 对 $x$ 求导是 $y'+xy''$，不是只留 $xy''$。</li><li><strong>$\mathrm e^y$ 忘链式</strong>：凡含 $y$ 的项求导都要带 $y'$。</li><li><strong>硬解通式再代值</strong>：每次求导后立刻代入已知数值，方程大幅简化；拖到最后再代反而容易算错。</li></ul>
+<blockquote>流程：定点 → 一阶导代值 → 二阶导代值，逐层消元。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

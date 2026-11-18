@@ -107,5 +107,25 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：振荡因子乘幂——$f'$ 在 $0$ 处连续的条件</h2>
+<p>答案：<strong>A</strong>。</p>
+<h3>第 0 步：先立机制——"连续"拆成两件事</h3>
+<p>$f'(x)$ 在 $x=0$ 连续 = ① $f'(0)$ 存在；② $\lim_{x\to0}f'(x)=f'(0)$。左半边 $f\equiv0$（常函数导数为零），左导数与 $f'(0)$ 的左极限都是 $0$；整个问题压在<strong>右侧</strong>：$f'(0)=0$ 与 $\lim_{x\to0^+}f'(x)=0$ 能否同时成立。核心机制提前说破：$x\to0^+$ 时 $\dfrac1{x^\beta}\to+\infty$，$\cos\dfrac1{x^\beta}$、$\sin\dfrac1{x^\beta}$ 无限振荡、绝不归零——<strong>唯一能救它们的是旁边的幂因子衰减得够快</strong>。</p>
+<h3>第 1 步：$f'(0)$ 本身要存在——幂次 $\alpha-1&gt;0$</h3>
+<p>$f'(0)=\lim_{x\to0^+}\dfrac{x^{\alpha}\cos\frac1{x^\beta}-0}{x}=\lim_{x\to0^+}x^{\alpha-1}\cos\dfrac1{x^\beta}$。有界振荡 × 幂因子：要极限为 $0$，需 $\alpha-1&gt;0$，即 $\alpha&gt;1$；$\alpha\le1$ 时振荡不归零（或振幅不衰减），导数不存在。</p>
+<h3>第 2 步：右侧导函数两项，逐项过筛</h3>
+<p>$x&gt;0$ 时乘积 + 链式求导：$\big(\cos\frac1{x^\beta}\big)'=-\sin\frac1{x^\beta}\cdot(-\beta x^{-\beta-1})=\beta x^{-\beta-1}\sin\frac1{x^\beta}$（负负得正），乘回 $x^{\alpha}$：</p>
+<p>$$f'(x)=\alpha x^{\alpha-1}\cos\frac1{x^\beta}+\beta x^{\alpha-\beta-1}\sin\frac1{x^\beta}.$$</p>
+<ul><li>第一项 $\to0$ 需要 $\alpha-1&gt;0$；</li><li>第二项（<strong>命门</strong>，幂次 $\alpha-\beta-1$ 更低）$\to0$ 需要 $\alpha-\beta-1&gt;0$，即 $\alpha-\beta&gt;1$。</li></ul>
+<h3>第 3 步：合并条件与临界验证</h3>
+<p>由 $\beta&gt;0$，$\alpha-\beta&gt;1\Rightarrow\alpha&gt;\beta+1&gt;1$，第一项条件自动满足——充要条件就是 $\alpha-\beta&gt;1$。为什么临界情形必败：$\alpha-\beta=1$ 时第二项恰为 $\beta\sin\frac1{x^\beta}$，只剩振荡因子、无极限（$\alpha-\beta&lt;1$ 时振幅 $\to\infty$ 更不可能），此时第一项虽 $\to0$ 也救不了，$f'$ 在 $0$ 不连续。</p>
+<h3>易错点</h3>
+<ul><li><strong>选 C</strong>：$\alpha-\beta&gt;2$ 条件过强，把 $1&lt;\alpha-\beta\le2$ 这段合法情形排除在外。</li><li><strong>只验 $f'(0)$ 存在就收工</strong>：存在 $\neq$ 连续，还必须右极限等于 $f'(0)=0$。</li><li><strong>链式第二项幂次算错</strong>：$x^{\alpha}\cdot\beta x^{-\beta-1}$ 的指数是 $\alpha-\beta-1$，漏了 $-1$ 条件就看错。</li></ul>
+<blockquote>记忆锚点：振荡因子不归零，全靠幂因子压；第二项幂次最低，$\alpha-\beta&gt;1$ 是命门。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

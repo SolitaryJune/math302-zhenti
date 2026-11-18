@@ -100,5 +100,27 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：同区间定积分比大小——统一分母后逐对比较被积函数</h2>
+<p>答案：A</p>
+<h3>第一步：确立比较框架——为什么这条路走得通</h3>
+<p>三个积分都在 $[0,1]$ 上，区间相同，只需<strong>逐对比较被积函数</strong>，再用保号性（被积函数严格小则积分严格小）定序。比大小的通用手法是<strong>统一分母</strong>：两个分式化成同分母后，二元比较就坍缩成一元不等式。三个被积函数在 $(0,1]$ 上均为正，保证不等号严格。</p>
+<h3>第二步：I₁ 与 I₂ 比较</h3>
+<p>$I_1$ 写成同分母：$\dfrac{x}{2(1+\cos x)}$ 对 $\dfrac{2\ln(1+x)}{2(1+\cos x)}$，只比分子 $x$ 与 $2\ln(1+x)$。令 $\varphi(x)=2\ln(1+x)-x$，$\varphi(0)=0$，$\varphi'(x)=\dfrac{1-x}{1+x}\ge0$ 于 $[0,1]$，故 $2\ln(1+x)&gt;x$ 于 $(0,1]$，得</p>
+<p>$$I_1&lt;I_2.$$</p>
+<h3>第三步：I₂ 与 I₃ 比较（放缩链）</h3>
+<p>先用 $\ln(1+x)\le x$：</p>
+<p>$$\frac{\ln(1+x)}{1+\cos x}\le\frac{x}{1+\cos x}.$$</p>
+<p>再比 $\dfrac{1}{1+\cos x}$ 与 $\dfrac{2}{1+\sin x}$，交叉相乘比 $1+\sin x$ 与 $2(1+\cos x)$：由 $x\le1&lt;\dfrac{\pi}{3}$ 及 $\cos$ 在 $[0,\frac{\pi}{2}]$ 递减得 $\cos x&gt;\cos\dfrac{\pi}{3}=\dfrac12$，故 $2(1+\cos x)&gt;3$；而 $1+\sin x\le2&lt;3$。于是 $\dfrac{x}{1+\cos x}&lt;\dfrac{2x}{1+\sin x}$，串联得</p>
+<p>$$I_2&lt;I_3.$$</p>
+<h3>第四步：定序</h3>
+<p>$I_1&lt;I_2&lt;I_3$，选 A。</p>
+<h3>易错点</h3>
+<ul><li><strong>把 $\ln(1+x)$ 与 $x$ 的大小记反</strong>：$\ln(1+x)\le x$ 但 $2\ln(1+x)&gt;x$，系数 $2$ 让方向反转，这是 $I_1&lt;I_2$ 的关键——误选 B（$I_2&lt;I_1$）正源于此。</li><li><strong>估 $\cos x$ 时硬算小数</strong>：用 $\cos x\ge\cos1&gt;\cos\dfrac{\pi}{3}=\dfrac12$（单调性）即可，干净且严谨。</li><li><strong>误选 C（$I_3&lt;I_2$）</strong>：没有交叉相乘做严格比较。$[0,1]$ 上恒有 $1+\sin x&lt;2(1+\cos x)$（一边不超过 $2$、另一边严格大于 $3$），故 $I_2$ 的被积函数严格小。</li><li><strong>误选 D（$I_3$ 最小）</strong>：只盯分母的直觉排序。实际上 $1+\sin x\le1+\sin1&lt;2&lt;3&lt;2(1+\cos x)$——$I_3$ 的分母才是三者中最小的，分子 $2x$ 又最大，$I_3$ 应当最大。</li></ul>
+<blockquote>一句话结论：$2\ln(1+x)&gt;x$ 给 $I_1&lt;I_2$；$1+\sin x&lt;2(1+\cos x)$ 给 $I_2&lt;I_3$，选 A。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

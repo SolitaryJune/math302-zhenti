@@ -94,5 +94,29 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：抽象复合函数的一阶、二阶导数——链式法则别断链</h2>
+<p>答案：$\left.\dfrac{\mathrm{d}y}{\mathrm{d}x}\right|_{x=0}=f_1'(1,1)$；$\left.\dfrac{\mathrm{d}^2y}{\mathrm{d}x^2}\right|_{x=0}=f_{11}''(1,1)+f_1'(1,1)-f_2'(1,1)$</p>
+<h3>第一步：理清复合结构，先求一阶导</h3>
+<p>设 $u=\mathrm{e}^x,\ v=\cos x$，则 $y=f(u,v)$ 是「一个自变量 $x$、两个中间变量」的复合。链式法则：</p>
+<p>$$\frac{\mathrm{d}y}{\mathrm{d}x}=f_1'\cdot u'+f_2'\cdot v'=\mathrm{e}^{x}f_1'-\sin x\,f_2'.$$</p>
+<p>在 $x=0$ 处 $u=\mathrm{e}^0=1,\ v=\cos 0=1,\ \sin 0=0$，故</p>
+<p>$$\left.\frac{\mathrm{d}y}{\mathrm{d}x}\right|_{x=0}=f_1'(1,1).$$</p>
+<h3>第二步：求二阶导——f₁′、f₂′ 仍是复合函数</h3>
+<p>关键提醒：$f_1',f_2'$ 的「位置」仍在 $(u,v)=(\mathrm{e}^x,\cos x)$ 处，对 $x$ 求导必须继续链式：</p>
+<p>$$\frac{\mathrm{d}}{\mathrm{d}x}f_1'=f_{11}''\,\mathrm{e}^{x}-f_{12}''\sin x,\qquad \frac{\mathrm{d}}{\mathrm{d}x}f_2'=f_{21}''\,\mathrm{e}^{x}-f_{22}''\sin x.$$</p>
+<p>对 $y'=\mathrm{e}^{x}f_1'-\sin x\,f_2'$ 用乘积法则展开：</p>
+<p>$$\frac{\mathrm{d}^2y}{\mathrm{d}x^2}=\mathrm{e}^{x}f_1'+\mathrm{e}^{x}\left(f_{11}''\mathrm{e}^{x}-f_{12}''\sin x\right)-\cos x\,f_2'-\sin x\left(f_{21}''\mathrm{e}^{x}-f_{22}''\sin x\right).$$</p>
+<p>因 $f$ 二阶偏导连续，$f_{12}''=f_{21}''$（本题代入后此项本身也是零）。</p>
+<h3>第三步：代 x=0，sin 项全部消失</h3>
+<p>$x=0$ 时 $e^0=1,\ \sin0=0,\ \cos0=1$，所有含 $\sin x$ 的项归零：</p>
+<p>$$\left.\frac{\mathrm{d}^2y}{\mathrm{d}x^2}\right|_{x=0}=f_1'(1,1)+f_{11}''(1,1)-f_2'(1,1).$$</p>
+<h3>易错点</h3>
+<ul><li><strong>把 $f_1',f_2'$ 当常数</strong>：二阶导时对它们漏乘链式，丢掉 $f_{11}'',f_{12}''$ 等项，是最常见错误。</li><li><strong>忘记位置代入</strong>：结果要写在 $(1,1)$ 处，即 $x=0$ 对应的中间变量值 $u=v=1$。</li><li><strong>漏掉乘积法则产生的 $e^x f_1'$ 与 $-\cos x f_2'$</strong>：这两项恰好构成答案里的 $f_1'(1,1)-f_2'(1,1)$，少了就错。</li></ul>
+<blockquote>一句话结论：一阶 $y'(0)=f_1'(1,1)$；二阶 = 二阶偏导项 $f_{11}''$ + 乘积法则补出的 $f_1'-f_2'$，全在 $(1,1)$ 处取值。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

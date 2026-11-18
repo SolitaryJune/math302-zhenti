@@ -96,5 +96,29 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：二元极值——为什么驻点是候选、为什么 AC−B² 能判型</h2>
+<p><strong>答案：极小值 $f\left(\dfrac16,\dfrac1{12}\right)=-\dfrac1{216}$；驻点 $(0,0)$ 不是极值点。</strong></p>
+<h3>第 0 步：机制——极值判别是两道关卡</h3>
+<p>可微函数的极值判别分两步机制。<strong>第一道关卡（必要条件）</strong>：费马定理的二元版——极值点处沿任何方向局部都不增不减，特别地沿两个坐标轴方向的一阶变化率为零，即 $f_x=f_y=0$，这样的点叫驻点；解不出驻点就无从谈极值，所以先解方程组。<strong>第二道关卡（充分性）</strong>：在驻点附近看曲面凹凸朝向，工具是二阶泰勒主部对应的 Hesse 矩阵 $\begin{pmatrix}A&amp;B\\B&amp;C\end{pmatrix}$（$A=f_{xx},\ B=f_{xy},\ C=f_{yy}$），其行列式正是 $AC-B^2$：大于 $0$ 说明两个主方向弯向一致（$A&gt;0$ 同向下弯成碗，极小；$A&lt;0$ 同向上拱，极大）；小于 $0$ 说明一凹一凸，沿一个方向上升、另一个方向下降——鞍点；等于 $0$ 时二阶信息不够，判别失效需另判。这就是「先解驻点、再判型」的来历。</p>
+<h3>第一步：解驻点方程组（小心别丢根）</h3>
+<p>$$f_x=3x^2-y=0,\qquad f_y=24y^2-x=0.$$</p>
+<p>由第一式 $y=3x^2$，代入第二式：</p>
+<p>$$24(3x^2)^2-x=216x^4-x=x\left(216x^3-1\right)=0,$$</p>
+<p>得 $x=0$ 或 $x=\dfrac16$，对应两个驻点 $(0,0)$ 与 $\left(\dfrac16,\dfrac1{12}\right)$。（因子 $x$ 必须保留——它给出驻点 $(0,0)$，这个点也要送进第二道关卡。）</p>
+<h3>第二步：逐点判型——先叙事，再对号</h3>
+<p>在 $(0,0)$：$A=0,\ B=-1,\ C=0$，$AC-B^2=-1&lt;0$，判为鞍点。这与直觉得互相印证：沿 $x$ 轴 $f(x,0)=x^3$ 过零变号，沿 $y$ 轴 $f(0,y)=8y^3$ 过零变号——$(0,0)$ 附近既有比 $f(0,0)=0$ 大的点也有比它小的点，根本当不成极值。</p>
+<p>在 $\left(\dfrac16,\dfrac1{12}\right)$：$A=1,\ B=-1,\ C=4$，$AC-B^2=1\cdot4-(-1)^2=3&gt;0$ 且 $A=1&gt;0$，曲面在该点附近呈碗状，取极小值。</p>
+<table><thead><tr><th>驻点</th><th>$A$</th><th>$B$</th><th>$C$</th><th>$AC-B^2$</th><th>判定</th></tr></thead><tbody><tr><td>$(0,0)$</td><td>$0$</td><td>$-1$</td><td>$0$</td><td>$-1&lt;0$</td><td>鞍点，非极值</td></tr><tr><td>$\left(\dfrac16,\dfrac1{12}\right)$</td><td>$1$</td><td>$-1$</td><td>$4$</td><td>$3&gt;0$</td><td>$A=1&gt;0$，极小值点</td></tr></tbody></table>
+<p>（表格只作对号入座的汇总，判型以上面的叙事为准。）</p>
+<h3>第三步：代回求极小值</h3>
+<p>$$f\left(\frac16,\frac1{12}\right)=\frac1{216}+8\cdot\frac1{1728}-\frac1{72}=\frac1{216}+\frac1{216}-\frac3{216}=-\frac1{216}.$$</p>
+<h3>易错点</h3>
+<ul><li><strong>解方程时用 x 除两边</strong>：$x(216x^3-1)=0$ 若直接除以 $x$ 会丢掉驻点 $(0,0)$，而它恰恰要参与判别。</li><li><strong>只看 AC−B² 的符号</strong>：$AC-B^2&gt;0$ 时还要分 $A&gt;0$（极小）与 $A&lt;0$（极大）；$AC-B^2&lt;0$ 直接判非极值，无需再看 $A$。</li><li><strong>以为 AC−B²=0 也能套结论</strong>：等于 $0$ 时判别法失效（例如 $f=x^4$ 与 $f=x^3$ 在原点都使 $AC-B^2=0$，但前者是极小、后者不是），需按定义或更高阶展开另判。</li></ul>
+<blockquote>一句话结论：驻点有两个，判别式一负一正，只有 $\left(\dfrac16,\dfrac1{12}\right)$ 取到极小值 $-\dfrac1{216}$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

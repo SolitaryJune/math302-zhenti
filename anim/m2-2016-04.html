@@ -110,5 +110,21 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：从 $f'$ 的图形数出极值点与拐点</h2>
+<p>答案：B</p>
+<h3>第 0 步：先立机制——两级"翻译"链</h3>
+<p>看图题先把判定法则的因果链立起来，图上的每一类点该翻译成 $f$ 的什么，要心里有账。<strong>极值</strong>是 $f$ 的一层信息，靠 $f'$ 翻译：$f'$ 变号（正转负）才保证 $f$ 由增转减、出现极大，反向变号出现极小；$f'$ <strong>不变号</strong>的零点只让 $f$ "原地喘口气"，单调性没变，<strong>不是极值点</strong>——最典型的反例是 $f(x)=x^3$：$f'(0)=0$ 但 $0$ 不是极值点。<strong>拐点</strong>是凹凸性信息，靠 $f''$ 翻译：$f''$ 变号 $\iff$ $f'$ 增减互换 $\iff$ $f'$ 的图形出现峰、谷或"弯向切换"。所以在 $f'$ 的图上：数<strong>穿轴变号</strong>的点得极值，数<strong>峰谷与弯向切换</strong>的点得拐点，两套点完全不同。</p>
+<h3>第一步：数极值点——只认"穿过 x 轴"的零点</h3>
+<p>图中 $f'$ 与 $x$ 轴共 3 个接触位置：<strong>2 处真正穿过并变号</strong>，各贡献一个极值点；<strong>1 处相切不穿</strong>，两侧 $f'$ 同号，$f$ 单调性不变，那里不是极值点。故 $f$ 有 <strong>2</strong> 个极值点。</p>
+<h3>第二步：数拐点——在 $f'$ 图上找 $f''$ 的变号</h3>
+<p>$f''$ 变号处即 $f'$ 增减互换处：图中 $f'$ 有 2 个内部峰/谷（各变号一次），再加相切触点——$f'$ 在触点附近先减后增，这次减增切换同样是 $f''$ 变号。合计 <strong>3</strong> 处；$f$ 处处二阶可导且凹凸方向确有切换，故曲线有 <strong>3</strong> 个拐点。</p>
+<h3>易错点</h3>
+<ul><li><strong>把相切点算成极值点</strong>（C/D）：把"驻点"混同"极值点"。$f'$ 切而不穿 $\Rightarrow$ 两侧同号 $\Rightarrow$ 单调性不变——$x^3$ 的指纹要认得。</li><li><strong>漏掉触点处的拐点</strong>（A）：以为拐点只能挂在 $f'$ 的峰谷上。触点处 $f'$ 先减后增正是 $f''$ 变号，这个拐点一个都不能少。</li><li><strong>看错图的主角</strong>：极值点数 $f'$ 的<strong>零点变号</strong>，拐点数 $f'$ 的<strong>单调性变化</strong>（$f'$ 自己的峰谷与弯向），别把两套点搅在一起。</li></ul>
+<blockquote>结论：穿轴变号 2 处 → 2 个极值点；$f'$ 增减切换 3 处 → 3 个拐点，选 B。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

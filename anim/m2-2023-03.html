@@ -119,5 +119,30 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：两个递推数列的无穷小阶比较——双指数碾压幂级</h2>
+<p>答案：B</p>
+<h3>第一步：y_n 可精确解出</h3>
+<p>$y_{n+1}=y_n^2$ 是迭代平方，取对数得 $\ln y_{n+1}=2\ln y_n$，故 $\ln y_n=2^{n-1}\ln\dfrac12$，即</p>
+<p>$$y_n=\Bigl(\frac12\Bigr)^{2^{n-1}}.$$</p>
+<p>前几项：$\dfrac12,\ \dfrac14,\ \dfrac1{16},\ \dfrac1{256},\ \dfrac1{65536}$，双指数速度趋于 0，极快。</p>
+<h3>第二步：x_n 趋于 0，但很慢</h3>
+<p>$x\in(0,1)$ 时 $0&lt;\sin x&lt;x$，故 $\{x_n\}$ 单调递减有下界 0；设极限为 $L$，由 $L=\sin L$ 得 $L=0$。数值上看：$0.5,\ 0.4794,\ 0.4613,\ 0.4447,\ \cdots$，收缩非常缓。</p>
+<h3>第三步：定出 x_n 的阶——为什么盯住 1/x_n² 的差分</h3>
+<p>先说思路从哪来：$x_{n+1}=\sin x_n=x_n-\dfrac{x_n^3}6+o(x_n^3)$，每步只砍掉一个三阶小量，相邻两项之比 $\dfrac{x_{n+1}}{x_n}\to1$，直接盯着 $x_n$ 本身几乎「看不出衰减」。要换个放大镜，把「乘性慢收缩」翻译成「加性常增量」——平方取倒数正合适：$x_{n+1}^2$ 只比 $x_n^2$ 少 $\dfrac{x_n^4}3$ 量级，取倒数后每步恰好加上一个固定常数。这就是为什么考察 $\dfrac{1}{x_{n+1}^2}-\dfrac{1}{x_n^2}$。</p>
+<p>具体算（泰勒展开 $\sin x=x-\dfrac{x^3}6+o(x^3)$）：</p>
+<p>$$\frac{1}{\sin^2x}-\frac{1}{x^2}=\frac{x^2-\sin^2x}{x^2\sin^2x}=\frac{(x-\sin x)(x+\sin x)}{x^2\sin^2x}\longrightarrow\frac{\dfrac{x^3}6\cdot2x}{x^4}=\frac13.$$</p>
+<p>于是 $\dfrac{1}{x_{n+1}^2}-\dfrac{1}{x_n^2}\to\dfrac13$：数列 $\dfrac1{x_n^2}$ 每步近似加 $\dfrac13$。「每步加常数」的量与步数 $n$ 同阶——这正是 Stolz 定理的标准场景（分母 $n$ 严格增趋于 $\infty$，分子的相邻两项之差趋于常数 $\dfrac13$，故 $\dfrac{1/x_n^2}{n}\to\dfrac13$），所以 $\dfrac{1}{x_n^2}\sim\dfrac n3$，即</p>
+<p>$$x_n\sim\sqrt{\frac3n},$$</p>
+<p>只是 $1/\sqrt n$ 量级的无穷小。</p>
+<h3>第四步：比较快慢</h3>
+<p>$\lim\limits_{n\to\infty}\dfrac{y_n}{x_n}=0$：双指数趋零远快于幂级趋零，故 $y_n$ 是 $x_n$ 的<strong>高阶</strong>无穷小，选 B。</p>
+<h3>易错点</h3>
+<ul><li><strong>方向搞反选 A</strong>：衰减更快的是 $y_n$，「高阶」指更小的那个。</li><li><strong>直觉认为 sin 迭代也很快</strong>：$x_{n+1}=\sin x_n$ 每步只削掉一个三阶小量，慢得出名。</li><li><strong>选 D「同阶非等价」</strong>：比值极限是 0，不是有限非零常数。</li></ul>
+<blockquote>一句话结论：$y_n$ 双指数趋零、$x_n\sim\sqrt{3/n}$，$y_n$ 比 $x_n$ 高阶，选 B。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

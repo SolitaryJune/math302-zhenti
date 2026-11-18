@@ -94,5 +94,27 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：参数方程二阶导——"再除一次 $x'_t$"是链式法则的必然</h2>
+<p>答案：$\dfrac{2}{3}$</p>
+<h3>第一步：机制——公式为什么长这样</h3>
+<p>一阶导是微分之比：$\dfrac{\mathrm{d}y}{\mathrm{d}x}=\dfrac{y'_t}{x'_t}$。算二阶导要注意：$\dfrac{\mathrm{d}y}{\mathrm{d}x}$ 算出来后是 <strong>$t$ 的函数</strong> $g(t)$，而 $\dfrac{\mathrm{d}^2y}{\mathrm{d}x^2}$ 的定义是"$g$ 对 $x$ 求导"。$g$ 的自变量是 $t$，对 $x$ 求导必须穿过中间变量 $t$（链式法则）：</p>
+<p>$$\frac{\mathrm{d}^2y}{\mathrm{d}x^2}=\frac{\mathrm{d}}{\mathrm{d}x}\,g(t)=g'(t)\cdot\frac{\mathrm{d}t}{\mathrm{d}x}=\frac{g'(t)}{x'_t}.$$</p>
+<p>所以"最后还要除一次 $x'_t$"不是死规定，而是链式法则的直接后果——$\dfrac{\mathrm{d}t}{\mathrm{d}x}=\dfrac{1}{x'_t}$ 自动补在分母上。它同时回答两个常见疑问：为什么不是除 $(x'_t)^2$？——那是把"对 $x$ 求导"错当成"对 $t$ 求两次"；$g$ 只对 $t$ 求导一次，商法则里的 $v^2$ 是 $g'$ 内部计算的产物，与最后的除法无关。直观地说：一阶导已换算成"$x$ 语言"，但它仍按参数 $t$ 的节奏记录，再对 $x$ 微分时换算因子 $\dfrac{1}{x'_t}$ 会再出现一次。</p>
+<h3>第二步：求一阶导</h3>
+<p>$x'_t=2\mathrm{e}^t+1$；对 $y=4(t-1)\mathrm{e}^t+t^2$，用 $(t-1)\mathrm{e}^t$ 的导数 $=t\mathrm{e}^t$：</p>
+<p>$$y'_t=4\mathrm{e}^t+4(t-1)\mathrm{e}^t+2t=4t\,\mathrm{e}^t+2t,\qquad g(t)=\frac{\mathrm{d}y}{\mathrm{d}x}=\frac{4t\mathrm{e}^t+2t}{2\mathrm{e}^t+1}.$$</p>
+<h3>第三步：$g$ 对 $t$ 求导（商法则）</h3>
+<p>记分子 $u=4t\mathrm{e}^t+2t$、分母 $v=2\mathrm{e}^t+1$，则 $u'=4\mathrm{e}^t+4t\mathrm{e}^t+2$，$v'=2\mathrm{e}^t$。在 $t=0$ 处 $u=0,\ u'=6,\ v=3,\ v'=2$，故</p>
+<p>$$g'(0)=\frac{u'v-uv'}{v^2}\bigg|_{t=0}=\frac{6\cdot3-0\cdot2}{9}=2.$$</p>
+<h3>第四步：除以 $x'_t(0)$ 收尾</h3>
+<p>$$\left.\frac{\mathrm{d}^2y}{\mathrm{d}x^2}\right|_{t=0}=\frac{g'(0)}{x'_t(0)}=\frac{2}{2\mathrm{e}^0+1}=\frac23.$$</p>
+<h3>易错点</h3>
+<ul><li><strong>漏除 $x'_t$</strong>：把 $g'(0)=2$ 当最终答案——二阶导的分母还有 $x'_t$，这是链式法则欠的账。</li><li><strong>公式记成除 $(x'_t)^2$</strong>：$v^2=9$ 属于商法则内部，与最后的除法无关；最后除的是 $x'_t$ 本身。</li><li><strong>$y'_t$ 求导出错</strong>：$\left((t-1)\mathrm{e}^t\right)'=\mathrm{e}^t+(t-1)\mathrm{e}^t=t\mathrm{e}^t$，写错则全盘皆错。</li></ul>
+<blockquote>一句话结论：$g(t)=\dfrac{4t\mathrm{e}^t+2t}{2\mathrm{e}^t+1}$，$g'(0)=2$，再除 $x'(0)=3$ 得 $\dfrac23$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

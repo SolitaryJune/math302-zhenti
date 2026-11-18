@@ -104,5 +104,28 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：曲率与曲率半径——弯得快慢与「最贴的圆」</h2>
+<p><strong>答案：C</strong></p>
+<h3>第一步：先立机制——$\kappa$ 是切线方向的转速</h3>
+<p>曲率回答「曲线弯得多快」：单位弧长上切线方向转过多少角度，$\kappa=\dfrac{\mathrm d\theta}{\mathrm ds}$。把 $\tan\theta=\dfrac{y'}{x'}$ 对 $t$ 求导、除以 $\mathrm ds=\sqrt{x'^{2}+y'^{2}}\,\mathrm dt$，就整理出参数公式</p>
+<p>$$\kappa=\frac{\lvert x'y''-y'x''\rvert}{(x'^{2}+y'^{2})^{3/2}}.$$</p>
+<p>为什么 $R=1/\kappa$：$R$ 是<strong>密切圆</strong>的半径——在该点与曲线贴得最紧的圆；圆弯得越凶半径越小，$\kappa$ 大 $\Leftrightarrow$ $R$ 小，互为倒数。特例校准：直线 $\kappa=0$、$R=\infty$；半径 $r$ 的圆 $\kappa=1/r$。题问<strong>半径</strong>，最后必须取倒数。分子上的<strong>绝对值</strong>也顺带说清：参数走向反过来时分子变号、但「弯得快慢」是几何量不该变号，故取 $\lvert\cdot\rvert$ 保正。</p>
+<h3>第二步：求导并代入 $t=1$</h3>
+<p>$x=t^2+7$，$y=t^2+4t+1$：</p>
+<table><thead><tr><th>量</th><th>通式</th><th>$t=1$ 处</th></tr></thead><tbody><tr><td>$x',\ y'$</td><td>$2t,\ 2t+4$</td><td>$2,\ 6$</td></tr><tr><td>$x'',\ y''$</td><td>$2,\ 2$</td><td>$2,\ 2$</td></tr></tbody></table>
+<h3>第三步：套公式</h3>
+<p>分子 $\lvert2\cdot2-6\cdot2\rvert=8$；分母 $(4+36)^{3/2}=40^{3/2}$。关键一步：指数 $\dfrac32$ 即「开平方再立方」，$40^{3/2}=40\sqrt{40}=80\sqrt{10}$。故</p>
+<p>$$\kappa=\frac{8}{80\sqrt{10}}=\frac{1}{10\sqrt{10}}\approx0.032,\qquad R=\frac1\kappa=10\sqrt{10}\approx31.6.$$</p>
+<p>曲线此处较平缓，$R$ 远大于单位圆的 $1$，量级合理。选 <strong>C</strong>。</p>
+<h3>干扰项归因</h3>
+<ul><li><strong>B $\dfrac{\sqrt{10}}{100}=\dfrac{1}{10\sqrt{10}}$</strong>：这是 $\kappa$ 本身——曲率算对了但忘取倒数，本题最大陷阱。</li><li><strong>D $5\sqrt{10}$</strong>：把分母误算成 $40\sqrt{10}$（漏掉 $\sqrt{40}=2\sqrt{10}$ 里的 $2$），得 $\kappa=\dfrac{1}{5\sqrt{10}}$ 后取了倒数。</li><li><strong>A $\dfrac{\sqrt{10}}{50}=\dfrac{1}{5\sqrt{10}}$</strong>：同一个分母错误<strong>且</strong>没取倒数——错上加错。</li></ul>
+<h3>易错点</h3>
+<ul><li><strong>把曲率当曲率半径</strong>：$R=1/\kappa$，B 即 $\kappa$。</li><li><strong>$40^{3/2}$ 算错</strong>：$=80\sqrt{10}$，不是 $40\sqrt{10}$。</li><li><strong>分子漏绝对值</strong>：$x'y''-y'x''=-8$，取 $\lvert\cdot\rvert$ 才是 $8$。</li></ul>
+<blockquote>一句话结论：$\kappa=\dfrac{1}{10\sqrt{10}}$，取倒数得 $R=10\sqrt{10}$，选 C。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

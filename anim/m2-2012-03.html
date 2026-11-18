@@ -100,5 +100,25 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：部分和有界与通项收敛的条件关系</h2>
+<p>答案：B（充分非必要条件）</p>
+<h3>第一步：翻译命题，看清方向</h3>
+<p>$a_n&gt;0$ 保证 $S_n=a_1+\cdots+a_n$ <strong>单调递增</strong>。记 P 为"$\{S_n\}$ 有界"、Q 为"$\{a_n\}$ 收敛"，判断谁推谁。</p>
+<h3>第二步：P $\Rightarrow$ Q（充分性成立）</h3>
+<p>$S_n$ 单调递增又有界，由单调有界准则 $\{S_n\}$ 收敛——这正是级数 $\sum a_n$ 收敛；于是通项</p>
+<p>$$a_n=S_n-S_{n-1}\to S-S=0,$$</p>
+<p>即 $\{a_n\}$ 收敛（极限为 0）。充分性成立。</p>
+<h3>第三步：Q $\Rightarrow$ P 不成立（反例）</h3>
+<p>取 $a_n\equiv1&gt;0$：$\{a_n\}$ 显然收敛（极限 1），但 $S_n=n\to+\infty$，无界。必要性破产。</p>
+<h3>第四步：下结论</h3>
+<p>P 能推 Q、Q 推不出 P，故 P 是 Q 的<strong>充分非必要条件</strong>。</p>
+<h3>易错点</h3>
+<ul><li><strong>把方向想反</strong>：误以为"通项收敛 $\Rightarrow$ 部分和有界"——通项趋于 0 只是级数收敛的必要条件，$a_n\equiv1$ 就是活反例（选 C 的根源）。</li><li><strong>丢掉 $a_n&gt;0$ 的前提</strong>：正项才保证 $S_n$ 单调增，单调有界准则才用得上；没有它，充分性论证就断了。</li></ul>
+<blockquote>一句话结论：正项数列里"$S_n$ 有界"锁死 $a_n\to0$，但常数列 $a_n\equiv1$ 让 $S_n=n$ 爆炸——充分非必要，选 B。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

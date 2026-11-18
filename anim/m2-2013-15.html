@@ -106,5 +106,29 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：「1 减趋 1 乘积」型无穷小的定阶——为什么必须泰勒展开</h2>
+<p>答案：$n=2,\ a=7$。</p>
+<h3>第一步：先选机器——三条路为什么只有泰勒好用</h3>
+<p>看到 $x\to0$ 时 $1-\cos x\cos2x\cos3x\to0$，是「一减趋一的乘积」型。工具箱里有三个候选，先比完再动手：</p>
+<ul><li><strong>等价无穷小替换</strong>：替换的本质是只保留每个因子的主部（$\cos kx$ 换成 $1$）。但本题是<strong>减法结构</strong>——$1$ 与乘积的差，恰恰全部由「每个因子偏离 $1$ 的那一小点」贡献。把 $\cos kx$ 换成 $1$，偏离量被一次抹光，主项直接变成 $0$，信息第一步就丢完。这就是「乘除可换、加减慎换」的机制：替换只保证<strong>比值</strong>不变，加减时主部会抵消，顶上来的恰是被替换掉的部分。</li><li><strong>洛必达</strong>：对 $F(x)=1-\cos x\cos2x\cos3x$ 求导，立刻展开成 $\sin x\cos2x\cos3x+2\sin2x\cos x\cos3x+3\sin3x\cos x\cos2x$ 三个乘积，还得再来一轮才见分晓，式子越滚越大——可行但脏。</li><li><strong>带佩亚诺余项的泰勒展开</strong>：每个因子写成多项式加余项，乘法变成「逐项挑次数」的机械操作，余项规则明确（$o(x^2)\pm o(x^2)=o(x^2)$，$o(x^2)$ 乘有界量仍是 $o(x^2)$）。本题选它。</li></ul>
+<h3>第二步：每个因子只展到 $x^2$——为什么不用更高阶</h3>
+<p>等价无穷小由<strong>最低次非零项</strong>决定，而每个因子偏离 $1$ 的最低阶都是 $x^2$：</p>
+<p>$$\cos kx=1-\frac{(kx)^2}{2}+o(x^2)$$</p>
+<p>代入 $k=1,2,3$：$\cos x=1-\dfrac{x^2}{2}+o(x^2)$，$\cos2x=1-2x^2+o(x^2)$，$\cos3x=1-\dfrac{9x^2}{2}+o(x^2)$。展到 $x^2$ 已足够定最低次；只有当 $x^2$ 系数恰好为零时才需续展到 $x^4$。</p>
+<h3>第三步：乘积里挑出 $x^2$——为什么系数是三项相加</h3>
+<p>三个因子各自贡献「常数 $1$」或「$-\frac{k^2}{2}x^2$」。凑出 $x^2$ 的方式只有一种：<strong>恰好一个因子出 $x^2$ 项、其余两个出常数</strong>；选两个 $x^2$ 项就是 $x^4$，被 $o(x^2)$ 吞掉。所以</p>
+<p>$$\cos x\cos2x\cos3x=1-\Big(\frac12+2+\frac92\Big)x^2+o(x^2)=1-7x^2+o(x^2)$$</p>
+<h3>第四步：对照 $ax^n$ 读答案——为什么 $n$ 被「最低次幂相同」强制</h3>
+<p>$$1-\cos x\cos2x\cos3x=7x^2+o(x^2)$$</p>
+<p>与 $ax^n$ 等价，即 $7x^2-ax^n=o(ax^n)$：差里不允许残留<strong>不低于</strong> $n$ 阶的项。若 $n&lt;2$，$7x^2$ 残留着；若 $n&gt;2$，差的主项是 $7x^2$、阶数低于 $n$——都不行。故 $n=2$，再比系数得 $a=7$。</p>
+<p><strong>为什么 $7$ 不是巧合</strong>：$\dfrac12+\dfrac42+\dfrac92=\dfrac{1^2+2^2+3^2}{2}$，可推广成一般结论 $1-\prod\cos(kx)\sim\dfrac12\Big(\sum k^2\Big)x^2$——每个因子的「平方系数」各交一半，加总即答案。</p>
+<h3>易错点</h3>
+<ul><li><strong>$\cos2x$、$\cos3x$ 系数算错</strong>：公式是 $1-\frac{(kx)^2}{2}$，$k=2$ 给 $2x^2$、$k=3$ 给 $\frac{9x^2}{2}$，别只把 $x$ 换成 $kx$ 后照抄 $\frac12$。</li><li><strong>在乘积内部做等价替换</strong>：$\cos2x\sim1$ 之类放进乘积再被 $1$ 减，主项 $7x^2$ 全部消失——本题最致命的错误。</li><li><strong>只展一个因子</strong>：三个因子都要带 $x^2$ 项，漏一个系数就错。</li></ul>
+<blockquote>记忆锚点：$1-\prod\cos(kx)\sim\frac12\big(\sum k^2\big)x^2$；加减结构里等价替换会吃掉主项，带 $o$ 余项的泰勒展开才是定阶机器。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

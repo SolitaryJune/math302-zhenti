@@ -102,5 +102,26 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：矩阵多项式锁死特征值，行列式定正负个数</h2>
+<p>答案：C（规范形 $y_1^2-y_2^2-y_3^2$）</p>
+<h3>第一步：由 $A^2+A=2E$ 逼出特征值的候选</h3>
+<p>设 $\lambda$ 是 $A$ 的特征值，$\xi\neq\boldsymbol{0}$ 为对应特征向量，则</p>
+<p>$$(A^2+A-2E)\,\xi=(\lambda^2+\lambda-2)\,\xi=\boldsymbol{0}\ \Longrightarrow\ (\lambda-1)(\lambda+2)=0,$$</p>
+<p>每个特征值只能是 $1$ 或 $-2$。</p>
+<h3>第二步：用 $|A|=4$ 数出各值的重数</h3>
+<p>$|A|$ 等于全部特征值之积。设 $1$ 出现 $k$ 次、$-2$ 出现 $3-k$ 次：</p>
+<p>$$|A|=1^k(-2)^{3-k}=(-2)^{3-k}=4=(-2)^2\ \Longrightarrow\ 3-k=2,\ k=1.$$</p>
+<p>故特征值为 $1,\,-2,\,-2$：一个正、两个负。</p>
+<h3>第三步：写规范形</h3>
+<p>实对称矩阵保证可以正交规范化，规范形由正负惯性指数决定：$p=1,\ q=2$，所以二次型的规范形为</p>
+<p>$$y_1^2-y_2^2-y_3^2.$$</p>
+<h3>易错点</h3>
+<ul><li><strong>用 $|A|$ 定重数时忽视符号</strong>：$(-2)^{3-k}=4$ 依赖偶次幂为正；若三个全是 $-2$，则 $|A|=-8\neq4$，这正是 D 项的死因。</li><li><strong>正负个数弄反</strong>：$y_1^2+y_2^2-y_3^2$ 对应 $p=2,q=1$（B 项），与实际的 $p=1,q=2$ 恰好颠倒。</li><li><strong>忘记实对称这一前提</strong>：惯性定理保证正负惯性指数是合同不变量，规范形才唯一；题目给实对称就是为此。</li></ul>
+<blockquote>一句话结论：$\lambda\in\{1,-2\}$，$|A|=4$ 强制特征值为 $1,-2,-2$，$p=1,q=2$，规范形 $y_1^2-y_2^2-y_3^2$，选 C。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

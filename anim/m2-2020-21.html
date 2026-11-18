@@ -96,5 +96,37 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：几何量列积分方程 → 求导 → 降阶解微分方程</h2>
+<p><strong>答案：所求曲线方程为 $y=Cx^3$（$C&gt;0$ 为任意常数）。</strong></p>
+<h3>第 0 步：这类题的机制——几何关系、恒等式、微分方程的三级跳</h3>
+<p>整题的逻辑分三跳，每跳的合法性都要先说清。<strong>第一跳</strong>：把曲边图形面积写成变限积分 $\displaystyle\int_0^x f(t)\,\mathrm dt$（下限固定在原点、上限是动点横坐标），三角形面积用初等几何写出；「比值<strong>恒</strong>为 $3:2$」意味着等式对<strong>每一个</strong> $x&gt;0$ 都成立——这是恒等式，不是单个方程。<strong>第二跳</strong>：恒等式两边才允许对 $x$ 求导，变限积分求导后积分号消失，得到纯微分方程——求导是「把面积信息升级成导数信息」的手段。<strong>第三跳</strong>：若所得微分方程不含自变量 $x$，就用 $p=f'$ 降阶。理解了这三跳为什么合法，每一步都是必然而非套路。</p>
+<h3>第一步：把所有几何量用 f 表出</h3>
+<p>设 $M=(x,f(x))$（$x&gt;0$，由 $f(0)=0$、$f'&gt;0$ 知 $f(x)&gt;0$）。过 $M$ 的切线 $Y-f=f'(X-x)$，令 $Y=0$ 解出与 $x$ 轴的交点：</p>
+<p>$$T\left(x-\frac{f}{f'},\ 0\right)\ \Longrightarrow\ TP=\frac{f}{f'},\qquad MP=f.$$</p>
+<p>于是两块面积：</p>
+<p>$$S_1=\int_0^x f(t)\,\mathrm dt,\qquad S_2=\frac12\cdot\frac f{f'}\cdot f=\frac{f^2}{2f'}.$$</p>
+<h3>第二步：把「面积比恒为 3:2」翻译成恒等式</h3>
+<p>$$S_1=\frac32S_2\ \Longrightarrow\ \int_0^x f(t)\,\mathrm dt=\frac{3f^2}{4f'}.$$</p>
+<h3>第三步：两边对 x 求导，消去积分号</h3>
+<p>左端由变限积分求导定理得 $f$；右端用商的求导法则：</p>
+<p>$$f=\frac34\cdot\frac{2f(f')^2-f^2f''}{(f')^2}\ \Longrightarrow\ 1=\frac34\left(2-\frac{ff''}{(f')^2}\right)\ \Longrightarrow\ \frac{ff''}{(f')^2}=\frac23.$$</p>
+<p>（两边除以 $f$ 合法，因为 $x&gt;0$ 时 $f&gt;0$。）</p>
+<h3>第四步：为什么这样降阶——方程里没有 x</h3>
+<p>方程 $\dfrac{ff''}{(f')^2}=\dfrac23$ 只含 $f,f',f''$，不含自变量 $x$（「缺 $x$ 型」）。标准手法是令 $p=f'$ 并把 $p$ 看作 $f$ 的函数（而不是 $x$ 的函数），这样二阶导经链式法则变成</p>
+<p>$$f''=\frac{\mathrm dp}{\mathrm dx}=\frac{\mathrm dp}{\mathrm df}\cdot\frac{\mathrm df}{\mathrm dx}=p\,\frac{\mathrm dp}{\mathrm df},$$</p>
+<p>代入后方程降成一阶可分离型：</p>
+<p>$$\frac{\mathrm dp}{p}=\frac23\cdot\frac{\mathrm df}{f}\ \Longrightarrow\ f'=C_1f^{2/3}.$$</p>
+<p>再分离变量积分：$3f^{1/3}=C_1x+C_2$。由曲线过原点 $f(0)=0$ 得 $C_2=0$，于是 $f^{1/3}=\dfrac{C_1}3x$，即</p>
+<p>$$y=Cx^3,\qquad C=\left(\frac{C_1}3\right)^3&gt;0.$$</p>
+<h3>第五步：回代验证</h3>
+<p>$\displaystyle\int_0^xCt^3\,\mathrm dt=\frac{Cx^4}4$；$S_2=\dfrac{(Cx^3)^2}{2\cdot3Cx^2}=\dfrac{Cx^4}6$；比值 $=\dfrac{Cx^4/4}{Cx^4/6}=\dfrac32$，满足 $3:2$。（验证不可省：推导里的除法与降阶可能放宽条件，代回去才坐实。）</p>
+<h3>易错点</h3>
+<ul><li><strong>TP 的长度写错</strong>：$T$ 的横坐标是 $x-\dfrac f{f'}$，故 $TP=\dfrac f{f'}$，不是整个 $OP$ 或 $x$。</li><li><strong>降阶时把 f'' 当 dp/dx</strong>：方程里没有自变量 $x$，必须令 $f''=p\dfrac{\mathrm dp}{\mathrm df}$ 按 $p(f)$ 处理，否则方程解不动。</li><li><strong>忘写 C&gt;0</strong>：$f'&gt;0$ 要求 $C_1&gt;0$，从而 $C&gt;0$，结论要带上范围。</li></ul>
+<blockquote>一句话结论：几何量 → $\displaystyle\int_0^xf=\dfrac{3f^2}{4f'}$ → 求导得 $\dfrac{ff''}{(f')^2}=\dfrac23$ → 降阶积分 → $y=Cx^3\ (C&gt;0)$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

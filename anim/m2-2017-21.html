@@ -97,5 +97,36 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：切线、法线截距条件 → 微分方程 → 齐次方程求解</h2>
+<p>答案：$\arctan\dfrac{y}{x}+\dfrac12\ln(x^{2}+y^{2})=0$</p>
+<h3>第一步：写出 P 点的切线与法线，求两个截距</h3>
+<p>设 $P(x,y)\in L$，记 $y'=y'(x)$；切线、法线上的动点用大写 $(X,Y)$，避免与曲线上的点混淆。切线：$Y-y=y'(X-x)$，令 $X=0$ 得切线在 $y$ 轴上的截距</p>
+<p>$$Y_{P}=y-x\,y'.$$</p>
+<p>法线与切线垂直，两斜率之积为 $-1$（$y'\ne0$ 时），故法线斜率为 $-\dfrac1{y'}$：$Y-y=-\dfrac{1}{y'}(X-x)$，令 $Y=0$ 得</p>
+<p>$$-y=-\frac{1}{y'}(X_{P}-x)\ \Longrightarrow\ X_{P}=x+y\,y'.$$</p>
+<p>（若某点 $y'=0$，法线是竖直线 $X=x$，与 $x$ 轴交于 $(x,0)$；此时公式 $X_{P}=x+y\,y'=x$ 依然成立，两条路一致。）</p>
+<h3>第二步：把 $X_P=Y_P$ 翻译成微分方程</h3>
+<p>$$x+y\,y'=y-x\,y'\ \Longleftrightarrow\ (x+y)\,y'=y-x.$$</p>
+<p>几何条件到此已完全变成分析语言：先解这个微分方程，再用 $y(1)=0$ 定常数，才是题目要的最终方程。</p>
+<h3>第三步：怎么一眼认出齐次方程、为什么令 y=ux</h3>
+<p>$y'=\dfrac{y-x}{x+y}$ 的分子、分母都是 $x,y$ 的<strong>一次齐次式</strong>：把 $x,y$ 同乘 $t$，分子分母同乘 $t$，比值不变——即右端只依赖比值 $\dfrac yx$。凡 $y'=F\!\left(\dfrac yx\right)$ 型，都令 $y=ux$：这样 $\dfrac yx=u$ 成为新未知量，方程从"二元"降到"一元"。对 $y=ux$ 求导（乘积法则）$y'=u+x\dfrac{\mathrm{d}u}{\mathrm{d}x}$，代入：</p>
+<p>$$u+x\frac{\mathrm{d}u}{\mathrm{d}x}=\frac{u-1}{u+1}\ \Longrightarrow\ x\frac{\mathrm{d}u}{\mathrm{d}x}=-\frac{u^{2}+1}{u+1}\ \Longrightarrow\ \frac{u+1}{u^{2}+1}\,\mathrm{d}u=-\frac{\mathrm{d}x}{x}.$$</p>
+<p>变量已分离（$u$ 与 $x$ 各居一边）——这正是换元的目的所在。</p>
+<h3>第四步：两边积分——为什么 ln|x| 会自己消掉</h3>
+<p>$$\int\frac{u}{u^{2}+1}\,\mathrm{d}u+\int\frac{\mathrm{d}u}{u^{2}+1}=-\ln|x|+C,$$</p>
+<p>$$\frac12\ln(u^{2}+1)+\arctan u=-\ln|x|+C.$$</p>
+<p>回代 $u=\dfrac yx$ 时，$\dfrac12\ln(u^{2}+1)=\dfrac12\ln\dfrac{x^{2}+y^{2}}{x^{2}}=\dfrac12\ln(x^{2}+y^{2})-\ln|x|$：末项 $-\ln|x|$ 与右端 $-\ln|x|$ <strong>恰好相消</strong>——这不是巧合，$u^{2}+1$ 回代后本来就带着 $x^{-2}$ 的因子。于是</p>
+<p>$$\arctan\frac{y}{x}+\frac12\ln(x^{2}+y^{2})=C.$$</p>
+<h3>第五步：初值 $y(1)=0$ 定常数</h3>
+<p>$x=1,\ y=0$：$\arctan0+\dfrac12\ln1=0$，故 $C=0$，所求方程为</p>
+<p>$$\arctan\frac{y}{x}+\frac12\ln(x^{2}+y^{2})=0.$$</p>
+<h3>易错点</h3>
+<ul><li><strong>法线截距算错</strong>：法线斜率是 $-\dfrac1{y'}$（来自"垂直 ⇒ 斜率积为 $-1$"），$X_P=x+yy'$ 不是 $x-yy'$。</li><li><strong>切线截距符号</strong>：$Y_P=y-xy'$，与 $X_P$ 不对称，别想当然写成 $y+xy'$。</li><li><strong>看不出齐次就乱换元</strong>：先检验"分子分母同乘 $t$ 比值不变"，再上 $y=ux$；$y'=u+xu'$ 的乘积法则别丢 $xu'$。</li><li><strong>不用初值</strong>：题目给了 $y(1)=0$ 就是为了定 $C=0$，不解到底只得一半分。</li></ul>
+<blockquote>一句话结论：$X_P=x+yy'$，$Y_P=y-xy'$，相等给出齐次方程 $(x+y)y'=y-x$；$y=ux$ 分离变量积分，$\ln|x|$ 项自动相消，由 $y(1)=0$ 定 $C=0$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

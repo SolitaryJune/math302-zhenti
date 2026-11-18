@@ -98,5 +98,38 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：一阶线性方程的"特解 + 齐次"结构与法线截距的最小化</h2>
+<p><strong>答案</strong>：(I) $y=1+\dfrac{1}{3}x^6$；(II) $P\left(\pm1,\dfrac{4}{3}\right)$，$I_y$ 的最小值为 $\dfrac{11}{6}$。</p>
+<h3>第 (I) 问第一步：机制——通解 = 一个特解 + 齐次通解</h3>
+<p>$xy'-6y=-6$ 对 $y$ 是线性的：右端是常数、系数只含 $x$。线性方程的结构定理说：<strong>通解 = 任一特解 + 齐次通解</strong>。</p>
+<p>先用眼睛找特解：试 $y\equiv1$，代入 $0-6=-6$ ✓——右端是常数 $-6$，常数解天然是首选。</p>
+<p>再解齐次 $xy'-6y=0$：分离变量 $\dfrac{\mathrm dy}{y}=6\dfrac{\mathrm dx}{x}$，积分得 $\ln\lvert y\rvert=6\ln\lvert x\rvert$，即 $y=Cx^6$。</p>
+<p>两者相加即通解 $y=1+Cx^6$。</p>
+<p><strong>积分因子法是同一件事的机械化</strong>（参考答案的路线）：化成标准形 $y'-\dfrac{6}{x}y=-\dfrac{6}{x}$ 后，要找 $\mu$ 使左端恰好坍缩成一个导数：$(\mu y)'=\mu y'+\mu'y$ 装下 $\mu\left(y'+Py\right)$，需 $\mu'=P\mu$，解得 $\mu=\mathrm e^{\int P\mathrm dx}=\mathrm e^{-6\ln x}=x^{-6}$。验证坍缩：$(x^{-6}y)'=x^{-6}y'-6x^{-7}y=x^{-6}\left(y'-\dfrac{6}{x}y\right)$ ✓——左端成了 $(x^{-6}y)'$，两边积分得 $x^{-6}y=x^{-6}+C$，同样给出 $y=1+Cx^6$。两条路殊途同归：结构法看得快，积分因子法不出错。</p>
+<h3>第 (I) 问第二步：代初值定常数并回验</h3>
+<p>代入 $y(\sqrt3)=10$：$(\sqrt3)^6=\left((\sqrt3)^2\right)^3=3^3=27$，故 $1+27C=10$，$C=\dfrac13$：</p>
+<p>$$y=1+\frac{1}{3}x^6.$$</p>
+<p>回验：$y'=2x^5$，$xy'-6y=2x^6-6-2x^6=-6$ ✓；$y(\sqrt3)=1+\dfrac{27}{3}=10$ ✓。</p>
+<h3>第 (II) 问第一步：法线机制——为什么斜率取负倒数</h3>
+<p>切线斜率 $y'(x_0)=2x_0^5$。法线与切线垂直：把切线方向向量 $(1,\ y')$ 转 $90^\circ$ 得 $(-y',\ 1)$，验证垂直：$(1,\ y')\cdot(-y',\,1)=-y'+y'=0$ ✓；这个方向向量的斜率是 $\dfrac{1}{-y'}=-\dfrac{1}{y'}$。故法线斜率为 $-\dfrac{1}{2x_0^5}$，法线方程</p>
+<p>$$Y-y_0=-\frac{1}{2x_0^5}(X-x_0).$$</p>
+<h3>第 (II) 问第二步：$y$ 轴截距 $I_y$</h3>
+<p>$y$ 轴上的点横坐标为零，令 $X=0$ 解出 $Y$：</p>
+<p>$$I_y=y_0+\frac{x_0}{2x_0^5}=1+\frac{1}{3}x_0^6+\frac{1}{2x_0^4}.$$</p>
+<h3>第 (II) 问第三步：为什么最小值必存在、为什么驻点就是它</h3>
+<p>记 $g(x)=\dfrac{1}{3}x^6+\dfrac{1}{2}x^{-4}$（$x&gt;0$，即初值所在分支）。<strong>两端行为先把"有没有最小"钉死</strong>：$x\to0^+$ 时 $\dfrac{1}{2x^4}\to+\infty$——法线近乎竖直，截距被甩向无穷远；$x\to+\infty$ 时 $\dfrac{x^6}{3}\to+\infty$——曲线本身飞离 $y$ 轴。两端都爆炸、中间连续，最小值必在内部取到。</p>
+<p>$$g'(x)=2x^5-2x^{-5}=\frac{2\left(x^{10}-1\right)}{x^5},$$</p>
+<p>$0&lt;x&lt;1$ 时 $g'&lt;0$，$x&gt;1$ 时 $g'&gt;0$：唯一驻点 $x=1$ 两侧负变正，是极小点，也就成了最小值点。代回 $y_0=1+\dfrac13=\dfrac43$，</p>
+<p>$$I_y^{\min}=1+\frac{1}{3}+\frac{1}{2}=\frac{11}{6}.$$</p>
+<h3>为什么 $\pm1$ 都算——对称性补全另一半</h3>
+<p>初值点 $x=\sqrt3&gt;0$，解在 $x&gt;0$ 上确定；但显式解 $y=1+\dfrac{1}{3}x^6$ 是<strong>偶函数</strong>，且在整个数轴上满足方程（$x=0$ 处方程给 $-6y=-6$，即 $y=1$，与公式值恰好衔接），整条曲线关于 $y$ 轴对称；$I_y$ 只含 $x^6$ 与 $x^4$，也是偶函数，故 $x=-1$ 处同样取最小。与参考答案口径一致：$P=\left(\pm1,\dfrac43\right)$，最小值 $\dfrac{11}{6}$。</p>
+<h3>易错点</h3>
+<ul><li><strong>法线斜率忘取负倒数</strong>：直接用 $y'$ 写出的是切线；垂直 $\Rightarrow$ 斜率之积为 $-1$。</li><li><strong>截距方向弄反</strong>：$y$ 轴截距是令 $X=0$ 解出的 $Y$，不是令 $Y=0$。</li><li><strong>只答 $(1,\dfrac43)$ 一点</strong>：不说明对称性就丢掉 $\left(-1,\dfrac43\right)$，按参考答案两点都要写。</li><li><strong>漏"最小值存在性"论证</strong>：两端趋于 $+\infty$ 才能把唯一驻点升级成全局最小，答卷里要有这一句。</li></ul>
+<blockquote>一句话结论：$y=1+\dfrac{1}{3}x^6$；$I_y=1+\dfrac{1}{3}x^6+\dfrac{1}{2x^4}$ 在 $x=\pm1$ 最小，$P\left(\pm1,\dfrac43\right)$，$I_y^{\min}=\dfrac{11}{6}$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

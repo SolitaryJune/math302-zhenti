@@ -109,5 +109,33 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：部分分式分解算有理函数定积分</h2>
+<p><strong>答案</strong>：$\displaystyle\int_0^1 \frac{\mathrm{d}x}{(x+1)(x^2-2x+2)}=\frac{3}{10}\ln 2+\frac{\pi}{10}$（数值约 $0.5221$）。</p>
+<h3>第一步：判型定策——为什么必须部分分式</h3>
+<p>有理函数的积分，归根结底只有两块"积木"：$\ln$（来自 $\int\frac{u'}{u}\,\mathrm{d}x$ 型）与 $\arctan$（来自配方后的 $\int\frac{\mathrm{d}u}{1+u^2}$ 型）。部分分式分解不是背出来的套路，而是把被积函数拆成这两块积木的组合——本题主部 $\frac1{x+1}$ 贡献 $\ln$，二次块里配方 $(x-1)^2+1$ 贡献 $\arctan$，最终答案"对数 + $\pi$"的结构正是这个机制的体现。</p>
+<p>分子怎么设？规则背后有两条依据：其一，因式上方的分子次数必须<strong>低于</strong>该因式次数（次数够了就先做多项式除法，本题分子是常数，天然满足）；其二，一次因式给 $A$、二次因式给 $Bx+C$，未知数恰好 $3$ 个，对上分母的 $3$ 次"自由度"，方程组才保证有唯一解。分母中 $x^2-2x+2$ 的判别式 $\Delta=(-2)^2-8&lt;0$，实数域<strong>不可约</strong>（配方即 $(x-1)^2+1$），不能再拆：</p>
+<p>$$\frac{1}{(x+1)(x^2-2x+2)}=\frac{A}{x+1}+\frac{Bx+C}{x^2-2x+2},$$</p>
+<p>两边乘分母通分，得对<strong>一切 $x$</strong> 成立的恒等式 $1=A(x^2-2x+2)+(Bx+C)(x+1)$。</p>
+<h3>第二步：赋值法定系数（比逐项比较快）</h3>
+<p>为什么可以随便代值？因为上式是恒等式，对一切 $x$ 成立，任何点代入都合法。技巧在于<strong>掐死一个因式</strong>：代 $x=-1$ 时 $(Bx+C)(x+1)$ 整块归零，一步锁定 $A$；其余点负责补出 $C$ 与 $B$。逐项比较要展开整理出三个联立方程，赋值法则让每步只出现一个未知数——这就是"快"的来源。</p>
+<table><thead><tr><th>代入点</th><th>得到的方程</th><th>解</th></tr></thead><tbody><tr><td>$x=-1$（掐死一次因子）</td><td>$1=5A$</td><td>$A=\dfrac15$</td></tr><tr><td>$x=0$</td><td>$1=2A+C$</td><td>$C=\dfrac35$</td></tr><tr><td>比较 $x^2$ 系数</td><td>$0=A+B$</td><td>$B=-\dfrac15$</td></tr></tbody></table>
+<h3>第三步：两块分别积分</h3>
+<p>凑导数与配方的分工：前半块 $-\dfrac12(2x-2)$ 恰是分母导数的倍数，积分落进 $\ln$ 积木（$\int\frac{u'}u\mathrm{d}u=\ln\lvert u\rvert$）；剩下常数 $2$ 配上 $x^2-2x+2=(x-1)^2+1$，令 $u=x-1$ 就变成 $\int\frac{\mathrm{d}u}{1+u^2}=\arctan u$（$\arctan$ 积木）。一题两积木，答案里一半对数、一半 $\pi$ 由此而来。</p>
+<p>第一块直接出对数：</p>
+<p>$$\frac15\int_0^1\frac{\mathrm{d}x}{x+1}=\frac15\Big[\ln(x+1)\Big]_0^1=\frac15\ln 2.$$</p>
+<p>第二块把分子凑成「分母的导数 + 常数」。因 $(x^2-2x+2)'=2x-2$，故 $-x+3=-\dfrac12(2x-2)+2$，于是</p>
+<p>$$\frac15\int_0^1\frac{-x+3}{x^2-2x+2}\mathrm{d}x
+=\frac15\Big[-\frac12\ln(x^2-2x+2)+2\arctan(x-1)\Big]_0^1.$$</p>
+<p>逐项代限：$-\dfrac12\big(\ln 1-\ln 2\big)=\dfrac12\ln 2$；$2\big(\arctan 0-\arctan(-1)\big)=2\cdot\dfrac\pi4=\dfrac\pi2$。合起来第二块等于 $\dfrac15\Big(\dfrac12\ln 2+\dfrac\pi2\Big)=\dfrac1{10}\ln 2+\dfrac\pi{10}$。</p>
+<h3>第四步：合并同类项</h3>
+<p>$$\frac15\ln 2+\frac1{10}\ln 2+\frac\pi{10}=\frac3{10}\ln 2+\frac\pi{10}.$$</p>
+<h3>易错点</h3>
+<ul><li><strong>把不可约二次因式硬拆</strong>：$\Delta&lt;0$ 的因式在实数域不能再分，分子必须设 $Bx+C$ 一次式；只设常数 $B$ 是常见错误，方程组会矛盾。</li><li><strong>凑导数系数错</strong>：$(x^2-2x+2)'=2x-2$，拆 $-x+3$ 应写 $-\dfrac12(2x-2)+2$；系数凑成 $-\dfrac12(x-1)$ 就少了因子 2。</li><li><strong>$\arctan(x-1)$ 代限符号</strong>：下限 $x=0$ 处是 $-\dfrac\pi4$，上减下得正 $\dfrac\pi4$；把负号丢掉整个 $\pi$ 项就没了。</li><li><strong>以为 $\ln(x^2-2x+2)$ 上限贡献非零</strong>：$x=1$ 时该式值为 $1$，$\ln 1=0$，贡献全来自下限的 $\ln 2$。</li></ul>
+<blockquote>一句话结论：设 $\dfrac{A}{x+1}+\dfrac{Bx+C}{x^2-2x+2}$，赋值定出 $A=\dfrac15,\ B=-\dfrac15,\ C=\dfrac35$，对数块与反正切块合并得 $\dfrac3{10}\ln 2+\dfrac\pi{10}$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

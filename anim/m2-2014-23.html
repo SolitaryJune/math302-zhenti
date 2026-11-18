@@ -97,5 +97,35 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：秩 1 矩阵对角化会师——同谱且都可对角化则相似</h2>
+<p>答案：两矩阵特征值同为 $n,\,0,\,\cdots,\,0$ 且都可对角化，故都相似于 $\Lambda=\operatorname{diag}(n,0,\cdots,0)$，由传递性得二者相似。</p>
+<h3>第 0 步：先立机制——证明相似的三条路里为什么选"对角化会师"</h3>
+<p>判定 $A\sim B$ 的可行路线有三：①按定义找可逆 $P$ 使 $P^{-1}AP=B$——要同时配对两个变换矩阵，方向难寻；②相似不变量（秩、迹、特征多项式……）——必要不充分，凑不齐全套；③<strong>对角化会师</strong>：若 $A$、$B$ 都可对角化且特征值完全相同，则各存在可逆 $P,Q$ 使</p>
+<p>$$P^{-1}AP=\Lambda=Q^{-1}BQ\ \Longrightarrow\ B=QP^{-1}APQ^{-1}=\left(PQ^{-1}\right)^{-1}A\left(PQ^{-1}\right),$$</p>
+<p>即 $A\sim B$。本题两个矩阵都是<strong>秩 1 矩阵</strong>，特征值结构极简（零的重数 + 迹定出最后一个），可对角化又恰好都能验证——路线③的每个环节都是为这类矩阵量身定做的。</p>
+<h3>第一步：$A$（全 1 矩阵）的特征值——秩与迹各管一头</h3>
+<p>$A$ 每行相同，$\operatorname{rank}(A)=1$。<strong>为什么秩 1 就押出 $n-1$ 个零特征值</strong>：$Ax=0$ 只有 $1$ 个独立约束（$x_1+\cdots+x_n=0$），解空间维数 $n-1$，故 $\lambda=0$ 的几何重数已是 $n-1$，代数重数只多不少。<strong>为什么剩下的那个特征值用迹找</strong>：特征多项式 $\det(\lambda E-A)=\lambda^n-(\operatorname{tr}A)\lambda^{n-1}+\cdots+(-1)^n\det A$，由根与系数关系，$n$ 个特征值之和等于迹；$\operatorname{tr}(A)=n$（对角线全 1），故</p>
+<p>$$\lambda_A=n,\ 0,\ \cdots,\ 0.$$</p>
+<p>秩管零的重数、迹管剩下的那个——秩 1 矩阵求谱的通用两板斧。</p>
+<h3>第二步：$A$ 可对角化——几何重数凑满 $n$</h3>
+<p>$\lambda=0$：解空间维数 $n-1$（第一步已数）；$\lambda=n$：特征向量 $(1,1,\cdots,1)^{\mathrm T}$（每行元素和为 $n$）。它与零特征值的解空间线性无关，合计恰 $n$ 个，故 $A$ 可对角化，$A\sim\Lambda=\operatorname{diag}(n,0,\cdots,0)$。</p>
+<h3>第三步：$B$ 的特征值——同一个"作用"要一眼看穿</h3>
+<p>$B$ 的第 $i$ 行末列是 $i$、其余全 $0$，所以 $B$ 对向量 $x$ 的作用只有一句话：</p>
+<p>$$Bx=\bigl(x_n,\ 2x_n,\ \cdots,\ nx_n\bigr)^{\mathrm T}=x_n\,(1,2,\cdots,n)^{\mathrm T}.$$</p>
+<p><strong>为什么这一句是 $B$ 的全部机制</strong>：$B$ 把任何向量压到 $(1,2,\cdots,n)^{\mathrm T}$ 方向上，压缩倍数恰是 $x_n$。于是特征值不请自来——$x_n=0$ 时 $Bx=0$，即 $\lambda=0$ 的特征子空间是 $\{x_n=0\}$，维数 $n-1$；$x_n\neq0$ 时 $Bx$ 沿固定方向，特征向量只能是 $(1,2,\cdots,n)^{\mathrm T}$ 的倍数，且 $B(1,\cdots,n)^{\mathrm T}=n\,(1,\cdots,n)^{\mathrm T}$ ✓，给出 $\lambda=n$。同时 $\operatorname{rank}(B)=1$、$\operatorname{tr}(B)=n$（只有 $(n,n)$ 处非零），与第一步互相印证：</p>
+<p>$$\lambda_B=n,\ 0,\ \cdots,\ 0.$$</p>
+<h3>第四步：$B$ 可对角化——与 $A$ 完全平行</h3>
+<p>$\lambda=0$ 给 $n-1$ 个线性无关特征向量（$x_n=0$ 的解空间），$\lambda=n$ 给 1 个（$(1,2,\cdots,n)^{\mathrm T}$），共 $n$ 个，故 $B$ 也可对角化，$B\sim\Lambda$。</p>
+<p><strong>为什么"可对角化"这一环绝对不能省</strong>：特征值相同不保证相似。反例：$\begin{pmatrix}0&amp;1\\0&amp;0\end{pmatrix}$ 与零矩阵的特征值同为 $0,0$，但前者是若尔当块（特征向量只有 1 个）、后者有 2 个，二者不相似——"同谱"只是入场券，"都能走到同一个对角阵"才是判决书。</p>
+<h3>第五步：会师收尾</h3>
+<p>$A\sim\Lambda$ 且 $B\sim\Lambda$，由相似的传递性（第 0 步的显式共轭 $B=\left(PQ^{-1}\right)^{-1}A\left(PQ^{-1}\right)$）得 $A\sim B$。证毕。</p>
+<h3>易错点</h3>
+<ul><li><strong>只比特征值就下结论</strong>：漏掉可对角化验证，反例见第四步；这是本题判卷的核心得分点。</li><li><strong>忘数几何重数</strong>：秩 1 只保证 $\lambda=0$ 的代数重数 $\ge n-1$，要靠解空间维数 $n-1$ 把它坐实，才能凑满 $n$ 个特征向量。</li><li><strong>$\operatorname{tr}(B)$ 看漏</strong>：$B$ 的对角元只有第 $(n,n)$ 个是 $n$，其余全 0，迹是 $n$ 不是 0。</li><li><strong>试图硬找 $P$ 使 $P^{-1}AP=B$</strong>：绕开定义，让两者各自对角化到同一个 $\Lambda$ 会师即可。</li></ul>
+<blockquote>结论：同秩 1（零特征值带 $n-1$ 维解空间）、同迹（最后一个特征值 $n$）、都可对角化 ⇒ 同相似于 $\operatorname{diag}(n,0,\cdots,0)$ ⇒ $A\sim B$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

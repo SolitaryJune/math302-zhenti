@@ -89,5 +89,23 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：二重积分交换次序——抛物线区域按 $\lvert x\rvert$ 分块</h2>
+<p>答案：A</p>
+<h3>第一步：由累次积分还原区域</h3>
+<p>原式先 $y$ 后 $x$，区域为 $D=\{(x,y)\mid -2\le x\le2,\ 4-x^2\le y\le4\}$：开口向下、顶点 $(0,4)$ 的抛物线 $y=4-x^2$ 的<strong>上方</strong>、直线 $y=4$ 的<strong>下方</strong>那一条带，抛物线在 $x=\pm2$ 处落到 $y=0$，故 $y$ 的整体范围是 $0\le y\le4$。</p>
+<h3>第二步：固定 $y$，解 $x$ 的不等式</h3>
+<p>条件 $y\ge4-x^2$ 即 $x^2\ge4-y$，即 $\lvert x\rvert\ge\sqrt{4-y}$ —— 是抛物线<strong>两侧之外</strong>，不是之内。再结合 $-2\le x\le2$，$x$ 分成两段：</p>
+<p>$$x\in\left[-2,\,-\sqrt{4-y}\right]\ \cup\ \left[\sqrt{4-y},\,2\right].$$</p>
+<h3>第三步：改写成先 $x$ 后 $y$</h3>
+<p>$$\int_0^4\left[\int_{-2}^{-\sqrt{4-y}}f(x,y)\,\mathrm dx+\int_{\sqrt{4-y}}^{2}f(x,y)\,\mathrm dx\right]\mathrm dy,$$</p>
+<p>与选项 <strong>A</strong> 完全一致。</p>
+<h3>易错点</h3>
+<ul><li><strong>不等式解反</strong>：把 $x^2\ge4-y$ 误当 $\lvert x\rvert\le\sqrt{4-y}$，第一段写成 $\int_{-2}^{\sqrt{4-y}}$（选项 B），把抛物线内部也算进来了。</li><li><strong>上下限颠倒</strong>：第二段写成 $\int_2^{\sqrt{4-y}}$（选项 C），积分限倒置差一个符号。</li><li><strong>乱用对称性</strong>：$D$ 虽关于 $y$ 轴对称，但 $f(x,y)$ 未必是 $x$ 的偶函数，不能提系数 $2$ 合并两段（选项 D）。</li></ul>
+<blockquote>一句话结论：画区域、解 $x^2\ge4-y$ 得左右两段，两段都从抛物线支到 $\pm2$，选 A。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

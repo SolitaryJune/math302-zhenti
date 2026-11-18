@@ -94,5 +94,27 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：复合恒等式两边求导，联立解出 $\mathrm{d}f(1,1)$</h2>
+<p>答案：C</p>
+<h3>第一步：定目标，挑「能命中 $(1,1)$」的 $x$</h3>
+<p>目标是 $f_x(1,1)$ 与 $f_y(1,1)$，因为 $\mathrm{d}f(1,1)=f_x(1,1)\,\mathrm{d}x+f_y(1,1)\,\mathrm{d}y$。两个恒等式必须在内层<strong>恰好路过 $(1,1)$</strong> 时才可用：$f(x+1,e^x)$ 取 $x=0$；$f(x,x^2)$ 取 $x=1$。</p>
+<h3>第二步：第一式对 $x$ 求导</h3>
+<p>$$f_x(x+1,e^x)\cdot1+f_y(x+1,e^x)\cdot e^x=(x+1)^2+2x(x+1)=(x+1)(3x+1).$$</p>
+<p>代 $x=0$（内层 $(1,1)$，$e^0=1$）：$f_x(1,1)+f_y(1,1)=1$。</p>
+<h3>第三步：第二式对 $x$ 求导</h3>
+<p>$$f_x(x,x^2)\cdot1+f_y(x,x^2)\cdot2x=4x\ln x+2x.$$</p>
+<p>代 $x=1$（内层 $(1,1)$）：$f_x(1,1)+2f_y(1,1)=0+2=2$。</p>
+<h3>第四步：联立求解</h3>
+<p>两式相减得 $f_y(1,1)=1$，回代得 $f_x(1,1)=0$。于是</p>
+<p>$$\mathrm{d}f(1,1)=0\cdot\mathrm{d}x+1\cdot\mathrm{d}y=\mathrm{d}y.$$</p>
+<p>选 C。</p>
+<h3>易错点</h3>
+<ul><li><strong>代错 $x$</strong>：第二式若也代 $x=0$，内层是 $(0,0)$ 且出现 $\ln0$，根本不可用；先让内层命中 $(1,1)$ 再动手。</li><li><strong>链式法则丢内层导数</strong>：$\dfrac{\mathrm{d}}{\mathrm{d}x}e^x=e^x$、$\dfrac{\mathrm{d}}{\mathrm{d}x}x^2=2x$，漏乘任何一侧方程组就废了。</li><li><strong>凭直觉平分</strong>：以为 $f_x=f_y=\dfrac12$；两个方程必须联立解，答案是 $(0,1)$。</li></ul>
+<blockquote>一句话结论：两个恒等式分别取 $x=0,1$ 求导，得 $f_x+f_y=1$ 与 $f_x+2f_y=2$，解出 $(0,1)$，故 $\mathrm{d}f(1,1)=\mathrm{d}y$，选 C。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

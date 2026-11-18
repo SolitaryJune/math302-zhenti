@@ -105,5 +105,27 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：$n$ 因子乘积函数在"零因子"处的求导</h2>
+<p>答案：A</p>
+<h3>第一步：拆因子、算代值，找出"谁是零"</h3>
+<p>记 $g_k(x)=\mathrm{e}^{kx}-k$，则 $f(x)=g_1(x)g_2(x)\cdots g_n(x)$。代入 $x=0$：$g_1(0)=\mathrm{e}^0-1=0$，而 $g_k(0)=1-k\neq0\ (k\ge2)$。<strong>零因子只有 $g_1$</strong>——这是整题的钥匙。</p>
+<h3>第二步：乘积法则展开，筛掉死项</h3>
+<p>$$f'(x)=\sum_{j=1}^{n}g_j'(x)\prod_{i\neq j}g_i(x).$$</p>
+<p>代 $x=0$：当 $j\ge2$ 时，连乘 $\prod_{i\neq j}g_i(0)$ 里仍含因子 $g_1(0)=0$，整项归零。于是只剩 $j=1$ 一项存活：</p>
+<p>$$f'(0)=g_1'(0)\cdot\prod_{k=2}^{n}g_k(0).$$</p>
+<h3>第三步：算两个 surviving 因子</h3>
+<p>$g_1'(x)=\mathrm{e}^x$，故 $g_1'(0)=1$；连乘</p>
+<p>$$\prod_{k=2}^{n}(1-k)=(-1)(-2)\cdots(-(n-1))=(-1)^{n-1}(n-1)!$$</p>
+<p>——共 $n-1$ 个负因子、绝对值恰为 $(n-1)!$。故 $f'(0)=(-1)^{n-1}(n-1)!$。</p>
+<h3>第四步：取 $n=2$ 验算</h3>
+<p>$f(x)=(\mathrm{e}^x-1)(\mathrm{e}^{2x}-2)$，$f'(0)=\mathrm{e}^0(1-2)+0=-1$；公式给 $(-1)^1\cdot1!=-1$，吻合（$n=3$ 时公式给 $+2$，可直接数值验证）。</p>
+<h3>易错点</h3>
+<ul><li><strong>负号个数数错</strong>：负因子是 $(1-2),\cdots,(1-n)$，共 $n-1$ 个，符号 $(-1)^{n-1}$ 而非 $(-1)^n$（B、D 错因）。</li><li><strong>阶乘多乘一项</strong>：连乘只到 $(1-n)$，是 $(n-1)!$ 而非 $n!$（C 错因）。</li><li><strong>对整式硬展开</strong>：不分析"零因子封杀死项"，对 $n$ 个因子全求导会陷入泥潭。</li></ul>
+<blockquote>一句话结论：零因子 $g_1(0)=0$ 封杀其余项，$f'(0)=1\cdot\prod_{k=2}^{n}(1-k)=(-1)^{n-1}(n-1)!$，选 A。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

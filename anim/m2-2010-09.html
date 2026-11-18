@@ -103,5 +103,28 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：三阶常系数齐次方程——特征方程为什么这样用</h2>
+<p>答案：$y=C_1\mathrm e^{2x}+C_2\cos x+C_3\sin x$（$C_1,C_2,C_3$ 为任意常数）。</p>
+<h3>第 0 步：先立机制——为什么找 $\mathrm e^{rx}$ 当试解</h3>
+<p>求导对 $\mathrm e^{rx}$ 只做一件事：<strong>乘 $r$</strong>（$\dfrac{\mathrm d}{\mathrm dx}\mathrm e^{rx}=r\,\mathrm e^{rx}$）。代回方程 $y'''-2y''+y'-2y=0$，每项都含因子 $\mathrm e^{rx}&gt;0$，整体提出后剩下的就是代数条件</p>
+<p>$$r^3-2r^2+r-2=0.$$</p>
+<p>于是「解微分方程」降维成「解三次代数方程」；微分方程的解空间（$3$ 维）由特征根按规则张成——<strong>每个单实根贡献 $\mathrm e^{rx}$，一对共轭复根贡献 $\cos$ 与 $\sin$ 两项</strong>。$3$ 个根恰好张满 $3$ 维，这就是通解里有 $3$ 个任意常数的原因。</p>
+<h3>第一步：解特征方程——为什么先试整数根</h3>
+<p>首一整系数多项式的有理根必是常数项 $-2$ 的因子：$\pm1,\ \pm2$。代 $r=2$：$8-8+2-2=0$，命中。用<strong>分组</strong>提公因式（或多项式除法）拆掉这个根：</p>
+<p>$$r^2(r-2)+(r-2)=(r-2)(r^2+1)=0,$$</p>
+<p>得 $r_1=2$（单实根）与 $r_{2,3}=\pm\mathrm i$（共轭复根，$\alpha=0,\ \beta=1$）。</p>
+<h3>第二步：按根型组装通解——复根为什么变成 $\cos$ 与 $\sin$</h3>
+<ul><li>$r=2$：贡献 $C_1\mathrm e^{2x}$。</li><li>$r=\pm\mathrm i$：形式解是 $\mathrm e^{(\alpha\pm\beta\mathrm i)x}$；由<strong>欧拉公式</strong> $\mathrm e^{\mathrm i\beta x}=\cos\beta x+\mathrm i\sin\beta x$，实值解取其实部、虚部的线性组合 $\mathrm e^{\alpha x}(C_2\cos\beta x+C_3\sin\beta x)$。此处 $\alpha=0,\ \beta=1$，即 $C_2\cos x+C_3\sin x$——<strong>没有指数因子</strong>，$\mathrm i$ 也不留在答案里。</li></ul>
+<p>三根互异，通解为</p>
+<p>$$y=C_1\mathrm e^{2x}+C_2\cos x+C_3\sin x.$$</p>
+<p>自检：独立常数 $3$ 个 $=$ 方程阶数；把 $y=\mathrm e^{2x}$ 的各阶导数代入原方程，对应 $r=2$ 的条件 $8-8+2-2=0$ ✓。</p>
+<h3>易错点</h3>
+<ul><li><strong>三次式分解不出来就放弃</strong>：先试常数项的因子（$\pm1,\pm2$），找到 $r=2$ 后用分组提 $(r-2)$，不必硬上求根公式。</li><li><strong>复根组装错</strong>：$\alpha\pm\beta\mathrm i$ 对应 $\mathrm e^{\alpha x}(C\cos\beta x+D\sin\beta x)$；此处 $\alpha=0$，凭空添 $\mathrm e^{x}$ 或把 $\mathrm i$ 写进答案是高频错误。</li><li><strong>常数个数与阶数不符</strong>：少写一项（如漏 $\sin x$）就不是通解——解空间维数由阶数决定。</li></ul>
+<blockquote>求导 $=$ 对 $\mathrm e^{rx}$ 乘 $r$ ⟹ 特征方程 $P(r)=0$；单实根给指数项，$\alpha\pm\beta\mathrm i$ 给 $\mathrm e^{\alpha x}(\cos,\sin)$。本题 $y=C_1\mathrm e^{2x}+C_2\cos x+C_3\sin x$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

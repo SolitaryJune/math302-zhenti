@@ -91,5 +91,28 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：矩阵方程 $AB=C$ 的相容性——按列分块定参数</h2>
+<p>答案：A</p>
+<h3>第零步：机制——为什么按列拆、为什么必有相容条件</h3>
+<p>矩阵乘法按列看：$AB$ 的第 $j$ 列 $=A\times(B\ \text{的第}\ j\ \text{列})$。所以 $AB=C$ 等价于两个独立的非齐次方程组 $A\beta_1=c_1$、$A\beta_2=c_2$ <strong>同时有解</strong>——$a,b$ 分属两个方程组，各有各的相容条件。又 $A$ 是 $4\times3$，<strong>方程比未知数多一个</strong>（$r(A)=3&lt;4$）：前三个方程总能把 $x_1,x_2,x_3$ 唯一解出，第四个方程就必须被"顺带满足"——这正是参数 $a,b$ 要付出的代价：常数列得落进 $A$ 的列空间。</p>
+<h3>第一步：写出方程组、找解的入口</h3>
+<p>设 $\beta=(x_1,x_2,x_3)^T$，$A\beta=c$ 即</p>
+<p>$$x_1+x_3=c^{(1)},\quad x_3=c^{(2)},\quad x_1+x_2+3x_3=c^{(3)},\quad x_1+x_2+x_3=c^{(4)}.$$</p>
+<p>第 2 式只含 $x_3$，前三个方程构成"先解 $x_3$、再回代 $x_1$、$x_2$"的链——任何 $c^{(1)},c^{(2)},c^{(3)}$ 都解得动；第四个方程自动给出 $c^{(4)}$ 必须满足的相容条件。</p>
+<h3>第二步：第一列定 $a$</h3>
+<p>$c_1=(2,1,1,a)^T$：$x_3=1$，$x_1=2-1=1$，$x_2=1-1-3=-3$。代第四式：</p>
+<p>$$x_1+x_2+x_3=1-3+1=-1\ \Longrightarrow\ a=-1.$$</p>
+<h3>第三步：第二列定 $b$ 并验算</h3>
+<p>$c_2=(0,1,1,b)^T$：$x_3=1$，$x_1=-1$，$x_2=1+1-3=-1$。代第四式：</p>
+<p>$$-1-1+1=-1\ \Longrightarrow\ b=-1.$$</p>
+<p>验算：$\beta_1=(1,-3,1)^T$ 给 $A\beta_1=(2,1,1,-1)^T$，$\beta_2=(-1,-1,1)^T$ 给 $A\beta_2=(0,1,1,-1)^T$，与 $C$ 完全吻合。选 <strong>A</strong>。</p>
+<h3>易错点</h3>
+<ul><li><strong>只处理一列</strong>：$a,b$ 分属两个方程组，各有相容条件，C、D 各错一半。</li><li><strong>用行变换硬消元</strong>：第 2 行只含 $x_3$，直接回代比通分消元更快更稳。</li><li><strong>误以为要求出整个 $B$</strong>：只需相容条件，不必把 $B$ 全解出来。</li></ul>
+<blockquote>一句话结论：按列拆成 $A\beta_1=c_1$、$A\beta_2=c_2$；前三个方程解出 $\beta$，第四个方程索要 $a=b=-1$，选 A。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

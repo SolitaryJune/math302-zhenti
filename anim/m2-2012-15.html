@@ -105,5 +105,33 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：通分 + 泰勒展开求极限，再按首项幂次定同阶常数 k</h2>
+<p>最终答案：(1) $a=1$；(2) $k=1$。</p>
+<h3>第 0 步：先立机制——分式比阶就是"分子分母首项的对话"</h3>
+<p>分式极限 $\lim_{x\to0}\dfrac{N(x)}{D(x)}$ 的本质：分子、分母各提出最低次幂，首项系数相除。一切工作都围绕"找出分子、分母各自的首项"展开。<strong>为什么选泰勒展开而不选洛必达</strong>：其一，洛必达每求导一次只能剥掉一层皮，本题分母 $x\sin x$ 在 $0$ 处的前几阶导数轮流为零，要连导两三轮才见分晓，且每轮表达式更繁；其二，第 (2) 问要找的是 $f(x)-a$ 的<strong>首个非零项</strong>，泰勒展开把各阶系数一次性摆在桌面上、首项直接可见，洛必达只能一轮轮摸黑剥皮。故本题全程用泰勒。</p>
+<h3>第一步：(1) 通分——为什么不能直接拆</h3>
+<p>$\dfrac{1+x}{\sin x}\sim\dfrac1x\to\infty$，$\dfrac1x\to\infty$：两项各自发散，"$\infty-\infty$"没有意义，不能拆成两个极限相减。通分把它们捆成一只 $\dfrac00$ 分式，才能动用第 0 步的比阶机制：</p>
+<p>$$f(x)=\frac{(1+x)x-\sin x}{x\sin x}=\frac{x+x^2-\sin x}{x\sin x}.$$</p>
+<h3>第二步：(1) 泰勒展开、首项对话</h3>
+<p>用 $\sin x=x-\dfrac{x^3}{6}+o(x^3)$（展到三阶即可：分母首项是 $x^2$，只需看清分子不高于三阶的部分）：</p>
+<ul><li>分子 $x+x^2-\sin x=x^2+\dfrac{x^3}{6}+o(x^3)$——一阶项相消，首项 $x^2$；</li><li>分母 $x\sin x=x^2+o(x^2)$——首项 $x^2$。</li></ul>
+<p>两个首项同为 $x^2$，极限就是系数比：</p>
+<p>$$a=\lim_{x\to0}\frac{x^2+\frac{x^3}{6}+o(x^3)}{x^2+o(x^2)}=1.$$</p>
+<h3>第三步：(2) 低阶相消，必须多展一层</h3>
+<p>$$f(x)-1=\frac{x+x^2-\sin x-x\sin x}{x\sin x}.$$</p>
+<p><strong>为什么这次要多保留一层</strong>：分子里 $x$ 与 $x^2$ 的系数都恰好相消（$x^2$ 一份来自 $+x^2$、一份来自 $-x\sin x$ 里的 $-x^2$），首项被抹掉了，商的首项只能由更高阶的存活项决定——这就是"多保留一层"的机制：<strong>低阶相消时，展开精度必须盖过相消的阶</strong>。取 $\sin x=x-\dfrac{x^3}{6}+o(x^3)$ 与 $x\sin x=x^2-\dfrac{x^4}{6}+o(x^4)$（$-\dfrac{x^4}{6}$ 这层正是为把误差压到 $o(x^3)$ 而保留的）：</p>
+<p>$$\text{分子}=x+x^2-\Big(x-\frac{x^3}{6}+o(x^3)\Big)-\Big(x^2-\frac{x^4}{6}+o(x^4)\Big)=\frac{x^3}{6}+o(x^3),$$</p>
+<p>分母首项仍是 $x^2$，相除得</p>
+<p>$$f(x)-1=\frac{x}{6}+o(x).$$</p>
+<h3>第四步：定 k——同阶的机制</h3>
+<p>同阶无穷小的定义：$\lim_{x\to0}\dfrac{f(x)-a}{x^k}=c\neq0$（$c$ 为非零常数，不必为 $1$）。$f(x)-a\sim\dfrac{x}{6}$ 首项是一次幂，故 $k=1$。直观检验：拿 $x^k$ 去除，$k$ 除"低"了商趋于 $0$（如 $k=0$），除"高"了商发散（如 $k=2$ 时 $\dfrac{x/6}{x^2}=\dfrac1{6x}\to\infty$），只有 $k=1$ 把商压成非零常数 $\dfrac16$。</p>
+<h3>易错点</h3>
+<ul><li><strong>把 $\infty-\infty$ 型直接拆成两个极限</strong>：两项各自发散，相减无意义，必须先通分。</li><li><strong>(2) 里展开阶数不够</strong>：低阶相消后首项藏在更高阶，$x\sin x$ 必须展到 $-\dfrac{x^4}{6}$ 才能把分子的精度传到 $o(x^3)$。</li><li><strong>把同阶误解为极限等于 1</strong>：极限为非零常数即同阶，等于 $1$ 才叫等价；本题 $\lim_{x\to0}\dfrac{f(x)-1}{x}=\dfrac16\neq0$。</li><li><strong>(2) 用洛必达硬剥</strong>：分母 $x\sin x$ 的低阶导数在 $0$ 处轮流为零，剥到三、四轮才能露出首项；泰勒展开一次到位。</li></ul>
+<blockquote>结论：$a=1$；$f(x)-a\sim\dfrac{x}{6}$，与 $x^1$ 同阶，$k=1$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

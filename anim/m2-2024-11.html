@@ -104,5 +104,29 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：切线竖直处的曲率圆——换自变量 + 三要素定位</h2>
+<p>答案：$\left(x-\dfrac{1}{2}\right)^2+y^2=\dfrac{1}{4}$。</p>
+<h3>第 0 步：先立模型——曲率圆由两件东西唯一确定</h3>
+<p>曲率圆（密切圆）是与曲线在一点"贴得最紧"的圆：过该点、共用切线、以该点的曲率弯曲。<strong>三要素</strong>：半径 $R=\dfrac1\kappa$——曲率是"单位弧长转过的角度"，弯得越狠半径越小，对圆恰有 $\kappa=\dfrac1R$，这就是 $R=1/\kappa$ 的来历；圆心在该点<strong>法线上、凹侧</strong>那一段——圆必须往曲线弯的方向贴，放凸侧则切是切了、弯向相反贴不住；圆心到切点距离恰为 $R$。所以本题只干两件事：算 $\kappa$，定凹侧方向。</p>
+<h3>第 1 步：换自变量——为什么 $y=y(x)$ 这条路走不通</h3>
+<p>$y^2=x$ 在 $(0,0)$ 处切线是 $y$ 轴（竖直）。硬按 $y=y(x)$ 求导得 $y'=\dfrac1{2y}$，在 $y=0$ 处分母为零——这不是"求不出"，而是在告诉我们：切线竖直，以 $x$ 为自变量的斜率是无穷。规范做法是<strong>把 $x$ 当因变量</strong>：$x=y^2$，</p>
+<p>$$\frac{\mathrm dx}{\mathrm dy}=2y,\qquad\frac{\mathrm d^2x}{\mathrm dy^2}=2.$$</p>
+<p>曲率公式换用对 $y$ 求导的版本 $\kappa=\dfrac{\lvert x''\rvert}{\big(1+(x')^2\big)^{3/2}}$——它就是把标准公式的 $x,y$ 角色互换：分母里的 $1+(x')^2$ 是切线倾角的修正项，此处 $x'(0)=0$，分母恰为 $1$。</p>
+<h3>第 2 步：算曲率与半径</h3>
+<p>在 $y=0$：$\kappa=\dfrac{2}{1^{3/2}}=2$，$R=\dfrac1\kappa=\dfrac12$。</p>
+<h3>第 3 步：定曲率中心——凹侧在哪边</h3>
+<p>原点处切线沿 $y$ 轴，法线即 $x$ 轴。曲线 $x=y^2$ 开口朝 $x$ 轴<strong>正方向</strong>（图形向右弯），凹侧即 $+x$ 一侧，故圆心在原点沿 $x$ 正向距离 $R$ 处：</p>
+<p>$$\text{圆心}\ \Big(\tfrac12,\ 0\Big),\qquad \text{曲率圆}\ \Big(x-\tfrac12\Big)^2+y^2=\tfrac14.$$</p>
+<p><strong>为什么不是 $-x$ 侧？</strong> 曲线在原点附近 $x=y^2\ge0$，整个"弯"朝右；圆放左侧与曲线弯向相反，无法二阶贴合。</p>
+<h3>第 4 步：验算</h3>
+<p>圆过原点（$\big(0-\frac12\big)^2+0=\frac14$ ✓）；半径 $\frac12=R$ ✓；圆心在凹侧 ✓；该圆与曲线在原点共用竖直切线与曲率（二阶接触）✓。</p>
+<h3>易错点</h3>
+<ul><li><strong>硬用 $y=y(x)$</strong>：$y'=\frac1{2y}$ 在原点爆掉，说明切线竖直，应换 $x=x(y)$，而不是硬套公式。</li><li><strong>曲率写成 $\kappa=\lvert x''\rvert$</strong>：本题分母恰为 $1$ 是巧合，一般 $\big(1+(x')^2\big)^{3/2}$ 不能省。</li><li><strong>圆心放反</strong>：$\big(x+\frac12\big)^2+y^2=\frac14$ 跑到凸侧；$x=y^2$ 的弯朝 $+x$。</li></ul>
+<blockquote>一句话结论：$x=y^2$ 对 $y$ 求导，$\kappa=2$、$R=\frac12$、凹侧圆心 $\big(\frac12,0\big)$，曲率圆 $\big(x-\frac12\big)^2+y^2=\frac14$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

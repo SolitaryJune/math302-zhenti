@@ -89,5 +89,26 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：变限积分给出的曲线求弧长——y′ 白送，积分化成圆弧</h2>
+<p>答案：$\dfrac{4\pi}3+\sqrt3$</p>
+<h3>第一步：写出弧长公式并求 y′</h3>
+<p>变限积分求导白送被积函数：$y'=\sqrt{3-x^2}$（下限是常数）。由 $3-x^2\ge0$ 知曲线定义在 $x\in[-\sqrt3,\sqrt3]$。</p>
+<h3>第二步：代入化简</h3>
+<p>$$L=\int_{-\sqrt3}^{\sqrt3}\sqrt{1+(y')^2}\,\mathrm dx=\int_{-\sqrt3}^{\sqrt3}\sqrt{4-x^2}\,\mathrm dx.$$</p>
+<p>被积函数是偶函数：$L=2\displaystyle\int_0^{\sqrt3}\sqrt{4-x^2}\,\mathrm dx$。</p>
+<h3>第三步：算定积分</h3>
+<p>套公式（或令 $x=2\sin\theta$）：$\displaystyle\int\sqrt{4-x^2}\,\mathrm dx=\frac x2\sqrt{4-x^2}+2\arcsin\frac x2$，代入：</p>
+<p>$$\int_0^{\sqrt3}\sqrt{4-x^2}\,\mathrm dx=\frac{\sqrt3}2\cdot1+2\arcsin\frac{\sqrt3}2=\frac{\sqrt3}2+\frac{2\pi}3.$$</p>
+<h3>第四步：收尾并几何自检</h3>
+<p>$$L=2\Bigl(\frac{\sqrt3}2+\frac{2\pi}3\Bigr)=\sqrt3+\frac{4\pi}3.$$</p>
+<p>几何验证：$\sqrt{4-x^2}$ 是半径 2 的上半圆，$x\in[-\sqrt3,\sqrt3]$ 上方的弓形面积 $=$ 圆心角 $\dfrac{2\pi}3$ 的扇形 $\dfrac12\cdot4\cdot\dfrac{2\pi}3=\dfrac{4\pi}3$，再加两块直角三角形 $2\cdot\dfrac{\sqrt3}2=\sqrt3$，一致。</p>
+<h3>易错点</h3>
+<ul><li><strong>忘写弧长公式里的 1</strong>：$\int\sqrt{3-x^2}\,\mathrm dx$ 算的是面积不是弧长。</li><li><strong>积分限拿错</strong>：曲线只在 $|x|\le\sqrt3$ 有定义，不是 $[-2,2]$，也不是 $[0,\sqrt3]$。</li><li><strong>$\arcsin\frac{\sqrt3}2$ 记成 $\frac\pi4$</strong>：是 $\frac\pi3$。</li></ul>
+<blockquote>一句话结论：$L=\displaystyle\int_{-\sqrt3}^{\sqrt3}\sqrt{4-x^2}\,\mathrm dx=\sqrt3+\dfrac{4\pi}3$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

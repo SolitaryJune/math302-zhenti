@@ -99,5 +99,30 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：交换积分次序，把"积不出"变成"积得出"</h2>
+<p>答案：$-\ln\cos 1$（等价写法 $\ln\sec 1$）</p>
+<h3>第一步：识局——先对 $x$ 积是死路</h3>
+<p>$\dfrac{\tan x}{x}$ 没有初等原函数，原积分 $\displaystyle\int_0^1\mathrm{d}y\int_y^1\frac{\tan x}{x}\,\mathrm{d}x$ 直接算不动。这类"内层积不出"的累次积分，标准动作是<strong>交换积分次序</strong>。</p>
+<h3>第二步：把区域写清楚</h3>
+<p>内层 $x$ 从 $y$ 到 $1$、外层 $y$ 从 $0$ 到 $1$，即区域</p>
+<p>$$D=\{(x,y)\mid 0\le y\le x\le 1\},$$</p>
+<p>是以 $(0,0),(1,0),(1,1)$ 为顶点的三角形（直线 $y=x$ 与 $x=1$、$y=0$ 围成）。</p>
+<h3>第三步：交换次序为先 $y$ 后 $x$</h3>
+<p>换成先 $y$ 后 $x$：$x$ 从 $0$ 到 $1$，固定 $x$ 时 $y$ 从 $0$ 到 $x$：</p>
+<p>$$\int_0^1\mathrm{d}y\int_y^1\frac{\tan x}{x}\,\mathrm{d}x=\int_0^1\mathrm{d}x\int_0^x\frac{\tan x}{x}\,\mathrm{d}y.$$</p>
+<h3>第四步：内层把 $x$ "约掉"</h3>
+<p>被积函数与 $y$ 无关，内层就是乘区间长度：</p>
+<p>$$\int_0^x\frac{\tan x}{x}\,\mathrm{d}y=\frac{\tan x}{x}\cdot x=\tan x.$$</p>
+<p>这正是交换次序的目的——分母 $x$ 被区间长度 $x$ 恰好消掉。</p>
+<h3>第五步：算 $\displaystyle\int_0^1\tan x\,\mathrm{d}x$</h3>
+<p>$$\int_0^1\tan x\,\mathrm{d}x=\Big[-\ln\lvert\cos x\rvert\Big]_0^1=-\ln\cos 1-\bigl(-\ln 1\bigr)=-\ln\cos 1.$$</p>
+<h3>易错点</h3>
+<ul><li><strong>死磕 $\tan x/x$ 的原函数</strong>：它不是初等函数，先对 $x$ 积分永远积不出，必须换序。</li><li><strong>区域写反</strong>：内层下限是 $x=y$ 说明 $y\le x$，写成 $y\ge x$ 交换后就错了。</li><li><strong>$\tan x$ 的原函数</strong>：$\int\tan x\,\mathrm{d}x=-\ln\lvert\cos x\rvert$，正负号与绝对值都要留神。</li></ul>
+<blockquote>结论：$D=\{0\le y\le x\le1\}$，换序后内层积出 $\tan x$，最终值为 $-\ln\cos 1$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

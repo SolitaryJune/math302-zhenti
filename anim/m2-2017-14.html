@@ -99,5 +99,25 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：用特征值特征向量的定义 $A\xi=\lambda\xi$ 定参数</h2>
+<p>答案：$a=-1$</p>
+<h3>第一步：回到定义列方程</h3>
+<p>$\xi=(1,1,2)^{\mathrm T}$ 是 $A$ 的特征向量，按定义存在 $\lambda$ 使</p>
+<p>$$A\xi=\lambda\xi.$$</p>
+<p>这是含两个未知量 $\lambda$ 与 $a$ 的方程组，思路是：<strong>先用不含 $a$ 的分量定 $\lambda$，再代回含 $a$ 的分量求 $a$</strong>。</p>
+<h3>第二步：算出 $A\xi$</h3>
+<p>$$A\xi=\begin{pmatrix}4&amp;1&amp;-2\\1&amp;2&amp;a\\3&amp;1&amp;-1\end{pmatrix}\begin{pmatrix}1\\1\\2\end{pmatrix}=\begin{pmatrix}4+1-4\\1+2+2a\\3+1-2\end{pmatrix}=\begin{pmatrix}1\\3+2a\\2\end{pmatrix}.$$</p>
+<h3>第三步：逐分量与 $\lambda\xi=\lambda(1,1,2)^{\mathrm T}$ 对齐</h3>
+<ul><li>第 1 行（不含 $a$）：$1=\lambda\cdot1$，得 $\lambda=1$；</li><li>第 3 行（也不含 $a$）：$2=\lambda\cdot2=2$，与 $\lambda=1$ 自洽，交叉验证；</li><li>第 2 行（含 $a$）：$3+2a=\lambda\cdot1=1$，解得 $2a=-2$，即 $a=-1$。</li></ul>
+<h3>第四步：回代验证</h3>
+<p>取 $a=-1$，则 $A\xi=(1,1,2)^{\mathrm T}=1\cdot\xi$，三行同时成立，$\xi$ 确为 $A$ 属于 $\lambda=1$ 的特征向量，结论可靠。</p>
+<h3>易错点</h3>
+<ul><li><strong>先啃含 $a$ 的行</strong>：一个方程两个未知数解不动；应先用第 1、3 行定 $\lambda$。</li><li><strong>第 3 行忘乘 $\lambda$</strong>：$A\xi$ 第 3 分量是 $2$，要与 $\lambda\cdot2$ 比较，不是与 $\lambda$ 比较。</li><li><strong>不回代验证</strong>：三行必须同时成立，解出 $a$ 后回代一遍才稳妥。</li></ul>
+<blockquote>结论：$A\xi=(1,\,3+2a,\,2)^{\mathrm T}$，第 1 行定 $\lambda=1$，第 2 行解得 $a=-1$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

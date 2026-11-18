@@ -115,5 +115,34 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：可微但偏导不连续——判定链模型 + 定义三连击</h2>
+<p>答案：<strong>C</strong>。</p>
+<h3>第 0 步：先立判定链模型——三件事的强弱关系</h3>
+<p>多元微分学里三个概念排成一条链：<strong>偏导存在 $\subset$ 可微 $\subset$ 偏导连续</strong>（反向都推不出）。本题考的正是"反向"那一段：可微推不出偏导连续。两个操作要点随之而来：</p>
+<ul><li>$f$ 是分段函数，$(0,0)$ 是分界点——求导公式只在公式段内部有效，<strong>分界点处偏导与可微都必须回到极限定义</strong>；</li><li>判"偏导连续"时，对象是公式段求出的 $f_x(x,y)$：看 $(x,y)\to(0,0)$ 时它是否回到 $f_x(0,0)$。</li></ul>
+<h3>第 1 步：按定义算 $(0,0)$ 处偏导</h3>
+<p>沿坐标轴 $xy=0$，走第二段定义，$f(x,0)\equiv0,\ f(0,y)\equiv0$，故</p>
+<p>$$f_x(0,0)=\lim_{h\to0}\frac{f(h,0)-f(0,0)}{h}=0,\qquad f_y(0,0)=0.$$</p>
+<p><strong>为什么必须用定义？</strong> "公式段"的 $2x\sin\frac1{xy}+\cdots$ 在 $xy=0$ 处根本不适用；分界点的一切导数问题只能回到极限定义。</p>
+<h3>第 2 步：判可微——残差被 $\rho$ 压住</h3>
+<p>可微的定义判据是残差比趋于零：</p>
+<p>$$\frac{f(x,y)-f(0,0)-0\cdot x-0\cdot y}{\sqrt{x^2+y^2}}=\sqrt{x^2+y^2}\,\Big|\sin\frac1{xy}\Big|\le\sqrt{x^2+y^2}\to0$$</p>
+<p>（$xy=0$ 时分子本来就是 $0$）。故 $f$ 在 $(0,0)$ <strong>可微</strong>，全微分 $\mathrm df|_{(0,0)}=0$。<strong>直觉</strong>：$\sin\frac1{xy}$ 在原点附近疯狂振荡、没有极限，但它有界（$\le1$），而距离 $\rho=\sqrt{x^2+y^2}$ 在压它——有界震荡乘趋于 0 的因子仍趋于 0。线性主部为 $0$ 恰因两个偏导都是 $0$：这函数在原点"平"得很好，狂野只在二阶层。</p>
+<h3>第 3 步：判 $f_x$ 连续性——沿路径爆掉</h3>
+<p>$xy\neq0$ 时按公式求导：</p>
+<p>$$f_x=2x\sin\frac1{xy}+(x^2+y^2)\cos\frac1{xy}\cdot\Big(-\frac1{x^2y}\Big).$$</p>
+<p>沿 $y=x$（$x&gt;0$）：</p>
+<p>$$f_x(x,x)=2x\sin\frac1{x^2}-\frac2x\cos\frac1{x^2}.$$</p>
+<p><strong>为什么挑 $y=x$、又挑点列 $x_n=\dfrac1{\sqrt{2n\pi}}$？</strong> 证"不连续"只需一条趋于原点的路径让 $f_x$ 不收敛于 $0$。第二项振幅 $\frac2x\to\infty$，能否爆掉取决于 $\cos$ 因子；取 $\frac1{x_n^2}=2n\pi$ 让 $\cos=1$，该项 $=-\dfrac2{x_n}=-2\sqrt{2n\pi}\to-\infty$，而第一项有界趋于 $0$。故 $\lim_{(x,y)\to(0,0)}f_x$ 不存在，更不等于 $f_x(0,0)=0$，$f_x$ 在原点<strong>不连续</strong>。</p>
+<h3>第 4 步：合题</h3>
+<p>偏导不连续 + 函数可微，选 <strong>C</strong>。</p>
+<h3>易错点</h3>
+<ul><li><strong>见 $\sin\frac1{xy}$ 就判不可微</strong>（选 D/B）：可微看的是"残差比 $\rho$"，有界震荡乘 $\rho$ 依旧趋于 0。</li><li><strong>以为可微必偏导连续</strong>（选 A）：那是判定链最右端"偏导连续"才有的推论；"可微"只比"偏导存在"强一档，中间隔着单向路。</li><li><strong>沿随手路径验 $f_x$</strong>：一般路径可能爆不出无界，必须沿让 $\cos$ 取到 $\pm1$ 的点列才干净。</li></ul>
+<blockquote>一句话结论：定义算得 $f_x(0,0)=0$、残差被 $\rho$ 压住故可微；沿 $y=x$ 取 $x_n=\frac1{\sqrt{2n\pi}}$ 让 $f_x$ 无界故不连续——选 C。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

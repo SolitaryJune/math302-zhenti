@@ -101,5 +101,28 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：过渡矩阵 $C$ 与 $Q^{-1}AQ$ 的计算</h2>
+<p>答案：B</p>
+<h3>第一步：把 $Q$ 写成 $P$ 乘过渡矩阵</h3>
+<p>$Q$ 的列是 $P$ 的列的线性组合：第 1 列 $\alpha_1+\alpha_2$、第 2 列 $\alpha_2$、第 3 列 $\alpha_3$，故</p>
+<p>$$Q=PC,\qquad C=\begin{pmatrix}1&amp;0&amp;0\\1&amp;1&amp;0\\0&amp;0&amp;1\end{pmatrix}.$$</p>
+<p>（验证：$PC$ 的第 1 列 $=\alpha_1+\alpha_2$，第 2、3 列不变 ✓）</p>
+<h3>第二步：相似关系转移</h3>
+<p>$$Q^{-1}AQ=(PC)^{-1}A(PC)=C^{-1}(P^{-1}AP)C=C^{-1}\Lambda C,\qquad \Lambda=\mathrm{diag}(1,1,2).$$</p>
+<h3>第三步：两步矩阵乘法</h3>
+<p>$C^{-1}=\begin{pmatrix}1&amp;0&amp;0\\-1&amp;1&amp;0\\0&amp;0&amp;1\end{pmatrix}$。先算（$\Lambda$ 左乘只缩放行）</p>
+<p>$$\Lambda C=\begin{pmatrix}1&amp;0&amp;0\\1&amp;1&amp;0\\0&amp;0&amp;2\end{pmatrix},$$</p>
+<p>再左乘 $C^{-1}$：</p>
+<p>$$C^{-1}\Lambda C=\begin{pmatrix}1&amp;0&amp;0\\0&amp;1&amp;0\\0&amp;0&amp;2\end{pmatrix}=\Lambda.$$</p>
+<h3>第四步：看清本质</h3>
+<p>$\alpha_1,\alpha_2$ 同属特征值 $1$ 的特征子空间，其线性组合 $\alpha_1+\alpha_2$ 仍是属于 $1$ 的特征向量；$\alpha_2,\alpha_3$ 原封不动。特征值与特征向量的对应关系没有被搅乱，对角矩阵自然不变。</p>
+<h3>易错点</h3>
+<ul><li><strong>以为列组合会搅乱对角元</strong>：只有混合<strong>不同</strong>特征值的特征向量时对角块才会变；这里 1 与 1 混合，2 不参与（C、D 错因）。</li><li><strong>写错 $C$ 的方向</strong>：$C$ 的第 $j$ 列是"$Q$ 的第 $j$ 列用 $P$ 的列表达"的系数，行、列角色别颠倒。</li></ul>
+<blockquote>一句话结论：$Q=PC$，混合只发生在特征值同为 1 的前两列之间，$Q^{-1}AQ=\mathrm{diag}(1,1,2)$，选 B。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

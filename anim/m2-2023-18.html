@@ -99,5 +99,34 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：二元函数驻点分类与极值判别</h2>
+<p><strong>答案</strong>：只有极小值 $f(-\mathrm e,\ 2k\pi)=-\dfrac{\mathrm e^2}{2}$（$k$ 为整数），无极大值。</p>
+<h3>第 0 步：先立模型——判别式 AC−B² 到底在判什么</h3>
+<p>可导函数的极值只能出现在驻点，但驻点是不是极值点，要看<strong>离开这点时函数往哪个方向走</strong>。在驻点 $P$ 处作二阶泰勒近似（一阶项因 $f_x=f_y=0$ 消失）：</p>
+<p>$$f(P+\Delta)\approx f(P)+\frac12\left(A\,\Delta x^2+2B\,\Delta x\,\Delta y+C\,\Delta y^2\right),$$</p>
+<p>增量的正负完全由二次型 $Q=A\,\Delta x^2+2B\,\Delta x\,\Delta y+C\,\Delta y^2$ 决定：$Q$ 恒正，则四面八方都比 $f(P)$ 高——极小；$Q$ 恒负——极大；$Q$ 随方向变号——有的方向高有的方向低，是鞍点。$Q$ 的定号性由 $AC-B^2$ 与 $A$ 联合判别：</p>
+<ul><li>$AC-B^2&gt;0$：$Q$ 不变号，且与 $A$ 同号——$A&gt;0$ 时极小、$A&lt;0$ 时极大（这就是「为什么还要看 $A$」）；</li><li>$AC-B^2&lt;0$：$Q$ 变号，鞍点；</li><li>$AC-B^2=0$：判别失效，需回到定义另判。</li></ul>
+<p>它是「一元看 $f''$ 符号」的二维升级：当 $B=0$ 时 $Q=A\Delta x^2+C\Delta y^2$，定号当且仅当 $A,\ C$ 同号且同正（或同负）——正对应一元的 $f''&gt;0$（或 $&lt;0$）。</p>
+<h3>第一步：求偏导，解驻点</h3>
+<p>$$f_x=\mathrm e^{\cos y}+x,\qquad f_y=-x\,\mathrm e^{\cos y}\sin y.$$</p>
+<p>由 $f_x=0$ 得 $x=-\mathrm e^{\cos y}\neq0$（指数恒正）。<strong>为什么不能在 $f_y=0$ 里令 $x=0$</strong>：两个条件必须联立，$f_x=0$ 已把 $x$ 钉死在 $-\mathrm e^{\cos y}$，于是 $f_y=0$ 中的因子 $x\,\mathrm e^{\cos y}\neq0$，只能 $\sin y=0$，即 $y=k\pi$。</p>
+<h3>第二步：按 cos y 的两个取值分两类</h3>
+<p>$\sin y=0$ 把 $y$ 锁在 $k\pi$，此时 $\cos y$ 只剩 $\pm1$ 两个值，驻点随周期 $2\pi$ 重复出现：</p>
+<ul><li>$y=2k\pi$：$\cos y=1$，$x=-\mathrm e$，驻点 $(-\mathrm e,\ 2k\pi)$；</li><li>$y=(2k+1)\pi$：$\cos y=-1$，$x=-\mathrm e^{-1}$，驻点 $\left(-\mathrm e^{-1},\ (2k+1)\pi\right)$。</li></ul>
+<h3>第三步：二阶偏导与判别</h3>
+<p>$$A=f_{xx}=1,\qquad B=f_{xy}=-\mathrm e^{\cos y}\sin y,\qquad C=f_{yy}=-x\,\mathrm e^{\cos y}(\cos y-\sin^2y).$$</p>
+<p>驻点处 $\sin y=0$，故 $B=0$（判别退化为看 $A$ 与 $C$ 的符号搭配），且 $\cos y-\sin^2y=\cos y$，即 $C=-x\,\mathrm e^{\cos y}\cos y$。</p>
+<ul><li>$(-\mathrm e,\ 2k\pi)$：$C=-(-\mathrm e)\cdot\mathrm e\cdot1=\mathrm e^2$，$AC-B^2=\mathrm e^2&gt;0$ 且 $A=1&gt;0$ → $Q$ 恒正 → <strong>极小值点</strong>，$f=-\mathrm e\cdot\mathrm e+\dfrac{\mathrm e^2}{2}=-\dfrac{\mathrm e^2}{2}$；</li><li>$\left(-\mathrm e^{-1},\ (2k+1)\pi\right)$：$C=-(-\mathrm e^{-1})\cdot\mathrm e^{-1}\cdot(-1)=-\mathrm e^{-2}$，$AC-B^2=-\mathrm e^{-2}&lt;0$ → $Q$ 变号 → 鞍点，非极值。</li></ul>
+<p><strong>为什么全函数无极大值</strong>：可导函数的极大值点必是驻点，而驻点只有这两族且已逐一判完——一族极小、一族鞍点，极大值没有落点。</p>
+<p>第二层汇总（对号入座用）：</p>
+<table><thead><tr><th>驻点</th><th>$C$</th><th>$AC-B^2$</th><th>判定</th></tr></thead><tbody><tr><td>$(-\mathrm e,\ 2k\pi)$</td><td>$\mathrm e^2$</td><td>$\mathrm e^2&gt;0$，$A=1&gt;0$</td><td>极小值点</td></tr><tr><td>$\left(-\mathrm e^{-1},\ (2k+1)\pi\right)$</td><td>$-\mathrm e^{-2}$</td><td>$-\mathrm e^{-2}&lt;0$</td><td>鞍点</td></tr></tbody></table>
+<h3>易错点</h3>
+<ul><li><strong>驻点漏一半</strong>：$\sin y=0$ 给出 $y=2k\pi$ 与 $y=(2k+1)\pi$ 两族，只取一族就丢掉另一类驻点。</li><li><strong>误令 $x=0$</strong>：$f_y=0$ 看似可取 $x=0$，但 $f_x=0$ 已强制 $x=-\mathrm e^{\cos y}\neq0$，两者必须联立。</li><li><strong>判别只看 $AC-B^2$</strong>：它为正还要 $A&gt;0$ 才是极小、$A&lt;0$ 才是极大，漏看 $A$ 会判反——这正是第 0 步里「$Q$ 与 $A$ 同号」的机制。</li><li><strong>极小值代入错</strong>：最后是把驻点代入<strong>原函数</strong> $f$，不是代偏导数。</li></ul>
+<blockquote>一句话结论：驻点两族——$(-\mathrm e,2k\pi)$ 处 $Q$ 恒正（$A=1&gt;0,\ AC-B^2=\mathrm e^2$）是极小值点，$f=-\dfrac{\mathrm e^2}{2}$；$\left(-\mathrm e^{-1},(2k+1)\pi\right)$ 处 $AC-B^2&lt;0$ 是鞍点；驻点已穷尽，故无极大值。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

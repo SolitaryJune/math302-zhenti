@@ -91,5 +91,31 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：微元法求细棒引力——矢量分解 + 对称性</h2>
+<p>答案：D</p>
+<h3>第零步：机制——为什么必须先分解再积分</h3>
+<p>引力是<strong>矢量</strong>，而微元法累加的是数。把各微元的引力直接"当数加"是错的：水平方向你有往左我有往右，合在一起不是大小相加。好在对称性救场——棒关于 $y$ 轴对称、质点恰在对称轴上，$x$ 与 $-x$ 处微元的水平分量等大反向、<strong>全部抵消</strong>；竖直分量同向叠加。所以合力 = 竖直分量之和，积分对象取竖直分量。</p>
+<h3>第一步：取微元，写元引力</h3>
+<p>棒在 $y=0,\ -1\le x\le1$ 上，线密度 $1$，质点 $m$ 在 $(0,1)$。取微元 $[x,x+dx]$，质量 $dm=1\cdot dx=dx$，到质点距离</p>
+<p>$$r=\sqrt{x^2+1^2}=\sqrt{x^2+1},$$</p>
+<p>由万有引力定律（距离平方在分母）：</p>
+<p>$$dF=\frac{Gm\,dm}{r^2}=\frac{Gm}{x^2+1}\,dx.$$</p>
+<h3>第二步：竖直分量乘方向余弦——$\cos\theta=\dfrac1r$ 从哪来</h3>
+<p>微元在 $(x,0)$、质点在 $(0,1)$，微元引力沿两点连线指向对方。连线与竖直方向的夹角 $\theta$ 落在一个直角三角形里：<strong>对边是水平距离 $\lvert x\rvert$，邻边是竖直距离 $1$，斜边是 $r$</strong>。竖直分量 $=dF\cos\theta$，而</p>
+<p>$$\cos\theta=\frac{\text{邻边}}{\text{斜边}}=\frac1r=\frac{1}{\sqrt{x^2+1}},$$</p>
+<p>故</p>
+<p>$$dF_y=\frac{Gm}{x^2+1}\cdot\frac{1}{\sqrt{x^2+1}}\,dx=\frac{Gm}{(x^2+1)^{3/2}}\,dx.$$</p>
+<p>（分子里的 $\dfrac{x}{r}$ 是<strong>水平</strong>方向余弦——正是 A、C 的分子；水平分量被对称性消掉，不该出现。）</p>
+<h3>第三步：对称区间合并</h3>
+<p>$$F=\int_{-1}^{1}\frac{Gm}{(x^2+1)^{3/2}}\,dx=2\int_0^1\frac{Gm}{(x^2+1)^{3/2}}\,dx=\int_0^1\frac{2Gm}{(x^2+1)^{3/2}}\,dx,$$</p>
+<p>选 <strong>D</strong>。</p>
+<h3>易错点</h3>
+<ul><li><strong>不分解直接积 $\dfrac1{r^2}$</strong>：距离平方只给 $(x^2+1)^{-1}$，还差一个方向余弦的方次；B 的分母 $1/2$ 次正是漏乘 $\dfrac1r$ 的结果。</li><li><strong>方向余弦取错</strong>：$\dfrac{x}{r}$ 对应水平方向，其贡献正负抵消；竖直方向对应常数因子 $\dfrac1r$，分子里不带 $x$。</li><li><strong>指数合成出错</strong>：$\dfrac1{r^2}\cdot\dfrac1r=\dfrac1{r^3}=(x^2+1)^{-3/2}$，分母是 $3/2$ 次不是 $1/2$ 次（A、B 的毛病）。</li></ul>
+<blockquote>一句话结论：距离平方给 $(x^2+1)^{-1}$，竖直方向余弦 $\dfrac1r$ 再给一次 $(x^2+1)^{-1/2}$，合成 $(x^2+1)^{-3/2}$，对称折半后选 D。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

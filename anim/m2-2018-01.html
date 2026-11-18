@@ -101,5 +101,29 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：$1^\infty$ 型幂指极限反求参数（取对数降维 + 泰勒定阶）</h2>
+<p>答案：B（$a=-\dfrac12,\ b=-1$）</p>
+<h3>第一步：先懂机制——幂指极限为什么一律先取对数</h3>
+<p>底数 $g(x)=e^x+ax^2+bx\to1$，指数 $\dfrac1{x^2}\to+\infty$，是 $1^\infty$ 型。这种形式没法直接用极限四则运算（指数位置是 $\infty$，代不进去），处理机制只有一条：<strong>底数为正时 $g^{1/x^2}=e^{\frac{\ln g}{x^2}}$</strong>，而 $e^t$ 连续且严格单调，所以</p>
+<p>$$L=\lim_{x\to0}g^{1/x^2}=e^{\lim_{x\to0}\frac{\ln g}{x^2}},$$</p>
+<p>"原极限 $=1$" 与 "对数极限 $=0$" 完全等价（$e^0=1$，且 $e^{v(x)}\to1$ 必推 $v(x)\to0$）。取对数把"幂"降成"乘积"，这就是为什么 $1^\infty$ 型一律先取对数。</p>
+<p>再把底数写成 $1+u$，由 $\ln(1+u)=u+o(u)$（$u\to0$），条件进一步等价于</p>
+<p>$$\lim_{x\to0}\frac{u}{x^2}=0,\qquad u=e^x+ax^2+bx-1.$$</p>
+<p><strong>为什么 $\ln(1+u)\sim u$ 必须整块用、不能拆项？</strong> 对数只有乘除的分配律（$\ln(AB)=\ln A+\ln B$），对加减没有；$u$ 本身是 $(1+b)x+\left(\frac12+a\right)x^2$ 的和，只能整体放进 $\ln(1+\ \cdot\ )$ 里作等价。</p>
+<h3>第二步：泰勒展开给 $u$ 定阶</h3>
+<p>分母是 $x^2$，所以 $e^x$ 必须展开到 $x^2$ 项（只展到一阶，$a$ 根本现不了身）：</p>
+<p>$$u=(1+b)x+\left(\frac12+a\right)x^2+o(x^2).$$</p>
+<h3>第三步：逐阶锁定参数</h3>
+<p>要 $\dfrac{u}{x^2}\to0$：</p>
+<ul><li><strong>一阶项先消失</strong>：$u$ 里只要留着一阶项，$\dfrac{u}{x^2}$ 就含 $\dfrac{1+b}{x}\to\infty$，对数极限发散，原极限根本不存在，更谈不上等于 $1$。故 $1+b=0\Rightarrow b=-1$。</li><li><strong>二阶项再归零</strong>：一阶消掉后 $\dfrac{u}{x^2}\to\dfrac12+a$，要它恰好为 $0$，只能 $\dfrac12+a=0\Rightarrow a=-\dfrac12$。</li></ul>
+<p>此时 $\ln L=0$，$L=e^0=1$。两个条件各管一件事：$b$ 管极限的<strong>存在性</strong>，$a$ 管<strong>值恰为 $1$</strong>，缺一不可。</p>
+<h3>易错点</h3>
+<ul><li><strong>误选 C、D（$b=1$）</strong>：$1+b=2$，一阶项不消，$\dfrac2x$ 发散——属"极限压根不存在"型错误。</li><li><strong>误选 A（$a=\dfrac12$）</strong>：一阶消掉了，但 $\ln L=1$，原极限是 $e$ 不是 $1$——属"只保证极限存在、忘了必须等于 $1$"。</li><li><strong>对 $e^x$ 只展一阶</strong>：分母 $x^2$ 逼着展开到二阶，否则第二个方程列不出来。</li></ul>
+<blockquote>结论：$1^\infty$ 型 = $g^{v}=e^{v\ln g}$ 降维，$L=1\iff\dfrac{g-1}{x^2}\to0$；泰勒定阶先逼死一阶（$b=-1$）再归零二阶（$a=-\dfrac12$），选 B。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

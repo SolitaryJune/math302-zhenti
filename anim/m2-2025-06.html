@@ -90,5 +90,27 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：变力做功微元法——引力先投影到运动方向</h2>
+<p>答案：B</p>
+<h3>第一步：审题定型</h3>
+<p>$P$ 沿 $x$ 轴移动。做功的机制是微元点积 $\mathrm dW=\vec F\cdot\mathrm d\vec r$：位移 $\mathrm d\vec r=(\mathrm dx,\,0)$ 只有 $x$ 分量，点积里垂直分量天然消掉——这就是「做功只与力<strong>沿运动方向（$x$ 方向）的分量</strong>有关」的依据。设 $P$ 位于 $(x,0)$，$Q$ 固定在 $(0,1)$，两单位质点引力大小为 $F=\dfrac{G}{r^2}=\dfrac{G}{x^2+1}$（$r^2=x^2+1$）。</p>
+<h3>第二步：把引力投影到 $x$ 方向</h3>
+<p>引力方向沿 $P\to Q$，即向量 $(-x,\,1)$；单位化要除以它的长度 $\sqrt{x^2+1}$，得 $\dfrac{1}{\sqrt{x^2+1}}(-x,\,1)$。引力的 $x$ 分量：</p>
+<p>$$F_x=F\cdot\frac{-x}{\sqrt{x^2+1}}=-\frac{Gx}{(x^2+1)^{3/2}},$$</p>
+<p>分母 $(x^2+1)^{3/2}$ 的两个因子各有来历：$x^2+1=r^2$ 来自引力大小的平方反比律，$\sqrt{x^2+1}=r$ 来自投影时的单位化——量纲上正是「力 $\div$ 距离」。$x&gt;0$ 时 $F_x&lt;0$，是阻碍前进的阻力；克服它做功的微元</p>
+<p>$$\mathrm dW=|F_x|\,\mathrm dx=\frac{Gx}{(x^2+1)^{3/2}}\,\mathrm dx.$$</p>
+<h3>第三步：积分定选项</h3>
+<p>$$W=\int_0^l\frac{Gx}{(x^2+1)^{3/2}}\,\mathrm dx,$$</p>
+<p>正是选项 <strong>B</strong>。</p>
+<h3>第四步：闭式验算</h3>
+<p>令 $u=x^2+1$，$\mathrm du=2x\,\mathrm dx$：$W=G\left(1-\dfrac{1}{\sqrt{l^2+1}}\right)&gt;0$，随 $l$ 增大而增大且趋于 $G$，符合「越走越省力、总功有限」的直觉。</p>
+<h3>易错点</h3>
+<ul><li><strong>拿引力大小直接积</strong>：$\dfrac{G}{x^2+1}$（选项 A）是全量，没投影到 $x$ 方向，缺方向余弦 $\dfrac{x}{\sqrt{x^2+1}}$。</li><li><strong>投影丢分子 $x$</strong>：$\dfrac{G}{(x^2+1)^{3/2}}$（选项 C）相当于只除了 $\sqrt{x^2+1}$ 忘了乘 $x$。</li><li><strong>把两个分量相加</strong>：$\dfrac{G(x+1)}{(x^2+1)^{3/2}}$（选项 D）把 $x$ 分量与 $y$ 分量的分子 $x$、$1$ 加在一起——$y$ 方向分量不做功。</li></ul>
+<blockquote>一句话结论：引力大小乘 $x$ 方向方向余弦 $\dfrac{x}{\sqrt{x^2+1}}$ 得阻力分量，沿 $[0,l]$ 积分，选 B。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

@@ -108,5 +108,23 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：范德蒙德型方程组——节点重合才线性相关</h2>
+<p>答案：<strong>D</strong>。</p>
+<h3>第 0 步：先立机制——把 $Ax=b$ 读成"向量配平"，节点向量何时无关</h3>
+<p>$Ax=b$ 就是 $x_1(1,1,1)^{\mathrm T}+x_2(1,2,4)^{\mathrm T}+x_3(1,a,a^2)^{\mathrm T}=(1,d,d^2)^{\mathrm T}$：三列与右端全是"节点 $t$ 的 $(1,t,t^2)^{\mathrm T}$"型，节点分别为 $1,2,a,d$。核心机制：<strong>这类向量线性相关 $\iff$ 节点重合</strong>。为什么：三个节点 $s_1,s_2,s_3$ 的行列式，作为 $s_3$ 的次数不超过 $2$ 的多项式，在 $s_3=s_1$ 或 $s_2$ 时两列相同、必为零，故含因子 $(s_3-s_1)(s_3-s_2)$，再看 $s_3^2$ 的系数得 $(s_2-s_1)$——拼出范德蒙德公式 $\prod_{j&gt;i}(s_j-s_i)$；节点互异则每个因子非零，行列式非零、向量无关。于是</p>
+<p>$$\det A=(2-1)(a-1)(a-2)=(a-1)(a-2).$$</p>
+<h3>第 1 步：为什么先要 $\det A=0$——无穷多解的第一道门</h3>
+<p>$Ax=b$ 有无穷多解 $\iff r(A)=r(A\mid b)&lt;3$。若 $a\notin\Omega$，三节点互异，$r(A)=3$，方程只能有<strong>唯一解</strong>（A、B 出局）。要降秩必须 $a\in\{1,2\}$：节点 $a$ 与 $1$ 或 $2$ 重合，$A$ 只剩两个不同节点，$r(A)=2$，列空间由 $(1,1,1)^{\mathrm T},(1,2,4)^{\mathrm T}$ 张成。</p>
+<h3>第 2 步：$b$ 进列空间 $\iff d\in\Omega$——第二道门，以及为什么是"无穷多"而非"唯一"</h3>
+<p>$b=(1,d,d^2)^{\mathrm T}$ 落入列空间 $\iff$ 它与那两列线性相关 $\iff$ 节点 $1,2,d$ 的行列式 $(2-1)(d-1)(d-2)=0\iff d\in\{1,2\}$。</p>
+<ul><li>$d\in\Omega$：$r(A\mid b)=2=r(A)&lt;3$。<strong>为什么是无穷多解</strong>：未知数 $3$ 个、独立方程只有 $2$ 个，自由变量 $3-2=1$ 个，解集是一条直线。</li><li>$d\notin\Omega$：三向量无关，$r(A\mid b)=3&gt;r(A)$，<strong>无解</strong>——为什么不是唯一解：唯一解需要 $r(A)=r(A\mid b)=3$，而 $r(A)=2$ 已经封顶。</li></ul>
+<h3>易错点</h3>
+<ul><li><strong>选 C</strong>：只验"降秩"就收工——降秩只是必要条件，$b$ 不进列空间时是<strong>无解</strong>而非无穷多解。</li><li><strong>选 A/B</strong>：$a\notin\Omega$ 时 $A$ 满秩，无论 $d$ 取什么都唯一解。</li><li><strong>把范德蒙德只当公式背</strong>：抓不住"节点重合才相关"，$a$ 与 $d$ 的分工就理不清。</li></ul>
+<blockquote>记忆锚点：$a$ 管降秩（$A$ 内节点重合）、$d$ 管相容（$b$ 的节点重合），两道门都过才有无穷多解。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

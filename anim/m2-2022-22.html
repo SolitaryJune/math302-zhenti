@@ -101,5 +101,35 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：正交对角化求标准形 + 瑞利商最小值</h2>
+<p><strong>答案</strong>：(1) $Q=\begin{pmatrix}-\frac{1}{\sqrt2}&amp;0&amp;\frac{1}{\sqrt2}\\0&amp;1&amp;0\\\frac{1}{\sqrt2}&amp;0&amp;\frac{1}{\sqrt2}\end{pmatrix}$，标准形 $f=2y_1^2+4y_2^2+4y_3^2$；(2) $\min\limits_{\boldsymbol{x}\neq0}\dfrac{f(\boldsymbol{x})}{\boldsymbol{x}^{\mathrm T}\boldsymbol{x}}=2$。</p>
+<h3>第一步：写出二次型矩阵</h3>
+<p>交叉项 $2x_1x_3$ 的系数平分到 $a_{13}=a_{31}=1$——原因：矩阵展开里 $x_1x_3$ 出现两次，$a_{13}x_1x_3+a_{31}x_3x_1=2a_{13}x_1x_3$，故 $2a_{13}=2$：</p>
+<p>$$A=\begin{pmatrix}3&amp;0&amp;1\\0&amp;4&amp;0\\1&amp;0&amp;3\end{pmatrix}.$$</p>
+<h3>第二步：特征值（第 2 行展开最省力）</h3>
+<p>$$\lvert A-\lambda E\rvert=\begin{vmatrix}3-\lambda&amp;0&amp;1\\0&amp;4-\lambda&amp;0\\1&amp;0&amp;3-\lambda\end{vmatrix}=(4-\lambda)\big[(3-\lambda)^2-1\big]=(4-\lambda)(\lambda-2)(\lambda-4),$$</p>
+<p>特征值 $\lambda_1=2$（单根），$\lambda_2=\lambda_3=4$（二重根）。</p>
+<h3>第三步：特征向量 → 单位正交组</h3>
+<ul><li>$\lambda=2$：$(A-2E)\boldsymbol{x}=\boldsymbol{0}$ 给出 $x_1+x_3=0,\ x_2=0$，取 $\xi_1=(-1,0,1)^{\mathrm T}$；</li><li>$\lambda=4$：$(A-4E)\boldsymbol{x}=\boldsymbol{0}$ 给出 $x_1=x_3,\ x_2$ 任意，取 $\xi_2=(0,1,0)^{\mathrm T},\ \xi_3=(1,0,1)^{\mathrm T}$。</li></ul>
+<p>不同特征值的特征向量自动正交——这不是巧合而是定理：设 $A\xi_1=\lambda_1\xi_1$，$A\xi_2=\lambda_2\xi_2$，$\lambda_1\ne\lambda_2$，用 $A$ 对称得 $\lambda_1\xi_1^{\mathrm T}\xi_2=(A\xi_1)^{\mathrm T}\xi_2=\xi_1^{\mathrm T}A\xi_2=\lambda_2\xi_1^{\mathrm T}\xi_2$，于是 $(\lambda_1-\lambda_2)\xi_1^{\mathrm T}\xi_2=0$，即 $\xi_1\perp\xi_2$。重根内部（$\xi_2,\xi_3$）没有这个保证，必须另验或施密特；本题验得 $\xi_2\cdot\xi_3=0$，直接单位化：</p>
+<p>$$\eta_1=\frac{1}{\sqrt2}(-1,0,1)^{\mathrm T},\quad\eta_2=(0,1,0)^{\mathrm T},\quad\eta_3=\frac{1}{\sqrt2}(1,0,1)^{\mathrm T},\qquad Q=(\eta_1,\eta_2,\eta_3),$$</p>
+<p>$$\boldsymbol{x}=Q\boldsymbol{y}\ \Rightarrow\ f=2y_1^2+4y_2^2+4y_3^2\ (\text{标准形系数}=\text{特征值}).$$</p>
+<p><strong>为什么标准形系数就是特征值？</strong> 代进定义看：$f=\boldsymbol{x}^{\mathrm T}A\boldsymbol{x}=\boldsymbol{y}^{\mathrm T}(Q^{\mathrm T}AQ)\boldsymbol{y}$。$Q$ 的列是单位特征向量 $\eta_i$，把 $A\eta_i=\lambda_i\eta_i$ 按列拼起来就是 $AQ=Q\Lambda$，两边左乘 $Q^{\mathrm T}$（用 $Q^{\mathrm T}Q=E$）得 $Q^{\mathrm T}AQ=\Lambda$，故 $f=\lambda_1y_1^2+\lambda_2y_2^2+\lambda_3y_3^2$——系数即特征值，且<strong>顺序跟着 $Q$ 的列走</strong>。</p>
+<h3>第四步：(2) 保范数 + 放缩 + 取等</h3>
+<p>作正交变换 $\boldsymbol{x}=Q\boldsymbol{y}$。分子化简、分母不变（$Q^{\mathrm T}Q=E$）：</p>
+<p>$$f=2y_1^2+4y_2^2+4y_3^2,\qquad \boldsymbol{x}^{\mathrm T}\boldsymbol{x}=(Q\boldsymbol{y})^{\mathrm T}(Q\boldsymbol{y})=\boldsymbol{y}^{\mathrm T}\boldsymbol{y}.$$</p>
+<p>由 $\boldsymbol{x}\ne\boldsymbol{0}\iff\boldsymbol{y}\ne\boldsymbol{0}$，对一切非零 $\boldsymbol{y}$：</p>
+<p>$$\frac{f}{\boldsymbol{x}^{\mathrm T}\boldsymbol{x}}=\frac{2y_1^2+4y_2^2+4y_3^2}{y_1^2+y_2^2+y_3^2}\ \ge\ \frac{2(y_1^2+y_2^2+y_3^2)}{y_1^2+y_2^2+y_3^2}=2.$$</p>
+<p>取等：$\boldsymbol{y}=(1,0,0)^{\mathrm T}$，即 $\boldsymbol{x}=\eta_1=\frac{1}{\sqrt2}(-1,0,1)^{\mathrm T}\ne\boldsymbol{0}$，此时 $f=2$、$\boldsymbol{x}^{\mathrm T}\boldsymbol{x}=1$，比值恰为 $2$。下界可达到，故最小值为 $2$——它就是 $A$ 的最小特征值。</p>
+<p><strong>为什么 (2) 必须用"正交"变换？</strong> 分母 $\boldsymbol{x}^{\mathrm T}\boldsymbol{x}$ 要参与比值：若 $Q$ 只是可逆矩阵，$\boldsymbol{x}^{\mathrm T}\boldsymbol{x}=\boldsymbol{y}^{\mathrm T}Q^{\mathrm T}Q\boldsymbol{y}\ne\boldsymbol{y}^{\mathrm T}\boldsymbol{y}$，分子分母就对不上号。正交恰好保范数（$(Q\boldsymbol{y})^{\mathrm T}(Q\boldsymbol{y})=\boldsymbol{y}^{\mathrm T}\boldsymbol{y}$），这是全题的枢纽。</p>
+<p><strong>这个结论的一般名字</strong>：对实对称矩阵，$\dfrac{\boldsymbol{x}^{\mathrm T}A\boldsymbol{x}}{\boldsymbol{x}^{\mathrm T}\boldsymbol{x}}$（瑞利商）的最小值就是最小特征值、最大值是最大特征值；"放缩给下界 + 最小特征向量取等"正是本题的两个动作，取等向量就是 $\lambda_{\min}$ 对应的单位特征向量。</p>
+<h3>易错点</h3>
+<ul><li><strong>交叉项系数直接抄</strong>：$2x_1x_3$ 对应 $a_{13}=a_{31}=1$，矩阵写成对角元 $2$ 会全盘皆错。</li><li><strong>重根向量不做正交性说明</strong>：$\lambda=4$ 的两个向量必须验证（或施密特）正交后才能拼 $Q$，本题 $\xi_2\perp\xi_3$ 天然成立但要写出来。</li><li><strong>只证下界不取等</strong>：没有取等向量 $\boldsymbol{x}=\eta_1$，「min」就退化为「inf」，证明不完整。</li></ul>
+<blockquote>一句话结论：$A$ 的特征值为 $2,4,4$，$Q$ 由单位正交特征向量拼成，标准形 $f=2y_1^2+4y_2^2+4y_3^2$；瑞利商最小值 = 最小特征值 $2$，在 $\boldsymbol{x}=\eta_1$ 方向取到。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

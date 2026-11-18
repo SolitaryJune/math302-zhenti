@@ -110,5 +110,23 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：三向量线性相关 = 行列式恒为零</h2>
+<p>答案：C</p>
+<h3>第一步：抓住题眼的"任意"</h3>
+<p>$c_1,c_2,c_3,c_4$ 是<strong>任意</strong>常数，所以要找的是对一切取值都成立的线性相关组——即以这三个向量为列的行列式<strong>恒等于 0</strong>，而不是"碰巧为 0"。突破口：$\alpha_3$ 与 $\alpha_4$ 的前两个分量互为相反数。</p>
+<h3>第二步：验证 C 组（$\alpha_1,\alpha_3,\alpha_4$）</h3>
+<p>$$\begin{vmatrix}0&amp;1&amp;-1\\0&amp;-1&amp;1\\c_1&amp;c_3&amp;c_4\end{vmatrix}=c_1\begin{vmatrix}1&amp;-1\\-1&amp;1\end{vmatrix}=c_1(1-1)=0,$$</p>
+<p>与常数无关，恒线性相关。结构原因：$\alpha_3+\alpha_4=(0,0,c_3+c_4)^{\mathrm T}$ 与 $\alpha_1=(0,0,c_1)^{\mathrm T}$ 同在 $e_3$ 方向——$c_1\neq0$ 时 $\alpha_3+\alpha_4$ 是 $\alpha_1$ 的倍数；$c_1=0$ 时 $\alpha_1$ 干脆是零向量。</p>
+<h3>第三步：排除其余选项</h3>
+<table><thead><tr><th>组</th><th>行列式（按列排）</th><th>结论</th></tr></thead><tbody><tr><td>A：$\alpha_1,\alpha_2,\alpha_3$</td><td>$-c_1$</td><td>$c_1\neq0$ 时无关</td></tr><tr><td>B：$\alpha_1,\alpha_2,\alpha_4$</td><td>$c_1$</td><td>$c_1\neq0$ 时无关</td></tr><tr><td>D：$\alpha_2,\alpha_3,\alpha_4$</td><td>$-(c_3+c_4)$</td><td>一般非零</td></tr></tbody></table>
+<p>三组都只在特殊取值下退化，不满足"任意常数都相关"。</p>
+<h3>易错点</h3>
+<ul><li><strong>把"存在相关"当"恒相关"</strong>：题目要求对任意 $c_i$ 成立，代一组特殊值过关不算数。</li><li><strong>漏看分量对峙结构</strong>：$\alpha_3,\alpha_4$ 前两分量互为相反数，二者之和只剩第三分量，与 $(0,0,c_1)^{\mathrm T}$ 型的 $\alpha_1$ 必然共线。</li><li><strong>按行排行列式</strong>：向量组以<strong>列</strong>摆进行列式；行、列颠倒虽不改变是否为零，但展开时容易算错。</li></ul>
+<blockquote>一句话结论：C 组行列式 $=c_1\cdot(1-1)\equiv0$，对任意常数线性相关，选 C。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

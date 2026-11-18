@@ -106,5 +106,29 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：极限为 0 与“相切且曲率相等”——充分而不必要</h2>
+<p>答案：A（充分不必要条件）</p>
+<h3>第一步：泰勒展开，拆开极限条件</h3>
+<p>令 $h(x)=f(x)-g(x)$，$h''$ 在 $x=a$ 连续，故可展开：</p>
+<p>$$h(x)=h(a)+h'(a)(x-a)+\frac{h''(a)}{2}(x-a)^2+o\big((x-a)^2\big).$$</p>
+<p>要 $\dfrac{h(x)}{(x-a)^2}\to0$，常数项、一次项必须先消失，二次项系数还得归零：</p>
+<p>$$h(a)=0,\quad h'(a)=0,\quad h''(a)=0,$$</p>
+<p>即 $f,g$ 在 $x=a$ 处函数值、一阶导、二阶导<strong>全部相等</strong>。</p>
+<p><strong>为什么三项必须"分别"消失、不能互相抵消？</strong> 它们的发散档位不同：$h(a)\neq0$ 时首项 $\dfrac{h(a)}{(x-a)^2}$ 直接爆掉；$h(a)=0$ 而 $h'(a)\neq0$ 时剩下 $\dfrac{h'(a)}{x-a}$ 仍爆——低阶发散盖过一切高阶项，谁也救不了谁。逐档清零后极限只剩常数档 $\dfrac{h''(a)}{2}+o(1)$，要它为 $0$ 就得 $h''(a)=0$。</p>
+<h3>第二步：翻译几何条件</h3>
+<ul><li>相切：过同一点且切线相同，即 $f(a)=g(a)$ 且 $f'(a)=g'(a)$。</li><li>曲率：$\kappa=\dfrac{\lvert y''\rvert}{(1+y'^2)^{3/2}}$。相切保证 $f'(a)=g'(a)$、分母一致，于是曲率相等只要求</li></ul>
+<p>$$\lvert f''(a)\rvert=\lvert g''(a)\rvert.$$</p>
+<h3>第三步：比强弱，定方向</h3>
+<ul><li><strong>充分性成立</strong>：$h(a)=h'(a)=h''(a)=0$ 给出相切，且 $f''(a)=g''(a)$ 当然蕴含 $\lvert f''(a)\rvert=\lvert g''(a)\rvert$。</li><li><strong>必要性不成立</strong>：反例取 $a=0$，$f(x)=\dfrac{x^2}{2}$，$g(x)=-\dfrac{x^2}{2}$。两曲线在原点相切，$f''=1,\ g''=-1$ 曲率都是 $1$；但</li></ul>
+<p>$$\lim_{x\to0}\frac{f(x)-g(x)}{x^2}=\lim_{x\to0}\frac{x^2}{x^2}=1\neq0.$$</p>
+<p>差距就在那个<strong>绝对值</strong>：几何条件允许 $f''(a)=-g''(a)\neq0$（上凸下凹、弯曲程度相同），极限条件不允许。</p>
+<h3>易错点</h3>
+<ul><li><strong>忽略曲率公式中的绝对值</strong>：把曲率相等当成 $f''(a)=g''(a)$，就会误选 B。</li><li><strong>方向弄反</strong>：判断谁推谁，先把两个条件各自的“结论清单”写全，再看集合包含关系，不要凭语感。</li></ul>
+<blockquote>一句话结论：极限为 0 强到 $f''(a)=g''(a)$；相切 + 曲率相等只弱到 $\lvert f''(a)\rvert=\lvert g''(a)\rvert$。强推弱成立、弱推强不行，选 A。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

@@ -92,5 +92,28 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：特征方程法——为什么微分方程会变成代数方程</h2>
+<p>答案：$y=C_1\mathrm{e}^x+\mathrm{e}^{-\frac12 x}\left(C_2\cos\frac{\sqrt3}{2}x+C_3\sin\frac{\sqrt3}{2}x\right)$（$C_1,C_2,C_3$ 为任意常数）</p>
+<h3>第一步：机制——为什么拿 $\mathrm{e}^{rx}$ 试根</h3>
+<p>指数函数求导"不变型"：每求导一次只乘一个常数 $r$。把 $y=\mathrm{e}^{rx}$ 代入 $y'''-y=0$，提出公因子 $\mathrm{e}^{rx}\neq0$ 约去，微分方程就降维成代数方程</p>
+<p>$$r^3-1=0.$$</p>
+<p>于是"解微分方程"变成"找哪些 $r$ 能让 $\mathrm{e}^{rx}$ 是解"。又因方程线性齐次，解的线性组合仍是解，通解由<strong>全部</strong>独立解拼成——$n$ 阶方程解空间的维数是 $n$，三阶必须凑够三个线性无关解、三个任意常数。</p>
+<h3>第二步：因式分解，解出全部根</h3>
+<p>用立方差公式 $r^3-1=(r-1)\left(r^2+r+1\right)$：实根 $r_1=1$；对 $r^2+r+1=0$ 用求根公式</p>
+<p>$$r=\frac{-1\pm\sqrt{1-4}}{2}=-\frac12\pm\frac{\sqrt3}{2}\,i,$$</p>
+<p>得一对共轭复根 $\alpha\pm\beta i$，其中 $\alpha=-\dfrac12,\ \beta=\dfrac{\sqrt3}{2}$。</p>
+<h3>第三步：复根为什么给出 $\cos,\sin$——按"根型→解型"翻译</h3>
+<p>机制在欧拉公式：$\mathrm{e}^{(\alpha+\beta i)x}=\mathrm{e}^{\alpha x}\left(\cos\beta x+i\sin\beta x\right)$。这是复值解；方程系数全为实数，它的<strong>实部</strong>与<strong>虚部</strong>各自单独都是原方程的解，一对共轭复根恰好贡献两个实解——衰减因子 $\mathrm{e}^{\alpha x}$ 与振荡频率 $\beta$ 都从根里直接读出。</p>
+<table><thead><tr><th>特征根</th><th>对应的独立解</th></tr></thead><tbody><tr><td>单实根 $r_1=1$</td><td>$\mathrm{e}^x$</td></tr><tr><td>共轭复根 $\alpha\pm\beta i$</td><td>$\mathrm{e}^{\alpha x}\cos\beta x$ 与 $\mathrm{e}^{\alpha x}\sin\beta x$</td></tr></tbody></table>
+<h3>第四步：三个独立解组合成通解</h3>
+<p>$$y=C_1\mathrm{e}^x+\mathrm{e}^{-\frac12x}\left(C_2\cos\frac{\sqrt3}{2}x+C_3\sin\frac{\sqrt3}{2}x\right).$$</p>
+<h3>易错点</h3>
+<ul><li><strong>只取实根</strong>：$r^3=1$ 在复数范围内有三个根，只写 $C_1\mathrm{e}^x$ 少两个独立解，不是通解（三阶要凑够三个常数）。</li><li><strong>复根实部符号错</strong>：$-\dfrac12$ 是负的，通解必须带衰减因子 $\mathrm{e}^{-x/2}$；只写 $\cos,\sin$ 不完整。</li><li><strong>虚部算错</strong>：$\beta=\dfrac{\sqrt{4-1}}{2}=\dfrac{\sqrt3}{2}$，来自判别式开方，别丢根号。</li></ul>
+<blockquote>一句话结论：$r^3-1=(r-1)(r^2+r+1)$，根为 $1$ 与 $-\dfrac12\pm\dfrac{\sqrt3}{2}i$；实根给指数项，共轭复根经欧拉公式给衰减振荡项。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

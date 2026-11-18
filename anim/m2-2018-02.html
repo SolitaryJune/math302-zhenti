@@ -106,5 +106,24 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：含 $|x|$、$\sqrt{|x|}$ 的函数在 $x=0$ 处的可导性判别</h2>
+<p>答案：D（$f(x)=\cos\sqrt{|x|}$ 在 $x=0$ 处不可导）</p>
+<h3>第一步：统一判别工具——导数定义 + 无穷小阶数</h3>
+<p>四个函数在 $x=0$ 都连续，能不能导只看一件事：差商极限</p>
+<p>$$f'(0)=\lim_{x\to0}\frac{f(x)-f(0)}{x}$$</p>
+<p>是否存在。分子含 $|x|$ 时，$\dfrac{|x|}{x}$ 在 $x\to0^\pm$ 分别取 $\pm1$，所以<strong>分子只要出现 $|x|$ 的同阶量就会左右导数不等</strong>；比 $|x|$ 高阶则可导且 $f'(0)=0$。用 $\sin t\sim t$、$1-\cos t\sim\dfrac{t^2}{2}$ 逐项称量分子。</p>
+<h3>第二步：逐项称分子</h3>
+<table><thead><tr><th>选项</th><th>$f(x)-f(0)$ 的量级</th><th>差商行为</th><th>判定</th></tr></thead><tbody><tr><td>A $\lvert x\rvert\sin\lvert x\rvert$</td><td>$\sim \lvert x\rvert^2=x^2$</td><td>$\dfrac{\lvert x\rvert\sin\lvert x\rvert}{x}=\pm\sin\lvert x\rvert\to0$</td><td>可导，$f'(0)=0$</td></tr><tr><td>B $\lvert x\rvert\sin\sqrt{\lvert x\rvert}$</td><td>$\sim \lvert x\rvert^{3/2}$</td><td>$\pm\sin\sqrt{\lvert x\rvert}\to0$</td><td>可导，$f'(0)=0$</td></tr><tr><td>C $\cos\lvert x\rvert$</td><td>$=\cos x$（偶函数去绝对值不变）</td><td>初等函数处处光滑</td><td>可导，$f'(0)=0$</td></tr><tr><td>D $\cos\sqrt{\lvert x\rvert}$</td><td>$-1+\cos\sqrt{\lvert x\rvert}\sim-\dfrac{\lvert x\rvert}{2}$</td><td>$\sim-\dfrac12\cdot\dfrac{\lvert x\rvert}{x}$</td><td><strong>左右导数不等</strong></td></tr></tbody></table>
+<p>D 的细节：$t=\sqrt{|x|}\to0$，用 $1-\cos t\sim\dfrac{t^2}{2}$ 得 $f(x)-f(0)\sim-\dfrac{|x|}{2}$，于是</p>
+<p>$$\lim_{x\to0^+}\frac{f(x)-f(0)}{x}=-\frac12,\qquad \lim_{x\to0^-}\frac{f(x)-f(0)}{x}=+\frac12.$$</p>
+<p>左右极限存在但不相等，$f'(0)$ 不存在——不可导。</p>
+<h3>易错点</h3>
+<ul><li><strong>把"根号"想当然当高阶</strong>：A、B 的 $\sin$ 把 $\sqrt{|x|}$ 的半阶"吃"进分子后仍是高阶（$x^2$、$|x|^{3/2}$）；而 D 里 $\cos\sqrt{|x|}$ 展开后恰好留下 $-\dfrac{|x|}{2}$，是<strong>一阶</strong>——方向恰好相反，必须逐个算，不能凭感觉。</li><li><strong>只看右导数</strong>：$x\to0^+$ 时 $\sqrt{|x|}=\sqrt{x}$，差商确为 $-\dfrac12$；漏掉左半支就误判可导。</li><li><strong>误以为 C 含绝对值必不可导</strong>：$\cos|x|=\cos x$，绝对值被偶函数性质消掉。</li></ul>
+<blockquote>结论：分子量级高于 $|x|$ 一阶 → 可导（A、B、C）；恰为一阶 → 出现 $\dfrac{|x|}{x}$，左右导数不等 → 不可导，选 D。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

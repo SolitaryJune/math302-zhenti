@@ -380,9 +380,10 @@ img{max-width:100%}
 /* ===== 学习区（讲解/动画）===== */
 .study{border-top:1px dashed var(--teal-soft);margin-top:16px;padding-top:14px}
 .study-tabs{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
-.study-tabs button{border:0;cursor:pointer;background:#5a7d8c40;color:var(--teal);border-radius:8px;
-  padding:8px 13px;font-size:12px;font-weight:800;font-family:inherit}
+.study-tabs button,.study-tabs a{border:0;cursor:pointer;background:#5a7d8c40;color:var(--teal);border-radius:8px;
+  padding:8px 13px;font-size:12px;font-weight:800;font-family:inherit;text-decoration:none;display:inline-block}
 .study-tabs button.on{color:var(--white);background:var(--teal)}
+.study-tabs a:hover{color:var(--white);background:var(--teal)}
 .study-pane{display:none}
 .study-pane.on{display:block}
 .explain{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:16px 18px;
@@ -498,6 +499,12 @@ footer .wrap{width:min(1220px,100% - 64px);margin:0 auto}
   .question-navigation{gap:10px}
   .anim-frame{min-height:420px;height:56vh}
 }
+
+/* ===== 题图自适应：按真实宽高比显示，不放大、不超高 ===== */
+.question-body img,.answer-content img,.ref-answer img,.explain img,
+.qstem img,.aw-qstem img{max-width:100%;width:auto;height:auto;max-height:72vh}
+.choice-text img{max-width:100%;width:auto;height:auto;max-height:150px}
+.question-body .markdown-image,.answer-content .markdown-image{display:flex;justify-content:center;margin:10px 0}
 """
 
 # ---------------------------------------------------------------- JS
@@ -1104,7 +1111,7 @@ def ref_answer_html(q: dict, rel: str) -> str:
     return analysis or '<p style="color:#586e72">参考答案编写中，敬请期待。</p>'
 
 
-def render_study(q: dict, rel: str) -> str:
+def render_study(q: dict, rel: str, preload: bool = False) -> str:
     """文字讲解 / 动画演示（可全屏）两个面板（数学站无解析视频源）。"""
     explain_file = PROJECT / "data" / "explain" / f"{q['id']}.md"
     anim_file = PROJECT / "anim" / f"{q['id']}.html"
@@ -1113,12 +1120,16 @@ def render_study(q: dict, rel: str) -> str:
     else:
         explain_html = '<p style="color:#586e72">讲解编写中，敬请期待。</p>'
     if anim_file.exists():
+        if preload:
+            frame = f'<iframe class="anim-frame" src="{rel}anim/{q["id"]}.html" loading="eager" title="交互动画"></iframe>'
+        else:
+            frame = f'<iframe class="anim-frame" data-lazy="{rel}anim/{q["id"]}.html" loading="lazy" title="交互动画"></iframe>'
         anim_pane = f"""
 <div class="anim-bar">
   <button class="exam-controls fs-btn" type="button" title="全屏播放动画">⛶ 全屏播放</button>
   <a class="video-link" style="border-color:var(--teal-soft);color:var(--teal)" href="{rel}anim/{q['id']}.html" target="_blank" rel="noopener noreferrer">↗ 新窗口打开动画</a>
 </div>
-<iframe class="anim-frame" data-lazy="{rel}anim/{q['id']}.html" loading="lazy" title="交互动画"></iframe>"""
+{frame}"""
     else:
         anim_pane = '<div class="anim-empty">🎬 该题的交互演示正在由生成流水线制作，完成后自动替换。</div>'
 
@@ -1200,7 +1211,7 @@ def render_card(q: dict, rel: str, focus: bool = False) -> str:
     </div>""")
     parts.append('<div class="choice-verdict"></div>')
     parts.append(f'<span class="card-page-number">{q["number"]}</span>')
-    parts.append(render_study(q, rel))
+    parts.append(render_study(q, rel, preload=focus))
     parts.append('</article>')
     return "\n".join(parts)
 
@@ -1405,6 +1416,30 @@ def build(meta: dict, years: list[int], all_q: list[dict], counts: dict) -> None
     if not KATEX_OK:
         print("警告：assets/katex/ 未就绪（缺 katex.min.css / katex.min.js / contrib/auto-render.min.js），"
               "单题页与整卷页未注入公式渲染。请先 vendor KaTeX 到 assets/katex/。")
+
+    # ---------- 动画页注入「文字讲解」（与动画同页，可折叠） ----------
+    n_explain = 0
+    for q in all_q:
+        af = adir / f"{q['id']}.html"
+        ef = PROJECT / "data" / "explain" / f"{q['id']}.md"
+        if not af.exists() or not ef.exists():
+            continue
+        src_ = af.read_text(encoding="utf-8")
+        block = (
+            "<!-- AW_EXPLAIN_START -->\n"
+            '<details class="aw-explain" open>\n'
+            '<summary><span class="aw-explain-title">📝 文字讲解</span>'
+            '<span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>\n'
+            f'<div class="aw-explain-body">{md2html(ef.read_text(encoding="utf-8"))}</div>\n'
+            "</details>\n<!-- AW_EXPLAIN_END -->"
+        )
+        if "<!-- AW_EXPLAIN_START -->" in src_:
+            src_ = re.sub(r"<!-- AW_EXPLAIN_START -->.*?<!-- AW_EXPLAIN_END -->", lambda m: block,
+                          src_, flags=re.S)
+        else:
+            src_ = src_.replace("</body>", block + "\n</body>", 1)
+        af.write_text(src_, encoding="utf-8")
+        n_explain += 1
 
     print(f"站点已生成：首页 1 + 年份页 {len(by_year)} + 单题页 {len(all_q)}"
           f" + 知识点/搜索/错题本 3 + 动画占位 {n_placeholder}")

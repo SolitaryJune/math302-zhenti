@@ -101,5 +101,23 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：极坐标弧长公式与对数螺线积分</h2>
+<p>答案：$\sqrt2\,(\mathrm e^\pi-1)$</p>
+<h3>第一步：极坐标弧长公式</h3>
+<p>$$s=\int_a^b\sqrt{r^2(\theta)+\big(r'(\theta)\big)^2}\,\mathrm d\theta.$$</p>
+<p>本题 $r=\mathrm e^\theta$，$r'=\mathrm e^\theta$，「$r'=r$」是对数螺线的标志性质。</p>
+<h3>第二步：化简被积函数</h3>
+<p>$$\sqrt{r^2+(r')^2}=\sqrt{\mathrm e^{2\theta}+\mathrm e^{2\theta}}=\sqrt{2\,\mathrm e^{2\theta}}=\sqrt2\,\mathrm e^\theta.$$</p>
+<p>根号里提出 $\mathrm e^{2\theta}$ 开出来是 $\mathrm e^\theta$（恒为正，无需绝对值），同时提取系数 $\sqrt2$。</p>
+<h3>第三步：积分</h3>
+<p>$$s=\sqrt2\int_0^{\pi}\mathrm e^\theta\,\mathrm d\theta=\sqrt2\Big[\mathrm e^\theta\Big]_0^{\pi}=\sqrt2\,(\mathrm e^\pi-1).$$</p>
+<h3>易错点</h3>
+<ul><li><strong>公式记错</strong>：弧长微元来自 $(\mathrm ds)^2=(\mathrm dr)^2+(r\,\mathrm d\theta)^2$，被积函数是 $\sqrt{r^2+(r')^2}$，不能写成 $r+r'$ 或漏掉 $r'$。</li><li><strong>开方丢 $\sqrt2$</strong>：$\sqrt{2\,\mathrm e^{2\theta}}=\sqrt2\,\mathrm e^\theta$，系数 2 也要开方。</li><li><strong>积分上下限混乱</strong>：题给 $0\le\theta\le\pi$，代入后是 $[\mathrm e^\theta]_0^{\pi}=\mathrm e^\pi-1$，不要写成 $\mathrm e^\pi$ 或 $\mathrm e^\pi/\pi$。</li></ul>
+<blockquote>对数螺线 $r=\mathrm e^\theta$ 恒有 $r'=r$，弧长被积函数恒为 $\sqrt2\,\mathrm e^\theta$，答案 $\sqrt2(\mathrm e^\pi-1)$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

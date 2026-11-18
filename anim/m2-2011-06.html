@@ -91,5 +91,26 @@ AW.init({
   },
 });
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：同区间定积分比大小——先比被积函数</h2>
+<p>答案：B（$I&lt;K&lt;J$）</p>
+<h3>第一步：统一比较原则</h3>
+<p>三个积分的区间都是 $\left(0,\dfrac\pi4\right)$。定积分保序：被积函数逐点小（且不恒等）者积分小。于是问题转化为比较 $\ln\sin x$、$\ln\cos x$、$\ln\cot x$ 的大小，<strong>完全不必算积分值</strong>。</p>
+<h3>第二步：在区间上排被积函数</h3>
+<p>$0&lt;x&lt;\dfrac\pi4$ 时：$0&lt;\sin x&lt;\cos x&lt;1$（两者的分界在 $\dfrac\pi4$），且</p>
+<p>$$\cot x=\frac{\cos x}{\sin x}&gt;1.$$</p>
+<p>$\ln$ 单调递增，故</p>
+<p>$$\ln\sin x&lt;\ln\cos x&lt;0&lt;\ln\cot x.$$</p>
+<p>前两个为负、第三个为正，这一符号差异保证了不等号是严格的。</p>
+<h3>第三步：保序性给结论</h3>
+<p>逐点不等号严格，积分后保持：</p>
+<p>$$I&lt;K&lt;J.$$</p>
+<h3>易错点</h3>
+<ul><li><strong>硬算三个积分</strong>：$\int\ln\sin x$ 不是初等积分，绕进死胡同；比较法一步出结果。</li><li><strong>$\sin$ 与 $\cos$ 大小记反</strong>：分界在 $x=\dfrac\pi4$，本题区间内 $\sin x&lt;\cos x$。</li><li><strong>忽视 $\ln$ 的符号</strong>：$(0,1)$ 上对数为负、大于 $1$ 时为正，这是 $J$ 排最前的根源。</li></ul>
+<blockquote>结论：选 <strong>B</strong>。同区间比积分，等于同区间比被积函数。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

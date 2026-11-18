@@ -99,5 +99,29 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：两次分部积分降阶，把三个条件逐个吃掉</h2>
+<p>最终答案：$I=\displaystyle\iint_D xy\,f_{xy}''(x,y)\,\mathrm dx\,\mathrm dy=a$。</p>
+<h3>第一步：立机制——分部是把"导数"搬走、把"边界"留下，边界正好对接条件</h3>
+<p>$f$ 是抽象函数，唯一出路是<strong>降阶</strong>：分部积分每做一次，$f$ 的导数阶数降一级，代价是冒出一个边界项。而题目给的三条条件恰好都是"边界/本体信息"：$f(x,1)=0$ 管上边界、$f(1,y)=0$ 管右边界、$\iint_D f=a$ 是最后剩下的本体。所以整道题的骨架就是：<strong>让每条边界条件各自吃掉一个边界项，剩下的正是已知积分</strong>。</p>
+<p><strong>为什么先对 $y$ 分部？</strong> 被积函数里 $y$ 搭配 $f''_{xy}$，且 $f''_{xy}=\dfrac{\partial}{\partial y}f_x'$——对 $y$ 分部后，边界项落在 $y$ 的端点上，正好对接 $f(x,1)=0$ 这条上边界；若先对 $x$ 分部，边界项落在 $x$ 端点，接的就是 $f(1,y)$。分部方向与条件是一一配对的，次序乱了条件就对不上号。</p>
+<h3>第二步：对 y 分部——条件 f(x,1)=0 接管，y=0 端自动为零</h3>
+<p>$$I=\int_0^1 x\left(\int_0^1 y\,\frac{\partial f_x'}{\partial y}\,\mathrm dy\right)\mathrm dx,\qquad
+\int_0^1 y\,f_{xy}''\,\mathrm dy=\big[y\,f_x'(x,y)\big]_{y=0}^{y=1}-\int_0^1 f_x'(x,y)\,\mathrm dy.$$</p>
+<p>边界项两端逐个看：$y=0$ 处因子 $y=0$，<strong>自动消失</strong>；$y=1$ 处剩 $f_x'(x,1)$。而 $f(x,1)\equiv0$ 是关于 $x$ 的恒等式，两边对 $x$ 求导得 $f_x'(x,1)=0$——这条条件不是白给的，正是为这一步准备的。于是</p>
+<p>$$I=-\int_0^1 x\left(\int_0^1 f_x'(x,y)\,\mathrm dy\right)\mathrm dx=-\int_0^1\!\!\int_0^1 x\,f_x'(x,y)\,\mathrm dx\,\mathrm dy.$$</p>
+<p>（$f$ 有二阶连续偏导，被积函数连续，交换积分次序合法。）</p>
+<h3>第三步：对 x 分部——条件 f(1,y)=0 接力，x=0 端同样自动为零</h3>
+<p>$$\int_0^1 x\,f_x'\,\mathrm dx=\big[x\,f(x,y)\big]_{x=0}^{x=1}-\int_0^1 f(x,y)\,\mathrm dx=f(1,y)-\int_0^1 f\,\mathrm dx=-\int_0^1 f\,\mathrm dx,$$</p>
+<p>其中 $x=0$ 处因子 $x=0$ 自动为零，$x=1$ 处正是条件 $f(1,y)=0$。代回原式：</p>
+<p>$$I=-\int_0^1\left(-\int_0^1 f(x,y)\,\mathrm dx\right)\mathrm dy=\iint_D f(x,y)\,\mathrm dx\,\mathrm dy=a.$$</p>
+<p>两次分部各贡献一个负号，负负得正——最后剩下的既不是边界也不是别的，恰是题目给的 $\iint_D f$。</p>
+<h3>易错点</h3>
+<ul><li><strong>想先求出 f</strong>：$f$ 只以抽象形式出现，不存在求 $f$ 的通道；正路是"分部降阶 + 边界条件化零"。</li><li><strong>漏掉 f′ₓ(x,1)=0 这一步</strong>：它不是题目直接给的，而是对恒等式 $f(x,1)=0$ <strong>整体对 $x$ 求导</strong>得来。</li><li><strong>分部次序随意选</strong>：先对 $y$ 分部，边界项才落在 $y=1$、接得上 $f(x,1)=0$；方向与条件一一配对，次序颠倒就接不上。</li><li><strong>负号管理混乱</strong>：两次分部各产生一个负号，建议每步写清"减去积分"再代入条件，最后负负得正。</li></ul>
+<blockquote>结论：$f_{xy}''\to f_x'\to f$ 连降两阶，$f(x,1)=0$ 与 $f(1,y)=0$ 分别消灭两个边界项（另两端被因子 $x,y$ 自动清零），剩 $\iint_D f=a$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

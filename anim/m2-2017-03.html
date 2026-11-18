@@ -106,5 +106,23 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：由复合式极限反解数列极限（找非零根排除）</h2>
+<p>答案：D</p>
+<h3>第一步：统一框架</h3>
+<p>题设 $\{x_n\}$ 收敛，记 $\lim\limits_{n\to\infty}x_n=a$。四个选项都是同一句话："某个含 $x_n$ 的连续复合式趋于 $0$，能否强制 $a=0$？"由连续性，复合式极限就是 $g(a)$，于是每个选项都归结为：<strong>方程 $g(a)=0$ 是否只有零根</strong>。有非零根就当场构造常值反例 $x_n\equiv a$，选项即被否定。</p>
+<h3>第二步：A、B、C 各找一个非零根</h3>
+<table><thead><tr><th>选项</th><th>方程</th><th>非零根</th><th>反例</th></tr></thead><tbody><tr><td>A</td><td>$\sin a=0$</td><td>$a=k\pi$</td><td>$x_n\equiv\pi$：$\sin x_n\to0$ 但 $x_n\to\pi$</td></tr><tr><td>B</td><td>$a+\sqrt{\lvert a\rvert}=0$</td><td>$a=-1$（$-1+1=0$）</td><td>$x_n\equiv-1$</td></tr><tr><td>C</td><td>$a+a^2=0$</td><td>$a=-1$</td><td>$x_n\equiv-1$：$x_n+x_n^2\to0$ 但极限为 $-1$</td></tr></tbody></table>
+<p>三项全部被反例否掉。注意 B 的坑：$\sqrt{\lvert a\rvert}$ 允许 $a$ 取负值，$a=-1$ 恰好使两项抵消。</p>
+<h3>第三步：D 的零根是唯一的</h3>
+<p>D 要求 $a+\sin a=0$，即 $\sin a=-a$。取绝对值得 $\lvert\sin a\rvert=\lvert a\rvert$；而熟知 $\lvert\sin a\rvert\le\lvert a\rvert$ 且<strong>等号仅在 $a=0$ 处成立</strong>（$a\ne0$ 时 $\lvert\sin a\rvert&lt;\lvert a\rvert$）。所以方程只有唯一根 $a=0$，从而 $\lim\limits_{n\to\infty}x_n=0$，D 成立。</p>
+<p>（也可以用单调性论证：$g(t)=t+\sin t$ 满足 $g'(t)=1+\cos t\ge0$ 且零点孤立，故严格增，$g(0)=0$ 是唯一零点。）</p>
+<h3>易错点</h3>
+<ul><li><strong>以为 $\sin x_n\to0$ 就有 $x_n\to0$</strong>：$\sin$ 不是单射，$\pi$ 也满足，A 的反例就是这么来的。</li><li><strong>给 B 找根时漏掉负根</strong>：心里默认 $x_n\ge0$ 就会漏掉 $a=-1$。</li><li><strong>对 D 用"排除法凑答案"</strong>：要知道 D 成立的完整理由——"$\lvert\sin a\rvert&lt;\lvert a\rvert$（$a\ne0$）"或严格单调性，二选一写清。</li></ul>
+<blockquote>结论：A、B、C 各有非零极限的反例，D 的方程只有 $a=0$ 一个根，选 D。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

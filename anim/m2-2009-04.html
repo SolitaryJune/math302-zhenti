@@ -99,5 +99,28 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：两块累次积分的合并与交换次序</h2>
+<p>答案：C</p>
+<h3>第一步：先立机制——累次积分的每一段都是"画区域"</h3>
+<p>$\int_a^b\mathrm dx\int_{\varphi_1(x)}^{\varphi_2(x)}f\,\mathrm dy$ 读作：对每个 $x\in[a,b]$，动点 $(x,y)$ 满足 $\varphi_1(x)\le y\le\varphi_2(x)$。所以两块累次积分就是两块平面区域：</p>
+<p>$$D_1:\ 1\le x\le2,\ x\le y\le2;\qquad D_2:\ 1\le y\le2,\ y\le x\le4-y.$$</p>
+<p>关键观察：直线 $y=x$ 把带状区域 $1\le y\le2$ 分成左右两半，$D_1$ 占右半（$x\le y$）、$D_2$ 占左半（$y\le x$），两块沿 $x=y$ 相邻——这决定了它们能拼成一整块。</p>
+<h3>第二步：为什么统一成"先 $x$ 后 $y$"这条路</h3>
+<p>要把两块并成一个累次积分，必须用<strong>同一次序、同一外层区间</strong>描述。$D_2$ 本来就是先 $x$ 后 $y$（外层 $1\le y\le2$）；若反过来把 $D_2$ 改成先 $y$ 后 $x$，固定 $x$ 时内层上限是 $\min(x,\,4-x)$，在 $x=2$ 处要拆段，反而更繁。所以正确方向是把 $D_1$ 也按 $y$ 描述：$D_1$ 中 $1\le x\le y$，即</p>
+<p>$$D_1:\ 1\le y\le2,\quad 1\le x\le y.$$</p>
+<h3>第三步：沿 $x=y$ 拼接</h3>
+<p>每条水平线 $y\in[1,2]$ 上，$D_1$ 给出 $x\in[1,\,y]$，$D_2$ 给出 $x\in[y,\,4-y]$，两段在 $x=y$ 处首尾相接（一段的右端恰是另一段的左端），无缝合并成</p>
+<p>$$1\le x\le4-y.$$</p>
+<h3>第四步：写出合并结果</h3>
+<p>$$\text{原式}=\iint_{D_1\cup D_2}f\,\mathrm d\sigma=\int_1^2\mathrm dy\int_1^{4-y}f(x,y)\,\mathrm dx,$$</p>
+<p>即选项 C。</p>
+<h3>易错点</h3>
+<ul><li><strong>误选 A</strong>：外层仍是 $x$、内层下限取 $1$，对应 $\{1\le x\le2,\ 1\le y\le4-x\}$，与两块并集对不上。</li><li><strong>误选 B</strong>：$\{1\le x\le2,\ x\le y\le4-x\}$ 只覆盖 $D_1$ 上方那部分，把 $1\le y\le x$ 的区域全丢了。</li><li><strong>误选 D</strong>：只交换了 $D_1$ 那一块就收工，没并入 $D_2$ 中 $x$ 一直到 $4-y$ 的部分。</li><li><strong>不画区域硬凑上限</strong>：本题一切结论都来自"区域不等式"，跳过这一步只能靠猜。</li></ul>
+<blockquote>口诀：累次积分先翻译成区域不等式，统一次序后看内层区间能否首尾相接。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

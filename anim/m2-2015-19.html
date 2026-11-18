@@ -96,5 +96,26 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：变限积分求导定单调性，分段数零点</h2>
+<p><strong>答案：$f(x)$ 共有 $2$ 个零点。</strong></p>
+<h3>第一步：求导，看清单调结构</h3>
+<p>变限积分求导（注意第二个积分上限是 $x^2$，要乘链式因子 $2x$）：</p>
+<p>$$f'(x)=-\sqrt{1+x^2}+\sqrt{1+x^2}\cdot2x=\sqrt{1+x^2}\,(2x-1).$$</p>
+<p>这里有个巧合：第二个被积函数 $\sqrt{1+t}$ 在上限 $t=x^2$ 处的值恰为 $\sqrt{1+x^2}$，与第一项同型。因 $\sqrt{1+x^2}&gt;0$，符号由 $2x-1$ 决定：</p>
+<ul><li>$x&lt;\dfrac12$：$f'&lt;0$，严格递减；</li><li>$x&gt;\dfrac12$：$f'&gt;0$，严格递增；</li></ul>
+<p>$x=\dfrac12$ 是唯一极小值点。</p>
+<h3>第二步：抓关键值</h3>
+<ul><li>$f(1)=0$：两个积分上下限都重合于 $1$，一段积分为零；</li><li>$f\bigl(\dfrac12\bigr)&lt;0$：$\dfrac12&lt;1$ 位于递减段，故 $f\bigl(\dfrac12\bigr)&lt;f(1)=0$（最小值为负）；</li><li>$x\to-\infty$ 时 $\int_x^1\sqrt{1+t^2}\,\mathrm dt\to+\infty$，$x\to+\infty$ 时 $\int_1^{x^2}\sqrt{1+t}\,\mathrm dt\to+\infty$，两端都趋于 $+\infty$。</li></ul>
+<h3>第三步：分段用零点定理计数</h3>
+<table><thead><tr><th>区间</th><th>$f$ 的走向</th><th>零点个数</th></tr></thead><tbody><tr><td>$(-\infty,\tfrac12]$</td><td>从 $+\infty$ 严格降到 $f(\tfrac12)&lt;0$</td><td>恰 $1$ 个</td></tr><tr><td>$[\tfrac12,+\infty)$</td><td>从 $f(\tfrac12)&lt;0$ 严格升到 $+\infty$</td><td>恰 $1$ 个（正是 $x=1$）</td></tr></tbody></table>
+<p>严格单调保证每段<strong>至多</strong>一个零点，端点符号相反保证<strong>至少</strong>一个，所以各恰一个。</p>
+<h3>易错点</h3>
+<ul><li><strong>求导忘乘 $2x$</strong>：上限 $x^2$ 的链式因子漏掉，$f'$ 变形，单调区间全错。</li><li><strong>试图解 $f(x)=0$</strong>：两个积分都积不出初等闭式，必须走「单调性 + 零点定理」路线。</li><li><strong>漏掉现成的 $x=1$</strong>：它是递增段上那个零点，不是额外发现的第三个。</li></ul>
+<blockquote>结论：递减段、递增段各一个零点，共 $2$ 个。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

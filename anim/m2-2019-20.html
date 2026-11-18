@@ -93,5 +93,29 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：指数变换为什么能"吸走"一阶偏导项</h2>
+<p><strong>答案</strong>：$a=-\dfrac34,\quad b=\dfrac34$。</p>
+<h3>第 0 步：机制——为什么偏偏选 $\mathrm{e}^{ax+by}$ 当变换因子</h3>
+<p>目标是消掉 $v_x$、$v_y$。求导算子对一般函数"越导越新"，对指数函数却只是<strong>乘常数</strong>：$\partial_x\mathrm{e}^{ax+by}=a\,\mathrm{e}^{ax+by}$，$\partial_y\mathrm{e}^{ax+by}=b\,\mathrm{e}^{ax+by}$——指数函数是 $\partial_x$ 与 $\partial_y$ 的共同"特征函数"。令 $u=v\,\mathrm{e}^{ax+by}$ 后，每次偏导按乘积法则出"对 $v$ 求导"与"乘 $a$ 或 $b$"两路，二阶导攒出 $2av_x$ 这样的<strong>一阶项</strong>；所有项都带公因子 $\mathrm{e}^{ax+by}$，$v$ 的各阶导数便能合并系数——选 $a,b$ 让一阶系数归零即可。这与 ODE 乘积分因子消一阶项、二次型配平方消一次项是同一思想：<strong>用可逆变换吸收不要的低阶项</strong>。</p>
+<h3>第一步：逐项求偏导——完全平方式的规律</h3>
+<p>由 $u=v\,\mathrm{e}^{ax+by}$，乘积法则与链式法则给出</p>
+<p>$$u_x=\mathrm{e}^{ax+by}\left(v_x+av\right),\qquad u_{xx}=\mathrm{e}^{ax+by}\left(v_{xx}+2av_x+a^2v\right),$$</p>
+<p>$$u_y=\mathrm{e}^{ax+by}\left(v_y+bv\right),\qquad u_{yy}=\mathrm{e}^{ax+by}\left(v_{yy}+2bv_y+b^2v\right).$$</p>
+<p><strong>为什么 $u_{xx}$ 里 $v_x$ 的系数是 $2a$</strong>：$(\partial_x+a)^2v=v_{xx}+2av_x+a^2v$ 是完全平方式——"先导 $v_x$ 再导指数"与"先导指数再导 $v_x$"两条路各贡献一个 $a$，二项式系数自动现形。每多求一次 $x$ 导，$v$ 的导数升一阶，同时掉下一个 $av_x$ 与一个 $a^2v$；对 $y$ 同理换 $b$。</p>
+<h3>第二步：代入原方程，约公因子后归类</h3>
+<p>$\mathrm{e}^{ax+by}$ 恒不为零，可整体约去（为什么能约：方程两边是恒等式，非零因子可以除）。按 $v_{xx},v_{yy},v_x,v_y,v$ 归类：</p>
+<p>$$2v_{xx}-2v_{yy}+\underbrace{(4a+3)}_{v_x\ \text{的系数}}v_x+\underbrace{(-4b+3)}_{v_y\ \text{的系数}}v_y+\left(2a^2-2b^2+3a+3b\right)v=0.$$</p>
+<p>$v_x$ 的系数 $4a$ 来自 $2u_{xx}$ 中的 $2\cdot2a$，再加 $3u_x$ 中的 $3$；$v_y$ 的系数 $-4b$ 来自 $-2u_{yy}$ 中的 $-2\cdot2b$，再加 $3$。</p>
+<h3>第三步：令一阶系数同时为零</h3>
+<p>$$4a+3=0\ \Rightarrow\ a=-\frac34,\qquad -4b+3=0\ \Rightarrow\ b=\frac34.$$</p>
+<p><strong>为什么只令一阶系数为零、不管 $v$ 的系数</strong>：题目只禁"一阶偏导数"，$v$ 项是零阶，不在禁令内；本题恰好 $2a^2-2b^2+3a+3b=0$（$a=-b$ 让两组自动归零），方程化为最干净的 $2v_{xx}-2v_{yy}=0$——属意外奖励，不是要求。<strong>为什么两个方程恰好解两个未知数且互不纠缠</strong>：$v_x$ 只经 $x$ 向链攒 $a$，$v_y$ 只经 $y$ 向链攒 $b$，这是题目把两个一阶项系数都设为 $3$ 的对称设计。</p>
+<h3>易错点</h3>
+<ul><li><strong>二阶偏导漏项 $2av_x$</strong>：它是完全平方式 $(\partial_x+a)^2v$ 的中间项，两条求导路径各出一个 $a$。</li><li><strong>误令 $v$ 的系数也为零</strong>：题目只要求消一阶项，强加这条约束反而可能无解（本题为零属巧合）。</li><li><strong>忘记约去 $\mathrm{e}^{ax+by}$</strong>：不约公因子就"令系数为零"，等于在带多余因子的等式上操作。</li></ul>
+<blockquote>结论：$4a+3=0$ 与 $-4b+3=0$ 同时成立，$a=-\dfrac34,\ b=\dfrac34$，此时方程化为 $2v_{xx}-2v_{yy}=0$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

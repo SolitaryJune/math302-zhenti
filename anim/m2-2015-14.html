@@ -121,5 +121,25 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：矩阵多项式的特征值——一条定义式推到底</h2>
+<p>答案：<strong>21</strong>。</p>
+<h3>第 0 步：先立机制——为什么 $g(\lambda)$ 就是 $g(A)$ 的特征值</h3>
+<p>特征值的定义是"存在非零向量被放大 $\lambda$ 倍"：$Ae=\lambda e$，$e\neq0$。这个式子可以反复自乘：$A^2e=\lambda(Ae)=\lambda^2e$，归纳得 $A^ke=\lambda^ke$；又 $Ee=e$。于是对 $g(t)=t^2-t+1$：</p>
+<p>$$g(A)e=(A^2-A+E)e=(\lambda^2-\lambda+1)e=g(\lambda)e.$$</p>
+<p>方向 $e$ 没动、放大倍数换成 $g(\lambda)$——<strong>$g(\lambda)$ 就是 $g(A)$ 的特征值</strong>。为什么这条路划算：硬算 $B=A^2-A+E$ 要两次矩阵乘法再卷一个三阶行列式，量大易错；特征值路线只是一元二次代入。</p>
+<h3>第 1 步：逐个代入</h3>
+<p>$A$ 的特征值 $2,-2,1$：</p>
+<ul><li>$g(2)=4-2+1=3$；</li><li>$g(-2)=4+2+1=7$——为什么 $-2$ 不产生负特征值：平方项吞掉符号，$-(-2)$ 又变加；</li><li>$g(1)=1-1+1=1$。</li></ul>
+<h3>第 2 步：为什么 $|B|$ = 特征值之积</h3>
+<p>$B$ 是 3 阶矩阵，特征多项式 $\det(\lambda E-B)=\prod_{i=1}^{3}(\lambda-\lambda_i)$；令 $\lambda=0$：$\det(-B)=(-1)^3\det B=(-\lambda_1)(-\lambda_2)(-\lambda_3)=-\lambda_1\lambda_2\lambda_3$，即 $\det B=\lambda_1\lambda_2\lambda_3$。<strong>会不会漏特征值</strong>：3 阶矩阵的特征多项式恰有 3 个根（计重数），$3,7,1$ 互异且已凑满 3 个，没有遗漏。故</p>
+<p>$$|B|=3\times7\times1=21.$$</p>
+<h3>易错点</h3>
+<ul><li><strong>以为 $-2$ 带来负特征值</strong>：$g(-2)=7$，平方项与减负数双重反转。</li><li><strong>硬算矩阵 $B$ 再求行列式</strong>：可行但慢且易错，特征值路线一步到位。</li><li><strong>忘了 $|B|=\prod\lambda_i$</strong>：行列式 = 全部特征值之积，是本题收尾的钥匙。</li></ul>
+<blockquote>记忆锚点：$Ae=\lambda e\Rightarrow g(A)e=g(\lambda)e$；$|B|=\prod\lambda_i$；本题 $3\cdot7\cdot1=21$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

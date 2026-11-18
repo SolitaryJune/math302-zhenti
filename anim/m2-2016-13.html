@@ -99,5 +99,25 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：相关变化率——曲线上动点到原点距离的变化率</h2>
+<p>答案：$2\sqrt{2}\,v_0$</p>
+<h3>第 0 步：先立机制——相关变化率的三步模型</h3>
+<p>相关变化率的流程固定三步：①建立一个<strong>对每一时刻都成立的恒等式</strong>，把未知变化率与已知变化率关进同一个等式；②两边对时间 $t$ 求导——所有变量都是 $t$ 的函数，链式法则自动把 $\dfrac{\mathrm dl}{\mathrm dt}$ 与 $\dfrac{\mathrm dx}{\mathrm dt}$ 串起来；③代入目标时刻的坐标值与已知速率，解出目标。本题的恒等式是距离公式 $l^2=x^2+y^2$。<strong>为什么先平方再求导</strong>：$l=\sqrt{x^2+y^2}$ 直接求导要嵌套根号加链式两层；平方后左边是 $2l\dfrac{\mathrm dl}{\mathrm dt}$、右边是多项式，一劳永逸——且 $l&gt;0$ 恒成立，平方是等价变形，不丢信息。<strong>为什么 $y$ 先代入 $x^3$</strong>：曲线约束 $y=x^3$ 也是恒等式，早代换早化简，变量只剩 $x,l$ 两个。</p>
+<h3>第一步：建立并化简恒等式</h3>
+<p>$$l^2=x^2+y^2=x^2+x^6.$$</p>
+<h3>第二步：两边对 t 求导</h3>
+<p>$$2l\frac{\mathrm dl}{\mathrm dt}=(2x+6x^5)\frac{\mathrm dx}{\mathrm dt}.$$</p>
+<p>右边系数 $(2x+6x^5)$ 是 $\dfrac{\mathrm d(x^2+x^6)}{\mathrm dx}$——链式法则里"内导"就是它；$6x^5$ 一项正是曲线约束 $y=x^3$ 贡献的，它不是凭空多出来的。</p>
+<h3>第三步：代入目标时刻的值</h3>
+<p>$P$ 运动到 $(1,1)$ 时：$l=\sqrt{1+1}=\sqrt2$，题给 $\dfrac{\mathrm dx}{\mathrm dt}=v_0$，且 $2x+6x^5=2+6=8$：</p>
+<p>$$2\sqrt2\,\frac{\mathrm dl}{\mathrm dt}=8v_0\ \Longrightarrow\ \frac{\mathrm dl}{\mathrm dt}=\frac{8v_0}{2\sqrt2}=2\sqrt2\,v_0.$$</p>
+<h3>易错点</h3>
+<ul><li><strong>把 $y$ 当独立变量</strong>：求导时对 $y$ 也冒出一个 $\dfrac{\mathrm dy}{\mathrm dt}$ 却无数据可用——先代 $y=x^3$ 就不会掉进这个坑。</li><li><strong>忘记 $l$ 要代数值</strong>：左边 $2l$ 里的 $l$ 是当下时刻的 $\sqrt2$，不是符号留白；次序必须<strong>先求导、后代数值</strong>，反了会把链式信息丢掉。</li><li><strong>对 $\sqrt{x^2+y^2}$ 硬求导</strong>：能做但绕；"先平方"是相关变化率的省力惯例，前提是被开方量非负（$l$ 天然满足）。</li></ul>
+<blockquote>结论：$2\sqrt2\,\dfrac{\mathrm dl}{\mathrm dt}=8v_0$，过 $(1,1)$ 时 $\dfrac{\mathrm dl}{\mathrm dt}=2\sqrt2\,v_0$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

@@ -89,5 +89,30 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：双瑕点反常积分——两端同时收敛才收敛</h2>
+<p>答案：$0&lt;p&lt;2$</p>
+<h3>第零步：机制——收敛是两段独立的极限，比阶用的是 p-积分尺子</h3>
+<p>反常积分按定义是极限：从任一内点（如 $1$）切开成 $\displaystyle\int_0^1+\int_1^{+\infty}$，整体收敛 ⟺ <strong>两段各自的极限都存在</strong>——任何一段崩掉，和就无意义。判别工具是比较判别法，而比较的"尺子"是 p-积分，其门槛来自原函数 $F_s(x)=\dfrac{x^{1-s}}{1-s}$（$s\ne1$）：</p>
+<ul><li>$\displaystyle\int_0^1\frac{dx}{x^{s}}$ 收敛 $\iff s&lt;1$（$x\to0^+$ 时 $F_s$ 要有有限极限，需 $1-s&gt;0$）；</li><li>$\displaystyle\int_1^{+\infty}\frac{dx}{x^{s}}$ 收敛 $\iff s&gt;1$（$x\to+\infty$ 时 $F_s$ 要趋于 $0$，需 $1-s&lt;0$）。</li></ul>
+<p>所以全题就是一件事：<strong>用等价无穷小量出被积函数在两端的"阶"，再对门槛 $1$ 比大小</strong>。</p>
+<h3>第一步：$x\to0^+$ 端</h3>
+<p>$\arctan x\sim x$（它在原点附近的泰勒首项），$x+1\to1$：</p>
+<p>$$f(x)\sim\frac{x}{x^p}=x^{1-p}=\frac{1}{x^{p-1}},$$</p>
+<p>对照零点尺子得 $p-1&lt;1$，即 $p&lt;2$。</p>
+<h3>第二步：$x\to+\infty$ 端</h3>
+<p>$\arctan x\to\dfrac\pi2$（<strong>非零</strong>常数只差常数倍，不改变阶），$x+1\sim x$：</p>
+<p>$$f(x)\sim\frac{\pi/2}{x^{p+1}},$$</p>
+<p>对照无穷尺子得 $p+1&gt;1$，即 $p&gt;0$。</p>
+<h3>第三步：取交集</h3>
+<p>两端条件同时成立：$p&lt;2$ 且 $p&gt;0$，即</p>
+<p>$$0&lt;p&lt;2.$$</p>
+<h3>易错点</h3>
+<ul><li><strong>只查一端</strong>：只查无穷远丢 $p&lt;2$，只查零点丢 $p&gt;0$；双瑕点必须拆段逐端验。</li><li><strong>阶数数错</strong>：分母上 $x^p$ 与 $x+1\sim x$ 合计 $x^{p+1}$，别只算一个 $x$。</li><li><strong>以为 $\arctan$ 在无穷端"有界就行"</strong>：必须趋于<strong>非零</strong>常数才能保阶；若趋于 $0$，有界因子会把阶降下去。</li></ul>
+<blockquote>一句话结论：零点处 $1-p&gt;-1$ 给 $p&lt;2$，无穷处 $p+1&gt;1$ 给 $p&gt;0$，交集 $0&lt;p&lt;2$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

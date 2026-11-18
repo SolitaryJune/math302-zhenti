@@ -134,5 +134,36 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：常系数方程组定 $f$，变限积分函数的拐点</h2>
+<p>最终答案：(1) $f(x)=\mathrm e^x$；(2) 拐点 $(0,0)$。</p>
+<h3>第 0 步：先立机制——特征方程为什么成立、路线为什么先齐次后代入</h3>
+<p><strong>为什么解 $f''+f'-2f=0$ 要找 $\mathrm e^{rx}$</strong>：求导算子对 $\mathrm e^{rx}$ 的作用就是乘常数——$\big(\mathrm e^{rx}\big)'=r\,\mathrm e^{rx}$，$\big(\mathrm e^{rx}\big)''=r^2\,\mathrm e^{rx}$。把它代进方程，微分方程就降维成代数方程 $r^2+r-2=0$。指数函数是求导运算的"特征方向"，这就是"特征方程"名字的来历。</p>
+<p><strong>为什么先解齐次通解、再代入第二式</strong>：齐次方程的通解（带两个独立常数）是全部候选，第二个方程 $f''+f=2\mathrm e^x$ 只负责从中挑人——路线是"先圈定候选、再筛选"，逻辑上保证不漏不重。若把两式直接相减降阶，得到的一阶方程只是必要条件，其通解还须回代原二阶方程检验，多一道手续。</p>
+<h3>第一步：(1) 特征方程与通解</h3>
+<p>$r^2+r-2=(r-1)(r+2)=0$，$r_1=1$，$r_2=-2$，故</p>
+<p>$$f(x)=C_1\mathrm e^x+C_2\mathrm e^{-2x}.$$</p>
+<h3>第二步：(1) 代入第二个方程定常数</h3>
+<p>$f''=C_1\mathrm e^x+4C_2\mathrm e^{-2x}$，于是</p>
+<p>$$f''+f=2C_1\mathrm e^x+5C_2\mathrm e^{-2x}=2\mathrm e^x.$$</p>
+<p><strong>为什么能"比较系数"</strong>：$\mathrm e^x$ 与 $\mathrm e^{-2x}$ 线性无关（比值 $\mathrm e^{3x}$ 非常数），恒等式成立必须两组系数各自相等。$2C_1=2$、$5C_2=0$，得 $C_1=1$、$C_2=0$，故 $f(x)=\mathrm e^x$。（代回两个方程：$\mathrm e^x+\mathrm e^x-2\mathrm e^x=0$、$\mathrm e^x+\mathrm e^x=2\mathrm e^x$，均成立。）</p>
+<h3>第三步：(2) 写出曲线并求一阶导</h3>
+<p>$f(x^2)=\mathrm e^{x^2}$，$f(-t^2)=\mathrm e^{-t^2}$。记 $g(x)=\displaystyle\int_0^x\mathrm e^{-t^2}\mathrm dt$，则曲线为 $y=\mathrm e^{x^2}g(x)$。变限积分求导的机制：把上限 $x$ 代进被积函数，$g'(x)=\mathrm e^{-x^2}$；乘积法则给</p>
+<p>$$y'=2x\,\mathrm e^{x^2}g(x)+\mathrm e^{x^2}\cdot\mathrm e^{-x^2}=2x\,\mathrm e^{x^2}g(x)+1.$$</p>
+<p>第二项里 $\mathrm e^{x^2}$ 与 $\mathrm e^{-x^2}$ 恰好抵消——这是本题设计好的"礼物"，但前提是 $g'$ 这一项必须写出：漏掉则一阶导缺项、二阶导全错。</p>
+<h3>第四步：求二阶导</h3>
+<p>$$y''=\big(2+4x^2\big)\mathrm e^{x^2}g(x)+2x\,\mathrm e^{x^2}\cdot\mathrm e^{-x^2}=2(1+2x^2)\mathrm e^{x^2}g(x)+2x.$$</p>
+<h3>第五步：判 $y''$ 变号——为什么看奇偶性、为什么"变号"才算拐点</h3>
+<p><strong>$g$ 是奇函数</strong>（这是判号的枢纽）：被积函数 $\mathrm e^{-t^2}$ 是偶函数，从 $0$ 往左积与往右积互为相反数。换元验证：$g(-x)=\displaystyle\int_0^{-x}\mathrm e^{-t^2}\mathrm dt\ \xrightarrow{\ t=-u\ }\ -\int_0^{x}\mathrm e^{-u^2}\mathrm du=-g(x)$。又 $x&gt;0$ 时被积函数恒正，故 $g(x)&gt;0$。</p>
+<p>于是第一项 = 奇函数 $g$ × 恒正因子 $(1+2x^2)\mathrm e^{x^2}$ = 奇函数，$2x$ 也是奇函数，故 $y''$ 为奇函数，且 $y''(0)=0$（连续奇函数在原点必为零）：</p>
+<ul><li>$x&gt;0$：$g(x)&gt;0$、$2x&gt;0$，故 $y''&gt;0$（曲线下凸）；</li><li>$x&lt;0$：由奇性 $y''&lt;0$（曲线上凸）。</li></ul>
+<p><strong>为什么"变号"才算拐点</strong>：拐点是凹凸性的分界点，$y''=0$ 但两侧不变号的点（如 $y=x^4$ 在原点）不是拐点——本题的奇性直接保证两侧异号，凹凸在 $x=0$ 处交替。又 $y(0)=\mathrm e^0\cdot g(0)=0$，故拐点为 $(0,0)$。</p>
+<h3>易错点</h3>
+<ul><li><strong>直接两式相减消 $f''$</strong>：得到的一阶方程只是必要条件，解出的函数须回代原方程组检验；先解齐次通解再定常数更稳。</li><li><strong>变限积分求导漏项</strong>：$g'(x)=\mathrm e^{-x^2}$ 漏写会使 $y'$ 缺一项、$y''$ 全错。</li><li><strong>奇函数论证跳步</strong>：$g$ 的奇性来自"偶函数从原点向两侧积分互为相反数"，要给出换元一行，不能凭感觉。</li><li><strong>拐点只报横坐标</strong>：拐点是曲线上的点，必须答 $(0,0)$ 而非 $x=0$。</li></ul>
+<blockquote>结论：$f(x)=\mathrm e^x$；曲线唯一拐点 $(0,0)$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

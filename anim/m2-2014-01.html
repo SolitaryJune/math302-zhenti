@@ -100,5 +100,28 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：无穷小的「阶」——两个不等式圈定 $\alpha$</h2>
+<p><strong>答案：B</strong></p>
+<h3>第一步：先立机制——「阶」是什么</h3>
+<p>若 $x\to0^+$ 时某量 $\sim Cx^{p}$（$C\neq0$），则它与 $x$ 之比 $\dfrac{Cx^{p}}{x}=Cx^{p-1}$ 趋于 $0$ <strong>当且仅当 $p&gt;1$</strong>——这就是「比 $x$ 高阶」的全部含义。所以本题不是比大小，而是给两个量各求出阶数 $p$，解两个不等式取交集。为什么走等价无穷小这条路：它一步读出阶数，而且幂运算保比例——$f\sim Cx^{p}$ 时 $f^{\alpha}\sim C^{\alpha}x^{p\alpha}$（常数与阶数各乘 $\alpha$），幂次把阶数乘 $\alpha$。</p>
+<h3>第二步：第一个量的阶</h3>
+<p>$\ln(1+2x)\sim2x$（泰勒首项），故 $\ln^{\alpha}(1+2x)\sim(2x)^{\alpha}$，阶数为 $\alpha$。比 $x$ 高阶要求</p>
+<p>$$\alpha&gt;1.$$</p>
+<h3>第三步：第二个量的阶</h3>
+<p>$1-\cos x\sim\dfrac{x^{2}}{2}$——用半角公式 $1-\cos x=2\sin^{2}\dfrac x2\sim2\big(\dfrac x2\big)^{2}$ 可直接看出阶数是 $2$。故</p>
+<p>$$(1-\cos x)^{\frac{1}{\alpha}}\sim\Big(\dfrac{x^{2}}{2}\Big)^{\frac{1}{\alpha}},\qquad \text{阶数}=\dfrac{2}{\alpha}.$$</p>
+<p>要求 $\dfrac{2}{\alpha}&gt;1$，即 $\alpha&lt;2$；幂指运算本身要求 $\alpha&gt;0$（$1/\alpha$ 在分母，负幂才有意义）。</p>
+<h3>第四步：取交集并回验</h3>
+<p>$1&lt;\alpha&lt;2$。取 $\alpha=\dfrac32$ 验证：两量阶数 $1.5$ 与 $\dfrac{4}{3}$ 都大于 $1$，选 <strong>B</strong>。</p>
+<h3>干扰项归因</h3>
+<ul><li><strong>A $(2,+\infty)$</strong>：只盯住了第一个条件；$\alpha&gt;2$ 时第二量阶 $\dfrac2\alpha&lt;1$，反而比 $x$ 低阶。</li><li><strong>C $\big(\dfrac12,1\big)$ 与 D $\big(0,\dfrac12\big)$</strong>：$\alpha&lt;1$，第一个量的阶数 $\alpha&lt;1$，第一步就不满足高阶。</li></ul>
+<h3>易错点</h3>
+<ul><li><strong>只列一个不等式</strong>：两个量都要高阶，缺一不可。</li><li><strong>把第二量的阶记成 $\dfrac1\alpha$</strong>：阶数是 $x$ 的幂次 $2\cdot\dfrac1\alpha=\dfrac2\alpha$，不是指数本身。</li><li><strong>解 $\dfrac2\alpha&gt;1$ 时丢 $\alpha&gt;0$</strong>：幂指式要求 $\alpha&gt;0$。</li></ul>
+<blockquote>一句话结论：两个阶数 $\alpha$ 与 $\dfrac2\alpha$ 都要大于 $1$，交集 $(1,2)$，选 B。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

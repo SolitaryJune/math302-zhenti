@@ -156,9 +156,10 @@ img{max-width:100%}
 /* ===== 学习区（讲解/动画）===== */
 .study{border-top:1px dashed var(--teal-soft);margin-top:16px;padding-top:14px}
 .study-tabs{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
-.study-tabs button{border:0;cursor:pointer;background:#5a7d8c40;color:var(--teal);border-radius:8px;
-  padding:8px 13px;font-size:12px;font-weight:800;font-family:inherit}
+.study-tabs button,.study-tabs a{border:0;cursor:pointer;background:#5a7d8c40;color:var(--teal);border-radius:8px;
+  padding:8px 13px;font-size:12px;font-weight:800;font-family:inherit;text-decoration:none;display:inline-block}
 .study-tabs button.on{color:var(--white);background:var(--teal)}
+.study-tabs a:hover{color:var(--white);background:var(--teal)}
 .study-pane{display:none}
 .study-pane.on{display:block}
 .explain{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:16px 18px;
@@ -274,3 +275,9 @@ footer .wrap{width:min(1220px,100% - 64px);margin:0 auto}
   .question-navigation{gap:10px}
   .anim-frame{min-height:420px;height:56vh}
 }
+
+/* ===== 题图自适应：按真实宽高比显示，不放大、不超高 ===== */
+.question-body img,.answer-content img,.ref-answer img,.explain img,
+.qstem img,.aw-qstem img{max-width:100%;width:auto;height:auto;max-height:72vh}
+.choice-text img{max-width:100%;width:auto;height:auto;max-height:150px}
+.question-body .markdown-image,.answer-content .markdown-image{display:flex;justify-content:center;margin:10px 0}

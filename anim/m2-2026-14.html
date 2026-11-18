@@ -87,5 +87,26 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：全微分的系数 + 多元复合链式法则</h2>
+<p>答案：$-2\pi$</p>
+<h3>第零步：机制——$df$ 的系数为什么就是偏导数、链式为什么两条支路都乘</h3>
+<p>可微的定义是：$f$ 在一点的改变量能被一个<strong>线性主部</strong>近似，$\Delta f=f_x\,dx+f_y\,dy+o(\rho)$，这个线性主部就叫全微分 $df=f_x\,dx+f_y\,dy$——所以 $dx,dy$ 前面的系数天然就是两个偏导数。对照题设 $df(0,0)=\pi\,dx+3\,dy$，立刻读出 $f_x(0,0)=\pi$、$f_y(0,0)=3$。而 $g(x)=f(\ln x,\ \sin\pi x)$ 中，$x$ 通过<strong>两条支路</strong>影响 $f$：一条经 $u=\ln x$，一条经 $v=\sin\pi x$；链式法则就是把两条支路的贡献各乘各的"传送率"（内层导数）后相加——一条都不能丢。</p>
+<h3>第一步：从全微分读偏导数</h3>
+<p>$$f_x(0,0)=\pi,\qquad f_y(0,0)=3.$$</p>
+<h3>第二步：理清复合结构并定位</h3>
+<p>$u=\ln x$、$v=\sin\pi x$。在 $x=1$ 处：$u=\ln1=0$，$v=\sin\pi=0$——复合点恰好落回已知偏导值的 $(0,0)$，这是命题人特意安排的落点，也是必须先定位再代值的原因。</p>
+<h3>第三步：链式法则</h3>
+<p>$$g'(x)=f_u(u,v)\cdot\frac1x+f_v(u,v)\cdot\pi\cos\pi x.$$</p>
+<p>（$\dfrac1x$ 与 $\pi\cos\pi x$ 就是两条支路各自的"传送率"。）</p>
+<h3>第四步：代入 $x=1$</h3>
+<p>$$g'(1)=f_x(0,0)\cdot1+f_y(0,0)\cdot\pi\cos\pi=\pi+3\pi\cdot(-1)=-2\pi.$$</p>
+<h3>易错点</h3>
+<ul><li><strong>$\cos\pi$ 算成 $1$</strong>：弧度制下 $\cos\pi=-1$，符号一错答案就变成 $4\pi$。</li><li><strong>漏掉第二条复合支</strong>：只对 $\ln x$ 求导、丢掉 $\sin\pi x$ 的 $\pi\cos\pi x$，是最常见的半截答案。</li><li><strong>把 $df$ 的系数当函数值</strong>：$\pi$ 与 $3$ 是 $(0,0)$ 处的偏导数，不是 $f(0,0)$ 本身。</li></ul>
+<blockquote>一句话结论：$g'(1)=\pi\cdot1+3\cdot\pi\cdot(-1)=-2\pi$；全微分系数即偏导，链式两条支路都乘。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

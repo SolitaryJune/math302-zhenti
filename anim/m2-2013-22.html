@@ -108,5 +108,32 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：矩阵方程两条路——迹的「一票否决」与按元素摊平</h2>
+<p>答案：当且仅当 $a=-1,\ b=0$ 时存在矩阵 $\boldsymbol C$ 使 $\boldsymbol{AC}-\boldsymbol{CA}=\boldsymbol B$，且全部解为 $\boldsymbol C=\begin{pmatrix}k_1+k_2+1&amp;-k_1\\ k_1&amp;k_2\end{pmatrix}$（$k_1,k_2$ 为任意常数）。</p>
+<h3>第一步：机制——先派不变量探路，再摊平成方程组</h3>
+<p>未知是矩阵，策略有二：抽象不变量（迹、行列式、秩）与按元素设未知数。本题两个都用，分工明确。<strong>迹为什么能一票否决</strong>：对任意方阵</p>
+<p>$$\operatorname{tr}(\boldsymbol{XY})=\sum_i(\boldsymbol{XY})_{ii}=\sum_i\sum_k X_{ik}Y_{ki}=\sum_k\sum_i X_{ik}Y_{ki}=\operatorname{tr}(\boldsymbol{YX})$$</p>
+<p>——对角元求和交换顺序而已。于是 $\operatorname{tr}(\boldsymbol{AC}-\boldsymbol{CA})=\operatorname{tr}(\boldsymbol{AC})-\operatorname{tr}(\boldsymbol{CA})\equiv0$，而 $\operatorname{tr}\boldsymbol B=b$，故 <strong>$b=0$ 是与 $a$ 无关的必要条件</strong>，可先行锁定。</p>
+<h3>第二步：摊平——设元、展开、对位</h3>
+<p>设 $\boldsymbol C=\begin{pmatrix}x_1&amp;x_2\\x_3&amp;x_4\end{pmatrix}$，逐元素计算：</p>
+<p>$$\boldsymbol{AC}=\begin{pmatrix}x_1+ax_3&amp;x_2+ax_4\\ x_1&amp;x_2\end{pmatrix},\qquad \boldsymbol{CA}=\begin{pmatrix}x_1+x_2&amp;ax_1\\ x_3+x_4&amp;ax_3\end{pmatrix}$$</p>
+<p><strong>$\boldsymbol{CA}$ 的 $(1,2)$ 元为什么是 $ax_1$</strong>：$\boldsymbol C$ 的第一行 $(x_1,x_2)$ 左乘 $\boldsymbol A$ 的第二列 $(a,0)^{\mathrm T}$，得 $ax_1+0\cdot x_2=ax_1$——「行乘列」逐个对位，不能凭感觉。</p>
+<p>相减对比 $\boldsymbol B=\begin{pmatrix}0&amp;1\\1&amp;b\end{pmatrix}$：</p>
+<p>$$\begin{cases}ax_3-x_2=0,\\ x_2+ax_4-ax_1=1,\\ x_1-x_3-x_4=1,\\ x_2-ax_3=b.\end{cases}$$</p>
+<h3>第三步：消元——为什么 $b$ 先出来、$a$ 后出来</h3>
+<p>第 1 式给 $x_2=ax_3$，代入第 4 式：$ax_3-ax_3=b$，得 $b=0$——与第一步的迹判据<strong>两条独立路径撞出同一结果</strong>，互相印证。$b$ 先出来不是巧合：第 1、4 式只含 $x_2,x_3$ 与 $b$，天然先解耦。</p>
+<p>再定 $a$：第 2 式用 $x_2=ax_3$ 化简为 $a(x_3+x_4-x_1)=1$，即 $-a(x_1-x_3-x_4)=1$；而第 3 式恰好给出 $x_1-x_3-x_4=1$，代入得 $-a=1$，故 $a=-1$。<strong>$a$ 被第 2、3 式联手锁定</strong>：组合 $x_1-x_3-x_4$ 在两式中同时出现，把第 3 式当已知值代入，$a$ 便无处藏身。</p>
+<h3>第四步：写通解并验算——为什么恰好两个任意常数</h3>
+<p>$a=-1,\ b=0$ 时四个方程合并成两条独立约束：$x_2=-x_3$（第 1、4 式合一），$x_1=x_3+x_4+1$（第 2、3 式合一）。$4$ 个未知数减 $2$ 条独立方程等于 $2$ 个自由变量，令 $x_3=k_1,\ x_4=k_2$：</p>
+<p>$$\boldsymbol C=\begin{pmatrix}k_1+k_2+1&amp;-k_1\\ k_1&amp;k_2\end{pmatrix}$$</p>
+<p>验算（$a=-1$）：$(1,1)$ 元 $-k_1-(-k_1)=0$，$(1,2)$ 元 $-k_1-k_2+k_1+k_2+1=1$，$(2,1)$ 元 $(k_1+k_2+1)-k_1-k_2=1$，$(2,2)$ 元 $-k_1+k_1=0=b$，与 $\boldsymbol B$ 逐元吻合。</p>
+<h3>易错点</h3>
+<ul><li><strong>$\boldsymbol{CA}$ 元素凭感觉写</strong>：$(1,2)$ 元是 $ax_1$ 不是 $ax_2$，务必「行乘列」逐个核对。</li><li><strong>漏掉迹的先手检验</strong>：$\operatorname{tr}(\boldsymbol{AC}-\boldsymbol{CA})\equiv0$ 一眼定 $b=0$，先排除大片参数。</li><li><strong>通解写成特解</strong>：有两个自由变量，答案必须含 $k_1,k_2$ 两个任意常数。</li></ul>
+<blockquote>记忆锚点：矩阵方程先查迹（$\operatorname{tr}\boldsymbol{XY}=\operatorname{tr}\boldsymbol{YX}$ 一票否决），再摊平消元；自由参数个数 = 未知数 − 独立约束数。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

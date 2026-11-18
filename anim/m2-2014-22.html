@@ -108,5 +108,38 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：行化简定基础解系，$AB=E$ 按列拆成三个方程组</h2>
+<p>答案：(1) 基础解系 $\boldsymbol\xi=(-1,2,3,1)^{\mathrm T}$；(2) $\boldsymbol B$ 的三列分别为 $(2-k_1,\ 2k_1-1,\ 3k_1-1,\ k_1)^{\mathrm T}$、$(6-k_2,\ 2k_2-3,\ 3k_2-4,\ k_2)^{\mathrm T}$、$(-k_3-1,\ 2k_3+1,\ 3k_3+1,\ k_3)^{\mathrm T}$，$k_1,k_2,k_3$ 为任意常数。</p>
+<h3>第 0 步：先立机制——矩阵等式怎么"按列"拆</h3>
+<p>矩阵乘法的列观点（"左行右列"规则的一半）：$\boldsymbol A\boldsymbol B$ 的第 $j$ 列 $=\boldsymbol A\times(\boldsymbol B\text{ 的第 }j\text{ 列})$。于是</p>
+<p>$$\boldsymbol A\boldsymbol B=\boldsymbol E\iff \boldsymbol A\boldsymbol b_j=\boldsymbol e_j,\quad j=1,2,3,$$</p>
+<p>即"求所有 $\boldsymbol B$"等价于<strong>把三个非齐次方程组 $\boldsymbol A\boldsymbol x=\boldsymbol e_j$ 的通解并排</strong>。尺寸也由乘法规则锁死：$\boldsymbol A$ 是 $3\times4$、$\boldsymbol E$ 是 $3\times3$，$\boldsymbol B$ 只能是 $4\times3$。每个非齐次组的通解结构 = 一个特解 $+\ k\,\boldsymbol\xi$（结构定理：任意两个特解之差满足 $\boldsymbol A\boldsymbol x=\boldsymbol 0$，由线性性），所以第 (1) 问的 $\boldsymbol\xi$ 是第 (2) 问的地基——两问不是并列而是递进。</p>
+<h3>第一步：(1) 行化简——为什么秩决定一切</h3>
+<p>$$\boldsymbol A=\begin{pmatrix}1&amp;-2&amp;3&amp;-4\\0&amp;1&amp;-1&amp;1\\1&amp;2&amp;0&amp;-3\end{pmatrix}
+\xrightarrow{\,r_3-r_1\,}\begin{pmatrix}1&amp;-2&amp;3&amp;-4\\0&amp;1&amp;-1&amp;1\\0&amp;4&amp;-3&amp;1\end{pmatrix}
+\xrightarrow{\,r_3-4r_2\,}\begin{pmatrix}1&amp;-2&amp;3&amp;-4\\0&amp;1&amp;-1&amp;1\\0&amp;0&amp;1&amp;-3\end{pmatrix}$$</p>
+<p>三个主元占满三行，秩 $r=3$，自由变量个数 $n-r=4-3=1$。<strong>为什么自由变量是 $x_4$</strong>：主元落在第 1、2、3 列，剩下的 $x_4$ 可自由取值；每给 $x_4$ 一个值，自下而上回代唯一确定一个解——解集是一条直线。</p>
+<h3>第二步：解出基础解系</h3>
+<p>取 $x_4=1$（<strong>为什么取 1</strong>：任何非零值都给同一个解向量方向的倍数，取 1 归一化最简），回代：末行 $x_3-3x_4=0\Rightarrow x_3=3x_4=3$；中行 $x_2-x_3+x_4=0\Rightarrow x_2=3-1=2$；首行 $x_1-2x_2+3x_3-4x_4=0\Rightarrow x_1=4-9+4=-1$：</p>
+<p>$$\boldsymbol\xi=(-1,2,3,1)^{\mathrm T}.$$</p>
+<p>基础解系含 1 个向量，与 $n-r=1$ 吻合。</p>
+<h3>第三步：(2) 解"一般的" $\boldsymbol A\boldsymbol x=(a,b,c)^{\mathrm T}$——为什么先解一般的</h3>
+<p>三个右端 $\boldsymbol e_1,\boldsymbol e_2,\boldsymbol e_3$ 共用同一个系数矩阵 $\boldsymbol A$：<strong>行变换只做一遍，换个右端回代三遍</strong>，比对三组增广矩阵各消元一次省力且不易错。带右端 $(a,b,c)^{\mathrm T}$ 做同样的行化简后回代，令自由变量 $x_4=0$ 取特解：</p>
+<p>$$\boldsymbol x^*=\bigl(2a+6b-c,\ -a-3b+c,\ c-a-4b,\ 0\bigr)^{\mathrm T},$$</p>
+<p>通解为 $\boldsymbol x=\boldsymbol x^*+k\boldsymbol\xi$。<strong>为什么差是齐次解</strong>：若 $\boldsymbol x_1,\boldsymbol x_2$ 都满足 $\boldsymbol A\boldsymbol x=\boldsymbol d$，则 $\boldsymbol A(\boldsymbol x_1-\boldsymbol x_2)=\boldsymbol 0$——非齐次的解集是"一个代表点 + 齐次解空间"的平移，这正是通解公式的来历。</p>
+<h3>第四步：逐列代入 $\boldsymbol e_1,\boldsymbol e_2,\boldsymbol e_3$</h3>
+<ul><li>$\boldsymbol d=(1,0,0)^{\mathrm T}$：特解 $(2,-1,-1,0)^{\mathrm T}$，$\boldsymbol b_1=(2-k_1,\ 2k_1-1,\ 3k_1-1,\ k_1)^{\mathrm T}$；</li><li>$\boldsymbol d=(0,1,0)^{\mathrm T}$：特解 $(6,-3,-4,0)^{\mathrm T}$，$\boldsymbol b_2=(6-k_2,\ 2k_2-3,\ 3k_2-4,\ k_2)^{\mathrm T}$；</li><li>$\boldsymbol d=(0,0,1)^{\mathrm T}$：特解 $(-1,1,1,0)^{\mathrm T}$，$\boldsymbol b_3=(-k_3-1,\ 2k_3+1,\ 3k_3+1,\ k_3)^{\mathrm T}$。</li></ul>
+<p><strong>为什么三列的参数必须独立命名</strong>：$\boldsymbol A\boldsymbol b_1=\boldsymbol e_1$ 与 $\boldsymbol A\boldsymbol b_2=\boldsymbol e_2$ 是两个互不约束的方程组，各自的解集各自选代表点、各自带任意常数；若共用一个 $k$，等于强行让三列的齐次分量同步变化，把解集错误地压扁。</p>
+<h3>第五步：拼装并验证</h3>
+<p>$$\boldsymbol B=\begin{pmatrix}2-k_1&amp;6-k_2&amp;-k_3-1\\2k_1-1&amp;2k_2-3&amp;2k_3+1\\3k_1-1&amp;3k_2-4&amp;3k_3+1\\k_1&amp;k_2&amp;k_3\end{pmatrix},\qquad k_1,k_2,k_3\ \text{为任意常数}.$$</p>
+<p>抽查第一列首分量：$(2-k_1)-2(2k_1-1)+3(3k_1-1)-4k_1=2-k_1-4k_1+2+9k_1-3-4k_1=1$ ✓；同法核出 $\boldsymbol A\boldsymbol b_1=(1,0,0)^{\mathrm T}$，另两列同理。<strong>为什么要验</strong>：通解公式链条长（消元、回代、通解、拼装），一处符号错全盘皆错，抽查一列成本极低。</p>
+<h3>易错点</h3>
+<ul><li><strong>$\boldsymbol B$ 的尺寸搞反</strong>：$\boldsymbol A(3\times4)\cdot\boldsymbol B(4\times3)=\boldsymbol E(3\times3)$，写成 $3\times4$ 乘法都做不成。</li><li><strong>三列共用一个参数</strong>：$k_1,k_2,k_3$ 各管各列，互相独立。</li><li><strong>特解与参考答案不同就慌</strong>：特解不唯一（自由变量取值任意、齐次分量可并入特解），只要形如"特解 $+k\boldsymbol\xi$"且满足方程，就是同一族解。</li><li><strong>只写一个 $\boldsymbol e_j$ 的解</strong>：$\boldsymbol B$ 的三列是三个独立方程组的答案，漏一列或复制参数都错。</li></ul>
+<blockquote>结论：秩 $3$、一个自由变量 ⇒ 齐次解直线 $\boldsymbol x=k\boldsymbol\xi$；$\boldsymbol B$ 的每一列 = 对应 $\boldsymbol e_j$ 的特解 $+k_j\boldsymbol\xi$——矩阵等式按列拆，是处理 $\boldsymbol A\boldsymbol B=\boldsymbol E$ 型问题的通用钥匙。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

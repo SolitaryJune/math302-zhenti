@@ -103,5 +103,27 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：由"不能表示"逼出 det B = 0，再用 A⁻¹B 读出表示式</h2>
+<p>最终答案：(1) $a=5$；(2) $\boldsymbol\beta_1=2\boldsymbol\alpha_1+4\boldsymbol\alpha_2-\boldsymbol\alpha_3$，$\boldsymbol\beta_2=\boldsymbol\alpha_1+2\boldsymbol\alpha_2+0\cdot\boldsymbol\alpha_3$，$\boldsymbol\beta_3=5\boldsymbol\alpha_1+10\boldsymbol\alpha_2-2\boldsymbol\alpha_3$。</p>
+<h3>第一步：(1) 从"不能表示"读出行列式条件</h3>
+<p>记 $A=(\boldsymbol\alpha_1,\boldsymbol\alpha_2,\boldsymbol\alpha_3)$，$B=(\boldsymbol\beta_1,\boldsymbol\beta_2,\boldsymbol\beta_3)$。先算</p>
+<p>$$\det A=\begin{vmatrix}1&amp;0&amp;1\\0&amp;1&amp;3\\1&amp;1&amp;5\end{vmatrix}=1\neq0,$$</p>
+<p>故 $\boldsymbol\alpha$ 组线性无关、张满 $\mathbb R^3$。反证：若 $\det B\neq0$，则 $\boldsymbol\beta$ 组也张满 $\mathbb R^3$，任何向量（包括每个 $\boldsymbol\alpha_i$）都能由 $\boldsymbol\beta$ 组线性表示，与题设矛盾。故必有 $\det B=0$。</p>
+<h3>第二步：消元算 det B，解出 a</h3>
+<p>$$\det B=\begin{vmatrix}1&amp;1&amp;3\\1&amp;2&amp;4\\1&amp;3&amp;a\end{vmatrix}\ \xrightarrow[\ r_3-r_1\ ]{\ r_2-r_1\ }\ \begin{vmatrix}1&amp;1&amp;3\\0&amp;1&amp;1\\0&amp;2&amp;a-3\end{vmatrix}=1\cdot\big(a-3-2\big)=a-5,$$</p>
+<p>令 $a-5=0$ 得 $a=5$。此时 $\boldsymbol\beta$ 组秩为 $2$，张成一张平面，而三个无关的 $\boldsymbol\alpha$ 不可能全落进平面里，"不能表示"成立，条件自洽。</p>
+<h3>第三步：(2) 解 B=AX，一次读出三组坐标</h3>
+<p>表示式 $\boldsymbol\beta_j=x_{1j}\boldsymbol\alpha_1+x_{2j}\boldsymbol\alpha_2+x_{3j}\boldsymbol\alpha_3$ 合起来就是矩阵方程 $B=AX$，解为 $X=A^{-1}B$。由 $\det A=1$ 求得</p>
+<p>$$A^{-1}=\begin{pmatrix}2&amp;1&amp;-1\\3&amp;4&amp;-3\\-1&amp;-1&amp;1\end{pmatrix},\qquad
+X=A^{-1}B=\begin{pmatrix}2&amp;1&amp;5\\4&amp;2&amp;10\\-1&amp;0&amp;-2\end{pmatrix}.$$</p>
+<p>$X$ 的第 $j$ 列就是 $\boldsymbol\beta_j$ 的坐标。验算一列：$2\boldsymbol\alpha_1+4\boldsymbol\alpha_2-\boldsymbol\alpha_3=(2-1,\ 4-3,\ 2+4-5)^{\mathrm T}=(1,1,1)^{\mathrm T}=\boldsymbol\beta_1$，成立。</p>
+<h3>易错点</h3>
+<ul><li><strong>把"不能表示"的方向弄反</strong>：是 $\boldsymbol\alpha$ 组<strong>不能由</strong> $\boldsymbol\beta$ 组表示。因为 $\boldsymbol\alpha$ 组无关，才反推出 $\boldsymbol\beta$ 组必须退化（$\det B=0$）。</li><li><strong>逐个解三个方程组</strong>：把 $\boldsymbol\beta_1,\boldsymbol\beta_2,\boldsymbol\beta_3$ 并成 $B$ 一次算 $A^{-1}B$，比解三次非齐次方程组省力得多。</li><li><strong>忘记验算</strong>：至少代回一列检查，防止矩阵乘法抄错行。</li></ul>
+<blockquote>结论：秩是这道题的钥匙——$\boldsymbol\alpha$ 组满秩 + "不能表示" $\Rightarrow$ $\boldsymbol\beta$ 组不满秩 $\Rightarrow a=5$；表示式就是 $A^{-1}B$ 的三列。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

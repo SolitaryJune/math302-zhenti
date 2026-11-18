@@ -93,5 +93,30 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：极坐标二重积分——为什么换、雅可比 $r$ 从哪来、对称性省一半</h2>
+<p><strong>答案</strong>：$\displaystyle\iint_D\frac{x+y}{\sqrt{x^2+y^2}}\,\mathrm{d}x\,\mathrm{d}y=\frac{43\sqrt2}{120}$。</p>
+<h3>第 0 步：机制——换坐标的唯一标准是"两样同时变简单"</h3>
+<p>二重积分选坐标系，看两件事：<strong>区域边界</strong>与<strong>被积函数</strong>能否都换成显式、简单的新变量。本题两者全由 $x^2+y^2$ 与 $y$ 组成：被积函数 $\dfrac{x+y}{\sqrt{x^2+y^2}}$ 在极坐标下就是 $\dfrac{r(\cos\theta+\sin\theta)}{r}=\cos\theta+\sin\theta$；边界 $(x^2+y^2)^3\le y^4$ 是<strong>齐次式</strong>——左端是 $r$ 的 $6$ 次幂、右端是 $r$ 的 $4$ 次幂，极坐标下 $r$ 能解出来。直角坐标下这块区域根本写不成"上下函数"，这才是"极坐标信号"背后的机制。</p>
+<p><strong>雅可比 $r$ 从哪来？</strong> $\mathrm{d}x\,\mathrm{d}y$ 换到极坐标，面积微元不是矩形而是<strong>小扇环</strong>：径向长 $\mathrm{d}r$、张角 $\mathrm{d}\theta$ 处的弧长是 $r\,\mathrm{d}\theta$，扇环面积 $\approx(r\,\mathrm{d}\theta)\cdot\mathrm{d}r$。$r$ 是扇环与"矩形"的面积比，不是可选项——丢掉它整个积分就错了。</p>
+<h3>第一步：两个条件各管一个坐标</h3>
+<ul><li>边界条件：$r^6\le r^4\sin^4\theta\ \Rightarrow\ 0\le r\le\sin^2\theta$——顶点在原点的叶形区域；</li><li>$\lvert x\rvert\le y$：即 $y\ge0$ 且 $y\ge\lvert x\rvert$（上方 $90^\circ$ 角域），极坐标下是 $\sin\theta\ge0$ 且 $\lvert\cos\theta\rvert\le\sin\theta$。<strong>为什么解出 $\theta\in\left[\tfrac\pi4,\tfrac{3\pi}4\right]$</strong>：拆成 $\cos\theta\le\sin\theta$ 与 $-\cos\theta\le\sin\theta$ 两半，前者给 $\theta\ge\tfrac\pi4$，后者给 $\theta\le\tfrac{3\pi}4$；对称轴是 $y$ 轴（$\theta=\tfrac\pi2$）。</li></ul>
+<h3>第二步：化被积函数，先积 $r$</h3>
+<p>$$\text{原式}=\int_{\pi/4}^{3\pi/4}(\cos\theta+\sin\theta)\int_0^{\sin^2\theta}r\,\mathrm{d}r\,\mathrm{d}\theta=\int_{\pi/4}^{3\pi/4}(\cos\theta+\sin\theta)\cdot\frac{\sin^4\theta}{2}\,\mathrm{d}\theta.$$</p>
+<p>注意 $r$ 的"一进一出"：被积函数的分子分母先<strong>约掉</strong>一个 $r$（$\sqrt{x^2+y^2}=r$），面积元又<strong>补回</strong>一个 $r$——信息全记进 $\theta$ 的积分：$\int_0^{\sin^2\theta}r\,\mathrm{d}r=\dfrac{\sin^4\theta}2$。</p>
+<h3>第三步：对称性砍掉 $\cos$ 项</h3>
+<p>区域关于 $\theta=\tfrac\pi2$ 对称（$\sin^2\theta$ 在 $\theta\mapsto\pi-\theta$ 下不变）。逐项看奇偶：$\cos\theta\sin^4\theta$ 在 $\pi-\theta$ 下<strong>变号</strong>（$\cos(\pi-\theta)=-\cos\theta$）——奇部在对称区间上积分为 $0$；$\sin^5\theta$ <strong>不变号</strong>——偶部积分加倍：</p>
+<p>$$\text{原式}=\frac12\int_{\pi/4}^{3\pi/4}\sin^5\theta\,\mathrm{d}\theta=\int_{\pi/4}^{\pi/2}\sin^5\theta\,\mathrm{d}\theta.$$</p>
+<h3>第四步：降幂 + 换元 $t=\cos\theta$ 收尾</h3>
+<p>$\sin^5\theta=\sin^4\theta\cdot\sin\theta=(1-\cos^2\theta)^2\sin\theta$——<strong>为什么拆出一个 $\sin\theta$</strong>：给 $\mathrm{d}(\cos\theta)=-\sin\theta\,\mathrm{d}\theta$ 当微分伴侣，剩下的全是 $\cos\theta$ 的多项式。令 $t=\cos\theta$：$\theta$ 从 $\tfrac\pi4$ 到 $\tfrac\pi2$ 时 $t$ 从 $\tfrac{\sqrt2}2$ 到 $0$，$\mathrm{d}t$ 里的负号把上下限翻正：</p>
+<p>$$\int_0^{\sqrt2/2}\left(1-t^2\right)^2\mathrm{d}t=\left[t-\frac{2t^3}{3}+\frac{t^5}{5}\right]_0^{\sqrt2/2}=\frac{\sqrt2}{2}-\frac{\sqrt2}{6}+\frac{\sqrt2}{40}=\frac{43\sqrt2}{120}.$$</p>
+<p>（代值时 $t^3=\tfrac{\sqrt2}4$、$t^5=\tfrac{\sqrt2}8$，通分 $120$ 得 $60-20+3=43$。）</p>
+<h3>易错点</h3>
+<ul><li><strong>$\lvert x\rvert\le y$ 只当 $y\ge\lvert x\rvert$ 看却不化角</strong>：它是区域的"角度半边"，漏掉它叶形区域残缺，答案必然错。</li><li><strong>忘乘雅可比 $r$</strong>：没有 $r$ 就成了 $\int_0^{\sin^2\theta}\mathrm{d}r=\sin^2\theta$，后面全盘皆错；本题还容易因"先约掉一个 $r$"顾此失彼。</li><li><strong>不验对称性硬算 $\cos\theta\sin^4\theta$</strong>：费时易错；"对称区间 + 奇函数 = $0$"要形成条件反射。</li><li><strong>换元 $t=\cos\theta$ 忘翻限</strong>：$\mathrm{d}t=-\sin\theta\,\mathrm{d}\theta$ 带负号，上下限要交换或翻转符号。</li></ul>
+<blockquote>结论：极坐标下 $0\le r\le\sin^2\theta$、$\theta\in\left[\tfrac\pi4,\tfrac{3\pi}4\right]$，对称性后只剩 $\sin^5\theta$ 的定积分，值为 $\dfrac{43\sqrt2}{120}$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

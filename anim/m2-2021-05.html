@@ -94,5 +94,25 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：$\sec x$ 的麦克劳林展开——偶函数定 $a$，倒数展开定 $b$</h2>
+<p>答案：D</p>
+<h3>第一步：认清系数的含义</h3>
+<p>$x=0$ 处的 2 次泰勒多项式是 $f(0)+f'(0)x+\dfrac{f''(0)}{2}x^2$，对照 $1+ax+bx^2$ 知 $a=f'(0)$，$b=\dfrac{f''(0)}{2}$。只需求两个数。</p>
+<h3>第二步：求导法（标准流程）</h3>
+<p>$f(0)=1$；$f'(x)=\sec x\tan x\Rightarrow f'(0)=1\cdot0=0$，得 $a=0$。<br/>$f''(x)=\sec x\tan^2x+\sec^3x\Rightarrow f''(0)=0+1=1$，得 $b=\dfrac12$。</p>
+<h3>第三步：倒数展开法（更快，也自带检验）</h3>
+<p>$\sec x=\dfrac{1}{\cos x}$ 是偶函数，奇次项系数全为零，$a=0$ 直接锁定（排除 A、B）。再用</p>
+<p>$$\cos x=1-\frac{x^2}{2}+o(x^2),\qquad \frac{1}{1-u}=1+u+o(u),$$</p>
+<p>取 $u=\dfrac{x^2}{2}$：</p>
+<p>$$\sec x=\frac{1}{1-\frac{x^2}{2}+o(x^2)}=1+\frac{x^2}{2}+o(x^2).$$</p>
+<p>对照得 $a=0,\ b=\dfrac12$，选 D。</p>
+<h3>易错点</h3>
+<ul><li><strong>把 $\sec$ 当 $\cos$ 展开</strong>：$\cos x=1-\dfrac{x^2}{2}+\cdots$ 二次系数是负的；取倒数后符号翻转成 $+\dfrac12$，选 C 就是这里翻车。</li><li><strong>以为 $a=1$</strong>：把函数值 $f(0)=1$ 误当一次项系数；偶函数的一次项必为 0。</li><li><strong>二阶导漏项</strong>：$(\sec x\tan x)'=\sec x\tan^2x+\sec^3x$，两项都不能丢，否则 $f''(0)$ 就错。</li></ul>
+<blockquote>一句话结论：$\sec x$ 是偶函数故 $a=0$；$\cos$ 展开取倒数，二次系数翻转成 $+\dfrac12$，选 D。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

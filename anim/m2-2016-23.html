@@ -94,5 +94,36 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：特征值互异可对角化——$A^{99}$ 靠 $PDP^{-1}$，$B^{100}$ 靠归纳</h2>
+<p><strong>答案：(1) $A^{99}=\begin{pmatrix}2^{99}-2&amp;1-2^{99}&amp;2-2^{98}\\2^{100}-2&amp;1-2^{100}&amp;2-2^{99}\\0&amp;0&amp;0\end{pmatrix}$；(2) $\beta_1=(2^{99}-2)\alpha_1+(2^{100}-2)\alpha_2$，$\beta_2=(1-2^{99})\alpha_1+(1-2^{100})\alpha_2$，$\beta_3=(2-2^{98})\alpha_1+(2-2^{99})\alpha_2$。</strong></p>
+<h3>第一步：求特征值——为什么互异就可对角化</h3>
+<p>第三行全零已提示 $0$ 是特征值（行列式为 $0$）。计算</p>
+<p>$$\det(A-\lambda I)=-\lambda(\lambda+1)(\lambda+2),$$</p>
+<p>特征值 $0,\,-1,\,-2$ 互异。<strong>互异的机制回报</strong>：不同特征值的特征向量必线性无关——若 $\sum_i k_i\xi_i=\mathbf 0$，对两边作用 $\prod_{j\ne1}(A-\lambda_j I)$，除 $\xi_1$ 外全被杀掉，逼出 $k_1=0$，轮流进行即得所有 $k_i=0$。三个互异特征值恰给出三个线性无关的特征向量，拼成可逆 $P$，可对角化无需再验证。</p>
+<h3>第二步：特征向量与过渡矩阵</h3>
+<p>解 $(A-\lambda I)\xi=\mathbf 0$：</p>
+<table><thead><tr><th>$\lambda$</th><th>方程组要点</th><th>特征向量</th></tr></thead><tbody><tr><td>$0$</td><td>$-y+z=0,\ 2x-3y=0$</td><td>$\xi_1=(3,2,2)^{\mathrm T}$</td></tr><tr><td>$-1$</td><td>$x-y=0,\ z=0$</td><td>$\xi_2=(1,1,0)^{\mathrm T}$</td></tr><tr><td>$-2$</td><td>$2x-y=0,\ z=0$</td><td>$\xi_3=(1,2,0)^{\mathrm T}$</td></tr></tbody></table>
+<p>$P=(\xi_1,\xi_2,\xi_3)$，$P^{-1}=\begin{pmatrix}0&amp;0&amp;\frac12\\2&amp;-1&amp;-2\\-1&amp;1&amp;\frac12\end{pmatrix}$，$P^{-1}AP=\mathrm{diag}(0,-1,-2)$。</p>
+<h3>第三步：算 $A^{99}$——幂为什么全落进对角阵</h3>
+<p>$A=PDP^{-1}\Rightarrow A^n=(PDP^{-1})(PDP^{-1})\cdots$：中间的 $P^{-1}P$ 两两相消，只剩 $P\,D^n\,P^{-1}$，而对角阵的幂就是各对角元取幂。于是</p>
+<p>$$A^{99}=P\,\mathrm{diag}\bigl(0,(-1)^{99},(-2)^{99}\bigr)P^{-1}=P\,\mathrm{diag}(0,-1,-2^{99})\,P^{-1},$$</p>
+<p>注意 $(-1)^{99}=-1$、$(-2)^{99}=-2^{99}$，负号被 $P$ 与 $P^{-1}$ 的元素吸收后出现 $1-2^{99}$ 这类「小减大」。连乘落位即得结论中的矩阵。</p>
+<p><strong>一个免费验算</strong>：$A$ 自己第三行是零，而 $(AM)$ 的第 3 行 $=\sum_k A_{3k}\,M_{kj}=0$ 与 $M$ 无关，故 $A$ 的任何左乘幂第三行恒为零——$A^{99}$ 第三行全零与此吻合，第五步还要用它。</p>
+<h3>第四步：(2) 归纳 $B^{100}=BA^{99}$</h3>
+<p>由 $B^2=BA$ 归纳：设 $B^n=BA^{n-1}$，则</p>
+<p>$$B^{n+1}=B\cdot B^n=B^2A^{n-1}=BA\cdot A^{n-1}=BA^n.$$</p>
+<p>故对一切 $n\ge1$ 有 $B^n=BA^{n-1}$，特别地 $B^{100}=BA^{99}$。（$B$ 始终在<strong>左侧</strong>：每一步都把已证的 $BA$ 整体前推，矩阵乘法不可交换，$A$ 到不了左边。）</p>
+<h3>第五步：按列拆成线性组合——「矩阵乘矩阵」的列观点</h3>
+<p>$B=(\alpha_1,\alpha_2,\alpha_3)$。乘积 $BM$ 的第 $j$ 列 $=B\times(M$ 的第 $j$ 列$)$，即用 $M$ 第 $j$ 列的分量给 $B$ 的各列做系数：</p>
+<p>$$\beta_j=c_{1j}\alpha_1+c_{2j}\alpha_2+c_{3j}\alpha_3,\qquad A^{99}=(c_{ij}).$$</p>
+<p>$A^{99}$ 第三行全零（$c_{3j}=0$，见第三步的免费验算），故每个 $\beta_j$ 只用 $\alpha_1,\alpha_2$ 组合，系数照抄 $A^{99}$ 前两行的第 $j$ 列。</p>
+<h3>易错点</h3>
+<ul><li><strong>硬乘 99 次或找规律</strong>：特征值互异时 $PDP^{-1}$ 是唯一正路，硬算既慢又不可靠。</li><li><strong>$(-2)^{99}$ 丢负号</strong>：奇数次幂为负，写成 $2^{99}$ 全错。</li><li><strong>$B^{100}$ 误写成 $A^{99}B$</strong>：矩阵乘法不可交换，归纳式 $B^n=BA^{n-1}$ 中 $B$ 始终在<strong>左</strong>侧。</li><li><strong>特征向量求错却没察觉</strong>：解出 $\xi$ 后代回 $A\xi=\lambda\xi$ 抽验一个分量，能当场抓住。</li></ul>
+<blockquote>结论：$A^{99}$ 如上（第三行全零）；$\beta_j$ 的系数取 $A^{99}$ 第 $j$ 列的前两个分量。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

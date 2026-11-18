@@ -103,5 +103,29 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：两端极限同时为零，逼出 α 的范围</h2>
+<p>最终答案：$1&lt;\alpha&lt;3$。</p>
+<h3>第一步：先把题读成一场"增长速度的比赛"</h3>
+<p>机制先立起来：$F(x)=\dfrac{G(x)}{x^{\alpha}}$，其中 $G(x)=\int_0^x\ln(1+t^2)\,\mathrm dt$。要求两端极限同时为 $0$，翻译过来就是一句话：<strong>分子在 $0$ 附近和 $\infty$ 附近，都必须比 $x^{\alpha}$ "慢"</strong>。所以整道题只做一件事——分别量出分子在两端的"增长档位"，再让 $x^{\alpha}$ 卡在中间。两端互不干涉，必须分开处理、各得一界。</p>
+<h3>第二步：$x\to0^+$ 端——分子是几阶无穷小？</h3>
+<p>$t\to0$ 时 $\ln(1+t^2)\sim t^2$（来自 $\ln(1+u)\sim u$，取 $u=t^2$）。于是</p>
+<p>$$G(x)\sim\int_0^x t^2\,\mathrm dt=\frac{x^3}{3},\qquad F(x)\sim\frac13\,x^{3-\alpha}.$$</p>
+<p><strong>为什么敢把等价无穷小搬进积分号里？</strong> 等价替换换掉的是"主部"，而积分不改变主部的阶。这不是想当然，可以当场验证：</p>
+<p>$$\lim_{x\to0^+}\frac{G(x)}{x^3/3}=\lim_{x\to0^+}\frac{\ln(1+x^2)}{x^2}=\lim_{x\to0^+}\frac{x^2}{x^2}=1,$$</p>
+<p>（中间对 $\frac00$ 型用了洛必达，前提满足）——所以 $G(x)\sim\dfrac{x^3}3$ 是被验证过的等价，不是"感觉"。</p>
+<p>要极限为 $0$，指数必须<strong>严格</strong>大于 $0$。<strong>为什么 $\alpha=3$ 不行？</strong> 此时 $F\to\dfrac13$，是非零常数，不满足"极限为 $0$"。故 $\alpha&lt;3$。</p>
+<h3>第三步：$x\to+\infty$ 端——为什么幂能压倒对数</h3>
+<p>分子此时发散，$F$ 是 $\dfrac{\infty}{\infty}$ 型。<strong>这里能用洛必达的前提</strong>是分母 $x^{\alpha}\to\infty$，即 $\alpha&gt;0$。洛必达一次：</p>
+<p>$$\lim_{x\to+\infty}F(x)=\lim_{x\to+\infty}\frac{\ln(1+x^2)}{\alpha x^{\alpha-1}}.$$</p>
+<p><strong>为什么幂压倒对数？</strong> 增长速度有一条硬层级：对数类 $\ln x$ 的导数是 $\dfrac1x$，越增越慢；正幂类 $x^{\beta}\ (\beta&gt;0)$ 的导数 $\beta x^{\beta-1}$ 越增越快。对分式反复洛必达，分子始终停留在"对数档"（$\ln(1+x^2)$ 求一次导降为 $x$，再导降为常数），分母只要 $\alpha-1&gt;0$ 就留在"正幂档"，比值必被压向 $0$。故需 $\alpha&gt;1$。</p>
+<p><strong>边界情形逐一预答</strong>：$\alpha=1$ 时 $F\sim2\ln x\to+\infty$，不行；$\alpha\le0$ 时分母根本不趋于无穷（$\alpha=0$ 分母是常数 $1$，$\alpha&lt;0$ 反而趋于 $0$），分子趋于 $+\infty$，比值不可能为 $0$。故 $\alpha&gt;1$。</p>
+<h3>易错点</h3>
+<ul><li><strong>只算一头</strong>：题目要求两个极限同时为 $0$，两端各给一个界，漏一端就得不出完整范围。</li><li><strong>在 $\alpha=3$ 以为"恰好"行</strong>：$3-\alpha=0$ 给的是非零常数 $\dfrac13$；"极限为 $0$"要求分子严格慢于分母。</li><li><strong>洛必达不管前提</strong>：$\infty$ 端用洛必达需 $\alpha&gt;0$；$\alpha\le0$ 的情形要单独排除，不能由洛必达代劳。</li></ul>
+<blockquote>结论：$0^+$ 端分子是 $x^3$ 阶 → $\alpha&lt;3$；$\infty$ 端分子是对数阶、分母是 $x^{\alpha-1}$ 的正幂 → $\alpha&gt;1$。合起来 $1&lt;\alpha&lt;3$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

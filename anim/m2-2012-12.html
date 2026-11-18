@@ -105,5 +105,30 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：把 $x$ 看成 $y$ 的函数，解一阶线性方程</h2>
+<p>答案：$y=\sqrt{x}$</p>
+<h3>第一步：换视角</h3>
+<p>方程 $y\,\mathrm{d}x+(x-3y^{2})\,\mathrm{d}y=0$ 按 $y(x)$ 看不是线性型，但交换角色——把 $x$ 视为 $y$ 的函数——得</p>
+<p>$$y\frac{\mathrm{d}x}{\mathrm{d}y}+x-3y^{2}=0\ \Longrightarrow\ \frac{\mathrm{d}x}{\mathrm{d}y}+\frac{1}{y}\,x=3y.$$</p>
+<p>（要求 $y\neq0$；初始点 $(1,1)$ 附近满足。）</p>
+<h3>第二步：积分因子</h3>
+<p>$$\mu(y)=\mathrm{e}^{\int\frac{1}{y}\mathrm{d}y}=y.$$</p>
+<p>两边乘 $y$：</p>
+<p>$$y\frac{\mathrm{d}x}{\mathrm{d}y}+x=\frac{\mathrm{d}(xy)}{\mathrm{d}y}=3y^{2}.$$</p>
+<h3>第三步：积分并定常数</h3>
+<p>$$xy=y^{3}+C.$$</p>
+<p>代入初始条件 $y|_{x=1}=1$（点 $(1,1)$）：$1=1+C\Rightarrow C=0$，故 $xy=y^{3}$。</p>
+<h3>第四步：还原成 $y(x)$</h3>
+<p>$xy=y^{3}\Rightarrow x=y^{2}\Rightarrow y=\pm\sqrt{x}$；由 $y(1)=1&gt;0$ 取正支：</p>
+<p>$$y=\sqrt{x}.$$</p>
+<p>验证：$\mathrm{d}y=\dfrac{\mathrm{d}x}{2\sqrt{x}}$，代回方程得 $\sqrt{x}\,\mathrm{d}x+(x-3x)\cdot\dfrac{\mathrm{d}x}{2\sqrt{x}}=\sqrt{x}\,\mathrm{d}x-\sqrt{x}\,\mathrm{d}x=0$ ✓。</p>
+<h3>易错点</h3>
+<ul><li><strong>死磕 $y'(x)$</strong>：按 $\dfrac{\mathrm{d}y}{\mathrm{d}x}=\dfrac{-y}{x-3y^{2}}$ 处理，非线性又难积分；"反客为主"才是正道。</li><li><strong>积分因子用错</strong>：对 $\dfrac{\mathrm{d}x}{\mathrm{d}y}+\dfrac1y x=3y$，因子是 $y$，不是 $y^{2}$ 或 $\mathrm{e}^{y}$。</li><li><strong>丢掉负支</strong>：$\pm\sqrt{x}$ 要靠 $y(1)=1$ 定正负，不能两个都写。</li></ul>
+<blockquote>一句话结论：$xy=y^{3}+C$，由 $(1,1)$ 定 $C=0$，解为 $y=\sqrt{x}$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

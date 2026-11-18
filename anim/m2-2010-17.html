@@ -89,5 +89,32 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：参数方程二阶导反求 $\psi(t)$</h2>
+<p><strong>答案</strong>：$\psi(t)=\dfrac32t^2+t^3$。</p>
+<h3>第一步：参数二阶导公式为什么长那样</h3>
+<p>$x=2t+t^2\Rightarrow x'_t=2(1+t)$。一阶导是"两个时间导数相除"：</p>
+<p>$$\frac{\mathrm dy}{\mathrm dx}=\frac{\psi'(t)}{2(1+t)}.$$</p>
+<p>关键在于：$\dfrac{\mathrm dy}{\mathrm dx}$ <strong>仍是 $t$ 的函数</strong>。求二阶时，"对 $x$ 的变化率"要先用链式法则换成"对 $t$ 的变化率"，再除以 $x'_t$ 换回去，即 $\dfrac{\mathrm d}{\mathrm dx}=\dfrac{1}{x'_t}\dfrac{\mathrm d}{\mathrm dt}$：</p>
+<p>$$\frac{\mathrm d^2y}{\mathrm dx^2}=\frac{1}{2(1+t)}\cdot\frac{\mathrm d}{\mathrm dt}\Big[\frac{\psi'(t)}{2(1+t)}\Big]=\frac{(1+t)\psi''-\psi'}{4(1+t)^3}.$$</p>
+<p>记不清公式时，就用"先对 $t$ 求导、再除一次 $x'_t$"这两句话现场重建，不易错。</p>
+<h3>第二步：代入已知条件，得到关于 $\psi$ 的方程</h3>
+<p>$$\frac{(1+t)\psi''-\psi'}{4(1+t)^3}=\frac3{4(1+t)}
+\ \Longrightarrow\ (1+t)\psi''-\psi'=3(1+t)^2.$$</p>
+<h3>第三步：为什么可以降阶、积分因子为什么取 $\dfrac1{1+t}$</h3>
+<p>方程里<strong>根本不出现 $\psi$ 本身</strong>，只含 $\psi''$ 与 $\psi'$——这是"缺未知函数"型方程：令 $w=\psi'$，它立刻退化为一阶线性方程</p>
+<p>$$w'-\frac1{1+t}w=3(1+t).$$</p>
+<p>积分因子按公式取 $\mu=\mathrm e^{\int-\frac{\mathrm dt}{1+t}}=\dfrac1{1+t}$；它的作用是把左边凑成<strong>一个函数的导数</strong>——$\mu$ 满足 $\mu'=-\dfrac{\mu}{1+t}$，于是乘上 $\dfrac1{1+t}$ 后左边恰是商法则下的 $\Big(\dfrac{w}{1+t}\Big)'$：</p>
+<p>$$\Big(\frac{w}{1+t}\Big)'=3\ \Longrightarrow\ \frac{w}{1+t}=3t+C_1\ \Longrightarrow\ \psi'(t)=(1+t)(3t+C_1).$$</p>
+<h3>第四步：两个条件各收一个常数</h3>
+<p>降阶加积分产生 $C_1,C_2$ 两个未知数，条件 $\psi'(1)=6$ 与 $\psi(1)=\dfrac52$ 恰好一一对应：由 $\psi'(1)=6$ 得 $2(3+C_1)=6$，$C_1=0$，故 $\psi'=3t+3t^2$；积分得 $\psi=\dfrac32t^2+t^3+C_2$，再由 $\psi(1)=\dfrac52$ 得 $\dfrac32+1+C_2=\dfrac52$，$C_2=0$。</p>
+<p><strong>验算</strong>：$\psi''=3+6t$，则 $(1+t)(3+6t)-(3t+3t^2)=3+6t+3t^2=3(1+t)^2$，代回二阶导公式恰为 $\dfrac3{4(1+t)}$。</p>
+<h3>易错点</h3>
+<ul><li><strong>把二阶导写成 $\dfrac{\psi''}{2(1+t)}$</strong>：漏掉"先对 $t$ 求导、再除以 $x'_t$"的完整流程——$\dfrac{\mathrm dy}{\mathrm dx}$ 是 $t$ 的函数，要对它再来一遍"除以 $x'_t$"。</li><li><strong>只用 $\psi(1)=\dfrac52$ 而丢 $\psi'(1)=6$</strong>：两个积分常数需要两个条件，缺一个就定不下来。</li><li><strong>积分因子随手取 $1+t$</strong>：$\mu$ 必须满足 $\mu'=-\dfrac{\mu}{1+t}$，取 $\dfrac1{1+t}$ 才能把左边凑成 $\Big(\dfrac{w}{1+t}\Big)'$。</li></ul>
+<blockquote>一句话：参数二阶导 = "先对 $t$ 求导、再除一次 $x'_t$"；方程缺 $\psi$ 本身，令 $w=\psi'$ 降阶，积分因子 $\dfrac1{1+t}$ 一步积出，$\psi'(1)$、$\psi(1)$ 分别收掉两个常数。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

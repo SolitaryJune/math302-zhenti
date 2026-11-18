@@ -99,5 +99,22 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：链式法则与"恰好抵消"的偏导组合</h2>
+<p>答案：$0$</p>
+<h3>第一步：设中间变量</h3>
+<p>$z=f(u)$，$u=\ln x+\dfrac{1}{y}$。$f$ 是一元函数，链式系数只有两条路：$\dfrac{\partial u}{\partial x}=\dfrac{1}{x}$，$\dfrac{\partial u}{\partial y}=-\dfrac{1}{y^{2}}$。</p>
+<h3>第二步：两条偏导</h3>
+<p>$$\frac{\partial z}{\partial x}=f'(u)\cdot\frac{1}{x},\qquad \frac{\partial z}{\partial y}=f'(u)\cdot\Big(-\frac{1}{y^{2}}\Big).$$</p>
+<h3>第三步：组合后 $f'(u)$ 被精确抵消</h3>
+<p>$$x\frac{\partial z}{\partial x}+y^{2}\frac{\partial z}{\partial y}=x\cdot\frac{f'(u)}{x}+y^{2}\cdot\Big(-\frac{f'(u)}{y^{2}}\Big)=f'(u)-f'(u)=0.$$</p>
+<p>组合系数 $x$ 与 $y^{2}$ 恰好是两条链式系数的倒数——这不是巧合，而是"系数互为消去"的设计：$f$ 具体是什么根本不重要。</p>
+<h3>易错点</h3>
+<ul><li><strong>漏掉 $f'(u)$</strong>：把 $\dfrac{\partial z}{\partial x}$ 写成 $\dfrac1x$——复合函数求导必须乘链式因子。</li><li><strong>$y$ 方向符号弄错</strong>：$\dfrac1y$ 对 $y$ 求导是 $-\dfrac{1}{y^{2}}$，负号丢失则组合变成 $2f'(u)$ 而不是 0。</li><li><strong>把 $f$ 当二元函数</strong>：$z=f(\,\cdot\,)$ 是一元函数的复合，不存在 $f'_x$、$f'_y$ 之类的记号。</li></ul>
+<blockquote>一句话结论：$x\cdot\dfrac{f'}{x}+y^{2}\cdot\Big(-\dfrac{f'}{y^{2}}\Big)=0$，与 $f$ 的具体形式无关。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

@@ -102,5 +102,26 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：$x^2\mathrm e^x$ 的五阶导数（莱布尼茨公式 + 多项式甩尾）</h2>
+<p>答案：$31\,\mathrm e$</p>
+<h3>第一步：先拆函数，甩掉多项式</h3>
+<p>$$f(x)=x^2\big(\mathrm e^x+1\big)=x^2\mathrm e^x+x^2.$$</p>
+<p>多项式 $x^2$ 的五阶导数是 $0$，所以 $f^{(5)}(x)=\big(x^2\mathrm e^x\big)^{(5)}$——求导对象瞬间瘦身。</p>
+<h3>第二步：莱布尼茨公式选项</h3>
+<p>$(uv)^{(n)}=\sum\limits_{k=0}^{n}\dbinom nk u^{(k)}v^{(n-k)}$，取 $u=x^2$、$v=\mathrm e^x$：</p>
+<ul><li>$v^{(j)}=\mathrm e^x$ 对一切 $j$（求导不变，这是选 $\mathrm e^x$ 做因子的原因）；</li><li>$u'=2x,\ u''=2,\ u^{(k)}=0\ (k\ge3)$——<strong>求和只剩 $k=0,1,2$ 三项</strong>。</li></ul>
+<h3>第三步：算出三项</h3>
+<p>$$\big(x^2\mathrm e^x\big)^{(5)}=\binom50x^2\mathrm e^x+\binom51(2x)\mathrm e^x+\binom52\cdot2\,\mathrm e^x=\mathrm e^x\big(x^2+10x+20\big).$$</p>
+<p>（$\binom51=5$ 故中间项 $10x\mathrm e^x$；$\binom52=10$ 故末项 $20\mathrm e^x$。）</p>
+<h3>第四步：代入 $x=1$</h3>
+<p>$$f^{(5)}(1)=\mathrm e\,(1+10+20)=31\,\mathrm e.$$</p>
+<h3>易错点</h3>
+<ul><li><strong>忘了拆出 $x^2$</strong>：对整个 $x^2(\mathrm e^x+1)$ 直接上莱布尼茨，多项式因子增多容易漏项；先拆开、甩掉 $(x^2)^{(5)}=0$ 最稳。</li><li><strong>漏 $\binom52$ 项</strong>：只算 $k=0,1$ 两项会得 $\mathrm e(1+10)=11\mathrm e$——$k$ 必须取到 $u''=2$ 那一级。</li><li><strong>组合数算错</strong>：$\binom52=10$ 不是 $20$；末项的系数是 $\binom52\cdot u''=10\times2=20$。</li></ul>
+<blockquote>一句话结论：拆掉 $x^2$ 的多项式尾巴，莱布尼茨只剩三项，$f^{(5)}(x)=\mathrm e^x(x^2+10x+20)$，代 $x=1$ 得 $31\mathrm e$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

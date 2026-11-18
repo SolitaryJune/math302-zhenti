@@ -101,5 +101,26 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：行等价的判定——行最简形是行变换下的「指纹」</h2>
+<p>答案：B</p>
+<h3>第一步：机制先行——为什么比行最简形</h3>
+<p>初等行变换只有三种：交换两行、非零数乘、倍加，每条都<strong>可逆</strong>，且都不改变行向量之间的线性组合关系——所以行变换前后的矩阵<strong>行空间相同</strong>。又，任何矩阵化成行最简形的结果是<strong>唯一</strong>的（主元列的位置、主元上方的清零都由行空间唯一决定）。两条合起来：</p>
+<blockquote>两矩阵行等价 $\iff$ 行空间相同 $\iff$ 行最简形完全相同。</blockquote>
+<p>目标矩阵 $R=\begin{pmatrix}1&amp;1&amp;0&amp;1\\0&amp;0&amp;1&amp;2\\0&amp;0&amp;0&amp;0\end{pmatrix}$ 秩为 $2$，主元在第 $1$、$3$ 列。于是有两道快筛：秩不是 $2$ 的直接出局；秩相同再看主元列与最简形是否一致。</p>
+<h3>第二步：逐个消元（叙事在前，比对在后）</h3>
+<p><strong>A</strong> $\begin{pmatrix}1&amp;1&amp;0&amp;1\\1&amp;2&amp;1&amp;3\\2&amp;3&amp;1&amp;4\end{pmatrix}$：$r_2-r_1=(0,1,1,2)$，$r_3-2r_1=(0,1,1,2)$——后两行消成相同，留下 $(1,1,0,1)$ 与 $(0,1,1,2)$；再用后者清第一行的第 $2$ 列得 $(1,0,-1,-1)$。行最简形主元在<strong>第 $1$、$2$ 列</strong>，与 $R$（第 $1$、$3$ 列）不同：秩同为 $2$ 但行空间不一样，<strong>排除</strong>。</p>
+<p><strong>B</strong> $\begin{pmatrix}1&amp;1&amp;0&amp;1\\1&amp;1&amp;2&amp;5\\1&amp;1&amp;1&amp;3\end{pmatrix}$：$r_2-r_1=(0,0,2,4)\to(0,0,1,2)$，$r_3-r_1=(0,0,1,2)$，相同故第三行消零；留下的两行恰是 $(1,1,0,1)$ 与 $(0,0,1,2)$，而第一行第 $3$ 列本来就是 $0$，主元上方无需再清——行最简形<strong>逐元素等于 $R$</strong>。<strong>正确</strong>。</p>
+<p><strong>C</strong> $\begin{pmatrix}1&amp;0&amp;0&amp;1\\0&amp;1&amp;0&amp;3\\0&amp;1&amp;0&amp;0\end{pmatrix}$：$r_2-r_3=(0,0,0,3)\ne0$，三行线性无关，秩 $3\ne2$。行等价必同秩，<strong>直接排除</strong>。</p>
+<p><strong>D</strong> $\begin{pmatrix}1&amp;1&amp;2&amp;3\\1&amp;2&amp;2&amp;3\\2&amp;3&amp;4&amp;6\end{pmatrix}$：$r_2-r_1=(0,1,0,0)$，$r_3-2r_1=(0,1,0,0)$，秩 $2$；清元得 $(1,0,2,3)$ 与 $(0,1,0,0)$，主元仍在第 $1$、$2$ 列，<strong>排除</strong>。</p>
+<h3>第三步：汇总对号入座</h3>
+<table><thead><tr><th>选项</th><th>秩</th><th>行最简形主元列</th><th>判定</th></tr></thead><tbody><tr><td>A</td><td>2</td><td>第 1、2 列</td><td>行空间不同</td></tr><tr><td>B</td><td>2</td><td>第 1、3 列</td><td>恰为 $R$</td></tr><tr><td>C</td><td>3</td><td>—</td><td>秩不同</td></tr><tr><td>D</td><td>2</td><td>第 1、2 列</td><td>行空间不同</td></tr></tbody></table>
+<h3>易错点</h3>
+<ul><li><strong>只算秩就下结论</strong>：秩相等只是必要条件，A、D 秩同为 $2$ 仍出局——行等价比「同秩」强，必须行空间相同。</li><li><strong>漏做「主元上方清零」</strong>：行最简形要求主元列上方也是 $0$，跳过这步比对会误判。</li><li><strong>把列变换混进来</strong>：初等<strong>行</strong>变换保行空间，列变换不保，本题只许行变换。</li></ul>
+<blockquote>一句话结论：行等价 ⟺ 行最简形相同；四个选项里只有 B 消元后恰好落在 $R$ 上。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

@@ -106,5 +106,40 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：偏积分还原 $f$，绕斜轴 $y=-1$ 的圆盘法体积</h2>
+<p>答案：$V=\pi\left(2\ln2-\dfrac54\right)$。</p>
+<h3>第 0 步：先立机制——两段式的工具选择</h3>
+<p>题目分两段：①从偏导条件<strong>还原</strong> $f(x,y)$（偏积分：把 $x$ 冻结、对 $y$ 积分，"积分常数"升级为只含 $x$ 的待定函数）；②曲线 $f(x,y)=0$ 绕直线 $y=-1$ 旋转求体积。第二段的核心是<strong>工具选择</strong>：旋转体两大工具按"轴的方向 + 轴与区域的位置关系"挑选。这里旋转轴 $y=-1$ 水平，且恰好<strong>横穿区域</strong>（曲线关于它上下对称），垂直于轴的竖直切片绕轴旋转扫出实心圆盘 ⇒ 圆盘法 $V=\pi\int R^2\,\mathrm dx$ 最短；柱壳法要沿 $y$ 积分、还得从隐式方程反解左右端点，绕远。</p>
+<h3>第一步：偏积分还原 $f$——为什么"常数"是 $\varphi(x)$</h3>
+<p>由 $\dfrac{\partial f}{\partial y}=2(y+1)$，视 $x$ 为常数对 $y$ 积分：</p>
+<p>$$f(x,y)=(y+1)^2+\varphi(x).$$</p>
+<p><strong>为什么积分"常数"不是数</strong>：对 $y$ 求偏导时，任何只含 $x$ 的函数导数都是 $0$，所以通解里的自由项天然是 $\varphi(x)$——这是偏积分与普通积分唯一的差别，也是本题第一处易错点。</p>
+<h3>第二步：对角线条件定 $\varphi$</h3>
+<p>条件给的是"对角线上的值"：$f(y,y)=(y+1)^2-(2-y)\ln y$。令 $f$ 的表达式中 $x=y$：</p>
+<p>$$f(y,y)=(y+1)^2+\varphi(y).$$</p>
+<p>两式比较，$(y+1)^2$ 对消，得 $\varphi(y)=-(2-y)\ln y$，把哑变量统一写成 $x$：</p>
+<p>$$f(x,y)=(y+1)^2-(2-x)\ln x.$$</p>
+<p><strong>为什么对角线条件就够</strong>：$\varphi$ 是一元函数，一条曲线上的取值足以逐点确定它。</p>
+<h3>第三步：认清曲线——为什么围成的是闭合纺锤</h3>
+<p>$f(x,y)=0$ 即 $(y+1)^2=(2-x)\ln x$。左端 $\ge0$，右端必须非负，逐段查符号：$0&lt;x&lt;1$ 时 $\ln x&lt;0$ 而正因号 $2-x&gt;0$，积为负，无点；$1&lt;x&lt;2$ 时两因皆正，有点；$x&gt;2$ 时 $\ln x&gt;0$ 而 $2-x&lt;0$，积为负，无点。所以曲线只活在 $1\le x\le2$，对每个 $x$ 张开上下两支</p>
+<p>$$y=-1\pm\sqrt{(2-x)\ln x},$$</p>
+<p>在 $x=1$（$\ln1=0$）与 $x=2$（$2-x=0$）两处两支并拢于直线 $y=-1$ 上——一条关于 $y=-1$ 对称的闭曲线（纺锤形），围出的区域在每个 $x$ 处是从 $-1-R$ 到 $-1+R$ 的竖直线段。</p>
+<h3>第四步：圆盘法——为什么半径是 $\lvert y+1\rvert$</h3>
+<p>旋转半径是<strong>点到轴的距离</strong>：$R(x)=\lvert y-(-1)\rvert=\lvert y+1\rvert=\sqrt{(2-x)\ln x}$。把坐标平移 $y'=y+1$，轴 $y=-1$ 变成新横轴 $y'=0$，问题就化成绕横轴的标准旋转体——这是处理斜轴/平移轴的通法：<strong>先平移，再套公式</strong>。每个 $x$ 处竖直切片绕轴扫出实心圆盘（轴在区域内部，不产生空洞，无需垫圈）：</p>
+<p>$$V=\pi\int_1^2R(x)^2\,\mathrm dx=\pi\int_1^2(2-x)\ln x\,\mathrm dx.$$</p>
+<p><strong>圆盘法赢在哪</strong>：$R(x)^2$ 恰好等于 $(2-x)\ln x$，连根号都开掉了；柱壳法则要对每个 $y$ 反解水平切片的左右端点，隐式方程无显式解，走不通。选工具不是口味问题，是计算量问题。</p>
+<h3>第五步：分部积分收尾——为什么 $u$ 取 $\ln x$</h3>
+<p>被积函数 $(2-x)\ln x$ 是"幂 × 对数"：按选 $u$ 的优先序（对数、反三角最优先），取 $u=\ln x$（求导后变 $\dfrac1x$，从超越变有理），$\mathrm dv=(2-x)\,\mathrm dx$，$v=2x-\dfrac{x^2}2$：</p>
+<p>$$\int_1^2(2-x)\ln x\,\mathrm dx=\Bigl[\bigl(2x-\tfrac{x^2}2\bigr)\ln x\Bigr]_1^2-\int_1^2\Bigl(2-\frac x2\Bigr)\mathrm dx.$$</p>
+<p>首项：$x=2$ 处 $(4-2)\ln2=2\ln2$；$x=1$ 处 $\ln1=0$ 整项消失。剩余积分 $\left[2x-\dfrac{x^2}4\right]_1^2=3-\dfrac74=\dfrac54$。故</p>
+<p>$$V=\pi\left(2\ln2-\frac54\right)\qquad\left(2\ln2\approx1.386&gt;\frac54,\ \text{体积为正，合理}\right).$$</p>
+<h3>易错点</h3>
+<ul><li><strong>把旋转轴当 $x$ 轴</strong>：半径是 $\lvert y+1\rvert$ 不是 $\lvert y\rvert$；先平移轴再套公式最稳。</li><li><strong>不讨论 $x$ 范围</strong>：积分限 $[1,2]$ 来自 $(2-x)\ln x\ge0$ 的符号分析，不是看 $\ln x$ 顺手写的。</li><li><strong>偏积分的常数写成数</strong>：$\varphi(x)$ 是函数；写成常数 $C$ 第二步就没法定了。</li><li><strong>对 $f(y,y)$ 变量拎不清</strong>：代入 $x=y$ 得到的是 $\varphi(y)$ 的表达式，改个记号就是 $\varphi(x)$，不必纠结"两个 $y$"。</li></ul>
+<blockquote>结论：$f(x,y)=(y+1)^2-(2-x)\ln x$，闭曲线限于 $1\le x\le2$ 且关于 $y=-1$ 对称，圆盘法 $V=\pi\int_1^2(2-x)\ln x\,\mathrm dx=\pi\left(2\ln2-\dfrac54\right)$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

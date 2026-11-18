@@ -101,5 +101,24 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：和式极限=把定积分的定义倒过来读</h2>
+<p>答案：$\dfrac{\pi}{4}$</p>
+<h3>第一步：机制先行——定积分本来就是黎曼和的极限</h3>
+<p>$\displaystyle\int_0^1 f(x)\,\mathrm dx=\lim_{n\to\infty}\sum_{k=1}^{n}\frac1n f\!\Big(\frac kn\Big)$——这不是解题技巧，是定义本身。所以拿到"$n$ 项和的极限"，要做的不是硬算，而是<strong>把和式整形成黎曼和的指纹</strong>：步长 $\tfrac1n$、取样点 $\tfrac kn$、函数值 $f(\tfrac kn)$。指纹藏在哪？通项 $\dfrac{1}{k^{2}+n^{2}}$ 里 $k$ 与 $n$ 同场出现，提出 $n^{2}$ 就现出 $\Big(\dfrac kn\Big)^{2}$——这就是信号。</p>
+<h3>第二步：按指纹改造</h3>
+<p>$$n\sum_{k=1}^{n}\frac{1}{k^{2}+n^{2}}=\sum_{k=1}^{n}\frac{1}{n}\cdot\frac{1}{\left(\frac{k}{n}\right)^{2}+1}.$$</p>
+<p>（通项分子分母同除 $n^{2}$：$\dfrac{n}{k^{2}+n^{2}}=\dfrac{1}{n}\cdot\dfrac{1}{(k/n)^{2}+1}$。）</p>
+<h3>第三步：对号入座认区间</h3>
+<p>取样点 $x_k=\dfrac{k}{n}$（右端点）、步长 $\Delta x=\dfrac1n$、$f(x)=\dfrac{1}{1+x^{2}}$；$k$ 取 $1\sim n$ 说明 $x_k$ 跑遍 $(0,1]$，区间是 $[0,1]$。<strong>为什么不必纠结左端点还是右端点？</strong> 两种取法只差一项 $\frac1n\big(f(1)-f(0)\big)\to0$，极限相同——黎曼和的极限对取样方式不敏感，这是定义允许的。</p>
+<h3>第四步：极限即积分</h3>
+<p>$$\lim_{n\to\infty}\sum_{k=1}^{n}\frac{1}{n}\cdot\frac{1}{1+\left(\frac{k}{n}\right)^{2}}=\int_{0}^{1}\frac{\mathrm{d}x}{1+x^{2}}=\arctan x\Big|_{0}^{1}=\frac{\pi}{4}.$$</p>
+<h3>易错点</h3>
+<ul><li><strong>提出 $n$ 时慌了手脚</strong>：正确动作是把 $n$ 分摊成步长 $\tfrac1n$，而不是硬拆每一项。</li><li><strong>认错区间</strong>：$k$ 从 1 到 $n$、右端点取样，对应 $[0,1]$；写成 $[0,n]$ 或 $[1,n]$ 全盘错。</li><li><strong>认不出 $f$</strong>：$\dfrac{1}{k^{2}+n^{2}}$ 必须先提出 $n^{2}$ 才现出 $\dfrac{1}{1+(k/n)^{2}}$ 的形状——看到 $k$ 与 $n$ 同场，先想"除以 $n$ 的同次幂"。</li></ul>
+<blockquote>一句话结论：原式 $=\int_0^1\frac{\mathrm{d}x}{1+x^2}=\frac{\pi}{4}$（数值旁证：$n=10^5$ 时和式约 $0.785396$）。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

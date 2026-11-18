@@ -99,5 +99,27 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：秩 1 矩阵的迹与相似</h2>
+<p>答案：$\boldsymbol\beta^{\mathrm T}\boldsymbol\alpha=2$</p>
+<h3>第一步：先立机制——一个 $3\times3$ 矩阵和一个数，靠什么连接</h3>
+<p>$\boldsymbol\alpha\boldsymbol\beta^{\mathrm T}$ 是 $3\times3$ 矩阵（列乘行），$\boldsymbol\beta^{\mathrm T}\boldsymbol\alpha$ 是一个数（行乘列，内积）。连接二者的桥梁是<strong>迹</strong>，而相似矩阵恰好保持迹——两条性质接力，就能从已知对角阵"读出"这个数。</p>
+<h3>第二步：关键恒等式——对角元之和就是内积</h3>
+<p>$$\operatorname{tr}\big(\boldsymbol\alpha\boldsymbol\beta^{\mathrm T}\big)=\sum_{i=1}^{3}\alpha_i\beta_i=\boldsymbol\beta^{\mathrm T}\boldsymbol\alpha.$$</p>
+<p>矩阵的对角元恰是配对乘积 $\alpha_i\beta_i$，求和正是内积——这解释了"为什么一个矩阵的性质能决定一个数"。</p>
+<h3>第三步：为什么相似矩阵的迹相等</h3>
+<p>用迹的<strong>轮换性质</strong> $\operatorname{tr}(\boldsymbol X\boldsymbol Y)=\operatorname{tr}(\boldsymbol Y\boldsymbol X)$：若 $\boldsymbol B=\boldsymbol P^{-1}\boldsymbol A\boldsymbol P$，则</p>
+<p>$$\operatorname{tr}\boldsymbol B=\operatorname{tr}\big(\boldsymbol P^{-1}\boldsymbol A\boldsymbol P\big)=\operatorname{tr}\big(\boldsymbol A\boldsymbol P\boldsymbol P^{-1}\big)=\operatorname{tr}\boldsymbol A.$$</p>
+<p>于是由 $\boldsymbol\alpha\boldsymbol\beta^{\mathrm T}\sim\operatorname{diag}(2,0,0)$ 得</p>
+<p>$$\boldsymbol\beta^{\mathrm T}\boldsymbol\alpha=\operatorname{tr}\big(\boldsymbol\alpha\boldsymbol\beta^{\mathrm T}\big)=\operatorname{tr}\operatorname{diag}(2,0,0)=2.$$</p>
+<h3>第四步：从特征值再印证——为什么秩 1 矩阵只剩一个非零特征值</h3>
+<p>一方面，$(\boldsymbol\alpha\boldsymbol\beta^{\mathrm T})\boldsymbol\alpha=\boldsymbol\alpha(\boldsymbol\beta^{\mathrm T}\boldsymbol\alpha)$，说明 $\boldsymbol\alpha$ 是特征向量、特征值恰为 $\boldsymbol\beta^{\mathrm T}\boldsymbol\alpha$。另一方面，秩 1 矩阵的核是 $\boldsymbol\beta^{\mathrm T}\boldsymbol x=0$ 的解空间，维数 $3-1=2$，故 $0$ 至少是二重特征值；三个特征值之和等于迹 $\boldsymbol\beta^{\mathrm T}\boldsymbol\alpha$，于是特征值只能是 $0,\ 0,\ \boldsymbol\beta^{\mathrm T}\boldsymbol\alpha$。相似矩阵特征值完全相同，对角阵给出 $2,0,0$，故 $\boldsymbol\beta^{\mathrm T}\boldsymbol\alpha=2$——与迹法殊途同归。</p>
+<h3>易错点</h3>
+<ul><li><strong>想先求出 $\boldsymbol\alpha,\boldsymbol\beta$ 的具体值</strong>：题目根本不需要，迹不变性一步到位。</li><li><strong>秩 1 矩阵特征值乱猜</strong>：$n$ 阶秩 1 矩阵的特征值为 $\underbrace{0,\cdots,0}_{n-1},\ \boldsymbol\beta^{\mathrm T}\boldsymbol\alpha$，依据是核的维数与迹。</li><li><strong>迹与行列式混淆</strong>：相似同时保持迹、行列式与特征多项式，但这里用迹最快。</li></ul>
+<blockquote>记忆锚点：$\operatorname{tr}(\boldsymbol\alpha\boldsymbol\beta^{\mathrm T})=\boldsymbol\beta^{\mathrm T}\boldsymbol\alpha$；相似矩阵迹相等（轮换性质）。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

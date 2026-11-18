@@ -96,5 +96,25 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：极坐标扇形面积公式算玫瑰线一瓣</h2>
+<p><strong>答案：$\dfrac{\pi}{12}$</strong></p>
+<h3>第一步：认清图形与公式</h3>
+<p>$r=\cos3\theta$ 在 $-\dfrac\pi6\le\theta\le\dfrac\pi6$ 上 $r\ge0$，且两端 $r=\cos\big(\pm\frac\pi2\big)=0$——从极点出发又回到极点，这正是三叶玫瑰线的<strong>一整片花瓣</strong>（角度范围由 $3\theta\in[-\frac\pi2,\frac\pi2]$ 解出）。极坐标面积用扇形公式：</p>
+<p>$$S=\frac12\int_{-\pi/6}^{\pi/6}r^2\,\mathrm d\theta=\frac12\int_{-\pi/6}^{\pi/6}\cos^23\theta\,\mathrm d\theta.$$</p>
+<p>公式从哪来？把张角 $\mathrm d\theta$ 处切出一条极细的扇形微元：半径 $r$、弧长近似 $r\,\mathrm d\theta$，按"底 $\times$ 高的一半"估为三角形面积 $\frac12\,r\cdot r\,\mathrm d\theta$——系数 $\frac12$ 是三角形面积带来的，不是凭空规定。另注意公式要求 $r\ge0$：$r&lt;0$ 时点会落到极点对侧，扇形拼图失效；本题已验证 $\cos3\theta\ge0$。</p>
+<h3>第二步：对称性减半 + 降幂</h3>
+<p>被积函数是偶函数，$S=\displaystyle\int_0^{\pi/6}\cos^23\theta\,\mathrm d\theta$。降幂公式 $\cos^23\theta=\dfrac{1+\cos6\theta}2$：</p>
+<p>$$S=\frac12\int_0^{\pi/6}(1+\cos6\theta)\,\mathrm d\theta.$$</p>
+<h3>第三步：算积分</h3>
+<p>$$S=\frac12\Big[\theta+\frac{\sin6\theta}6\Big]_0^{\pi/6}=\frac12\Big(\frac\pi6+\frac{\sin\pi}6\Big)=\frac12\cdot\frac\pi6=\frac{\pi}{12}.$$</p>
+<p>（顺带验算：三瓣总面积 $3\times\frac\pi{12}=\frac\pi4$，恰为单位圆面积的四分之一，量级合理。）</p>
+<h3>易错点</h3>
+<ul><li><strong>漏掉系数 $\frac12$</strong>：扇形面积微元是 $\frac12r^2\,\mathrm d\theta$，公式自带 $\frac12$。</li><li><strong>角度范围取错</strong>：一瓣对应 $\theta\in[-\frac\pi6,\frac\pi6]$（由 $\cos3\theta\ge0$ 定），不是 $[0,\frac\pi3]$，更不是整周期。</li><li><strong>$\int\cos6\theta\,\mathrm d\theta$ 忘除以 6</strong>：结果应为 $\frac16\sin6\theta$。</li><li><strong>直接对 $r$ 积分</strong>：面积公式里是 $r^2$，不是 $r$。</li></ul>
+<blockquote>一句话结论：一瓣面积 $S=\dfrac{\pi}{12}$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

@@ -105,5 +105,28 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：用偏导符号沿折线比较两点函数值</h2>
+<p>答案：D（$f(0,1)&lt;f(1,0)$）</p>
+<h3>第一步：读出两个单调性</h3>
+<p>$\dfrac{\partial f}{\partial x}&gt;0$：固定 $y$，$x$ 增大则 $f$ 严格增大；$\dfrac{\partial f}{\partial y}&lt;0$：固定 $x$，$y$ 增大则 $f$ 严格减小。这两个符号是比较一切函数值的全部依据。</p>
+<h3>第二步：先看 A、B 为什么"定不了"</h3>
+<p>比较 $(0,0)$ 与 $(1,1)$：从 $(0,0)$ 走到 $(1,1)$，$x$ 增大（使 $f$ 增）同时 $y$ 增大（使 $f$ 减），两个效应方向相反、强弱未知，大小关系无法判定。所以 A、B 都不能选——这类选项考的就是"条件不够就别下结论"。</p>
+<h3>第三步：折线比较 $(0,1)$ 与 $(1,0)$</h3>
+<p>选一条每段只动一个变量的折线：$(0,1)\to(1,1)\to(1,0)$。</p>
+<p><strong>第一段</strong> $(0,1)\to(1,1)$：$y$ 固定、$x$ 由 $0$ 增到 $1$，由 $f_x&gt;0$ 得</p>
+<p>$$f(1,1)&gt;f(0,1).$$</p>
+<p><strong>第二段</strong> $(1,1)\to(1,0)$：$x$ 固定、$y$ 由 $1$ 减到 $0$；$f_y&lt;0$ 意味着 $y$ <strong>减小</strong>反而使 $f$ 增大，故</p>
+<p>$$f(1,0)&gt;f(1,1).$$</p>
+<h3>第四步：串联出结论</h3>
+<p>$$f(1,0)&gt;f(1,1)&gt;f(0,1)\ \Longrightarrow\ f(0,1)&lt;f(1,0),$$</p>
+<p>选 <strong>D</strong>；C 恰好把方向写反。</p>
+<h3>易错点</h3>
+<ul><li><strong>在 $(0,0)$ 与 $(1,1)$ 之间硬比</strong>：两个偏导效应冲突，任何"&gt;"或"&lt;"都推不出来。</li><li><strong>第二段符号想反</strong>：$y$ 减小叠加 $f_y&lt;0$，净效果是 $f$ <strong>增大</strong>，不是减小。</li><li><strong>折线没选好</strong>：若走 $(0,1)\to(0,0)\to(1,0)$ 也是每段单变量，结论相同，但段内叙述容易写乱；选端点重合度高的折线更稳。</li></ul>
+<blockquote>结论：沿折线逐段用 $f_x&gt;0,\ f_y&lt;0$，得 $f(1,0)&gt;f(1,1)&gt;f(0,1)$，选 D。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

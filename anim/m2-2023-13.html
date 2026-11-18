@@ -87,5 +87,27 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：隐函数的二阶偏导——先定点，再一阶，最后对乘积等式再求导</h2>
+<p>答案：$-\dfrac32$</p>
+<h3>第一步：代点定 z</h3>
+<p>$(x,y)=(1,1)$ 代入 $\mathrm e^z+xz=2x-y$：$\mathrm e^z+z=1$。令 $h(z)=\mathrm e^z+z$，则 $h'(z)=\mathrm e^z+1&gt;0$，$h$ 严格增，方程至多一个解；而 $h(0)=1$，所以 $z=0$ 就是这个唯一解，$z(1,1)=0$。先定点不是走形式：后面每一步都要在 $z=0$ 处把 $\mathrm e^z$ 数值化，不定出 $z$，方程解不动。</p>
+<h3>第二步：一阶偏导</h3>
+<p>方程两边对 $x$ 求导（$z=z(x,y)$）：</p>
+<p>$$\mathrm e^z z_x+z+xz_x=2\quad\Longrightarrow\quad z_x=\frac{2-z}{\mathrm e^z+x}.$$</p>
+<p>代入 $z=0,\ x=1$：$z_x=\dfrac{2}{2}=1$。</p>
+<h3>第三步：对乘积等式再求导</h3>
+<p>为什么保留乘积等式、而不把 $z_x=\dfrac{2-z}{\mathrm e^z+x}$ 代回去再求导？代回去是分式，再求导要走商法则，分子分母互相纠缠，极易出错；保留乘积等式，两边都只是乘积结构，乘积法则一步到位。右端 $y$ 与 $x$ 无关，只需对 $-z$ 求导（$z$ 仍是 $x$ 的函数）。于是两边再对 $x$ 求导：</p>
+<p>$$z_{xx}(\mathrm e^z+x)+z_x\bigl(\mathrm e^z z_x+1\bigr)=-z_x.$$</p>
+<h3>第四步：代入数值</h3>
+<p>$z=0,\ z_x=1,\ \mathrm e^z+x=2$：</p>
+<p>$$2z_{xx}+1\cdot(1\cdot1+1)=-1\ \Longrightarrow\ 2z_{xx}=-3\ \Longrightarrow\ z_{xx}=-\frac32.$$</p>
+<h3>易错点</h3>
+<ul><li><strong>忘先求 z(1,1)</strong>：不代 $z=0$，$\mathrm e^z$ 无法数值化，方程解不动。</li><li><strong>二阶求导漏链式</strong>：$\mathrm e^z$ 对 $x$ 求导是 $\mathrm e^z z_x$，乘积因子的 $z_x$ 不能省。</li><li><strong>右端搞混</strong>：一阶方程右端是 2（$2-y$ 对 $x$ 求导），二阶方程右端是 $-z_x$（来自 $2-z$）。</li></ul>
+<blockquote>一句话结论：$z(1,1)=0$、$z_x=1$，二阶方程 $2z_{xx}+2=-1$ 解得 $z_{xx}=-\dfrac32$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

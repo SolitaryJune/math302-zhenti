@@ -94,5 +94,23 @@ AW.init({
   },
 });
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：伴随矩阵方程组的基础解系——把秩的链条一步步接起来</h2>
+<p>答案：D</p>
+<h3>第一步：从 Ax=0 的基础解系读出秩</h3>
+<p>$(1,0,1,0)^{\mathrm T}$ 是 $Ax=0$ 的<strong>基础解系</strong>——注意不是「一个解」而是「解系的全部」：解空间维数为 $1$。由维数公式 $n-r=1$ 得 $\operatorname{rank}(A)=4-1=3$。把它代回方程组还顺带得到 $\alpha_1+\alpha_3=0$，即 $\alpha_3=-\alpha_1$——这个关系后面挑选项时是关键。</p>
+<h3>第二步：A*x=0 的解空间有多大——秩公式从哪来</h3>
+<p>由伴随矩阵秩的公式：$r(A)=n-1$ 时 $r(A^*)=1$。这个公式可以现场推出来，两条夹逼：</p>
+<ul><li>一方面 $r(A)=3&lt;4$，故 $\lvert A\rvert=0$，而 $A^*A=\lvert A\rvert E=O$。按列看就是 $A^*\alpha_i=0$ 对每个 $i$ 成立：$A$ 的每一列都是 $A^*x=0$ 的解，这四个解张成 $3$ 维空间，故解空间维数 $\ge3$，即 $r(A^*)\le1$；</li><li>另一方面 $r(A)=n-1$ 意味着 $A$ 有一个 $3$ 阶子式非零，对应的代数余子式不为零，而 $A^*$ 恰由代数余子式排成——$A^*\neq O$，故 $r(A^*)\ge1$。</li></ul>
+<p>两边夹出 $r(A^*)=1$，于是 $A^*x=0$ 的基础解系含 $4-1=3$ 个向量——A、B 各只给 2 个向量，维数不过关，直接排除。</p>
+<h3>第三步：找出 3 个线性无关的解</h3>
+<p>第二步已证 $A$ 的每一列都是 $A^*x=0$ 的解，所以只需在 $\{\alpha_1,\alpha_2,\alpha_3,\alpha_4\}$ 里挑 3 个线性无关的。由 $\alpha_3=-\alpha_1$ 与 $r(A)=3$ 知 $\alpha_1,\alpha_2,\alpha_4$ 线性无关（极大无关组）；选项 D 的 $\alpha_2,\alpha_3,\alpha_4$ 把 $\alpha_3$ 换成 $-\alpha_1$ 后正是这组向量——替换不改变张成空间，同样线性无关、都是解，构成基础解系。</p>
+<h3>易错点</h3>
+<ul><li><strong>背错秩公式</strong>：$r(A)=n-1\Rightarrow r(A^*)=1$，不是 $2$ 也不是 $n-1$；记不清就用第二步的两条夹逼现场推。</li><li><strong>不会用 $A^*A=\lvert A\rvert E$</strong>：这是「$A$ 的列全是 $A^*x=0$ 的解」的唯一来源，没有它就找不到具体解。</li><li><strong>误选 A、B</strong>：只给 2 个向量——$r(A^*)=1$ 决定解空间是 $3$ 维，个数先不过关（A 还有 $\alpha_1,\alpha_3$ 相关的问题）。</li><li><strong>误选 C</strong>：$\alpha_1,\alpha_2,\alpha_3$ 个数够了，但 $\alpha_3=-\alpha_1$ 二者线性相关，整组张不满 $3$ 维，作不了基础解系。</li></ul>
+<blockquote>结论：选 <strong>D</strong>。链条：基础解系个数 → 秩 → $r(A^*)$ → 解空间维数 → 用 $A^*A=O$ 找解、用 $\alpha_3=-\alpha_1$ 挑无关组。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

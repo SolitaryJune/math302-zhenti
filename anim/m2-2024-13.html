@@ -104,5 +104,31 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：$y'=f(x+y)$ 型方程（换元 $u=x+y$ 化可分离）</h2>
+<p>答案：$y-\arctan(x+y)+\dfrac\pi4=0$</p>
+<h3>第一步：识别类型，选准换元</h3>
+<p>右端 $\dfrac{1}{(x+y)^2}$ 只依赖 $x+y$，是典型的 $y'=f(x+y)$ 型。令 $u=x+y$，则</p>
+<p>$$\frac{\mathrm du}{\mathrm dx}=1+\frac{\mathrm dy}{\mathrm dx}=1+\frac{1}{u^2}=\frac{u^2+1}{u^2}.$$</p>
+<h3>第二步：分离变量并积分</h3>
+<p>$$\frac{u^2}{u^2+1}\,\mathrm du=\mathrm dx,\qquad\text{即}\qquad\Big(1-\frac{1}{u^2+1}\Big)\mathrm du=\mathrm dx.$$</p>
+<p>两边积分（$\dfrac{u^2}{u^2+1}=1-\dfrac{1}{u^2+1}$ 是关键拆分）：</p>
+<p>$$u-\arctan u=x+C.$$</p>
+<h3>第三步：回代并定常数</h3>
+<p>回代 $u=x+y$：右端的 $x$ 与左端 $u$ 里的 $x$ 相消，得</p>
+<p>$$y-\arctan(x+y)=C.$$</p>
+<p>代入初值 $y(1)=0$（此时 $x+y=1$）：$C=0-\arctan1=-\dfrac\pi4$。</p>
+<h3>第四步：写出最终解并验算</h3>
+<p>$$y-\arctan(x+y)+\frac\pi4=0.$$</p>
+<p>验算：对隐式解两端求导，$y'-\dfrac{1+y'}{1+(x+y)^2}=0$，两边乘 $1+(x+y)^2$ 并整理：</p>
+<p>$$y'\Big(1+(x+y)^2\Big)=1+y'\ \Longrightarrow\ y'(x+y)^2=1\ \Longrightarrow\ y'=\frac{1}{(x+y)^2},$$</p>
+<p>与原方程一致；$x=1,y=0$ 时左端 $0-\arctan1+\frac\pi4=0$ ✓。</p>
+<h3>易错点</h3>
+<ul><li><strong>换元后漏加 1</strong>：$u'=1+y'$，不是 $y'$ 本身；漏掉 $1$ 会得到 $\dfrac{\mathrm du}{\mathrm dx}=\dfrac1{u^2}$ 的错方程。</li><li><strong>初值代入点搞错</strong>：定常数用的是 $x=1$ <strong>且</strong> $u=x+y=1$，两者要同时满足。</li><li><strong>非要把 $y$ 解成显函数</strong>：$\arctan$ 套在里面，隐式解就是标准答案形态；强解反而出错。</li></ul>
+<blockquote>一句话结论：令 $u=x+y$ 分离变量，积分得 $u-\arctan u=x+C$，回代相消 $x$ 后定出 $C=-\frac\pi4$，解为 $y-\arctan(x+y)+\frac\pi4=0$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

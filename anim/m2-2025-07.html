@@ -107,5 +107,24 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：带绝对值的差商极限与 $f'(0)$ 的存在性</h2>
+<p>答案：D</p>
+<h3>第一步：统一策略——分母趋零逼分子趋零</h3>
+<p>$f$ 在 $0$ 连续，记 $f(0)=c$。四个条件都是「差商极限存在」：分母 $x\to0$，若分子极限不为 $0$，比值就会无界、极限不可能存在——所以<strong>分子必须趋于 $0$</strong>，由此先逼出 $c$ 的符号信息，再把绝对值脱掉，归结到标准差商 $\dfrac{f(x)-f(0)}{x}$。</p>
+<h3>第二步：逐条分析</h3>
+<p><strong>(1)</strong> $\dfrac{\lvert f(x)\rvert-c}{x}$ 存在 $\Rightarrow\lvert c\rvert=c\Rightarrow c\ge0$。若 $c&gt;0$，$f$ 连续且 $f(0)=c&gt;0$，由连续保号性邻域内 $f(x)&gt;0$，绝对值可脱，原式即 $\dfrac{f(x)-f(0)}{x}$，$f'(0)$ 存在；若 $c=0$，原式为 $\dfrac{\lvert f(x)\rvert}{x}$，$x\to0^+$ 时商 $\ge0$、$x\to0^-$ 时商 $\le0$，极限只能为 $0$；再用绝对值桥接一步：$\left\lvert\dfrac{f(x)}{x}\right\rvert=\dfrac{\lvert f(x)\rvert}{\lvert x\rvert}\to0$，故 $\dfrac{f(x)}{x}\to0$，$f'(0)=0$ 存在。✓</p>
+<p><strong>(2)</strong> $\dfrac{f(x)-\lvert c\rvert}{x}$ 存在 $\Rightarrow c=\lvert c\rvert\Rightarrow c\ge0$，此时 $\lvert f(0)\rvert=f(0)$，原式就是标准差商，$f'(0)$ 存在。✓</p>
+<p><strong>(3)</strong> $\dfrac{\lvert f(x)\rvert}{x}$ 存在 $\Rightarrow\lvert c\rvert=0\Rightarrow c=0$，同 (1) 的 $c=0$ 情形左右夹逼得极限为 $0$，再经 $\left\lvert f(x)/x\right\rvert\to0$ 桥接得 $f'(0)=0$ 存在。✓</p>
+<p><strong>(4)</strong> $\dfrac{\lvert f(x)\rvert-\lvert c\rvert}{x}$ 存在，记为 $B$。若 $c\ne0$，由连续保号性（$f(0)=c\ne0$）邻域内 $f$ 与 $c$ 同号，$\lvert f(x)\rvert=\operatorname{sgn}(c)f(x)$，原式 $=\operatorname{sgn}(c)\cdot\dfrac{f(x)-f(0)}{x}$，故 $f'(0)=\operatorname{sgn}(c)\cdot B$ 存在；若 $c=0$，同 (3) 得 $f'(0)=0$。✓</p>
+<h3>第三步：计数</h3>
+<p>四条全部能推出 $f$ 在 $x=0$ 可导，个数为 $4$，选 <strong>D</strong>。</p>
+<h3>易错点</h3>
+<ul><li><strong>只认最标准的 (4)</strong>：(1)(2)(3) 靠「分子趋零定符号」同样能脱绝对值。</li><li><strong>漏判 $c=0$ 的临界情形</strong>：$\dfrac{\lvert f(x)\rvert}{x}$ 存在时被左右两侧 $\ge0$ 与 $\le0$ 夹逼成 $0$，仍可推出 $f'(0)=0$，把个数数成 2 或 3 就错了。</li><li><strong>忽略 (3) 的隐含信息</strong>：它虽不含 $f(0)$，但极限存在已强制 $\lvert f(0)\rvert=0$。</li></ul>
+<blockquote>一句话结论：分母趋零逼分子趋零定出 $c\ge0$ 或 $c=0$，四条殊途同归都能脱掉绝对值，选 D。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

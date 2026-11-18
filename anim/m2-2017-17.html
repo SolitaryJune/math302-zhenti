@@ -93,5 +93,32 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：n 项和极限化定积分——先认出「宽度 × 高度」，再分部积分</h2>
+<p>答案：$\dfrac14$</p>
+<h3>第一步：机制——黎曼和就是「宽度 × 高度」的清单</h3>
+<p>定积分 $\int_0^1g(x)\,\mathrm{d}x$ 的定义：把 $[0,1]$ 切成 $n$ 等份，每份宽 $\dfrac1n$，在第 $k$ 份上取高 $g\!\left(\dfrac kn\right)$，阶梯面积 $\dfrac1n\,g\!\left(\dfrac kn\right)$ 求和取极限。所以"n 项和极限化定积分"的全部技巧就是：<strong>从通项里认出宽度与高度</strong>。本题通项</p>
+<p>$$\frac{k}{n^{2}}\ln\!\left(1+\frac{k}{n}\right)=\underbrace{\frac1n}_{\text{宽度}}\cdot\underbrace{\frac{k}{n}\ln\!\left(1+\frac{k}{n}\right)}_{\text{高度 }g(k/n)},$$</p>
+<p>高度是 $g(x)=x\ln(1+x)$ 在分点 $x_k=\dfrac kn$ 处的值，分点铺满 $[0,1]$，区间即 $[0,1]$：</p>
+<p>$$\sum_{k=1}^{n}\frac{k}{n^{2}}\ln\!\left(1+\frac{k}{n}\right)=\frac1n\sum_{k=1}^{n}\frac{k}{n}\ln\!\left(1+\frac{k}{n}\right).$$</p>
+<p>这一步合法的原因：$g$ 在 $[0,1]$ 上连续故可积，可积则<strong>任何分割、任何取点</strong>的黎曼和都收敛到同一个积分值——右端点取法只是其中一种，不必纠结。</p>
+<h3>第二步：为什么要换成定积分</h3>
+<p>和式里 $n$ 同时出现在求和限与通项内部，硬算无从下手；化成 $\int_0^1x\ln(1+x)\,\mathrm{d}x$ 后，问题从"数列极限"变成"一个具体积分"，微积分的工具（牛顿–莱布尼茨、分部积分）就都能用了——这步换形的目的正在于此：</p>
+<p>$$\lim_{n\to\infty}\sum_{k=1}^{n}\frac{k}{n^{2}}\ln\!\left(1+\frac{k}{n}\right)=\int_0^1 x\ln(1+x)\,\mathrm{d}x.$$</p>
+<h3>第三步：为什么分部积分、为什么 u 取对数</h3>
+<p>被积函数是"幂 × 对数"。分部积分的选 $u$ 原则：<strong>让 $u$ 求导后变简单，让 $\mathrm{d}v$ 好积分</strong>。$\ln(1+x)$ 求导变成 $\dfrac1{1+x}$，对数消失；$x\,\mathrm{d}x$ 积出 $\dfrac{x^2}2$ 是多项式。反过来取（$u=x$，$\mathrm{d}v=\ln(1+x)\mathrm{d}x$）会把 $\ln$ 留在积分里，越积越乱。取 $u=\ln(1+x)$，$\mathrm{d}v=x\,\mathrm{d}x$：</p>
+<p>$$\int_0^1 x\ln(1+x)\,\mathrm{d}x=\left[\frac{x^{2}}{2}\ln(1+x)\right]_0^1-\frac12\int_0^1\frac{x^{2}}{1+x}\,\mathrm{d}x=\frac12\ln2-\frac12\int_0^1\frac{x^{2}}{1+x}\,\mathrm{d}x.$$</p>
+<h3>第四步：为什么假分式要先拆——多项式除法</h3>
+<p>$\dfrac{x^{2}}{1+x}$ 的分子次数不低于分母，不是基本积分公式能直接积的形状。用 $x^{2}=(x-1)(x+1)+1$ 拆成多项式加真分式再逐段积：</p>
+<p>$$\frac{x^{2}}{1+x}=x-1+\frac{1}{1+x}\ \Longrightarrow\ \int_0^1\frac{x^{2}}{1+x}\,\mathrm{d}x=\left(\frac12-1\right)+\ln2=\ln2-\frac12.$$</p>
+<p>代回：</p>
+<p>$$\int_0^1x\ln(1+x)\,\mathrm{d}x=\frac12\ln2-\frac12\left(\ln2-\frac12\right)=\frac14.$$</p>
+<h3>易错点</h3>
+<ul><li><strong>找不到 $\dfrac1n$</strong>：盯着 $\dfrac{k}{n^{2}}$ 发呆——按"宽度×高度"去拆，$\dfrac{k}{n^{2}}=\dfrac1n\cdot\dfrac{k}{n}$，黎曼和立刻现形。</li><li><strong>区间写错</strong>：分点是 $\dfrac{k}{n}\in[0,1]$，积分区间是 $[0,1]$，不要写成 $[0,n]$ 或 $[1,+\infty)$。</li><li><strong>分部方向取反</strong>：$u$ 取 $x$ 会把对数留在积分号里；记住"对数求导会消失，幂函数积分易"。</li><li><strong>假分式硬积</strong>：$\dfrac{x^{2}}{1+x}$ 先拆成 $x-1+\dfrac{1}{1+x}$ 再积。</li></ul>
+<blockquote>一句话结论：通项拆成 $\dfrac1n\times g\!\left(\dfrac kn\right)$（$g=x\ln(1+x)$，区间 $[0,1]$）得 $\int_0^1x\ln(1+x)\,\mathrm{d}x$；分部让对数消失、假分式拆项，结果 $=\dfrac14$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

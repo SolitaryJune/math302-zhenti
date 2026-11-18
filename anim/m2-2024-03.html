@@ -115,5 +115,26 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：变限积分定义函数的奇偶性（换元 $t=-u$ 两次）</h2>
+<p>答案：D</p>
+<h3>第一步：备好两件工具</h3>
+<p>判定 $f(-x)$ 是否等于 $\pm f(x)$，唯一的正规手段是<strong>对积分换元 $t=-u$</strong>，把积分上限与被积函数里的负号一起消化。另备一条通用结论备用：<strong>偶函数从 $0$ 起变上限积分是奇函数；奇函数从 $0$ 起变上限积分是偶函数</strong>。</p>
+<h3>第二步：判 $f(x)=\displaystyle\int_0^{\sin x}\sin t^3\,\mathrm dt$</h3>
+<p>写出 $f(-x)=\displaystyle\int_0^{\sin(-x)}\sin t^3\,\mathrm dt=\int_0^{-\sin x}\sin t^3\,\mathrm dt$，换元 $t=-u$（$\mathrm dt=-\mathrm du$）：</p>
+<ul><li>上限 $-\sin x\to\sin x$；</li><li>被积函数 $\sin((-u)^3)=-\sin u^3$（奇复合奇仍奇）；</li><li>两个负号（来自被积函数与 $\mathrm dt$）相消。</li></ul>
+<p>$$f(-x)=\int_0^{\sin x}\sin u^3\,\mathrm du=f(x),$$</p>
+<p>故 $f$ 为<strong>偶函数</strong>。口诀记法："被积奇 × 上限奇 = 偶"，两重奇性相消。</p>
+<h3>第三步：判 $g(x)=\displaystyle\int_0^x f(t)\,\mathrm dt$</h3>
+<p>$f$ 已是偶函数，故</p>
+<p>$$g(-x)=\int_0^{-x}f(t)\,\mathrm dt\xlongequal{t=-u}-\int_0^{x}f(-u)\,\mathrm du=-\int_0^x f(u)\,\mathrm du=-g(x),$$</p>
+<p>$g$ 为<strong>奇函数</strong>。偶 + 奇 对应选项 <strong>D</strong>。</p>
+<h3>易错点</h3>
+<ul><li><strong>把 $f$ 判成奇</strong>（选 A/B）：只看到 $\sin t^3$ 是奇的，忽略了上限 $\sin x$ 也是奇的，换元后负号成对出现、互相抵消。</li><li><strong>把 $g$ 判成偶</strong>（选 B/C）：忘记"偶函数从 $0$ 积分起必得奇函数"，这是不需要计算就直接可用的结论。</li><li><strong>换元时丢负号</strong>：$t=-u$ 要同时改上限、改被积函数、改 $\mathrm dt$，三处一致才不翻车。</li></ul>
+<blockquote>一句话结论：$\sin t^3$ 奇、上限 $\sin x$ 奇，合成 $f$ 偶；偶函数再变上限积分得 $g$ 奇——选 D。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

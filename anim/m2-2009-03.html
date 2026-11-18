@@ -103,5 +103,29 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：由全微分判二元函数的极值</h2>
+<p>答案：D（是极小值点）</p>
+<h3>第一步：先立机制——全微分给出什么、判极值靠什么</h3>
+<p>$f$ 可微时 $\mathrm dz=f_x\,\mathrm dx+f_y\,\mathrm dy$，对照 $\mathrm dz=x\,\mathrm dx+y\,\mathrm dy$ 逐项读系数得</p>
+<p>$$f_x=x,\qquad f_y=y.$$</p>
+<p><strong>为什么可微就能排除 A（不是连续点）？</strong> 可微的定义是 $\Delta f=f_x\Delta x+f_y\Delta y+o(\rho)$，右边在 $(\Delta x,\Delta y)\to(0,0)$ 时趋于 $0$，故 $\Delta f\to0$，即 $f$ 连续——可微是比连续强得多的条件，能写出全微分就自动连续。</p>
+<h3>第二步：驻点只是"候选人"</h3>
+<p>$f_x(0,0)=f_y(0,0)=0$，$(0,0)$ 是驻点。但驻点只说明切平面水平，函数在此可高可低，必须过二阶判别法这一关。</p>
+<h3>第三步：二阶判别——为什么 $AC-B^2&gt;0$ 且 $A&gt;0$ 是"碗"</h3>
+<p>在驻点附近作二阶泰勒展开，函数增量由二次型主导：</p>
+<p>$$\Delta f\approx\tfrac12\big(A\,h^2+2B\,hk+C\,k^2\big),\qquad h=\Delta x,\ k=\Delta y.$$</p>
+<p>$AC-B^2$ 正是这个二次型的判别式：$AC-B^2&gt;0$ 说明它<strong>定号</strong>（沿任何方向都不摇摆变号），符号由 $A$ 决定；$A&gt;0$ 定号为正——无论往哪个方向走一小步，函数值都变大，几何上是"碗口向上"，故取极小。代入本题：</p>
+<p>$$A=f_{xx}=1,\quad B=f_{xy}=0,\quad C=f_{yy}=1,\qquad AC-B^2=1&gt;0,\ A=1&gt;0,$$</p>
+<p>所以 $(0,0)$ 是<strong>极小值点</strong>，选 D。若 $A&lt;0$ 则"碗口向下"取极大——这正是 C 的误区。</p>
+<h3>第四步：特例印证</h3>
+<p>积分还原得 $f(x,y)=\dfrac{x^2+y^2}{2}+C$，旋转抛物面开口向上，原点显然是最低点，与判别结果一致。</p>
+<h3>易错点</h3>
+<ul><li><strong>误选 A（不是连续点）</strong>：可微 $\Rightarrow$ 连续（见第一步的增量式），写得出全微分就连续。</li><li><strong>误选 B（不是极值点）</strong>：把"驻点未必是极值点"错当成"驻点必不是极值点"，本题判别式确实通过。</li><li><strong>误选 C（极大值点）</strong>：$A&gt;0$ 对应碗口向上即极小；极大要 $A&lt;0$。</li><li><strong>跳过判别直接下结论</strong>：驻点只是必要条件，$AC-B^2$ 这一步不能省。</li></ul>
+<blockquote>一句话：读偏导 → 验驻点 → 二次型判别式 $AC-B^2&gt;0$ 且 $A&gt;0$ ⇒ 极小值点。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

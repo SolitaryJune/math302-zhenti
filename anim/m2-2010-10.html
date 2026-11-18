@@ -101,5 +101,29 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：渐近线三查——本质是「曲线与直线的纵差趋于零」</h2>
+<p>答案：$y=2x$。</p>
+<h3>第 0 步：先立机制——渐近线是什么、为什么按这个顺序查</h3>
+<p>渐近线不是含糊的「曲线贴近某直线」，而是精确的极限条件：</p>
+<ul><li><strong>竖直</strong>：$x\to x_0$ 时 $y\to\infty$——只可能发生在分母为零的点，所以<strong>先查定义域</strong>；</li><li><strong>水平/斜</strong>：$x\to\infty$ 时曲线与直线 $y=kx+b$ 的<strong>纵差</strong> $y-(kx+b)\to0$——纵向误差被吸干，直线才能越拉越紧地「贴住」曲线。</li></ul>
+<p>查的顺序由「谁先出面」决定：竖直看有限点，水平/斜看无穷远。本题分母 $x^2+1&gt;0$ 恒成立，无竖直渐近线；分子次数（$3$）比分母（$2$）恰高一次，$x\to\pm\infty$ 时 $y\to\pm\infty$，无水平渐近线——<strong>次数差恰好 $1$ 正是斜渐近线的典型信号</strong>（差 $0$ 才对应水平）。</p>
+<h3>第一步：为什么必须先求 $k$ 再求 $b$——顺序不可反</h3>
+<p>设 $y=kx+b+\varepsilon(x)$ 且 $\varepsilon(x)\to0$。除以 $x$：</p>
+<p>$$\frac yx=k+\frac bx+\frac{\varepsilon(x)}x\ \xrightarrow{\ x\to\infty\ }\ k.$$</p>
+<p><strong>这就是「先 $k$ 后 $b$」的机制</strong>：只有斜率猜对了，$y-kx$ 才会收敛到有限的 $b$；斜率不对，$y-kx$ 直接发散，$b$ 根本算不出来。</p>
+<p>$$k=\lim_{x\to\infty}\frac yx=\lim_{x\to\infty}\frac{2x^2}{x^2+1}=2.$$</p>
+<h3>第二步：再求 $b$——长除法一眼看出余项</h3>
+<p>$$b=\lim_{x\to\infty}\big(y-2x\big)=\lim_{x\to\infty}\frac{2x^3-2x(x^2+1)}{x^2+1}=\lim_{x\to\infty}\frac{-2x}{x^2+1}=0.$$</p>
+<p><strong>更快的一条路</strong>是先做除法分离整部：</p>
+<p>$$\frac{2x^3}{x^2+1}=2x-\frac{2x}{x^2+1}.$$</p>
+<p>「多项式部分 $+$ 真分式」正是斜渐近线的代数形态：$2x$ 就是那根直线，余项 $-\dfrac{2x}{x^2+1}\to0$ 自动验证 $b=0$——极限法与长除法互为印证。$x\to-\infty$ 方向同样得 $k=2,\ b=0$，故唯一渐近线为 $y=2x$。</p>
+<h3>易错点</h3>
+<ul><li><strong>只答 $k$ 丢 $b$</strong>：斜渐近线要 $k,b$ 齐备；此处 $b=0$ 只是恰好为零，不是可以不写。</li><li><strong>顺序颠倒或跳步</strong>：斜率没定准就令 $b=\lim(y-kx)$，极限发散算不出；更常见的是跳过竖直与水平检查直接凑斜率。</li><li><strong>通分漏项</strong>：$y-2x$ 的分子是 $2x^3-2x(x^2+1)=-2x$，漏减 $2x$ 会得错误余项。</li></ul>
+<blockquote>渐近线 $=$ 纵差趋零；先 $k=\lim y/x$ 后 $b=\lim(y-kx)$（顺序不可反），或长除分离整部。本题 $y=2x$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

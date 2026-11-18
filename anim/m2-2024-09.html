@@ -118,5 +118,31 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：由 $\boldsymbol A(\boldsymbol A-\boldsymbol A^*)=\boldsymbol O$ 定秩——先消伴随，再按秩过筛</h2>
+<p>答案：<strong>D</strong>（$r(\boldsymbol A)$ 可能为 1 或 2）。</p>
+<h3>第 0 步：先立机制——伴随矩阵的一切由秩决定</h3>
+<p>条件里有伴随阵 $\boldsymbol A^*$，而四阶矩阵的伴随阵性质由 $r(\boldsymbol A)$ 一个开关完全决定：</p>
+<p>$$r(\boldsymbol A^*)=\begin{cases}4,&amp; r(\boldsymbol A)=4\\1,&amp; r(\boldsymbol A)=3\\0,&amp; r(\boldsymbol A)\le2\end{cases}$$</p>
+<p><strong>为什么按秩分类是对的路？</strong> 展开方程 $\boldsymbol A(\boldsymbol A-\boldsymbol A^*)=\boldsymbol O$ 得 $\boldsymbol A^2=\boldsymbol A\boldsymbol A^*$，再代入核心恒等式 $\boldsymbol A\boldsymbol A^*=|\boldsymbol A|\boldsymbol E$，伴随被彻底洗掉，剩下</p>
+<p>$$\boldsymbol A^2=|\boldsymbol A|\boldsymbol E.$$</p>
+<p>它是否自洽、$\boldsymbol A\ne\boldsymbol A^*$ 是否被违反，全由秩的取值说了算——秩是本题唯一的自由度，逐个秩过筛即可。</p>
+<h3>第 1 步：$r=4$ 与 $r=0$——都死在 $\boldsymbol A\ne\boldsymbol A^*$ 上</h3>
+<p>$r=4$ 时 $\boldsymbol A$ 可逆，$\boldsymbol A^2=|\boldsymbol A|\boldsymbol E$ 两边右乘 $\boldsymbol A^{-1}$ 得 $\boldsymbol A=|\boldsymbol A|\boldsymbol A^{-1}$；而伴随公式 $\boldsymbol A^*=|\boldsymbol A|\boldsymbol A^{-1}$ 恰是同一个东西，于是 $\boldsymbol A=\boldsymbol A^*$，违反 $\boldsymbol A\ne\boldsymbol A^*$，排除。$r=0$ 即 $\boldsymbol A=\boldsymbol O$，此时 $\boldsymbol A^*=\boldsymbol O=\boldsymbol A$，同样违反，排除。<strong>这两个秩死在同一个"小条件"上</strong>——$\boldsymbol A\ne\boldsymbol A^*$ 不是废话，是命题人埋的闸门。</p>
+<h3>第 2 步：$r=3$——被秩不等式卡死</h3>
+<p>$r=3&lt;4$ 时 $|\boldsymbol A|=0$，方程退化为 $\boldsymbol A^2=\boldsymbol O$。<strong>为什么 $\boldsymbol A^2=\boldsymbol O$ 推出 $r\le2$？</strong> 看 $\boldsymbol A$ 把向量打到哪：$\boldsymbol A^2\boldsymbol x=\boldsymbol0$ 对一切 $\boldsymbol x$ 成立，说明 $\boldsymbol A$ 的每一列都落在 $\boldsymbol A\boldsymbol x=\boldsymbol0$ 的解空间里——列空间（维数 $r$）含于零空间（维数 $4-r$），故 $r\le4-r$，$r\le2$。这与 $r=3$ 矛盾，排除。</p>
+<h3>第 3 步：$r=2$ 与 $r=1$——条件全活，各配一个实例</h3>
+<p>$r\le2$ 时 $r(\boldsymbol A^*)=0$ 即 $\boldsymbol A^*=\boldsymbol O$，方程同样退化为 $\boldsymbol A^2=\boldsymbol O$，而 $r\le2$ 与它相容。但"相容"还不算数——<strong>得构造出真的满足条件的 $\boldsymbol A$</strong>：</p>
+<ul><li>$r=2$：取 $\boldsymbol A=\begin{pmatrix}0&amp;0&amp;1&amp;0\\0&amp;0&amp;0&amp;1\\0&amp;0&amp;0&amp;0\\0&amp;0&amp;0&amp;0\end{pmatrix}$（右移算子），直接验算 $\boldsymbol A^2=\boldsymbol O$，$r(\boldsymbol A)=2$，且 $\boldsymbol A\ne\boldsymbol O=\boldsymbol A^*$，全部条件满足。</li><li>$r=1$：秩 1 阵可写 $\boldsymbol A=\boldsymbol u\boldsymbol v^{\mathrm T}$，则 $\boldsymbol A^2=(\boldsymbol v^{\mathrm T}\boldsymbol u)\boldsymbol A$，只要 $\boldsymbol v^{\mathrm T}\boldsymbol u=0$（如严格上三角的 $\begin{pmatrix}0&amp;1&amp;0&amp;0\\0&amp;0&amp;0&amp;0\\0&amp;0&amp;0&amp;0\\0&amp;0&amp;0&amp;0\end{pmatrix}$）就幂零，且 $r=1$、$\boldsymbol A\ne\boldsymbol O$。</li></ul>
+<h3>第 4 步：合题</h3>
+<table><thead><tr><th>$r$</th><th>4</th><th>3</th><th>2</th><th>1</th><th>0</th></tr></thead><tbody><tr><td>判定</td><td>排除</td><td>排除</td><td>可取</td><td>可取</td><td>排除</td></tr></tbody></table>
+<p>$r(\boldsymbol A)$ 可能取 $1$ 或 $2$，选 <strong>D</strong>。</p>
+<h3>易错点</h3>
+<ul><li><strong>漏掉 $r=1$</strong>：只记得 $\boldsymbol A^2=\boldsymbol O\Rightarrow r\le2$，忘了相容还要<strong>构造实例</strong>佐证——迹为零的秩 1 幂零阵就是现成例子。</li><li><strong>保留 $r=0$</strong>：零矩阵的伴随还是零矩阵，$\boldsymbol A\ne\boldsymbol A^*$ 正是卡它的。</li><li><strong>$r=3$ 时漏掉秩约束</strong>：把 $\boldsymbol A^2=\boldsymbol O$ 当"没问题"——它对秩的压缩（列空间 $\subseteq$ 零空间）是硬约束。</li></ul>
+<blockquote>一句话结论：$\boldsymbol A^2=|\boldsymbol A|\boldsymbol E$ 杀满秩，$\boldsymbol A^2=\boldsymbol O$ 杀 $r\ge3$，$\boldsymbol A\ne\boldsymbol A^*$ 杀零阵——只剩 $r=1,2$，选 D。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

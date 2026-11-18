@@ -86,5 +86,28 @@ AW.init({
   },
 });
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：对数型函数的驻点计数——ln|x| 求导免分段</h2>
+<p>答案：C（2 个）</p>
+<h3>第一步：先解决最可能卡住的「为什么」——ln|x−a| 求导不用分段</h3>
+<p>定义域为 $x\neq1,2,3$。常见疑问：带绝对值求导要不要分区间讨论？其实不用：</p>
+<p>$$\bigl(\ln\lvert x-a\rvert\bigr)'=\frac{1}{x-a}.$$</p>
+<p>$x&gt;a$ 时就是普通的链式法则；$x&lt;a$ 时 $\ln\lvert x-a\rvert=\ln(a-x)$，求导得 $\dfrac{-1}{a-x}=\dfrac{1}{x-a}$——两条路给出同一个式子。直观地说，$\ln\lvert x-a\rvert$ 的图像在 $x=a$ 两侧镜像对称，斜率公式统一。于是放心拆开：</p>
+<p>$$f(x)=\ln\lvert x-1\rvert+\ln\lvert x-2\rvert+\ln\lvert x-3\rvert,\qquad f'(x)=\frac{1}{x-1}+\frac{1}{x-2}+\frac{1}{x-3}.$$</p>
+<h3>第二步：解 $f'(x)=0$</h3>
+<p>通分后分母 $(x-1)(x-2)(x-3)$ 在定义域内恒非零，只需分子为零：</p>
+<p>$$(x-2)(x-3)+(x-1)(x-3)+(x-1)(x-2)=3x^2-12x+11=0.$$</p>
+<p>判别式 $\Delta=144-132=12&gt;0$，两根</p>
+<p>$$x=2\pm\frac{\sqrt3}{3}\approx1.42,\ 2.58,$$</p>
+<p>分别落在 $(1,2)$ 与 $(2,3)$ 内，都不等于 $1,2,3$，全部有效。</p>
+<h3>第三步：用单调性兜底——为什么不漏不重</h3>
+<p>不解方程也能先「数」出个数：$f''(x)=-\dfrac{1}{(x-1)^2}-\dfrac{1}{(x-2)^2}-\dfrac{1}{(x-3)^2}&lt;0$，故 $f'$ 在四个区间上都严格递减。在 $(-\infty,1)$ 上三项全负、$f'&lt;0$；在 $(3,+\infty)$ 上三项全正、$f'&gt;0$——这两段没有零点。在 $(1,2)$ 上 $f'$ 从 $+\infty$（$x\to1^+$）降到 $-\infty$（$x\to2^-$），恰一个零点；$(2,3)$ 同理恰一个。合计恰好 $2$ 个，与二次方程的两根互相印证。</p>
+<h3>易错点</h3>
+<ul><li><strong>把 $x=1,2,3$ 卷进来（误选 D）</strong>：这些点函数无定义（$f\to-\infty$），是「奇点」不是「驻点」候选。</li><li><strong>只盯一个区间（误选 B）</strong>：$(1,2)$ 和 $(2,3)$ 各藏一个驻点，漏掉一边就数成 $1$。</li><li><strong>以为绝对值/对数会抹掉驻点（误选 A）</strong>：拆成对数和后 $f'$ 是货真价实的有理式，零点确实存在。</li><li><strong>通分展开算错</strong>：三个二次式相加是 $3x^2-12x+11$，判别式要细心算出 $12&gt;0$ 才有两根。</li></ul>
+<blockquote>结论：选 <strong>C</strong>。$\ln\lvert\cdot\rvert$ 求导免分段是起手式；「$f'$ 严格递减 + 端点极限异号」保证每区间恰一个驻点。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

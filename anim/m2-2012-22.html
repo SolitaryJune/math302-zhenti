@@ -132,5 +132,30 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：循环型矩阵行列式 + 含参方程组的解的判定与通解</h2>
+<p>最终答案：(1) $|A|=1-a^4$；(2) $a=-1$ 时有无穷多解，通解 $\boldsymbol x=C\,(1,1,1,1)^{\mathrm T}+(0,-1,0,0)^{\mathrm T}$（$C$ 为任意常数）；$a=1$ 时无解。</p>
+<h3>第一步：(1) 按第一列展开</h3>
+<p>第一列只有 $a_{11}=1$ 与 $a_{41}=a$ 非零：</p>
+<p>$$|A|=1\cdot\begin{vmatrix}1&amp;a&amp;0\\0&amp;1&amp;a\\0&amp;0&amp;1\end{vmatrix}-a\cdot\begin{vmatrix}a&amp;0&amp;0\\1&amp;a&amp;0\\0&amp;1&amp;a\end{vmatrix}=1-a\cdot a^3=1-a^4.$$</p>
+<p>（第二个三阶行列式是上三角，值 $a^3$；$a_{41}$ 的代数余子式带符号 $(-1)^{4+1}=-1$。）</p>
+<h3>第二步：(2) 无穷多解的必要条件</h3>
+<p>$|A|=1-a^4=0\ \Rightarrow\ a^4=1$，实数只有 $a=\pm1$，逐一检验增广矩阵的秩。</p>
+<h3>第三步：$a=1$ 时无解</h3>
+<p>四条方程为 $x_1+x_2=1$、$x_2+x_3=-1$、$x_3+x_4=0$、$x_1+x_4=0$。第 1 行加第 3 行得 $x_1+x_2+x_3+x_4=1$；第 2 行加第 4 行得 $x_1+x_2+x_3+x_4=-1$。矛盾 → $r(A)=3&lt;r(A\mid\beta)=4$，无解。</p>
+<h3>第四步：$a=-1$ 时消元求通解</h3>
+<p>增广矩阵依次作 $R_4+R_1\to R_4$、$R_4+R_2\to R_4$、$R_4+R_3\to R_4$，化为</p>
+<p>$$\left(\begin{array}{cccc|c}1&amp;-1&amp;0&amp;0&amp;1\\0&amp;1&amp;-1&amp;0&amp;-1\\0&amp;0&amp;1&amp;-1&amp;0\\0&amp;0&amp;0&amp;0&amp;0\end{array}\right),$$</p>
+<p>$r(A)=r(A\mid\beta)=3&lt;4$，有无穷多解。取自由变量 $x_4=C$ 回代：$x_3=C$，$x_2=C-1$，$x_1=C$，即</p>
+<p>$$\boldsymbol x=C\begin{pmatrix}1\\1\\1\\1\end{pmatrix}+\begin{pmatrix}0\\-1\\0\\0\end{pmatrix}\quad(C\ \text{为任意常数}).$$</p>
+<h3>第五步：验算</h3>
+<p>取 $C=0$，$\boldsymbol x=(0,-1,0,0)^{\mathrm T}$：第 1 行 $0-(-1)=1$；第 2 行 $-1$；第 3、4 行为 $0$，与 $\beta=(1,-1,0,0)^{\mathrm T}$ 吻合。</p>
+<h3>易错点</h3>
+<ul><li><strong>代数余子式漏负号</strong>：按第一列展开时 $a_{41}$ 的符号是 $(-1)^{4+1}$，漏掉会得 $1+a^4$，$a^4=1$ 就无实数解了。</li><li><strong>只令 $|A|=0$ 不检验</strong>：$a=\pm1$ 都使 $|A|=0$，但只有 $a=-1$ 相容，$a=1$ 是矛盾方程组，漏讨论丢一半分。</li><li><strong>自由变量认错列</strong>：阶梯形中第 4 列无主元，自由变量是 $x_4$，回代顺序从下往上。</li></ul>
+<blockquote>结论：$|A|=1-a^4$；$a=-1$ 时通解 $C(1,1,1,1)^{\mathrm T}+(0,-1,0,0)^{\mathrm T}$，$a=1$ 时无解。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

@@ -99,5 +99,40 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：切线截距条件建微分方程 + 切线三角形面积最值</h2>
+<p><strong>答案</strong>：(1) $y=x(2-\ln x)$（$x&gt;\mathrm e$）；(2) 切点 $\left(\mathrm e^{3/2},\ \dfrac{\mathrm e^{3/2}}{2}\right)$，最小面积 $S=\mathrm e^3$。</p>
+<h3>第 0 步：先立模型——「距离=截距」这句话为什么必然是一个微分方程</h3>
+<p>曲线由「每一点处切线的性质」来刻画，而切线由切点 $(x,y)$ 与斜率 $y'$ 完全决定——所以这句话天生是关于 $x,\ y,\ y'$ 的一阶微分方程。先把两个几何量翻译出来：</p>
+<ul><li><strong>切线的 $y$ 轴截距</strong>：切线 $Y-y=y'(X-x)$，横坐标从 $x$ 走到 $0$ 时纵坐标的变化量为 $y'\cdot(0-x)=-xy'$，故截距 $Y_0=y-xy'$；</li><li><strong>$P$ 到 $y$ 轴的距离</strong>：$\lvert x\rvert$，题给 $x&gt;\mathrm e&gt;0$，就是 $x$。</li></ul>
+<p>于是条件即</p>
+<p>$$y-xy'=x\quad\Longrightarrow\quad y'-\frac{1}{x}\,y=-1.$$</p>
+<h3>第一步：为什么用积分因子——方程里藏着商导数的分子</h3>
+<p><strong>为什么这条路走得通</strong>：一阶线性方程 $y'+P(x)y=Q(x)$ 两边乘 $\mu=\mathrm e^{\int P\mathrm dx}$ 后，由 $\mu'+P\mu=0$，左端恰好捆成乘积的导数 $(\mu y)'$——积分因子的本质就是把「散开的 $y'$ 与 $y$」重新粘成一个整体。本题 $P=-\dfrac1x$，$\mu=\mathrm e^{-\ln x}=\dfrac1x$。</p>
+<p>本题还有更直接的看法：方程左端含组合 $xy'-y$，而 $\left(\dfrac yx\right)'=\dfrac{xy'-y}{x^2}$——<strong>方程里的组合正是商 $y/x$ 导数的分子</strong>。两边乘 $\dfrac1x$ 得</p>
+<p>$$\frac{y'}{x}-\frac{y}{x^2}=\left(\frac yx\right)'=-\frac1x\quad\Longrightarrow\quad \frac yx=-\ln x+C,$$</p>
+<p>即 $y=x(C-\ln x)$。代入 $\left(\mathrm e^2,0\right)$：$0=\mathrm e^2(C-2)$，得 $C=2$，故</p>
+<p>$$y=x(2-\ln x)\qquad(x&gt;\mathrm e).$$</p>
+<p>（通解是一族曲线，「过点 $\left(\mathrm e^2,0\right)$」这一条件负责从族里挑出唯一一条，所以 $C$ 必被唯一确定。）</p>
+<h3>第二步：两条截距与面积函数（第 2 问）</h3>
+<p>$y'=1\cdot(2-\ln x)+x\cdot\Big(-\dfrac1x\Big)=1-\ln x$，$x&gt;\mathrm e$ 时 $\ln x&gt;1$，$y'&lt;0$，曲线单调下降。</p>
+<p><strong>为什么 $y$ 轴截距不用重算</strong>：(1) 的条件说「每点截距 $=$ 距离 $=x$」，这就是 $Y_0=x$——第 1 问的微分方程在计算上的直接红利。</p>
+<p>$x$ 轴截距：令 $Y=0$，$X_0=x-\dfrac{y}{y'}$，代入 $y$ 与 $y'$：</p>
+<p>$$X_0=x-\frac{x(2-\ln x)}{1-\ln x}=\frac{x\left[(1-\ln x)-(2-\ln x)\right]}{1-\ln x}=\frac{x}{\ln x-1}&gt;0,$$</p>
+<p>分母 $\ln x-1&gt;0$ 保证 $X_0&gt;0$，三角形落在第一象限，面积</p>
+<p>$$S(x)=\frac12\,X_0Y_0=\frac{x^2}{2(\ln x-1)}.$$</p>
+<h3>第三步：取对数求导，并说清「极小即最小」</h3>
+<p>$S&gt;0$ 恒成立，取对数把商式求导变成加减法：</p>
+<p>$$\ln S=2\ln x-\ln 2-\ln(\ln x-1),\qquad \frac{S'}{S}=\frac2x-\frac{1}{x(\ln x-1)}=\frac{2(\ln x-1)-1}{x(\ln x-1)}.$$</p>
+<p>令分子为零：$2(\ln x-1)=1$，即 $\ln x=\dfrac32$，$x=\mathrm e^{3/2}$。</p>
+<p><strong>为什么这是全局最小而不是局部</strong>：$x\to\mathrm e^+$ 时 $\ln x-1\to0^+$，$S\to+\infty$；$x\to+\infty$ 时 $S\approx\dfrac{x^2}{2\ln x}\to+\infty$。两端都冲上天，$S$ 先减后增，唯一临界点就是最小值点。代入：</p>
+<p>$$y=\mathrm e^{3/2}\Big(2-\frac32\Big)=\frac{\mathrm e^{3/2}}2,\qquad S\Big(\mathrm e^{3/2}\Big)=\frac{\mathrm e^3}{2\cdot\frac12}=\mathrm e^3.$$</p>
+<h3>易错点</h3>
+<ul><li><strong>距离写成 $y$ 或 $\lvert y\rvert$</strong>：到 $y$ 轴的距离是 $\lvert x\rvert$，本题 $x&gt;\mathrm e$ 才能直接写 $x$。</li><li><strong>移项丢负号</strong>：$y-xy'=x$ 应整理为 $y'-\frac1xy=-1$；若写成 $y'+\frac1xy$，积分因子就变成 $x$，会解出完全不同的曲线。</li><li><strong>忘用 (1) 的结论</strong>：$y$ 轴截距 $=x$ 恰是原条件，重新硬算既费时又易错。</li><li><strong>对 $S(x)$ 硬用商法则</strong>：商的求导又长又易错，$S&gt;0$ 时取对数求导把乘除变加减最稳。</li></ul>
+<blockquote>一句话结论：切线 $y$ 轴截距条件给出 $y'-\frac{y}{x}=-1$（左端可凑成 $\left(\frac yx\right)'$），配 $\left(\mathrm e^2,0\right)$ 得 $y=x(2-\ln x)$；$S=\dfrac{x^2}{2(\ln x-1)}$ 两端发散、唯一临界点 $x=\mathrm e^{3/2}$ 即最小，$S_{\min}=\mathrm e^3$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

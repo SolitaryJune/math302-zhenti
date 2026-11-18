@@ -88,5 +88,24 @@ AW.init({
   },
 });
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：初等变换的矩阵语言——左右乘规则可以「推」出来</h2>
+<p>答案：D（$A=P_2P_1^{-1}$）</p>
+<h3>第一步：先懂机制——为什么行变换左乘、列变换右乘</h3>
+<p>这条规则不必背，用矩阵乘法的结构一推就出。<strong>按列看</strong>：$AP$ 的第 $j$ 列 $=A\cdot(P$ 的第 $j$ 列$)$，即用 $P$ 第 $j$ 列的分量为系数去<strong>组合 $A$ 的列</strong>——列操作天然从右边乘进来。$P_1$ 的第 $1$ 列是 $(1,1,0)^{\mathrm T}$，于是 $AP_1$ 的第 $1$ 列 $=1\cdot$第$1$列 $+1\cdot$第$2$列 $+0\cdot$第$3$列，正是「第 2 列加到第 1 列」。<strong>按行看</strong>：$PA$ 的第 $i$ 行 $=(P$ 的第 $i$ 行$)\cdot A$，是用 $P$ 第 $i$ 行为系数<strong>组合 $A$ 的行</strong>——行操作天然从左边乘进来。$P_2$ 的第 $2$、$3$ 行分别是 $(0,0,1)$、$(0,1,0)$，所以 $P_2A$ 的第 $2$ 行取 $A$ 的第 $3$ 行、第 $3$ 行取 $A$ 的第 $2$ 行，正是交换第 2、3 行。</p>
+<p>于是 $P_1$ 就是「列加」矩阵、$P_2$ 就是「行换」矩阵，题面两句话可以逐句翻译。</p>
+<h3>第二步：把题面翻译成矩阵等式</h3>
+<ul><li>「$A$ 的第 2 列加到第 1 列得 $B$」是<strong>列变换</strong>，等于<strong>右乘</strong>：$B=AP_1$；</li><li>「交换 $B$ 的第 2、3 行得 $E$」是<strong>行变换</strong>，等于<strong>左乘</strong>：$P_2B=E$。</li></ul>
+<h3>第三步：联立解出 A——每一步求逆都有理由</h3>
+<p>$$P_2AP_1=E\ \Longrightarrow\ A=P_2^{-1}P_1^{-1}.$$</p>
+<p>$P_2$ 是交换两行的初等矩阵，再换一次就还原，故 $P_2^{-1}=P_2$；$P_1$ 把第 2 列加到第 1 列，其逆就是「把第 1 列减去第 2 列」，即那个 $1$ 变号。于是</p>
+<p>$$A=P_2P_1^{-1}.$$</p>
+<h3>易错点</h3>
+<ul><li><strong>左右乘记反（误选 A）</strong>：$P_1P_2$ 把「行左列右」全反过来，还漏了取逆；想不清就现场推一遍——列组合从右乘进来、行组合从左乘进来。</li><li><strong>逆矩阵安错对象（误选 B）</strong>：$P_1^{-1}P_2$ 顺序颠倒，且把不该取逆的 $P_1$ 取了逆、该体现自逆的 $P_2$ 没处理对。</li><li><strong>漏掉 $P_1$ 的逆（误选 C）</strong>：$P_2P_1$ 左右乘对了，但「加到」的逆是「减去」，$P_1^{-1}$ 不能省。</li><li><strong>不敢用 $P_2^{-1}=P_2$</strong>：交换矩阵自逆（换两次还原），漏了这步就凑不出 D 的形状。</li></ul>
+<blockquote>验证：取 $A=\begin{pmatrix}1&amp;0&amp;0\\0&amp;0&amp;1\\-1&amp;1&amp;0\end{pmatrix}$，则 $AP_1=\begin{pmatrix}1&amp;0&amp;0\\0&amp;0&amp;1\\0&amp;1&amp;0\end{pmatrix}$，交换其第 2、3 行恰得 $E$，完全吻合。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

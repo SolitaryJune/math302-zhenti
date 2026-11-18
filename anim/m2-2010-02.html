@@ -106,5 +106,21 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：非齐次线性方程解的线性组合条件</h2>
+<p>答案：A（$\lambda=\mu=\dfrac12$）</p>
+<h3>第一步：把条件翻译成算子语言</h3>
+<p>记 $L[y]=y'+p(x)y$，这是线性算子：$L[ay_1+by_2]=aL[y_1]+bL[y_2]$。题设 $L[y_1]=L[y_2]=q(x)$，且方程<strong>非齐次</strong>意味着 $q(x)\not\equiv0$。对两个组合解分别作用：</p>
+<p>$$L[\lambda y_1+\mu y_2]=(\lambda+\mu)\,q,\qquad L[\lambda y_1-\mu y_2]=(\lambda-\mu)\,q.$$</p>
+<h3>第二步：两个条件各自给出一条方程</h3>
+<ul><li>$\lambda y_1+\mu y_2$ 仍是<strong>非齐次</strong>方程的解：$(\lambda+\mu)q=q$，由 $q\not\equiv0$ 得 $\lambda+\mu=1$；</li><li>$\lambda y_1-\mu y_2$ 是<strong>齐次</strong>方程的解：$(\lambda-\mu)q=0$，得 $\lambda-\mu=0$。</li></ul>
+<p>联立解得 $\lambda=\mu=\dfrac12$。核对选项：A 两条全满足；B 满足 $\lambda=\mu$ 但 $\lambda+\mu=-1$；C 满足和为 1 但差为 $\dfrac13$；D 的和为 $\dfrac43$，两条都不满足。</p>
+<h3>易错点</h3>
+<ul><li><strong>忽视「非齐次」这个前提</strong>：若 $q\equiv0$，条件一只给出 $(\lambda+\mu)q=0$，推不出 $\lambda+\mu=1$；题干强调非齐次正是为了让两条方程都有内容。</li><li><strong>只验证一条就下结论</strong>：B、C 都恰好满足一条条件，必须两条同时成立。</li></ul>
+<blockquote>非齐次解的组合仍是非齐次解 ⟹ 系数和为 $1$；组合为齐次解 ⟹ 系数差为 $0$。选 <strong>A</strong>。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

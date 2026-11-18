@@ -106,5 +106,25 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：用麦克劳林系数读高阶导数</h2>
+<p>答案：$y^{(n)}(0)=-2^n(n-1)!$</p>
+<h3>第一步：基本工具</h3>
+<p>若 $f(x)=\sum_{k\ge0}a_kx^k$ 在 $x=0$ 附近成立，则 $f^{(n)}(0)=n!\,a_n$。于是目标变成：把 $\ln(1-2x)$ 展开成幂级数，读出 $x^n$ 的系数。</p>
+<h3>第二步：套用 $\ln(1+u)$ 的展开并代入 $u=-2x$</h3>
+<p>$$\ln(1+u)=u-\frac{u^2}{2}+\frac{u^3}{3}-\cdots\quad(\lvert u\rvert\lt1).$$</p>
+<p>令 $u=-2x$，每一项都带 $(-1)^{k-1}(-1)^k=-1$ 的因子，正负号全部翻转为负：</p>
+<p>$$\ln(1-2x)=-2x-\frac{(-2x)^2}{2}-\frac{(-2x)^3}{3}-\cdots=-\sum_{k=1}^{\infty}\frac{2^k}{k}x^k.$$</p>
+<h3>第三步：读系数、乘阶乘</h3>
+<p>$x^n$ 的系数 $a_n=-\dfrac{2^n}{n}$，于是</p>
+<p>$$y^{(n)}(0)=n!\cdot\Big(-\frac{2^n}{n}\Big)=-2^n(n-1)!.$$</p>
+<p>自检：$n=1$ 时 $y'(x)=\dfrac{-2}{1-2x}$，$y'(0)=-2=-2^1\cdot0!\ \checkmark$；$n=2$ 时 $y''(0)=-4=-2^2\cdot1!\ \checkmark$；$n=3$ 时 $y^{(3)}(0)=-16=-2^3\cdot2!\ \checkmark$。</p>
+<h3>易错点</h3>
+<ul><li><strong>符号处理错</strong>：$(-1)^{k-1}(-1)^k=-1$，各项系数全为负，漏乘负号是最常见错误。</li><li><strong>忘乘 $n!$ 或把 $\dfrac{n!}{n}$ 算错</strong>：$n!\cdot\dfrac1n=(n-1)!$，不是 $(n-1)$ 也不是 $n!-1$。</li><li><strong>直接硬求 $n$ 阶导数</strong>：对 $\ln$ 逐阶求导虽有规律，但用幂级数系数法更快且不易错。</li></ul>
+<blockquote>求高阶导数在定点值：先展开成幂级数，再取 $f^{(n)}(0)=n!\,a_n$。本题 $-2^n(n-1)!$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

@@ -96,5 +96,34 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：含参变限积分求导 + 导函数在一点的连续性</h2>
+<p><strong>答案：$x\neq0$ 时 $g'(x)=\dfrac{f(x)}x-\dfrac{1}{x^2}\displaystyle\int_0^x f(t)\,\mathrm dt$；$g'(0)=\dfrac12$，且 $g'(x)$ 在 $x=0$ 处连续。</strong></p>
+<h3>第零步：为什么必须换元——把参数从被积函数里搬出来</h3>
+<p>先立机制：变限积分求导公式 $\dfrac{\mathrm d}{\mathrm dx}\displaystyle\int_a^x f(t)\,\mathrm dt=f(x)$ 只对「被积函数与 $x$ 无关」的积分有效。$g(x)=\displaystyle\int_0^1 f(xt)\,\mathrm dt$ 里参数 $x$ 混在被积函数内部，公式管不着；而换元 $u=xt$ 正是把 $x$ 从被积函数里搬到积分限上，化为标准变限积分——这一步是全题的机制基础，后面求导、算 $g'(0)$ 全都建立在它之上。</p>
+<h3>第一步：先从条件里抠出 f(0)</h3>
+<p>$f$ 连续且 $\lim\limits_{x\to0}\dfrac{f(x)}x=1$：分母趋于 $0$ 而极限有限，分子必须同样趋于 $0$（否则比值发散），故 $f(0)=0$。从而</p>
+<p>$$g(0)=\int_0^1 f(0)\,\mathrm dt=0.$$</p>
+<h3>第二步：x≠0 时换元化为变限积分</h3>
+<p>令 $u=xt$（$t:0\to1$ 对应 $u:0\to x$），$\mathrm du=x\,\mathrm dt$：</p>
+<p>$$g(x)=\frac1x\int_0^x f(u)\,\mathrm du.$$</p>
+<p>再用商的求导法则与变限积分求导公式：</p>
+<p>$$g'(x)=\frac{x f(x)-\displaystyle\int_0^x f(u)\,\mathrm du}{x^2}=\frac{f(x)}x-\frac{1}{x^2}\int_0^x f(u)\,\mathrm du.$$</p>
+<h3>第三步：x=0 处为什么必须回到定义</h3>
+<p>$g'(x)$ 的表达式分母是 $x^2$，在 $x=0$ 处公式<strong>不存在</strong>——不是不想代，是没得代。导数在一点是否存在的最终裁判是定义：</p>
+<p>$$g'(0)=\lim_{x\to0}\frac{g(x)-g(0)}x=\lim_{x\to0}\frac{1}{x^2}\int_0^x f(u)\,\mathrm du.$$</p>
+<p>$\dfrac00$ 型用洛必达，合法性有两块：分子 $\displaystyle\int_0^x f(u)\,\mathrm du$ 关于 $x$ 可导且导数为 $f(x)$（变限积分求导定理，条件正是 $f$ 连续）；分母 $x^2$ 可导且在极限过程中非零。分子求导得 $f(x)$：</p>
+<p>$$g'(0)=\lim_{x\to0}\frac{f(x)}{2x}=\frac12\lim_{x\to0}\frac{f(x)}x=\frac12.$$</p>
+<h3>第四步：证连续——要验证的正是连续的定义本身</h3>
+<p>$g'(x)$ 在 $x=0$ 连续，按定义就是 $\lim\limits_{x\to0}g'(x)=g'(0)$，所以要算的恰是第二步公式在 $x\to0$ 的极限。两个极限都已入手：</p>
+<p>$$\lim_{x\to0}\frac{f(x)}x=1,\qquad \lim_{x\to0}\frac{1}{x^2}\int_0^x f(u)\,\mathrm du=\frac12,$$</p>
+<p>故 $\lim\limits_{x\to0}g'(x)=1-\dfrac12=\dfrac12=g'(0)$，$g'(x)$ 在 $x=0$ 处连续。</p>
+<h3>易错点</h3>
+<ul><li><strong>在 x=0 硬代公式</strong>：$g'(x)$ 的表达式分母是 $x^2$，$x=0$ 处必须用导数定义另算。</li><li><strong>漏掉 f(0)=0 这一步</strong>：没有它，$g(0)$ 算不出、换元后的下限也对不上。</li><li><strong>连续性只写极限值不写等于 g'(0)</strong>：连续的定义是极限值等于函数值，两边都要落笔。</li></ul>
+<blockquote>一句话结论：换元化成变限积分 → 分段求导 → 定义补上 $g'(0)=\dfrac12$ → 极限对账证连续。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

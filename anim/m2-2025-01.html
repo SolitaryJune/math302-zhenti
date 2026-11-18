@@ -89,5 +89,27 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：隐函数偏导 + 变限积分求导（盯住变下限的负号）</h2>
+<p>答案：A</p>
+<h3>第一步：审题定型</h3>
+<p>$z$ 由方程 $z+\ln z-\int_y^x \mathrm e^{-t^2}\,\mathrm dt=0$ 隐式确定。左边按成员拆解：$z$ 与 $\ln z$ 求导得 $\left(1+\dfrac1z\right)z_x$（或 $z_y$）；变限积分部分，对上限 $x$ 与下限 $y$ 分别求导。目标只算 $z_x+z_y$，两个偏导各求一次再相加。</p>
+<h3>第二步：对 $x$ 求偏导（$y$ 视为常数）</h3>
+<p>变上限求导直接得 $\mathrm e^{-x^2}$：</p>
+<p>$$z_x+\frac{1}{z}\,z_x-\mathrm e^{-x^2}=0\ \Longrightarrow\ z_x=\frac{z}{z+1}\,\mathrm e^{-x^2}.$$</p>
+<h3>第三步：对 $y$ 求偏导（$x$ 视为常数）</h3>
+<p><strong>为什么变下限求导多一层负号？</strong> 把积分反写：$\displaystyle\int_y^x \mathrm e^{-t^2}\mathrm dt=-\int_x^y\mathrm e^{-t^2}\mathrm dt$，对 $y$ 求导时它其实是变<strong>上</strong>限积分 $-\displaystyle\int_x^y$，上限换成 $y$ 直接得 $-\mathrm e^{-y^2}$。直观地说：下限增大、区间变短、积分变小——积分对下限的敏感度天生是负的。这个负号与积分前面挂着的整体减号两层叠加：</p>
+<p>$$z_y+\frac{1}{z}\,z_y+\mathrm e^{-y^2}=0\ \Longrightarrow\ z_y=-\frac{z}{z+1}\,\mathrm e^{-y^2}.$$</p>
+<p>交叉验证（隐函数求导公式）：记 $F=z+\ln z-\int_y^x \mathrm e^{-t^2}\mathrm dt$，则 $F_x=-\mathrm e^{-x^2}$，$F_y=\mathrm e^{-y^2}$，$F_z=1+\dfrac1z$，由 $z_y=-F_y/F_z$ 得 $z_y=-\dfrac{z}{z+1}\,\mathrm e^{-y^2}$，与直接求导一致。</p>
+<h3>第四步：相加定选项</h3>
+<p>$$z_x+z_y=\frac{z}{z+1}\left(\mathrm e^{-x^2}-\mathrm e^{-y^2}\right),$$</p>
+<p>正是选项 <strong>A</strong> 的形状：括号内一正一负相减。</p>
+<h3>易错点</h3>
+<ul><li><strong>变下限忘带负号</strong>：把 $z_y$ 的符号取成正号就得到两项相加，错选 B。</li><li><strong>整体再反一次号</strong>：C、D 是在 A、B 基础上整体多乘 $-1$，来源于把移项方向搞反。</li><li><strong>$\ln z$ 求导漏链式</strong>：$\dfrac{\partial}{\partial x}\ln z=\dfrac{z_x}{z}$，丢掉 $z_x$ 就凑不出 $\left(1+\dfrac1z\right)$ 这个公因子。</li></ul>
+<blockquote>一句话结论：变上限给 $+\mathrm e^{-x^2}$，变下限给 $-\mathrm e^{-y^2}$，除以 $1+\dfrac1z$ 后一正一负相加，选 A。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

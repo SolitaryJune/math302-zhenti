@@ -91,5 +91,27 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：含参方程组解的判定——范德蒙行列式 + 两行相同时盯住右端</h2>
+<p>答案：D</p>
+<h3>第一步：算系数行列式——为什么从行列式入手</h3>
+<p>$n$ 元方程组 $A x=b$（$A$ 为 $n$ 阶方阵）的解的情况由秩决定：$r(A)=n$ 时唯一解；$r(A)&lt;n$ 时要么无解（$r(A)&lt;r(\bar A)$）、要么无穷多解（$r(A)=r(\bar A)&lt;n$）。方阵情形 $r(A)=3\iff\det A\neq0$，所以第一件事是把 $\det A$ 算出来。系数矩阵的行形如 $(1,x,x^2)$，对应节点 $1,a,b$，是范德蒙型：</p>
+<p>$$\det A=\begin{vmatrix}1&amp;1&amp;1\\1&amp;a&amp;a^2\\1&amp;b&amp;b^2\end{vmatrix}=(a-1)(b-1)(b-a).$$</p>
+<p>解的情况由 $\det A$ 是否为零分类。</p>
+<h3>第二步：det A ≠ 0（$a\neq1,\ b\neq1,\ a\neq b$）</h3>
+<p>$r(A)=3=n$，方程组<strong>有唯一解</strong>。</p>
+<h3>第三步：det A = 0 时看相容性</h3>
+<p>$\det A=0$ 意味着 $1,a,b$ 中<strong>至少两个相等</strong>，于是 $A$ 有两行相同。右端 $\boldsymbol b=(1,2,4)^{\mathrm T}$：</p>
+<ul><li>$a=1$：行 1、2 同为 $(1,1,1)$，右端却是 $1$ 与 $2$，出现 $0=1$ 型矛盾方程，无解；</li><li>$b=1$：行 1、3 相同，右端 $1\neq4$，无解；</li><li>$a=b$：行 2、3 相同，右端 $2\neq4$，无解。</li></ul>
+<p>三种子情况<strong>全部无解</strong>。</p>
+<h3>第四步：排除无穷多解</h3>
+<p>无穷多解需要 $r(A)=r(\bar A)&lt;3$，即「两行相同且对应右端分量也相同」——但 $1,2,4$ 两两不同，这一情形不可能出现。</p>
+<h3>易错点</h3>
+<ul><li><strong>以为 $\det A=0$ 就有无穷多解</strong>：还要看增广矩阵是否相容；两行相同而右端不同时是<strong>无解</strong>——误选 C 正源于此。</li><li><strong>忽视右端分量两两不同</strong>：正是它封死了「相同行 + 相同右端」的无穷多解情形。</li><li><strong>误选 A（无解）</strong>：漏看 $\det A\neq0$ 的情形——$1,a,b$ 两两不同时秩为 3，有唯一解。</li><li><strong>误选 B（有解）</strong>：忘了 $a=1$、$b=1$、$a=b$ 三种情况下方程组全部不相容，并非恒有解。</li></ul>
+<blockquote>一句话结论：$\det A\neq0$ 唯一解、$\det A=0$ 必无解（右端分量互异），选 D。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

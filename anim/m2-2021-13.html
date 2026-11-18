@@ -92,5 +92,27 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：隐函数求偏导——先定点的 $z$ 值，再代点解出系数</h2>
+<p>答案：$1$（题干中「$(0.2)$」按参考解析口径理解为点 $(0,2)$）</p>
+<h3>为什么走"隐函数求导"这条路</h3>
+<p>方程里 $z$ 同时出现在乘积项 $(x+1)z$、对数项 $y\ln z$、反三角复合项 $\arctan 2xy$ 中，无法从方程把 $z$ 显式解成 $z=f(x,y)$（参考解析口径：<strong>无法显式解出 $z$，直接对方程两端求导</strong>）。既然 $z$ 只能"藏"在方程里，就把 $z$ 看成 $z(x,y)$、两端对 $x$ 求偏导；求导后 $\dfrac{\partial z}{\partial x}$ 只以一次形式出现，代点即可解出。至于"先定点 $z=1$ 再代点、$z+2\ln z$ 严格递增故不必真解"的理由，见第一步与易错点第一条。</p>
+<h3>第一步：求指定点处的 $z$</h3>
+<p>把 $x=0,\ y=2$ 代入方程 $(x+1)z+y\ln z-\arctan2xy=1$：</p>
+<p>$$z+2\ln z=1.$$</p>
+<p>$z=1$ 满足（$1+0=1$）；又 $g(z)=z+2\ln z$ 满足 $g'(z)=1+\dfrac2z&gt;0$（$z&gt;0$），严格递增，故 $z=1$ 是唯一取值。</p>
+<h3>第二步：方程两边对 $x$ 求偏导（$y$ 视为常数，$z=z(x,y)$）</h3>
+<p>$$z+(x+1)\frac{\partial z}{\partial x}+\frac{y}{z}\,\frac{\partial z}{\partial x}-\frac{2y}{1+4x^2y^2}=0.$$</p>
+<p>逐项来源：$(x+1)z$ 用乘积法则；$y\ln z$ 里 $\ln z$ 对 $x$ 的导数是 $\dfrac{1}{z}z_x$；$\arctan 2xy$ 的分子是 $2y$。</p>
+<h3>第三步：代点解出</h3>
+<p>代 $x=0,\ y=2,\ z=1$：</p>
+<p>$$1+z_x+2z_x-\frac{4}{1+0}=0\ \Longrightarrow\ 3z_x=3\ \Longrightarrow\ \frac{\partial z}{\partial x}\bigg|_{(0,2)}=1.$$</p>
+<h3>易错点</h3>
+<ul><li><strong>跳过求 $z$</strong>：不先定出 $z(0,2)=1$，第三步无从代起；方程 $z+2\ln z=1$ 观察 $z=1$ 即可，不必真的解。</li><li><strong>$\arctan$ 求导错</strong>：$(\arctan 2xy)_x=\dfrac{2y}{1+4x^2y^2}$，分子是内层 $2xy$ 对 $x$ 的导数 $2y$，不是 $2x$。</li><li><strong>$\ln z$ 链式丢因子</strong>：$z$ 是 $x$ 的函数，$\dfrac{\partial}{\partial x}\ln z=\dfrac{1}{z}\dfrac{\partial z}{\partial x}$，漏掉 $\dfrac1z$ 或 $z_x$ 都不行。</li></ul>
+<blockquote>一句话结论：定点 $z=1$，求导后代点得 $1+3z_x-4=0$，故 $\left.\dfrac{\partial z}{\partial x}\right|_{(0,2)}=1$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

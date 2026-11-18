@@ -102,5 +102,32 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：隐式递推数列——递推映射把 $(0,x_n)$ 映回自身，单调有界收敛</h2>
+<p>答案：$\{x_n\}$ 收敛，且 $\displaystyle\lim_{n\to\infty}x_n=0$。</p>
+<h3>第一步：为什么走"单调有界"这条路</h3>
+<p>递推式 $x_n\mathrm{e}^{x_{n+1}}=\mathrm{e}^{x_n}-1$ 把 $x_{n+1}$ 隐含给出（取对数得 $x_{n+1}=\ln\dfrac{\mathrm{e}^{x_n}-1}{x_n}$），没有初等通项，也不能先猜极限再验。隐式递推证收敛的标准工具是<strong>单调有界准则</strong>：把递推看成映射 $x_{n+1}=h(x_n)$，只要 $h$ 把每个 $x_n$ 映回 $(0,x_n)$ 内部，正性与递减同时到手。本题 $h$ 的结构恰好允许一次证完：</p>
+<p>$$\mathrm{e}^{x_{n+1}}=\frac{\mathrm{e}^{x_n}-1}{x_n}.$$</p>
+<h3>第二步：一个中值定理夹出两个不等式</h3>
+<p>对 $t&gt;0$，对 $g(s)=\mathrm{e}^{s}$ 在 $[0,t]$ 用拉格朗日中值定理：</p>
+<p>$$\mathrm{e}^{t}-1=t\,\mathrm{e}^{\xi},\qquad 0&lt;\xi&lt;t.$$</p>
+<p>由 $1&lt;\mathrm{e}^{\xi}&lt;\mathrm{e}^{t}$ 一次夹出<strong>两句话</strong>：</p>
+<p>$$t&lt;\mathrm{e}^{t}-1&lt;t\,\mathrm{e}^{t}.$$</p>
+<p>左边那句管<strong>正性</strong>，右边那句管<strong>递减</strong>——两条本是同一凸性事实的两面：$\mathrm{e}^{s}$ 是凸函数，弧在 $0$ 处切线 $y=1+s$ 的上方（故 $\mathrm{e}^{t}-1&gt;t$），而 $[0,t]$ 上的平均变化率小于右端点的瞬时变化率 $\mathrm{e}^{t}$（故 $\mathrm{e}^{t}-1&lt;t\,\mathrm{e}^{t}$）。</p>
+<h3>第三步：正性与递减一并证出</h3>
+<p>$x_1&gt;0$；设 $x_n&gt;0$。夹逼式给出</p>
+<p>$$1&lt;\frac{\mathrm{e}^{x_n}-1}{x_n}&lt;\mathrm{e}^{x_n}\ \Longrightarrow\ 1&lt;\mathrm{e}^{x_{n+1}}&lt;\mathrm{e}^{x_n}\ \Longrightarrow\ 0&lt;x_{n+1}&lt;x_n.$$</p>
+<p>左半边即 $x_{n+1}&gt;0$（保正，归纳法完成：$\{x_n\}$ 有下界 $0$），右半边即 $x_{n+1}&lt;x_n$（严格递减）。两件事由同一个映射"夹在 $(0,x_n)$ 内"一次完成。</p>
+<h3>第四步：单调有界 ⇒ 收敛；取极限解方程</h3>
+<p>$\{x_n\}$ 递减且有下界 $0$，由单调有界准则收敛，记 $\lim\limits_{n\to\infty}x_n=L\ge0$（递减数列的极限不小于下界——这是后面舍去负根的依据）。对递推式两边取极限（指数连续，极限可代入）：</p>
+<p>$$L\,\mathrm{e}^{L}=\mathrm{e}^{L}-1\ \Longleftrightarrow\ (1-L)\,\mathrm{e}^{L}=1.$$</p>
+<p>为什么只有 $L=0$：令 $h(L)=(1-L)\mathrm{e}^{L}$，$h(0)=1$，$h'(L)=-L\,\mathrm{e}^{L}&lt;0\ (L&gt;0)$——$h$ 从 $1$ 严格单调降到负，水平线 $y=1$ 只碰它一次，故 $L\ge0$ 内唯一解 $L=0$。</p>
+<h3>易错点</h3>
+<ul><li><strong>只证正性不证递减（或反之）</strong>：单调有界准则两条缺一，收敛结论不成立；用中值定理一次夹出 $t&lt;\mathrm{e}^{t}-1&lt;t\,\mathrm{e}^{t}$ 最省事。</li><li><strong>两个不等式用混方向</strong>：$\mathrm{e}^{t}-1&gt;t$ 使 $\mathrm{e}^{x_{n+1}}&gt;1$（保正）；$\mathrm{e}^{t}-1&lt;t\,\mathrm{e}^{t}$ 使 $\mathrm{e}^{x_{n+1}}&lt;\mathrm{e}^{x_n}$（递减）。</li><li><strong>取极限后直接写 $L=0$</strong>：$L\mathrm{e}^{L}=\mathrm{e}^{L}-1$ 是超越方程，必须用 $h(L)=(1-L)\mathrm{e}^{L}$ 在 $[0,+\infty)$ 严格递减说明唯一。</li><li><strong>忘了 $L\ge0$ 的依据</strong>：$L\ge0$ 来自"递减 + 下界 $0$"，舍负根全靠它。</li></ul>
+<blockquote>一句话结论：中值定理一次夹出 $t&lt;\mathrm{e}^{t}-1&lt;t\,\mathrm{e}^{t}$，于是 $0&lt;x_{n+1}&lt;x_n$（正且递减），单调有界收敛；极限满足 $(1-L)\mathrm{e}^{L}=1$，$h$ 严格递减唯一零点 $\lim\limits_{n\to\infty}x_n=0$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

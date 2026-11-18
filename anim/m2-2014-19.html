@@ -100,5 +100,39 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：积分不等式——把 $g$ 看成沙堆，单调性决定"往左压"</h2>
+<p>答案：(I) $0\le\displaystyle\int_a^xg(t)\,\mathrm dt\le x-a$；(II) $\displaystyle\int_a^{a+\int_a^bg(t)\,\mathrm dt}f(x)\,\mathrm dx\le\int_a^bf(x)g(x)\,\mathrm dx$。</p>
+<h3>第 0 步：先立机制——为什么结论长这样</h3>
+<p>把 $g$ 看成铺在 $[a,b]$ 上的<strong>沙堆</strong>：$0\le g\le1$ 意思是每一点最多铺一层；$c=\int_a^bg\,\mathrm dt$ 是沙的<strong>总质量</strong>。(II) 比较两个量：右边 $\int_a^bfg$ 是"沙铺在 $f$ 上"的总价值；左边 $\int_a^{a+c}f$ 是"把质量为 $c$ 的沙<strong>全部压到最左边</strong>（铺满 $[a,a+c]$）"的总价值。$f$ 单调增——同样的沙，铺得越靠左，压到的 $f$ 越小。所以直觉上 $\int_a^{a+c}f$ 是<strong>最省钱的一种铺法</strong>，任何真实铺法（受"每点至多一层"约束，质量 $c$ 只能往右溢出）价值只会更大。证明的全部内容，就是把"任何铺法 ≥ 最左铺法"这一句写严格；(I) 则是为 (II) 提供"沙的质量不超过区间长度 $b-a$、上限 $a+c$ 不越界"的后勤保障。</p>
+<h3>第一步：(I) 保号性的直接搬运</h3>
+<p>$0\le g(t)\le1$ 在 $[a,x]$ 上同时积分，由积分保号性：</p>
+<p>$$\int_a^x0\,\mathrm dt\le\int_a^xg(t)\,\mathrm dt\le\int_a^x1\,\mathrm dt=x-a.$$</p>
+<p>这一问是送分的，但<strong>不要跳过</strong>：取 $x=b$ 得 $0\le c\le b-a$，立刻给出 $a+c\in[a,b]$——(II) 的积分上限合法、且能用 $f$ 在 $a+c$ 处的值，全靠它。(I) 不是孤立小题，是 (II) 的先决条件。</p>
+<h3>第二步：(II) 作差——为什么拆分点选 $a+c$</h3>
+<p>记 $c=\int_a^bg(t)\,\mathrm dt$，考察差</p>
+<p>$$\Delta=\int_a^bf(x)g(x)\,\mathrm dx-\int_a^{a+c}f(x)\,\mathrm dx.$$</p>
+<p><strong>为什么在 $a+c$ 处把 $\int_a^bfg$ 拆成两段</strong>：左边的积分上限恰好是 $a+c$，拆开后两段区间 $[a,a+c]$ 与 $[a+c,b]$ 各自的"权重账"可以分开算：</p>
+<p>$$\Delta=-\int_a^{a+c}f(x)\bigl[1-g(x)\bigr]\,\mathrm dx+\int_{a+c}^bf(x)g(x)\,\mathrm dx.$$</p>
+<p>读一下这个式子的含义：左段"欠账"（该铺满却没铺满的 $1-g$），右段"盈余"（铺上去的 $g$）。</p>
+<h3>第三步：单调性放缩——为什么方向是那样</h3>
+<p>$f$ 单调增，与常数 $f(a+c)$ 比较：在左段 $[a,a+c]$ 上 $f(x)\le f(a+c)$；在右段 $[a+c,b]$ 上 $f(x)\ge f(a+c)$。权重 $1-g\ge0$、$g\ge0$，逐点不等式乘非负权重后可积分：</p>
+<p>$$-\int_a^{a+c}f(1-g)\,\mathrm dx\ \ge\ -f(a+c)\int_a^{a+c}(1-g)\,\mathrm dx,\qquad \int_{a+c}^bfg\,\mathrm dx\ \ge\ f(a+c)\int_{a+c}^bg\,\mathrm dx.$$</p>
+<p>合并：</p>
+<p>$$\Delta\ge f(a+c)\left[-\int_a^{a+c}(1-g)\,\mathrm dx+\int_{a+c}^bg\,\mathrm dx\right].$$</p>
+<p><strong>为什么这样放缩不会翻方向</strong>：左段带负号，"小的 $f$ 配大系数"才放大左端，故把 $f$ 换成上界 $f(a+c)$ 后不等号仍朝 $\ge$；右段带正号，$f$ 换下界 $f(a+c)$ 也是 $\ge$。两段都朝同一个方向让步，误差被推给方括号。</p>
+<h3>第四步：方括号恰为零——面积守恒是枢纽</h3>
+<p>由 $c=\displaystyle\int_a^bg=\int_a^{a+c}g+\int_{a+c}^bg$ 得</p>
+<p>$$\int_{a+c}^bg\,\mathrm dx=c-\int_a^{a+c}g\,\mathrm dx,$$</p>
+<p>而左段欠账 $\displaystyle\int_a^{a+c}(1-g)\,\mathrm dx=c-\int_a^{a+c}g\,\mathrm dx$。<strong>两个"修正量"一模一样</strong>——$[a,a+c]$ 上没铺满的质量，恰好等于 $[a+c,b]$ 上铺着的质量（沙的总质量守恒 $c$ 的两面）。于是方括号 $=0$，$\Delta\ge0$，即</p>
+<p>$$\int_a^{a+\int_a^bg(t)\,\mathrm dt}f(x)\,\mathrm dx\le\int_a^bf(x)g(x)\,\mathrm dx.\qquad\text{证毕。}$$</p>
+<p><strong>为什么恰好归零而不是 $\ge0$</strong>：放缩是有损的，若方括号还带正数，等于要求 $f(a+c)&gt;0$ 之类的额外条件；守恒式把两段误差精确对冲，让下界干净地落在 $0$ 上——这说明"最左铺法"在极限意义下真的可以取到（$g\equiv1$ 于 $[a,a+c]$、其后为 $0$ 时等号成立）。</p>
+<h3>易错点</h3>
+<ul><li><strong>不交代上限合法</strong>：必须先用 (I) 说明 $a+c\in[a,b]$，否则 $f(a+c)$ 无定义，后面全部悬空。</li><li><strong>放缩方向搞反</strong>：左段负系数、右段正系数，两段让步方向要同朝 $\ge$；动笔前先写清"谁放大谁缩小"。</li><li><strong>误把 (II) 当成 $\int_a^{a+c}f\le\int_a^{a+c}fg$</strong>：在 $[a,a+c]$ 上 $fg\le f$ 逐点成立，方向恰好相反；(II) 比的是全区间 $[a,b]$ 的 $fg$ 与左段的 $f$——右段补上左段欠的权重，才是本题的实质。</li><li><strong>想用切比雪夫不等式</strong>：它要求两个函数同向单调，$g$ 无单调性，不适用；分点比较法才是通用武器。</li></ul>
+<blockquote>直观锚点：$g$ 是每点至多一层的沙堆，总质量 $c$；$f$ 递增 ⇒ 沙铺得越靠左总价值越小，"压满 $[a,a+c]$"是最省配置，故 $\int_a^bfg\ge\int_a^{a+c}f$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

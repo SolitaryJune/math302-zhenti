@@ -87,5 +87,33 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：识破「伪极坐标」，换回直角坐标积分</h2>
+<p><strong>答案</strong>：$I=\dfrac13-\dfrac\pi{16}$。</p>
+<h3>第一步：先看微元——它不是极坐标，也不该留在极坐标里硬算</h3>
+<p>题面微元是 $\mathrm dr\,\mathrm d\theta$，<strong>没有雅可比因子 $r$</strong>，所以不能当极坐标二重积分硬算。为什么也不该原地硬积：先对 $r$ 积会撞上 $\int\sqrt{1-r^2\cos2\theta}\,\mathrm dr$ 这类 $\arcsin$ 型原函数，再对 $\theta$ 积更是没有初等闭式。出路藏在被积函数里：$r^2\cos2\theta=r^2\cos^2\theta-r^2\sin^2\theta$ 恰是 $x^2-y^2$ 的形状，故令 $x=r\cos\theta,\ y=r\sin\theta$，则</p>
+<p>$$r^2\cos2\theta=x^2-y^2,\qquad r^2\sin\theta=r\,y,\qquad \mathrm dx\,\mathrm dy=r\,\mathrm dr\,\mathrm d\theta\ \Rightarrow\ \mathrm dr\,\mathrm d\theta=\frac1r\,\mathrm dx\,\mathrm dy.$$</p>
+<p>（$\mathrm dx\,\mathrm dy=r\,\mathrm dr\,\mathrm d\theta$ 的来历：小扇环面积 $\approx$ 弧长 $r\,\mathrm d\theta$ $\times$ 径向厚度 $\mathrm dr$；所以把 $\mathrm dr\,\mathrm d\theta$ 换成 $\mathrm dx\,\mathrm dy$ 时要<strong>除回</strong>一个 $r$。至于 $r=0$ 处 $\dfrac1r$ 没定义——那只对应原点一个点，不影响积分值。）被积式变成</p>
+<p>$$r\,y\sqrt{1-x^2+y^2}\cdot\frac1r\,\mathrm dx\,\mathrm dy=y\sqrt{1-x^2+y^2}\,\mathrm dx\,\mathrm dy.$$</p>
+<h3>第二步：把区域翻译成直角坐标</h3>
+<p>$0\le\theta\le\dfrac\pi4\iff0\le y\le x$；$0\le r\le\sec\theta\iff r\cos\theta\le1\iff x\le1$（连同 $r\ge0$ 得 $0\le x\le1$）。故</p>
+<p>$$D'=\{(x,y)\mid0\le x\le1,\ 0\le y\le x\},\qquad I=\iint_{D'}y\sqrt{1-x^2+y^2}\,\mathrm dx\,\mathrm dy.$$</p>
+<p>区域从"扇形说法"变成最普通的三角形——换元的价值在微元与区域两头同时兑现。</p>
+<h3>第三步：为什么先对 $y$ 积</h3>
+<p>被积函数 $y\sqrt{1-x^2+y^2}$ 里，$y$ 恰好是 $(1-x^2+y^2)'/2$ 的因子——凑微分一步到位；若先对 $x$ 积，原函数会带 $\arcsin\dfrac{x}{\sqrt{1+y^2}}$ 一类背着 $y$ 的项，外层积分立刻恶化。令 $u=1-x^2+y^2$，$\mathrm du=2y\,\mathrm dy$：</p>
+<p>$$\int_0^xy\sqrt{1-x^2+y^2}\,\mathrm dy=\frac13(1-x^2+y^2)^{3/2}\Big|_{y=0}^{y=x}
+=\frac13\Big[1-(1-x^2)^{3/2}\Big].$$</p>
+<p>（$y=x$ 时 $1-x^2+x^2=1$，上界化成干净的 $1$——这是区域 $y\le x$ 送的礼物。）</p>
+<h3>第四步：再对 $x$ 积分（三角换元 + 华里士）</h3>
+<p>$$I=\frac13\Big[1-\int_0^1(1-x^2)^{3/2}\mathrm dx\Big],\qquad
+\int_0^1(1-x^2)^{3/2}\mathrm dx\overset{x=\sin t}{=\!=\!=}\int_0^{\pi/2}\cos^4t\,\mathrm dt=\frac34\cdot\frac12\cdot\frac\pi2=\frac{3\pi}{16}.$$</p>
+<p>（华里士公式：偶次幂 $\cos^4$ 直接写成 $\dfrac{3\cdot1}{4\cdot2}\cdot\dfrac\pi2$。）故 $I=\dfrac13-\dfrac\pi{16}\approx0.137&gt;0$，量级合理。</p>
+<h3>易错点</h3>
+<ul><li><strong>看到 $r,\theta$ 就乘 $r$</strong>：微元是 $\mathrm dr\,\mathrm d\theta$，代换后是 $\dfrac1r\,\mathrm dx\,\mathrm dy$，多乘一个 $r$ 结果全错。</li><li><strong>把 $r\le\sec\theta$ 看成圆</strong>：它等价于 $x\le1$，是竖直直线；区域是三角形 $0\le y\le x\le1$，不是扇形。</li></ul>
+<blockquote>一句话：被积函数里藏着 $x^2-y^2$，提示换直角坐标；微元没有 $r$，代换后反而要除回去；先 $y$（凑 $u=1-x^2+y^2$）后 $x$（$\cos^4$ 华里士），两步收工。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

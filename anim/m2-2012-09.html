@@ -101,5 +101,26 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：隐函数在定点处的二阶导（逐阶代入法）</h2>
+<p>答案：$1$</p>
+<h3>第一步：先定 $y(0)$</h3>
+<p>令 $x=0$：$1-y=\mathrm{e}^{y}$。$y=0$ 时左右同为 1，故 $y(0)=0$。（$h(y)=1-y-\mathrm{e}^{y}$ 满足 $h'(y)=-1-\mathrm{e}^{y}&lt;0$ 严格递减，解唯一。）</p>
+<h3>第二步：一阶导，边导边代</h3>
+<p>方程 $x^{2}-y+1=\mathrm{e}^{y}$ 两边对 $x$ 求导：</p>
+<p>$$2x-y'=\mathrm{e}^{y}\,y'\ \Longrightarrow\ 2x=y'(1+\mathrm{e}^{y}).$$</p>
+<p>代 $x=0,\ y=0$：$0=y'(1+1)$，得 $y'(0)=0$。</p>
+<h3>第三步：二阶导，再把旧值代入</h3>
+<p>对 $2x=y'(1+\mathrm{e}^{y})$ 再求导（右端用乘积法则，$y'$ 仍是 $x$ 的函数）：</p>
+<p>$$2=y''(1+\mathrm{e}^{y})+\mathrm{e}^{y}\,(y')^{2}.$$</p>
+<p>代 $y=0,\ y'=0$：$2=2y''$，故</p>
+<p>$$\left.\frac{\mathrm{d}^{2}y}{\mathrm{d}x^{2}}\right|_{x=0}=1.$$</p>
+<h3>易错点</h3>
+<ul><li><strong>不先定 $y(0)$ 就乱代</strong>：方程两边处处有 $y$，必须先解出 $y(0)=0$，后续代入才有依托。</li><li><strong>漏掉 $\mathrm{e}^{y}(y')^{2}$ 项</strong>：对 $\mathrm{e}^{y}\cdot y'$ 求导要用乘积法则，$y''$ 与 $\mathrm{e}^{y}y'$ 都会出现；本题 $y'(0)=0$ 让交叉项恰好归零。</li><li><strong>把 $y'$ 当常数</strong>：隐函数求导里 $y$ 与 $y'$ 都是 $x$ 的函数，链式法则不能省。</li></ul>
+<blockquote>一句话结论：$y(0)=0\Rightarrow y'(0)=0\Rightarrow 2=2y''$，二阶导为 $1$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

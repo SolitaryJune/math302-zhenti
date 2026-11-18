@@ -90,5 +90,25 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：规范形 $y_1^2$ 反推 $r(A)=1$——两行成比例定 $a,b$</h2>
+<p>答案：$2$</p>
+<h3>第零步：机制——规范形在报什么信、$AA^T$ 在做什么</h3>
+<p>两条机制撑起全题：</p>
+<ul><li><strong>$AA^T$ 半正定</strong>：$x^T(AA^T)x=(A^Tx)^T(A^Tx)=\lVert A^Tx\rVert^2$——它是向量 $A^Tx$ 各分量的<strong>平方和</strong>，天然 $\ge0$，所以负惯性指数必为 $0$，规范形里只会出现 $+1$ 的平方项。</li><li><strong>规范形 $y_1^2$ 在报秩</strong>：规范形的平方项个数就等于矩阵的秩。只有一个平方项，即 $r(AA^T)=1$。</li></ul>
+<p>再由秩的降维公式 $r(AA^T)=r(A)$。它的机制是同解性：$A^Tx=0$ 时显然 $(AA^T)x=A(A^Tx)=0$；反过来 $(AA^T)x=0$ 给出 $x^T(AA^T)x=\lVert A^Tx\rVert^2=0$，<strong>平方和为零必须每个分量都为零</strong>，故 $A^Tx=0$——两个方程组同解，秩相等。于是问题落到 $r(A)=1$，即 $2\times3$ 矩阵<strong>两行成比例（且非零）</strong>。</p>
+<h3>第一步：两行成比例列方程</h3>
+<p>设 $(a+2,\ 3,\ -3a)=k\,(1,\ b,\ -1)$。由第 1、3 个分量：</p>
+<p>$$k=a+2,\qquad k=3a\ \Longrightarrow\ a+2=3a\ \Longrightarrow\ a=1,\ k=3.$$</p>
+<h3>第二步：解出 $b$ 并验证</h3>
+<p>由第 2 个分量 $3=kb=3b$，得 $b=1$。验证：$A=\begin{pmatrix}1&amp;1&amp;-1\\3&amp;3&amp;-3\end{pmatrix}$ 两行成比例，$r(A)=1$，$AA^T$ 半正定且秩 $1$，规范形恰为 $y_1^2$ ✓。故</p>
+<p>$$a+b=1+1=2.$$</p>
+<h3>易错点</h3>
+<ul><li><strong>把规范形 $y_1^2$ 当正定</strong>：正定的规范形是 $y_1^2+y_2^2$；只有一个平方项是<strong>半</strong>正定且秩为 $1$。</li><li><strong>对 $AA^T$ 硬乘</strong>：算出含 $a,b$ 的 $2\times2$ 矩阵再讨论秩，又繁又易错；用 $r(AA^T)=r(A)$ 一步降维。</li><li><strong>比例只列一个方程</strong>：$k$ 要用两个分量联立才能消去解出 $a$。</li></ul>
+<blockquote>一句话结论：规范形 $y_1^2\Rightarrow r(A)=1\Rightarrow$ 两行成比例 $\Rightarrow a=1,\ b=1$，故 $a+b=2$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

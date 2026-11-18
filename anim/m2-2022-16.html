@@ -91,5 +91,29 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：初等变换的矩阵语言 + 迹的循环性质</h2>
+<p>答案：$-1$</p>
+<h3>第一步：把变换翻译成初等矩阵——为什么行左乘、列右乘</h3>
+<p>矩阵乘法的结构决定了方向：$(PA)$ 的第 $i$ 行是 $P$ 的第 $i$ 行对 $A$ 各行的组合——<strong>左乘动行</strong>；$(AQ)$ 的第 $j$ 列是 $A$ 各列按 $Q$ 的第 $j$ 列的组合——<strong>右乘动列</strong>。所以「交换第 2、3 行」= 左乘行交换矩阵 $P$；「第 2 列的 $-1$ 倍加到第 1 列」= 右乘列变换矩阵 $Q$（第 1 列加上 $-e_2$）：</p>
+<p>$$P=\begin{pmatrix}1&amp;0&amp;0\\0&amp;0&amp;1\\0&amp;1&amp;0\end{pmatrix},\qquad Q=\begin{pmatrix}1&amp;0&amp;0\\-1&amp;1&amp;0\\0&amp;0&amp;1\end{pmatrix},\qquad PAQ=B.$$</p>
+<h3>第二步：表示 $A^{-1}$</h3>
+<p>由 $PAQ=B$ 得 $A=P^{-1}BQ^{-1}$，取逆按逆序法则 $(XYZ)^{-1}=Z^{-1}Y^{-1}X^{-1}$ 反排（$P$ 是对称的交换矩阵，$P^{-1}=P$）：</p>
+<p>$$A^{-1}=QB^{-1}P.$$</p>
+<p>求迹用<strong>循环性质</strong>：$\operatorname{tr}(A^{-1})=\operatorname{tr}(QB^{-1}P)=\operatorname{tr}(B^{-1}PQ)$。它为什么成立？$\operatorname{tr}(XY)=\sum_i\sum_k X_{ik}Y_{ki}=\operatorname{tr}(YX)$——对角元求和时把两个求和号换序即可，三个因子同理轮换。于是只需算 $PQ$ 与 $B^{-1}PQ$ 的对角元。</p>
+<h3>第三步：算 $B^{-1}$ 与 $PQ$</h3>
+<p>$\det B=1$（按第 3 行展开），</p>
+<p>$$B^{-1}=\begin{pmatrix}0&amp;0&amp;-1\\0&amp;-1&amp;-1\\-1&amp;-1&amp;1\end{pmatrix},\qquad PQ=\begin{pmatrix}1&amp;0&amp;0\\0&amp;0&amp;1\\-1&amp;1&amp;0\end{pmatrix}.$$</p>
+<h3>第四步：取迹</h3>
+<p>$B^{-1}(PQ)$ 的对角元依次为</p>
+<p>$$(0,0,-1)\cdot(1,0,-1)^{\mathrm T}=1,\quad (0,-1,-1)\cdot(0,0,1)^{\mathrm T}=-1,\quad (-1,-1,1)\cdot(0,1,0)^{\mathrm T}=-1,$$</p>
+<p>故 $\operatorname{tr}(A^{-1})=1-1-1=-1$。（交叉验证：$A=\begin{pmatrix}-1&amp;1&amp;-1\\-1&amp;0&amp;0\\0&amp;-1&amp;0\end{pmatrix}$，$A^{-1}=\begin{pmatrix}0&amp;-1&amp;0\\0&amp;0&amp;-1\\-1&amp;1&amp;-1\end{pmatrix}$，迹同为 $-1$。）</p>
+<h3>易错点</h3>
+<ul><li><strong>行变换右乘、列变换左乘搞混</strong>：必须「左乘行、右乘列」，$PAQ$ 的顺序不能反。</li><li><strong>$Q$ 的元素位置</strong>：列倍加操作写在 $Q$ 的<strong>第 1 列</strong>（$Q_{21}=-1$），不是第 2 行。</li></ul>
+<blockquote>一句话结论：$A^{-1}=QB^{-1}P$，$\operatorname{tr}(A^{-1})=\operatorname{tr}(B^{-1}PQ)=-1$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

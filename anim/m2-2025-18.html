@@ -100,5 +100,36 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：泰勒展开反解出 $f$ 的结构，再用定义证可导</h2>
+<p><strong>答案</strong>：$f(x)$ 在 $x=0$ 处可导，且 $f'(0)=5$。</p>
+<h3>第一步：看清分母的阶</h3>
+<p>$$\ln(1+x)+\ln(1-x)=\ln\big((1+x)(1-x)\big)=\ln(1-x^2)\sim -x^2\quad(x\to0).$$</p>
+<p>分母是 $x^2$ 阶，极限等于 $-3$（非零常数），说明分子也必须是 $x^2$ 阶：这正是本题的突破口——<strong>从极限条件反解出 $xf(x)$ 的二阶展开</strong>。</p>
+<h3>第二步：把 $e^{2\sin x}$ 展到 $x^2$ 精度</h3>
+<p>$\sin x=x-\dfrac{x^3}6+\cdots$，故 $2\sin x=2x+o(x^2)$。三次项为什么可以扔？后面要用 $u^2=(2x+o(x^2))^2=4x^2+o(x^3)$，$x^3$ 落在平方项里仍不超出 $x^2$ 的精度预算，所以 $\sin$ 展到一阶就够。代入 $e^u=1+u+\dfrac{u^2}2+o(u^2)$，取 $u=2x+o(x^2)$：</p>
+<p>$$e^{2\sin x}=1+2x+\frac{(2x)^2}2+o(x^2)=1+2x+2x^2+o(x^2).$$</p>
+<h3>第三步：由极限条件反解 $xf(x)$</h3>
+<p>为什么"极限等于 $-3$"能变成等式？设分子 $N(x)=xf(x)-e^{2\sin x}+1$、分母主部 $B(x)=-x^2$。$\dfrac{N}{B}\to-3$ 等价于 $\dfrac{N-(-3)B}{B}\to0$，即分子与 $-3B$ 之差是比 $x^2$ 更高阶的小量：</p>
+<p>$$N(x)-3x^2=o(x^2)\quad\Longleftrightarrow\quad N(x)=3x^2+o(x^2).$$</p>
+<p>极限值只锁定到 $x^2$ 主项，零头全部收进 $o(x^2)$——这就是"极限条件"与"带余项展开"的互译，也是全题后文的源头。于是分子满足</p>
+<p>$$xf(x)-e^{2\sin x}+1=3x^2+o(x^2).$$</p>
+<p>代入第二步：</p>
+<p>$$xf(x)=e^{2\sin x}-1+3x^2+o(x^2)=2x+2x^2+3x^2+o(x^2)=2x+5x^2+o(x^2).$$</p>
+<p>两端除以 $x$（$x\ne0$）得 $f$ 在 $0$ 附近的<strong>结构</strong>：</p>
+<p>$$f(x)=2+5x+o(x).$$</p>
+<h3>第四步：连续性补上 $f(0)$，定义算出 $f'(0)$</h3>
+<p>上面的展开只在 $x\ne0$ 处得出，$f(0)$ 由连续性补齐：</p>
+<p>$$f(0)=\lim_{x\to0}f(x)=\lim_{x\to0}\big(2+5x+o(x)\big)=2.$$</p>
+<p>再按导数定义：</p>
+<p>$$f'(0)=\lim_{x\to0}\frac{f(x)-f(0)}x=\lim_{x\to0}\frac{5x+o(x)}x=5.$$</p>
+<p>验算：取 $f\approx2+5x$，则分子 $=(2x+5x^2)-(2x+2x^2)+o(x^2)=3x^2+o(x^2)$，除以分母 $-x^2$ 恰为 $-3$，与条件吻合。</p>
+<h3>易错点</h3>
+<ul><li><strong>对分子用洛必达</strong>：$f$ 只知连续、未必可导，$xf(x)$ 没有导数可求；条件给的是"极限存在"，正确工具是泰勒展开反解，不是洛必达。</li><li><strong>$e^{2\sin x}$ 展开精度不足</strong>：分母是 $x^2$ 阶，$e$ 上必须展到 $x^2$ 项 $\dfrac{(2x)^2}2=2x^2$；只展到 $1+2x$ 就定不出 $f'(0)$。</li><li><strong>跳过连续性直接写 $f(0)=2$</strong>：$f(x)=2+5x+o(x)$ 是在 $x\to0,\ x\ne0$ 过程中得到的，$f(0)$ 的值必须靠"在 $x=0$ 连续"这个条件取极限补上，这是证明中不可缺少的一环。</li><li><strong>导数定义写错对象</strong>：应写 $\dfrac{f(x)-f(0)}x$ 趋于 5；有人误把 $\dfrac{f(x)-2-5x}{x}$ 之类当导数定义。</li></ul>
+<blockquote>一句话结论：分母 $\sim-x^2$、极限 $-3$ 反解出 $xf(x)=2x+5x^2+o(x^2)$；连续性给 $f(0)=2$，导数定义给 $f'(0)=5$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

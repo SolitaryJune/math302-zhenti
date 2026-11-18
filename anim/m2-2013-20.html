@@ -108,5 +108,30 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：用最值造不等式，单调有界准则锁极限</h2>
+<p>答案：(1) 最小值为 $1$；(2) $\lim\limits_{n\to\infty}x_n=1$。</p>
+<h3>第一步：(1) 求最小值——同时造出一把「尺子」</h3>
+<p>$$f'(x)=\frac1x-\frac1{x^2}=\frac{x-1}{x^2}$$</p>
+<p>$x^2&gt;0$，符号由 $x-1$ 决定：$0&lt;x&lt;1$ 时递减、$x&gt;1$ 时递增，$x=1$ 是唯一极小点，两侧单调夹住它，故就是最小值点：</p>
+<p>$$f(1)=\ln1+1=1,\qquad \ln x+\frac1x\ge1\ \ (x&gt;0)$$</p>
+<p>这条<strong>全局不等式</strong>就是第 (2) 问的全部外援——(1) 不只是算个值，是在给 (2) 造工具。</p>
+<h3>第二步：为什么用单调有界准则</h3>
+<p>题设 $\ln x_n+\dfrac1{x_{n+1}}&lt;1$ 是关于 $x_n,x_{n+1}$ 的<strong>不等式</strong>，不是显式递推 $x_{n+1}=g(x_n)$——手里只有「序」的信息。单调有界准则恰好只需要序信息就能兑现收敛性，所以它是这类题的标准机器。它需要两样原料——单调性、有界性——都从 (1) 的尺子来。把 $f(x_n)\ge1$ 改写成 $1-\ln x_n\le\dfrac1{x_n}$，与题设串成链：</p>
+<p>$$\frac1{x_{n+1}}&lt;1-\ln x_n\le\frac1{x_n}$$</p>
+<h3>第三步：单调性与有界性——每步变形为什么合法</h3>
+<ul><li><strong>取倒数为什么合法</strong>：链上各量均为正——$\dfrac1{x_{n+1}}&gt;0$；它小于右端又迫使 $1-\ln x_n&gt;0$；$\dfrac1{x_n}&gt;0$。<strong>同正才可倒数反向</strong>，得 $x_{n+1}&gt;x_n$，$\{x_n\}$ 严格递增。</li><li><strong>有界从哪来</strong>：$1-\ln x_n&gt;0$ 给出 $\ln x_n&lt;1$，即 $x_n&lt;\mathrm e$——上界是顺手拿到的副产品。</li><li>单调递增 + 有上界，由单调有界准则，$A=\lim\limits_{n\to\infty}x_n$ 存在。</li></ul>
+<h3>第四步：取极限夹出 $A$——两处容易翻车的地方</h3>
+<p>对 $\ln x_n+\dfrac1{x_{n+1}}&lt;1$ 令 $n\to\infty$：</p>
+<ul><li><strong>为什么 $1/x_{n+1}$ 可以代极限</strong>：$\{x_n\}$ 递增且各项为正（$\ln x_n$ 有意义强制 $x_n&gt;0$），故 $A\ge x_1&gt;0$；$1/x$ 在 $(0,\infty)$ 连续，极限可代入。不交代 $A&gt;0$ 是常见失分点。</li><li><strong>为什么严格不等号只能传成 $\le$</strong>：极限过程会吃掉严格性（如 $x_n=1-\frac1n$ 每项严格小于 $1$，极限却是 $1$）。于是得 $\ln A+\dfrac1A\le1$，即 $f(A)\le1$。</li></ul>
+<p>但 (1) 的尺子给出 $f(A)\ge1$，两面夹出 $f(A)=1$。<strong>为什么能钉死 $A=1$</strong>：$f(A)=1$ 说明 $A$ 是最小值点，而单调性分析已证最小值点唯一（$x=1$），故</p>
+<p>$$\lim_{n\to\infty}x_n=1$$</p>
+<h3>易错点</h3>
+<ul><li><strong>取倒数忘了反向</strong>：同正才反向，$0&lt;\dfrac1{x_{n+1}}&lt;\dfrac1{x_n}$ 倒过来是 $x_{n+1}&gt;x_n$（递增），别弄成递减。</li><li><strong>不交代 $A&gt;0$ 就代 $1/A$</strong>：$1/x$ 只在 $(0,\infty)$ 连续，$A&gt;0$ 须由「递增 + 各项为正」落实。</li><li><strong>把 $&lt;$ 直接传成 $&lt;$</strong>：只能得 $f(A)\le1$，等号靠 $f(A)\ge1$ 夹出来。</li></ul>
+<blockquote>记忆锚点：数列题只有序信息就用单调有界准则；(1) 的最小值是 (2) 的尺子——造链、夹 $f(A)=1$、唯一最小点钉死 $A$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

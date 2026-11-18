@@ -85,5 +85,35 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：由「两个不同解」定参数 + 行变换求通解</h2>
+<p><strong>答案</strong>：(1) $\lambda=-1,\ a=-2$；(2) $x=k\begin{pmatrix}1\\0\\1\end{pmatrix}+\begin{pmatrix}\tfrac32\\[2pt]-\tfrac12\\[2pt]0\end{pmatrix}$（$k$ 为任意常数）。</p>
+<h3>第一步：(1) "两个不同解"背后的解的结构</h3>
+<p>设有两个不同解 $x_1\ne x_2$，两式相减得 $A(x_1-x_2)=0$：差是导出组 $Ax=0$ 的<strong>非零</strong>齐次解。于是对任意 $k$，$x_1+k(x_1-x_2)$ 仍是 $Ax=b$ 的解——解一经不唯一，就必然<strong>无穷多</strong>（这正是"非齐次通解 $=$ 特解 $+$ 齐次通解"结构的直接后果）；而齐次解非零要求 $A$ 不可逆，即</p>
+<p>$$|A|=0.$$</p>
+<p>按第二行展开（该行只有 $\lambda-1$ 非零）：</p>
+<p>$$|A|=\begin{vmatrix}\lambda&amp;1&amp;1\\0&amp;\lambda-1&amp;0\\1&amp;1&amp;\lambda\end{vmatrix}
+=(\lambda-1)\begin{vmatrix}\lambda&amp;1\\1&amp;\lambda\end{vmatrix}=(\lambda-1)^2(\lambda+1),$$</p>
+<p>得 $\lambda=1$ 或 $\lambda=-1$。</p>
+<h3>第二步：逐个检验相容性，定 $a$</h3>
+<p>$\lambda=1$：第二行变成 $0x_1+0x_2+0x_3=1$——"零系数行对非零常数"的矛盾意味着增广矩阵的秩高于系数矩阵的秩，无解，舍去。</p>
+<p>$\lambda=-1$：对增广矩阵作行变换</p>
+<p>$$\left(\begin{array}{ccc|c}-1&amp;1&amp;1&amp;a\\0&amp;-2&amp;0&amp;1\\1&amp;1&amp;-1&amp;1\end{array}\right)
+\xrightarrow{r_3+r_1}\left(\begin{array}{ccc|c}-1&amp;1&amp;1&amp;a\\0&amp;-2&amp;0&amp;1\\0&amp;2&amp;0&amp;1+a\end{array}\right)
+\xrightarrow{r_3+r_2}\left(\begin{array}{ccc|c}-1&amp;1&amp;1&amp;a\\0&amp;-2&amp;0&amp;1\\0&amp;0&amp;0&amp;2+a\end{array}\right).$$</p>
+<p>末行是零系数行，相容（有解）要求它的常数端也是零：$2+a=0$，即 $a=-2$。综上 $\lambda=-1,\ a=-2$。</p>
+<h3>第三步：(2) 为什么恰有一个自由变量</h3>
+<p>回代得 $r(A)=r(\bar A)=2&lt;3$，自由未知量个数 $=n-r=3-2=1$——通解里恰有一个任意常数 $k$。由阶梯形：$-2x_2=1\Rightarrow x_2=-\dfrac12$；第一行 $-x_1+x_2+x_3=-2\Rightarrow x_1=x_3+\dfrac32$。取 $x_3=k$：</p>
+<p>$$x_1=k+\frac32,\quad x_2=-\frac12,\quad x_3=k
+\ \Longrightarrow\ \boldsymbol x=k\begin{pmatrix}1\\0\\1\end{pmatrix}+\begin{pmatrix}\tfrac32\\[2pt]-\tfrac12\\[2pt]0\end{pmatrix}.$$</p>
+<p>（特解取 $x_3=0$ 的那一个，方便计算；齐次部分 $(1,0,1)^T$ 是自由变量 $x_3$ 对应的基础解系。）</p>
+<p><strong>验算</strong>：特解代入三行：$-\tfrac32-\tfrac12=-2=a$ ✓，$-2\cdot(-\tfrac12)=1$ ✓，$\tfrac32-\tfrac12=1$ ✓；$(1,0,1)^T$ 满足 $\boldsymbol A(1,0,1)^T=\boldsymbol0$ ✓。</p>
+<h3>易错点</h3>
+<ul><li><strong>只解 $|\boldsymbol A|=0$ 就写答案</strong>：$\lambda=1$ 也使行列式为零但方程组<strong>无解</strong>，必须回代检验增广矩阵的秩。</li><li><strong>通解里漏特解或漏齐次解</strong>：非齐次通解 $=$ 特解 $+$ 导出组基础解系，两者缺一不可；$\big(\tfrac32,-\tfrac12,0\big)^T$ 是特解，$(1,0,1)^T$ 是齐次解。</li></ul>
+<blockquote>一句话：「存在两个不同解」$\Rightarrow$ 解集不唯一 $\Rightarrow$ 有非零齐次解 $\Rightarrow|\boldsymbol A|=0$——先筛 $\lambda$，再靠相容性定 $a$，最后按"自由变量个数 $=n-r$"回代写通解。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

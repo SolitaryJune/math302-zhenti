@@ -101,5 +101,25 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：摆线的切线——参数求导三件事：切点、斜率、截距</h2>
+<p>答案：$\dfrac{3\pi}{2}+2$</p>
+<h3>第一步：备好三角值与导数</h3>
+<p>$x=t-\sin t,\ y=1-\cos t$，在 $t=\dfrac{3\pi}{2}$ 处 $\sin\dfrac{3\pi}{2}=-1,\ \cos\dfrac{3\pi}{2}=0$；导数 $x'_t=1-\cos t,\ y'_t=\sin t$。</p>
+<h3>第二步：切点与斜率</h3>
+<p>$$x_0=\frac{3\pi}{2}-(-1)=\frac{3\pi}{2}+1,\qquad y_0=1-0=1.$$</p>
+<p>参数方程求斜率用 $y$ 对 $t$、$x$ 对 $t$ 的导数相除：</p>
+<p>$$k=\frac{\mathrm{d}y}{\mathrm{d}x}\bigg|_{t=\frac{3\pi}{2}}=\frac{\sin t}{1-\cos t}\bigg|_{t=\frac{3\pi}{2}}=\frac{-1}{1-0}=-1.$$</p>
+<p><strong>为什么斜率是 $\dfrac{y'_t}{x'_t}$？</strong> 链式法则把 $t$ 当桥梁：$\dfrac{\mathrm{d}y}{\mathrm{d}x}=\dfrac{\mathrm{d}y/\mathrm{d}t}{\mathrm{d}x/\mathrm{d}t}$，分子分母的 $\mathrm{d}t$ 相除约掉；前提是 $x'_t\neq0$——本题 $1-\cos t$ 只在 $t=0,2\pi$（摆线的尖点）为零，$t=\dfrac{3\pi}{2}$ 处安全。</p>
+<h3>第三步：写切线，令 $x=0$ 取 $y$ 轴截距</h3>
+<p>$$y-1=-\left(x-\Big(\frac{3\pi}{2}+1\Big)\right)\quad\Longrightarrow\quad y=-x+\frac{3\pi}{2}+2.$$</p>
+<p>令 $x=0$，得 $y$ 轴截距 $\dfrac{3\pi}{2}+2$。</p>
+<h3>易错点</h3>
+<ul><li><strong>$\sin\dfrac{3\pi}{2}$ 代成 $1$</strong>：它是 $-1$；于是 $x_0=\dfrac{3\pi}{2}+1$，符号一错截距全错。</li><li><strong>斜率上下颠倒</strong>：$\dfrac{\mathrm{d}y}{\mathrm{d}x}=\dfrac{y'_t}{x'_t}$，分母是 $x'_t$。</li><li><strong>求成 $x$ 轴截距</strong>：$y$ 轴截距是令 $x=0$ 后的 $y$ 值，不是令 $y=0$ 解出的 $x$。</li></ul>
+<blockquote>一句话结论：切点 $\left(\dfrac{3\pi}{2}+1,\,1\right)$、斜率 $-1$，切线 $y=-x+\dfrac{3\pi}{2}+2$，$y$ 轴截距为 $\dfrac{3\pi}{2}+2$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

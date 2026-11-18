@@ -100,5 +100,31 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：极坐标切线——参数化后按链式法则取斜率</h2>
+<p><strong>答案：$y=-\dfrac{2}{\pi}x+\dfrac{\pi}{2}$</strong></p>
+<h3>第一步：先立机制——为什么化参数方程</h3>
+<p>极坐标点 $(r,\theta)$ 的直角坐标定义就是 $x=r\cos\theta$、$y=r\sin\theta$，故曲线 $r=\theta$ 天然是以 $\theta$ 为参数的参数曲线，而参数曲线的斜率有现成机制：</p>
+<p>$$\frac{\mathrm dy}{\mathrm dx}=\frac{\mathrm dy/\mathrm d\theta}{\mathrm dx/\mathrm d\theta}\qquad(\mathrm dx/\mathrm d\theta\neq0\ \text{时的链式法则}).$$</p>
+<p>为什么不能拿 $r'=1$ 当斜率：$r'$ 量的是「到极点的距离随角度的变化率」，方向沿极径；切线方向与极径方向一般不同，必须经参数方程换算。</p>
+<h3>第二步：求参数导数</h3>
+<p>$$\frac{\mathrm dx}{\mathrm d\theta}=\cos\theta-\theta\sin\theta,\qquad \frac{\mathrm dy}{\mathrm d\theta}=\sin\theta+\theta\cos\theta.$$</p>
+<h3>第三步：代 $\theta=\dfrac\pi2$</h3>
+<p>$\cos\dfrac\pi2=0$，$\sin\dfrac\pi2=1$：</p>
+<p>$$x'_\theta=0-\frac\pi2=-\frac\pi2\ (\neq0,\ \text{链式法则合法}),\qquad y'_\theta=1+0=1.$$</p>
+<p>斜率</p>
+<p>$$k=\frac{1}{-\pi/2}=-\frac2\pi.$$</p>
+<h3>第四步：定切点、写切线</h3>
+<p>题给的 $\big(\dfrac\pi2,\dfrac\pi2\big)$ 是 $(r,\theta)$，<strong>不是直角坐标</strong>！切点要现算：</p>
+<p>$$x=\frac\pi2\cos\frac\pi2=0,\qquad y=\frac\pi2\sin\frac\pi2=\frac\pi2,$$</p>
+<p>即切点 $\big(0,\dfrac\pi2\big)$ 在正 $y$ 轴上；螺线在此处向左上方爬，斜率约 $-0.64$，几何上合理。切线：</p>
+<p>$$y-\frac\pi2=-\frac2\pi(x-0)\ \Longleftrightarrow\ y=-\frac2\pi x+\frac\pi2.$$</p>
+<h3>易错点</h3>
+<ul><li><strong>把 $(r,\theta)$ 当直角坐标入式</strong>：切点要用 $x=r\cos\theta$、$y=r\sin\theta$ 换算。</li><li><strong>拿 $r'$ 当斜率</strong>：$r'$ 沿极径量距离，斜率须走 $y'_\theta/x'_\theta$。</li><li><strong>斜率倒数弄反</strong>：$k=\dfrac{1}{-\pi/2}=-\dfrac2\pi$，不是 $-\dfrac\pi2$。</li></ul>
+<blockquote>一句话结论：切点 $\big(0,\frac\pi2\big)$、斜率 $-\frac2\pi$，切线 $y=-\frac2\pi x+\frac\pi2$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

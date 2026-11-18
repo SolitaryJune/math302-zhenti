@@ -94,5 +94,34 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：月牙区域旋转——垫圈法求体积，两段曲线分别算侧面积</h2>
+<p><strong>答案：$V=\dfrac{18\pi}{35}$，$S=\dfrac{16\pi}{5}$。</strong></p>
+<h3>第一步：认清区域（文字描述几何结构）</h3>
+<p>两条边界都从 $(1,0)$ 走到 $(0,1)$：圆弧 $y=\sqrt{1-x^2}\ (0\le x\le1)$ 在外侧，星形线 $x=\cos^3t,\ y=\sin^3t\ \bigl(0\le t\le\frac\pi2\bigr)$ 在内侧——例如 $x=\frac12$ 处，圆弧 $y=\frac{\sqrt3}2\approx0.87$，星形线 $y=\bigl(1-2^{-2/3}\bigr)^{3/2}\approx0.23$。$D$ 是两曲线之间的<strong>月牙形</strong>区域。</p>
+<h3>第二步：体积——垫圈法的切片机制</h3>
+<p>垂直于 $x$ 轴切一片，截面是<strong>圆环</strong>：外半径 $y_{\text{圆}}=\sqrt{1-x^2}$、内半径 $y_{\text{星}}$，面积 $\pi\bigl(y_{\text{圆}}^2-y_{\text{星}}^2\bigr)$——「外减内」来自圆环面积，不是死记公式：</p>
+<p>$$V=\pi\int_0^1\bigl(y_{\text{圆}}^2-y_{\text{星}}^2\bigr)\,\mathrm{d}x.$$</p>
+<p>外圈（圆弧）：</p>
+<p>$$\pi\int_0^1(1-x^2)\,\mathrm{d}x=\pi\Bigl(1-\frac13\Bigr)=\frac{2\pi}{3}.$$</p>
+<p>内圈（星形线，参数式；$x:0\to1$ 对应 $t:\frac\pi2\to0$，$\mathrm{d}x=-3\cos^2t\sin t\,\mathrm{d}t$，交换积分限把负号吃掉）：</p>
+<p>$$\pi\int_0^1y^2\,\mathrm{d}x=3\pi\int_0^{\pi/2}\sin^7t\cos^2t\,\mathrm{d}t=3\pi\cdot\frac{6!!\cdot1!!}{9!!}=\frac{16\pi}{105}.$$</p>
+<p>$$V=\frac{2\pi}{3}-\frac{16\pi}{105}=\frac{70\pi-16\pi}{105}=\frac{18\pi}{35}.$$</p>
+<h3>第三步：表面积——微元机制与「两段都要算」</h3>
+<p>旋转面由曲线扫出，其微元是一小段细锥台带：侧面积 $\approx2\pi y\,\mathrm{d}s$（周长 × 斜高），故 $S=2\pi\int y\,\mathrm{d}s$。<strong>关键：月牙区域有两条边界，旋转后各自扫出一个曲面</strong>——外表面（圆弧的）与内表面（星形线的），总面积是两段之和，漏一段就少算一半表面。</p>
+<p>圆弧绕 $x$ 轴转出<strong>半球面</strong>（半径 $1$，可回验球面公式）：</p>
+<p>$$S_1=2\pi\cdot1^2=2\pi.$$</p>
+<p>星形线段：$x^{\prime}=-3\cos^2t\sin t,\ y^{\prime}=3\sin^2t\cos t$，故 $x'^2+y'^2=9\sin^2t\cos^2t$，$\mathrm{d}s=3\sin t\cos t\,\mathrm{d}t$，于是</p>
+<p>$$S_2=2\pi\int_0^{\pi/2}y\,\mathrm{d}s=2\pi\int_0^{\pi/2}\sin^3t\cdot3\sin t\cos t\,\mathrm{d}t=6\pi\int_0^{\pi/2}\sin^4t\cos t\,\mathrm{d}t=\frac{6\pi}{5}.$$</p>
+<p>$$S=S_1+S_2=2\pi+\frac{6\pi}{5}=\frac{16\pi}{5}.$$</p>
+<h3>为什么星形线走参数式</h3>
+<p>体积项其实有显式 $y^2=(1-x^{2/3})^3$（由 $x=\cos^3t$ 得 $\cos t=x^{1/3}$，代入 $y=(1-\cos^2t)^{3/2}$），直接展开积分同样得 $\dfrac{16}{105}$，可作验算；但表面积的 $\mathrm{d}s$ 走显式会陷入 $x^{-1/3}$ 与根式的纠缠，参数式配点火公式是标准且不易错的路。</p>
+<h3>易错点</h3>
+<ul><li><strong>内外弄反</strong>：星形线在圆弧<strong>内侧</strong>，体积是「圆的旋转体挖掉星形线的」；减反了会得到更大的错误值。</li><li><strong>星形线参数上下限弄反</strong>：$x:0\to1$ 对应 $t:\frac\pi2\to0$，$\mathrm{d}x$ 里的负号靠交换积分限消化，两头同时改号会错出负值。</li><li><strong>点火公式误带 $\frac\pi2$</strong>：$\int_0^{\pi/2}\sin^7t\cos^2t\,\mathrm{d}t=\dfrac{6!!\,1!!}{9!!}$——幂次含奇数时不带 $\frac\pi2$ 因子；而 $\int\sin^4t\cos t\,\mathrm{d}t$ 可直接凑微分 $\mathrm{d}(\sin t)$。</li></ul>
+<blockquote>结论：$V=\dfrac{18\pi}{35}$；表面积 $=$ 半球面 $2\pi+$ 星形线侧面积 $\dfrac{6\pi}5=\dfrac{16\pi}{5}$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

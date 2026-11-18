@@ -91,5 +91,25 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：凑微分换元——$\arcsin\sqrt{x}$ 的导数恰是 $\frac{1}{2\sqrt{x(1-x)}}$</h2>
+<p>答案：A</p>
+<h3>第一步：识别凑微分信号</h3>
+<p>被积函数同时出现 $\arcsin\sqrt{x}$ 与 $\dfrac{1}{\sqrt{x(1-x)}}$，先求前者导数：</p>
+<p>$$\mathrm{d}\left(\arcsin\sqrt{x}\right)=\frac{1}{\sqrt{1-x}}\cdot\frac{1}{2\sqrt{x}}\,\mathrm{d}x=\frac{1}{2\sqrt{x(1-x)}}\,\mathrm{d}x.$$</p>
+<p>被积式恰好只差常数 2 倍——直接令 $t=\arcsin\sqrt{x}$，不必硬算。为什么先对 $\arcsin\sqrt{x}$ 求导而不反过来？因为"它的导数已在场内"是凑微分最典型的信号；若反过来对根式求导，只会越算越繁。</p>
+<h3>第二步：换元并同步换限</h3>
+<p>$t=\arcsin\sqrt{x}$ 即 $x=\sin^2t$，$t\in\left[0,\frac{\pi}{2}\right]$；换限：$x=0\to t=0$，$x=1\to t=\frac{\pi}{2}$。微分与分母同时化简：</p>
+<p>$$\mathrm{d}x=2\sin t\cos t\,\mathrm{d}t,\qquad \sqrt{x(1-x)}=\sqrt{\sin^2t\cos^2t}=\sin t\cos t.$$</p>
+<h3>第三步：代入积分收口</h3>
+<p>$$\int_0^1\frac{\arcsin\sqrt{x}}{\sqrt{x(1-x)}}\,\mathrm{d}x=\int_0^{\frac{\pi}{2}}\frac{t}{\sin t\cos t}\cdot2\sin t\cos t\,\mathrm{d}t=\int_0^{\frac{\pi}{2}}2t\,\mathrm{d}t=t^2\Big|_0^{\frac{\pi}{2}}=\frac{\pi^2}{4}.$$</p>
+<p>换元的"收益"一目了然：分子只剩 $t$，分母 $\sin t\cos t$ 与 $\mathrm{d}x=2\sin t\cos t\,\mathrm{d}t$ 中的同名因子恰好约掉——"反三角 + 双根式"的难题塌缩成一次幂函数积分。选 A。</p>
+<h3>易错点</h3>
+<ul><li><strong>漏掉因子 2</strong>：凑微分后分子剩 $2t$ 而不是 $t$，漏掉 2 会错成 $\frac{\pi^2}{8}$（选 B 的典型来源）。</li><li><strong>开方取负</strong>：$\sqrt{\sin^2t\cos^2t}$ 在 $t\in[0,\frac{\pi}{2}]$ 上取正 $\sin t\cos t$，别写出绝对值混乱。</li><li><strong>换限不同步</strong>：新积分上限是 $t$ 的 $\frac{\pi}{2}$，不是 $x$ 的 1。</li><li><strong>选 C（$\frac{\pi}{4}$）</strong>：多半把 $\arcsin\sqrt{x}$ 当成了常数、或根本没对新变量 $t$ 积分，整层 $\int_0^{\frac{\pi}{2}}2t\,\mathrm{d}t$ 丢失。</li><li><strong>选 D（$\frac{\pi}{8}$）</strong>：换元没做到底——漏掉 $\mathrm{d}x$ 里的因子 $2\sin t\cos t$ 或换限出错，结果再砍一半。</li></ul>
+<blockquote>一句话结论：$\left(\arcsin\sqrt{x}\right)'=\dfrac{1}{2\sqrt{x(1-x)}}$ 是现成的凑微分对，令 $t=\arcsin\sqrt{x}$ 后积分塌缩为 $\int_0^{\pi/2}2t\,\mathrm{d}t=\dfrac{\pi^2}{4}$，选 A。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

@@ -94,5 +94,27 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：由关系式定 $\alpha(x)$ 的无穷小阶数</h2>
+<p><strong>答案：C</strong></p>
+<h3>第一步：立起"比阶"的标尺</h3>
+<p>比较无穷小的阶，唯一标尺是<strong>比值极限</strong>：$\lim\limits_{x\to0}\dfrac{\alpha(x)}x$ 为 $0$ 是高阶、为非零常数是同阶（恰为 $1$ 才等价）、为 $\infty$ 是低阶。道理在于比值度量"谁缩得快"：$\alpha\approx cx$ 说明两者步调一致、只差倍数 $c$。所以本题的全部目标就是算出这一个数。为此把 $\cos x-1=x\sin\alpha(x)$ 两边除以 $x$：</p>
+<p>$$\sin\alpha(x)=\frac{\cos x-1}{x}.$$</p>
+<p>$\alpha$ 本身不好直接解，但它的"影子" $\sin\alpha(x)$ 已被解出——只要确认 $\alpha\to0$，就有 $\sin\alpha\sim\alpha$，影子可当本人用。</p>
+<h3>第二步：确认 $\alpha(x)\to0$</h3>
+<p>$x\to0$ 时 $\cos x-1\sim-\dfrac{x^2}{2}$，代入得 $\sin\alpha(x)\sim-\dfrac x2\to0$。条件 $\lvert\alpha(x)\rvert&lt;\dfrac\pi2$ 保证 $\sin$ 在 $(-\frac\pi2,\frac\pi2)$ 上严格单调、可以反解，故 $\alpha(x)\to0$：它是无穷小，且 $\alpha(x)\sim\sin\alpha(x)$。</p>
+<h3>第三步：定阶——只看一个数</h3>
+<p>$$\lim_{x\to0}\frac{\alpha(x)}{x}=\lim_{x\to0}\frac{\sin\alpha(x)}{x}=\lim_{x\to0}\frac{\cos x-1}{x^2}=\lim_{x\to0}\frac{-\frac{x^2}{2}}{x^2}=-\frac12.$$</p>
+<p>直观读数：$\dfrac{\alpha(x)}x\to-\dfrac12$ 意味着 $\alpha(x)\approx-\dfrac x2$——与 $x$ 同速缩小、方向相反、幅度减半，这正是"同阶不等价"的画像。</p>
+<h3>第四步：按定义对号入座</h3>
+<table><thead><tr><th>$\lim\dfrac{\alpha(x)}{x}$</th><th>$0$</th><th>非零常数且 $\ne1$</th><th>$1$</th><th>$\infty$</th></tr></thead><tbody><tr><td>结论</td><td>高阶</td><td>同阶不等价</td><td>等价</td><td>低阶</td></tr></tbody></table>
+<p>现在极限是 $-\dfrac12$：非零、有限、不等于 $1$，正中"同阶但不等价"，选 <strong>C</strong>。</p>
+<h3>易错点</h3>
+<ul><li><strong>跳过 $\alpha$ 直接判 $\sin\alpha$</strong>：$\sin\alpha(x)\sim-\frac x2$ 要转化为 $\alpha\sim-\frac x2$，前提是 $\alpha\to0$（保证 $\sin\alpha\sim\alpha$）；条件 $\lvert\alpha\rvert&lt;\frac\pi2$ 正是为此设的。</li><li><strong>见到非零常数就选"等价"</strong>：等价要求极限恰为 $1$，$-\frac12$ 只算同阶。</li><li><strong>选 A 或 B</strong>：高阶要求比值极限为 $0$、低阶要求为 $\infty$，而 $-\frac12$ 两者都不沾——先把标尺算出来，再对号入座。</li><li><strong>把 $\cos x-1$ 等价成 $-\frac{x^2}2$ 后忘记除 $x$</strong>：分子分母要同步处理。</li></ul>
+<blockquote>一句话结论：$\lim_{x\to0}\frac{\alpha(x)}{x}=-\frac12$，同阶不等价，选 C。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

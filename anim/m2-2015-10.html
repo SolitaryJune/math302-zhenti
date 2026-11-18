@@ -99,5 +99,27 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：$x^2\cdot2^x$ 的高阶导数——读系数就是读导数</h2>
+<p>答案：$f^{(n)}(0)=n(n-1)(\ln 2)^{n-2}$（$n\ge2$）。</p>
+<h3>第 0 步：先立机制——为什么系数里藏着 $f^{(n)}(0)$</h3>
+<p>$c_kx^k$ 对 $x$ 求 $n$ 阶导：每求一次幂次降一、掉一个因子，成为 $c_k\,k(k-1)\cdots(k-n+1)\,x^{k-n}$；在 $x=0$ 处只有 $k=n$ 的项存活——$k\lt n$ 的项经 $n$ 次求导已耗尽为 $0$，$k\gt n$ 的项仍含 $x$ 因子——存活值恰为 $c_n\,n!$。所以</p>
+<p>$$f^{(n)}(0)=n!\,c_n,$$</p>
+<p><strong>求 $f^{(n)}(0)$ = 求展开式中 $x^n$ 的系数再乘 $n!$</strong>。为什么选这条路：莱布尼茨公式对 $x^2\cdot2^x$ 也可行（$x^2$ 三阶以上导数为零），但要把各因子配平；幂级数路线"哪一项存活"一目了然，不易漏因子。</p>
+<h3>第 1 步：为什么先化 $\mathrm e^{x\ln2}$——标准展开只有 $\mathrm e^u$ 有</h3>
+<p>$2^x$ 本身没有现成幂级数，但它的定义就是 $2^x=\mathrm e^{x\ln2}$，套指数级数：</p>
+<p>$$2^x=\sum_{k=0}^{\infty}\frac{(\ln2)^k}{k!}x^k\ \Longrightarrow\ f(x)=x^2\,2^x=\sum_{k=0}^{\infty}\frac{(\ln2)^k}{k!}x^{k+2}.$$</p>
+<p>乘 $x^2$ 只把幂次整体后移两位，系数不动。</p>
+<h3>第 2 步：定位 $x^n$ 的系数，乘 $n!$</h3>
+<p>令 $k+2=n$（即 $k=n-2$，需 $n\ge2$）：$c_n=\dfrac{(\ln2)^{n-2}}{(n-2)!}$，于是</p>
+<p>$$f^{(n)}(0)=n!\cdot\frac{(\ln2)^{n-2}}{(n-2)!}=n(n-1)(\ln2)^{n-2}.$$</p>
+<p>验算 $n=2$：公式给 $2\cdot1\cdot(\ln2)^0=2$；直接求导 $f''(x)=\big(2+4x\ln2+x^2(\ln2)^2\big)2^x$，代 $x=0$ 得 $2$，吻合。$n=0,1$ 时 $f(0)=f'(0)=0$：$x^2$ 因子让前两阶在原点全灭。</p>
+<h3>易错点</h3>
+<ul><li><strong>漏乘 $n!$</strong>：把系数 $c_n$ 直接当导数值。</li><li><strong>幂次错位</strong>：乘 $x^2$ 后 $x^n$ 对应 $k=n-2$，不是 $k=n$。</li><li><strong>没化 $\mathrm e^{x\ln2}$</strong>：没有指数级数就无从按幂展开。</li></ul>
+<blockquote>记忆锚点：$f^{(n)}(0)=n!\times$（$x^n$ 系数）；$a^x=\mathrm e^{x\ln a}$ 先化再展。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

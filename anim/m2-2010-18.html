@@ -87,5 +87,32 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：平放椭圆贮油罐 —— 浸油截面积 $\times$ 罐长</h2>
+<p><strong>答案</strong>：$m=\rho V=\Big(\dfrac{2\pi}3+\dfrac{\sqrt3}4\Big)abl\rho$。</p>
+<h3>第一步：把几何条件翻译成坐标，并说清"体积为什么 $=$ 截面积 $\times$ 罐长"</h3>
+<p>横截面为椭圆 $\dfrac{x^2}{a^2}+\dfrac{y^2}{b^2}=1$，$y$ 轴竖直向上，罐底最低点 $y=-b$。油面高度 $\dfrac32b$ 是<strong>从罐底量起的油深</strong>，故油面所在水平线为</p>
+<p>$$y=-b+\frac32b=\frac b2,$$</p>
+<p>浸油部分是 $-b\le y\le\dfrac b2$ 的一段椭圆区域。罐体是柱体：沿罐长方向<strong>每个纵截面全同</strong>，油层就是这块浸油截面沿罐长平移扫出的柱体，由切片原理（柱体体积 $=$ 底面积 $\times$ 高，此处高即 $l$）立得</p>
+<p>$$V=S\times l.$$</p>
+<p>全题的胜负手在这一步：把"油深 $\dfrac32b$"翻译成"油面 $y=\dfrac b2$"——坐标系原点在椭圆中心，而油深从罐底 $y=-b$ 起算，两种度量必须先对齐。</p>
+<h3>第二步：为什么用水平条带</h3>
+<p>油面是水平线、油深沿竖直方向度量，所以用<strong>水平条带</strong>积分最顺：高度 $y$ 处油层的厚度就是 $\mathrm dy$，条带长由椭圆方程解出 $2x=2a\sqrt{1-\dfrac{y^2}{b^2}}$。若改用竖直条带，区域下界是椭圆弧、上界是油面线，表达与分段都更繁琐。于是</p>
+<p>$$S=\int_{-b}^{b/2}2a\sqrt{1-\frac{y^2}{b^2}}\,\mathrm dy.$$</p>
+<h3>第三步：为什么换元 $y=b\sin t$</h3>
+<p>根号里 $\sqrt{1-\dfrac{y^2}{b^2}}$ 是"$\sqrt{1-\sin^2t}=\cos t$"的形状，三角代换专为消这种根号而生；$t$ 的几何意义就是椭圆参数方程 $x=a\cos t,\ y=b\sin t$ 的离心角。换限：$y=-b\leftrightarrow t=-\dfrac\pi2$；$y=\dfrac b2\leftrightarrow\sin t=\dfrac12\leftrightarrow t=\dfrac\pi6$。于是</p>
+<p>$$S=2ab\int_{-\pi/2}^{\pi/6}\cos^2t\,\mathrm dt=ab\Big[t+\frac{\sin2t}2\Big]_{-\pi/2}^{\pi/6}
+=ab\Big[\Big(\frac\pi6+\frac{\sqrt3}4\Big)-\Big(-\frac\pi2\Big)\Big]=ab\Big(\frac{2\pi}3+\frac{\sqrt3}4\Big).$$</p>
+<p>结果还能拆开对几何"验明正身"：$S=$ 下半椭圆 $\dfrac{\pi ab}2$ $+$ 中央条带 $y\in\big[0,\tfrac b2\big]$ 的面积 $ab\big(\tfrac\pi6+\tfrac{\sqrt3}4\big)$，而 $\dfrac\pi2+\dfrac\pi6=\dfrac{2\pi}3$——答案的每一块都有几何出处，不是一笔糊涂账。</p>
+<h3>第四步：乘罐长与密度得质量</h3>
+<p>$$V=Sl=\Big(\frac{2\pi}3+\frac{\sqrt3}4\Big)abl,\qquad m=\rho V=\Big(\frac{2\pi}3+\frac{\sqrt3}4\Big)abl\rho.$$</p>
+<p><strong>验算</strong>：满罐截面为 $\pi ab\approx3.14ab$，这里 $S\approx2.53ab$，油面高于中心线、约占八成，量级合理。</p>
+<h3>易错点</h3>
+<ul><li><strong>把油面直接写成 $y=\dfrac32b$</strong>：$\dfrac32b$ 是从罐底量的深度，坐标系原点在椭圆中心时必须先换算成 $y=\dfrac b2$，否则上限全错。</li><li><strong>换元后上限写成 $\dfrac\pi2$</strong>：$y=\dfrac b2$ 对应 $\sin t=\dfrac12$，即 $t=\dfrac\pi6$；$t=\dfrac\pi2$ 对应 $y=b$（满罐）。</li></ul>
+<blockquote>一句话：平放柱体体积 $=$ 截面浸油面积 $\times$ 罐长（切片原理）；先翻译油深为油面 $y=\dfrac b2$，再水平条带 $+$ 离心角换元，一气呵成。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

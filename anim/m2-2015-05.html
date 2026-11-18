@@ -99,5 +99,25 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：由复合关系反求 $f(u,v)$——先显式化，再谈偏导</h2>
+<p>答案：<strong>D</strong>。</p>
+<h3>第 0 步：先立机制——为什么必须先把 $f$ 显式化</h3>
+<p>$\dfrac{\partial f}{\partial u}$ 的含义是：把 $f$ 看成以 $(u,v)$ 为自变量的二元函数，固定 $v$ 对 $u$ 求导。现在手里只有 $f\big(x+y,\frac yx\big)=x^2-y^2$——$u,v$ 藏在 $x,y$ 里，不显式化连"对谁求导"都说不清。路线选择：两个方程两个未知数，可解——由 $y=vx$ 代入 $u=x+y=x(1+v)$，只要 $v\neq-1$（本题目标点 $v=1$ 满足）就能反解出 $x,y$；用链式法则隐式求导也能做，但要解方程组，绕远。<strong>反解显式化是最直接的路。</strong></p>
+<h3>第 1 步：反解与代回——为什么用平方差</h3>
+<p>$$x=\frac{u}{1+v},\qquad y=\frac{uv}{1+v}.$$</p>
+<p>代回时用平方差 $x^2-y^2=(x+y)(x-y)$：因子 $x+y=u$ 现成，$x-y=x(1-v)=\dfrac{u(1-v)}{1+v}$ 也现成，一步到位；硬算 $x^2,y^2$ 再通分相减是绕路。</p>
+<p>$$f(u,v)=u\cdot\frac{u(1-v)}{1+v}=u^2\,\frac{1-v}{1+v}.$$</p>
+<h3>第 2 步：求偏导——两个结果各有各的"为什么"</h3>
+<p>$\dfrac{\partial f}{\partial u}=2u\,\dfrac{1-v}{1+v}$，在 $(1,1)$ 处 $=0$。<strong>直观</strong>：$v=1$ 时 $f(u,1)\equiv0$（因子 $1-v$ 归零），函数沿 $u$ 方向平躺，变化率自然是 $0$。</p>
+<p>$\dfrac{\partial f}{\partial v}$ 用商法则：$\Big(\dfrac{1-v}{1+v}\Big)'=\dfrac{-(1+v)-(1-v)}{(1+v)^2}=\dfrac{-2}{(1+v)^2}$（分子 $-(1+v)-(1-v)=-2$，相消后只剩常数），故 $\dfrac{\partial f}{\partial v}=\dfrac{-2u^2}{(1+v)^2}$，在 $(1,1)$ 处 $=-\dfrac12$。</p>
+<p>交叉验证：$(u,v)=(1,1)$ 反解得 $x=y=\tfrac12$，此时 $x^2-y^2=0$，即 $f(1,1)=0$，与 $f(1,1)=1^2\cdot\frac02$ 吻合。</p>
+<h3>易错点</h3>
+<ul><li><strong>不反解、直接对 $x,y$ 求导</strong>：求的是复合关系的导数，不是 $f$ 对 $u,v$ 的偏导，对象就错了。</li><li><strong>商法则分子算错</strong>：结果 $\dfrac{-2}{(1+v)^2}$ 不是 $-1$。</li><li><strong>两个数顺序/符号排错</strong>：第一个是 $0$，第二个才是 $-\dfrac12$——A、B、C 正是在这两处设坑。</li></ul>
+<blockquote>记忆锚点：复合关系给的是"函数值方程"，先反解显式化再求导；$v=1$ 处因子 $1-v$ 归零，$\dfrac{\partial f}{\partial u}$ 必为 $0$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

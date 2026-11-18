@@ -94,5 +94,34 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：摆线拱上的二重积分——看边界选次序，外层换参数</h2>
+<p>答案：$\displaystyle\iint_D(x+2y)\,\mathrm{d}x\mathrm{d}y=5\pi+3\pi^{2}$</p>
+<h3>第一步：认清区域，为什么必须"先 y 后 x"</h3>
+<p>摆线一拱 $x=t-\sin t,\ y=1-\cos t\ (0\le t\le2\pi)$：由 $\dfrac{\mathrm{d}x}{\mathrm{d}t}=1-\cos t\ge0$（仅在 $t=0,2\pi$ 处为零），$x$ 从 $0$ 单调增到 $2\pi$，且 $y\ge0$。故 $D=\{0\le x\le2\pi,\ 0\le y\le Y(x)\}$，上边界 $Y(x)$ 是摆线纵坐标，下边界是 $x$ 轴。</p>
+<p>选积分次序的依据是<strong>边界好不好写</strong>：竖直条的上下端点分别是摆线与 $x$ 轴——一条上边界曲线加一条下边界直线，先 $y$ 后 $x$ 内层立刻积出；反过来先 $x$ 后 $y$，水平条的左右端点要解 $x=t-\sin t$ 关于 $y$ 的反函数——摆线没有初等反函数，走不通；极坐标也不行（拱形边界写不出 $r=\rho(\theta)$ 型）。所以"先 $y$ 后 $x$"不是习惯，是被边界逼出来的。</p>
+<h3>第二步：内层积出，外层为什么换参数</h3>
+<p>$$\iint_D(x+2y)\,\mathrm{d}x\mathrm{d}y=\int_0^{2\pi}\!\left[\int_0^{Y(x)}(x+2y)\,\mathrm{d}y\right]\mathrm{d}x=\int_0^{2\pi}\left[xY(x)+Y(x)^{2}\right]\mathrm{d}x.$$</p>
+<p>外层 $\int_0^{2\pi}[xY+Y^{2}]\,\mathrm{d}x$ 中 $Y(x)$ 是摆线——对 $x$ 没有初等原函数。但摆线自带参数：$x=t-\sin t,\ Y=1-\cos t,\ \mathrm{d}x=(1-\cos t)\,\mathrm{d}t$（$(1-\cos t)$ 是摆线的水平速率：拱顶 $t=\pi$ 处最大为 $2$，两端 $t=0,2\pi$ 处为 $0$——摆线的尖点正落在两端）。参数化把"未知曲线的积分"变成"$t$ 的多项式 × 三角的积分"：</p>
+<p>$$I=\int_0^{2\pi}\Big[(t-\sin t)(1-\cos t)+(1-\cos t)^{2}\Big](1-\cos t)\,\mathrm{d}t=I_{1}+I_{2},$$</p>
+<p>$$I_{1}=\int_0^{2\pi}(t-\sin t)(1-\cos t)^{2}\,\mathrm{d}t,\qquad I_{2}=\int_0^{2\pi}(1-\cos t)^{3}\,\mathrm{d}t.$$</p>
+<h3>第三步：算 I₂——整周期上的"平均值 × 长度"</h3>
+<p>展开 $(1-\cos t)^{3}=1-3\cos t+3\cos^{2}t-\cos^{3}t$。在整周期 $[0,2\pi]$ 上，$\cos t$ 与 $\cos^{3}t$ 正负面积完全抵消（积分为 $0$）；$\cos^{2}t$ 降幂为 $\dfrac{1+\cos2t}{2}$，均值 $\dfrac12$，积分 $=\dfrac12\times2\pi=\pi$——"平均值 × 区间长"一句话给出。故</p>
+<p>$$I_{2}=2\pi+3\pi=5\pi.$$</p>
+<h3>第四步：算 I₁——反对称项自动归零，t 项降幂后分部</h3>
+<p>把 $I_1$ 拆成 $\displaystyle\int_0^{2\pi}t(1-\cos t)^{2}\mathrm{d}t-\int_0^{2\pi}\sin t(1-\cos t)^{2}\mathrm{d}t$。</p>
+<p><strong>$\sin$ 项为什么是 $0$</strong>：$(1-\cos t)^{2}$ 关于 $t=\pi$ 对称（$\cos(2\pi-t)=\cos t$），$\sin t$ 关于 $t=\pi$ 反对称（$\sin(2\pi-t)=-\sin t$），乘积反对称，整周期积分抵消为 $0$。（代数验证：原函数 $\dfrac{1}{3}(1-\cos t)^{3}$ 在两端取值相同。）</p>
+<p><strong>$t$ 项</strong>：降幂 $(1-\cos t)^{2}=\dfrac{3}{2}-2\cos t+\dfrac{1}{2}\cos2t$。为什么 $\displaystyle\int_0^{2\pi}t\cos kt\,\mathrm{d}t=0\ (k\ge1)$：把 $t$ 换成 $2\pi-t$（$\cos k(2\pi-t)=\cos kt$），与原式相加得 $2I=2\pi\int_0^{2\pi}\cos kt\,\mathrm{d}t=0$——$t$ 与 $2\pi-t$ 关于对称中心互补，只剩常数项"活下来"：</p>
+<p>$$\int_0^{2\pi}\frac{3}{2}t\,\mathrm{d}t=\frac{3}{2}\cdot\frac{(2\pi)^{2}}{2}=3\pi^{2}.$$</p>
+<p>故 $I_{1}=3\pi^{2}$。</p>
+<h3>第五步：合并</h3>
+<p>$$I=I_{1}+I_{2}=3\pi^{2}+5\pi.$$</p>
+<h3>易错点</h3>
+<ul><li><strong>把摆线拱当圆弧用极坐标</strong>：摆线不是圆，边界写不出 $r=\rho(\theta)$；只能直角坐标化累次积分，外层再对参数 $t$ 换元。</li><li><strong>次序选反</strong>：先 $x$ 后 $y$ 要摆线的反函数（非初等），一旦陷进去就出不来；选次序先看边界。</li><li><strong>参数换元只换代不换微分</strong>：必须连同 $\mathrm{d}x=(1-\cos t)\,\mathrm{d}t$ 一起换，否则 $I_{1},I_{2}$ 全错。</li><li><strong>$\int_0^{2\pi}t\cos kt\,\mathrm{d}t$ 不加论证就写 $0$</strong>：$t$ 不是周期函数，必须分部或用对称性说明；"为 $0$"依赖 $\cos kt$ 关于 $t=\pi$ 对称。</li><li><strong>内层积完丢项</strong>：$\int_0^{Y}(x+2y)\,\mathrm{d}y=xY+Y^{2}$，两项都要保留。</li></ul>
+<blockquote>一句话结论：$D$ 是摆线拱下的曲边三角形，边界决定"先 $y$ 后 $x$"；内层积出 $\int_0^{2\pi}[xY+Y^{2}]\mathrm{d}x$，参数换元后反对称项归零，$I_{1}=3\pi^{2}$、$I_{2}=5\pi$，积分 $=5\pi+3\pi^{2}$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

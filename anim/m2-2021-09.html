@@ -99,5 +99,24 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：线性表出 $\Rightarrow A=BC$，转置后解集往「大」处流</h2>
+<p>答案：D</p>
+<h3>第一步：把「可表出」翻译成矩阵等式</h3>
+<p>「$\alpha_1,\alpha_2,\alpha_3$ 可由 $\beta_1,\beta_2,\beta_3$ 线性表出」$\iff$ 每列 $\alpha_i=Bc_i$ $\iff$ 存在三阶方阵 $C$ 使 $A=BC$。</p>
+<h3>第二步：转置，得到关键恒等式</h3>
+<p>$$A^{\mathrm T}=(BC)^{\mathrm T}=C^{\mathrm T}B^{\mathrm T}.$$</p>
+<p>于是若 $X$ 满足 $B^{\mathrm T}X=0$，则 $A^{\mathrm T}X=C^{\mathrm T}\left(B^{\mathrm T}X\right)=0$：$B^{\mathrm T}X=0$ 的解<strong>全部</strong>是 $A^{\mathrm T}X=0$ 的解。这正是 D，也是唯一能从前提严格推出的选项。</p>
+<h3>第三步：用秩看清方向为什么对</h3>
+<p>$A=BC$ 保证列空间被包含：$r(A)\le r(B)$。$A^{\mathrm T}X=0$ 的解空间维数是 $3-r(A)$，$B^{\mathrm T}X=0$ 的是 $3-r(B)$，前者 $\ge$ 后者——「小的解集装进大的解集」，与 D 的包含方向吻合。而 $AX=0$、$BX=0$ 关心的是<strong>行</strong>方向，$A=BC$ 管不到它们。</p>
+<h3>第四步：反例封口 A 与 B</h3>
+<p>取 $B=E$（此时任何 $A$ 都可表出，$C=A$），再取 $A=\mathrm{diag}(1,0,0)$：$BX=0$ 与 $B^{\mathrm T}X=0$ 都只有零解，而 $AX=0$、$A^{\mathrm T}X=0$ 都有非零解——A、B 声称的「均为何者的解」当场不成立（零解集合装不下非零解）。C 与秩的单向推理相反，同样不恒真。</p>
+<h3>易错点</h3>
+<ul><li><strong>包含方向背反</strong>：被表出的一组「更弱」、秩更小，齐次解空间更大，所以解是从 $B^{\mathrm T}$ 流向 $A^{\mathrm T}$，不是反过来。</li><li><strong>转置忘了换方向</strong>：$A=BC$ 说的是列关系，$AX=0$ 是行关系，二者不能直接互推。</li><li><strong>以为四选一靠排除</strong>：本题 D 是正面推出的恒真命题，排除只是辅助验证。</li></ul>
+<blockquote>一句话结论：$A=BC\Rightarrow A^{\mathrm T}=C^{\mathrm T}B^{\mathrm T}$，故 $B^{\mathrm T}X=0\Rightarrow A^{\mathrm T}X=0$，选 D。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

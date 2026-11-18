@@ -105,5 +105,31 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：旋转体容积（截面圆盘法）与抽水做功（微元法）</h2>
+<p>最终答案：(1) 容积 $V=\dfrac{9\pi}{4}\ \mathrm{m}^3$；(2) 所需功至少为 $W=\dfrac{27\times10^3}{8}\,\pi g\ \mathrm{J}$。</p>
+<h3>第一步：立机制——旋转体的截面是圆盘，两问的一切积分都从它来</h3>
+<p>容器是曲线绕 $y$ 轴旋转一周而成的曲面：母线上每一点 $(x,y)$ 绕轴转出一个半径 $x$ 的水平圆，所以<strong>任何高度 $y$ 处的水平截面都是圆盘</strong>，面积 $\pi x^2$。这一个机制同时撑起两问：</p>
+<ul><li><strong>容积</strong> = 圆盘面积沿 $y$ 从底到顶"码薄片"：$V=\pi\int x^2\,\mathrm dy$。<strong>为什么用截面法而不用柱壳法？</strong> 母线方程天然给的是 $x^2(y)$，截面法一行积分搞定；柱壳法要按 $x$ 积、还得拆段，反而绕远。</li><li><strong>做功</strong> = 把水一层一层提上去。功是标量，<strong>按层可加</strong>：第 $y$ 层薄片（厚 $\mathrm dy$、体积 $\pi x^2\,\mathrm dy$）重 $\rho g\,\pi x^2\,\mathrm dy$，要提到顶部 $y=2$，行程 $2-y$，故 $\mathrm dW=\rho g\,\pi x^2(2-y)\,\mathrm dy$。<strong>为什么行程是 $2-y$？</strong> 越深的水提得越高：底部 $y=-1$ 要走 $3$ 米，顶层 $y=2$ 走 $0$ 米。</li></ul>
+<p>两问共用同一张"半径表" $x^2(y)$——所以先花一步把它写准。</p>
+<h3>第二步：把母线写准——配平方识别两段圆，分段点靠衔接验证</h3>
+<p>上段 $x^2+y^2=2y$ 配平方得 $x^2+(y-1)^2=1$：圆心 $(0,1)$、半径 $1$ 的圆的<strong>上部</strong>（$y\ge\dfrac12$，顶在 $y=2$，该处 $x=0$）；下段 $x^2+y^2=1$ 是单位圆的<strong>下部</strong>（$y\le\dfrac12$，底在 $y=-1$，该处 $x=0$）。两段在 $y=\dfrac12$ 处<strong>同时</strong>给出 $x^2=\dfrac34$，衔接无缺口——这正是题目按 $\dfrac12$ 分段的由来。汇总对号：</p>
+<table><thead><tr><th>段</th><th>方程</th><th>$x^2=$</th><th>$y$ 范围</th></tr></thead><tbody><tr><td>上段</td><td>$x^2+(y-1)^2=1$</td><td>$2y-y^2$</td><td>$\left[\dfrac12,2\right]$</td></tr><tr><td>下段</td><td>$x^2+y^2=1$</td><td>$1-y^2$</td><td>$\left[-1,\dfrac12\right]$</td></tr></tbody></table>
+<h3>第三步：(1) 容积——两张圆盘各积一段</h3>
+<p>$$V=\pi\int_{-1}^{\frac12}(1-y^2)\,\mathrm dy+\pi\int_{\frac12}^{2}(2y-y^2)\,\mathrm dy.$$</p>
+<p>上段 $\displaystyle\int_{\frac12}^{2}(2y-y^2)\,\mathrm dy=\Big[y^2-\frac{y^3}3\Big]_{\frac12}^{2}=\frac{27}{24}=\frac98$；下段 $\displaystyle\int_{-1}^{\frac12}(1-y^2)\,\mathrm dy=\Big[y-\frac{y^3}3\Big]_{-1}^{\frac12}=\frac{27}{24}=\frac98$。故</p>
+<p>$$V=\pi\left(\frac98+\frac98\right)=\frac{9\pi}{4}\ \mathrm{m}^3.$$</p>
+<p>（两段恰好相等是本题的几何巧合，不是必然后果——但相等可以当验算信号：若算出不等，先查哪段抄错。）</p>
+<h3>第四步：(2) 做功——同一张半径表，多乘一个行程</h3>
+<p>$$W=10^3\pi g\left[\int_{-1}^{\frac12}(1-y^2)(2-y)\,\mathrm dy+\int_{\frac12}^{2}(2y-y^2)(2-y)\,\mathrm dy\right].$$</p>
+<p>展开逐项积：下段 $(1-y^2)(2-y)=2-y-2y^2+y^3$，原函数 $2y-\dfrac{y^2}2-\dfrac{2y^3}3+\dfrac{y^4}4$，积分值 $\dfrac{153}{64}$；上段 $(2y-y^2)(2-y)=4y-4y^2+y^3$，原函数 $2y^2-\dfrac{4y^3}3+\dfrac{y^4}4$，积分值 $\dfrac{63}{64}$。合计 $\dfrac{153}{64}+\dfrac{63}{64}=\dfrac{216}{64}=\dfrac{27}{8}$，故</p>
+<p>$$W=10^3\pi g\cdot\frac{27}{8}=\frac{27\times10^3}{8}\,\pi g\ \mathrm J.$$</p>
+<h3>易错点</h3>
+<ul><li><strong>两段归属接反</strong>：$y\ge\dfrac12$ 归大圆上部 $x^2=2y-y^2$，$y\le\dfrac12$ 归单位圆下部 $x^2=1-y^2$；分段点由"两方程在 $y=\frac12$ 同给 $x^2=\frac34$"锁定。</li><li><strong>做功行程写错</strong>：从顶部抽出，行程是 $2-y$，越深的层行程越长；写成 $y$ 或常数 $2$ 都会错。</li><li><strong>漏乘 $\rho g$ 或忘单位</strong>：力 $=$ 质量 $\times g$，质量 $=\rho\times$体积；容积单位 $\mathrm{m}^3$、功单位 $\mathrm J$。</li><li><strong>截面法与柱壳法混用变量</strong>：绕 $y$ 轴旋转且已知 $x^2(y)$，截面法沿 $y$ 积最直接；若写柱壳法必须换元，勿把 $\mathrm dy$ 直接当壳厚。</li></ul>
+<blockquote>结论：旋转体问题先问"高度 $y$ 处截面半径是多少"——容积是 $\pi x^2$ 沿 $y$ 累加，功是 $\rho g\,\pi x^2(2-y)$ 沿 $y$ 累加，两问共用同一张 $x^2(y)$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

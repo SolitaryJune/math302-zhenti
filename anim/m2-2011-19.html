@@ -101,5 +101,28 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：中值定理证不等式，单调有界证收敛</h2>
+<p>最终答案：(1) 对任意正整数 $n$，$\dfrac{1}{n+1}&lt;\ln\left(1+\dfrac1n\right)&lt;\dfrac1n$ 成立；(2) 数列 $\{a_n\}$ 收敛。（题库 <code>answer</code> 字段为空，结论以本题推导与参考解析为准。）</p>
+<h3>第一步：(1) 为什么拉格朗日中值定理是对的工具</h3>
+<p>关键观察：$\ln\left(1+\dfrac1n\right)=\ln(n+1)-\ln n$，正是 $f(x)=\ln x$ 在区间 $[n,n+1]$ 上的<strong>增量</strong>。中值定理的机制恰是"增量 = 中间某点的导数 × 区间长"：</p>
+<p>$$\ln(n+1)-\ln n=\frac{1}{\xi}\cdot\big((n+1)-n\big)=\frac1\xi,\qquad \xi\in(n,n+1).$$</p>
+<p><strong>为什么一步就得到双侧夹逼？</strong> 因为 $\dfrac1x$ 严格递减，而 $\xi$ 被 $n&lt;\xi&lt;n+1$ 夹住，倒序后左右不等式同时到手：$\dfrac{1}{n+1}&lt;\dfrac1\xi&lt;\dfrac1n$。不用分别放缩两侧，一个 $\xi$ 的位置估计就是全部。又 $\ln(n+1)-\ln n=\ln\left(1+\dfrac1n\right)$，(1) 得证。左右两半各管一头：左半是下界、右半是上界，第 (2) 问各用一次——两问在这时就已挂上钩。</p>
+<h3>第二步：(2) 先证单调递减——左半不等式登场</h3>
+<p>$$a_{n+1}-a_n=\frac{1}{n+1}-\big(\ln(n+1)-\ln n\big)=\frac{1}{n+1}-\ln\left(1+\frac1n\right)&lt;0,$$</p>
+<p>最后一步用的正是 (1) 的<strong>左半</strong>不等式。直观地说：调和级数每步加上的 $\dfrac{1}{n+1}$，抵不掉对数一步的增量，故 $\{a_n\}$ 严格递减。</p>
+<h3>第三步：(2) 再证有下界——右半不等式累加成望远镜和</h3>
+<p>把 (1) 的右半改写为 $\dfrac1k&gt;\ln(k+1)-\ln k$，对 $k=1,2,\dots,n$ 累加。右边是<strong>裂项相消（望远镜和）</strong>：中间的 $\ln2,\ln3,\dots,\ln n$ 一加一减全部抵消，只剩首尾</p>
+<p>$$\sum_{k=1}^n\frac1k&gt;\sum_{k=1}^n\big(\ln(k+1)-\ln k\big)=\ln(n+1)&gt;\ln n,$$</p>
+<p>故 $a_n=\displaystyle\sum_{k=1}^n\frac1k-\ln n&gt;0$，$\{a_n\}$ 有下界 $0$。</p>
+<h3>第四步：为什么"单调递减 + 有下界"就敢下收敛结论</h3>
+<p>这是单调有界准则的机制：递减数列只能一路向下，却被下界 $0$ 挡住穿不过去——它被"挤"在固定区间里，只能贴向下确界，下确界就是它的极限（背后是实数的确界原理）。<strong>两个条件缺一不可</strong>：只有递减可能一路跌到 $-\infty$，只有有界可能来回振荡不收敛。本题两条都验完，由单调有界准则，$\{a_n\}$ 收敛。</p>
+<h3>易错点</h3>
+<ul><li><strong>(1) 死算极限</strong>：不等式是对每个 $n$ 的精确估计；把 $\ln(1+\frac1n)$ 认作 $\ln x$ 在 $[n,n+1]$ 上的增量最直接，$\dfrac{1}{\xi}$ 的范围一步给出双侧夹逼。</li><li><strong>(2) 想算出极限值</strong>：本题只要求证收敛，单调有界准则就够；极限其实是欧拉常数 $\gamma\approx0.577$，不必也不能在此求出。</li><li><strong>下界证成 $\sum\frac1k&gt;\ln n$ 却不引 (1)</strong>：没有 (1) 的右半不等式，这条累加是无从谈起的——(1) 是为 (2) 备好的工具。</li><li><strong>只验一条就收工</strong>：只递减不找下界、或只有界不单调，都推不出收敛；准则两个条件必须同时成立。</li></ul>
+<blockquote>结论：递减（(1) 左半）+ 下界 $0$（(1) 右半累加成望远镜和），由单调有界准则，$\{a_n\}$ 收敛。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

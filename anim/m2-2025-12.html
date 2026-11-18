@@ -89,5 +89,26 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：三次根式曲线的斜渐近线（提主部 + 泰勒展开）</h2>
+<p>答案：$y=x-1$</p>
+<h3>第一步：判断渐近线类型</h3>
+<p>$x\to\pm\infty$ 时 $y=\sqrt[3]{x^3-3x^2+1}\to\pm\infty$，无水平渐近线；$\sqrt[3]{\ \cdot\ }$ 处处有定义，无无穷间断点，故只可能存在<strong>斜渐近线</strong> $y=kx+b$。</p>
+<h3>第二步：求斜率 $k$</h3>
+<p>$$k=\lim_{x\to\infty}\frac{y}{x}=\lim_{x\to\infty}\sqrt[3]{1-\frac3x+\frac1{x^3}}=1.$$</p>
+<p>根号内趋于 $1$，且三次根号对 $x\to-\infty$ 同样成立（立方根保号），故 $k=1$ 在两个方向都有效。</p>
+<h3>第三步：求截距 $b$ —— 提主部再展开</h3>
+<p>把主部 $x$ 提出根号：</p>
+<p>$$y=x\Big(1-\frac3x+\frac1{x^3}\Big)^{1/3}.$$</p>
+<p>令 $t=-\dfrac3x+\dfrac1{x^3}\to0$，用 $(1+t)^{1/3}=1+\dfrac{t}{3}+o(t)$：</p>
+<p>$$\Big(1-\frac3x+\frac1{x^3}\Big)^{1/3}=1-\frac1x+o\Big(\frac1x\Big)\ \Longrightarrow\ y=x\Big(1-\frac1x+o\Big(\frac1x\Big)\Big)=x-1+o(1).$$</p>
+<p>故 $b=\lim_{x\to\infty}(y-x)=-1$，渐近线为 $y=x-1$（$x\to+\infty$ 与 $x\to-\infty$ 得同一条直线）。</p>
+<h3>易错点</h3>
+<ul><li><strong>直接让根式减 $x$ 硬算 $\infty-\infty$</strong>：不提主部就展开，容易丢因子或算错符号。</li><li><strong>泰勒展开只展开到常数项</strong>：$(1+t)^{1/3}$ 的一次项 $\dfrac t3$ 正是 $-\dfrac1x$ 的来源，丢了它 $b$ 就错。</li><li><strong>漏验 $x\to-\infty$</strong>：立方根保号使两个方向斜率相同，若是平方根就必须分方向讨论。</li></ul>
+<blockquote>一句话结论：$k=1$；提主部后 $(1+t)^{1/3}\approx1-\dfrac1x$，得 $y=x-1$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

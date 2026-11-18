@@ -94,5 +94,32 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：偏积分还原 $f$——"+C"升级成待定函数，条件逐层安放</h2>
+<p><strong>答案：极小值 $f(0,-1)=-1$。</strong></p>
+<h3>第 0 步：先立机制——偏积分的"+C"长什么样</h3>
+<p>条件给了 $f''_{xy}$、$f'_x(x,0)$、$f(0,y)$，目标是还原 $f$。关键认识：<strong>对 $y$ 积分时 $x$ 是常数</strong>，所以"积分常数"不再是一个数，而是任何只依赖 $x$ 的函数 $\varphi(x)$——因为 $\dfrac{\partial}{\partial y}\varphi(x)=0$，对 $y$ 积分完全看不见它。一元不定积分的 $+C$，在偏积分里升级为 $\varphi(x)$；反过来对 $x$ 积分则冒出 $\psi(y)$。</p>
+<h3>第 1 步：还原顺序为什么是"先对 $y$、再对 $x$"（预答）</h3>
+<p>顺序不是随便挑的，是<strong>条件决定的</strong>：对 $y$ 积分从 $f''_{xy}$ 回到 $f'_x$，差一个 $\varphi(x)$——条件 $f'_x(x,0)$ 恰好在 $y=0$ 处把 $\varphi(x)$ 逼出来；再对 $x$ 积分回到 $f$，差一个 $\psi(y)$——条件 $f(0,y)$ 恰好把它逼出来。三个条件沿一条积分链逐层安放，一个不多一个不少。若反过来先对 $x$ 积分，得到的是 $f'_y$，可手里没有任何 $f'_y$ 的取值信息，待定函数定不下来。</p>
+<h3>第 2 步：逐层还原</h3>
+<p>对 $y$ 积分并补 $\varphi(x)$：</p>
+<p>$$f'_x(x,y)=(y^2+2y)e^x+\varphi(x)\ \xrightarrow{\ f'_x(x,0)=(x+1)e^x\ }\ \varphi(x)=(x+1)e^x.$$</p>
+<p>对 $x$ 积分，其中 $\int(x+1)e^x\,\mathrm dx=xe^x$（用 $(xe^x)'=(x+1)e^x$ 一秒验证），再补 $\psi(y)$：</p>
+<p>$$f(x,y)=(y^2+2y)e^x+xe^x+\psi(y)\ \xrightarrow{\ f(0,y)=y^2+2y\ }\ \psi(y)=0.$$</p>
+<p>于是 $f(x,y)=(y^2+2y+x)e^x$。</p>
+<h3>第 3 步：标准流程求极值</h3>
+<p>$e^x&gt;0$ 恒不为零，可先约去——驻点方程实为多项式方程：</p>
+<p>$$f'_x=0\iff y^2+2y+x+1=0,\qquad f'_y=0\iff y=-1.$$</p>
+<p>代回得 $x=0$，唯一驻点 $(0,-1)$。二阶判别（几何内容：$AC-B^2&gt;0$ 且 $A&gt;0$ 说明二阶近似是开口向上的椭圆抛物面）：</p>
+<p>$$A=f''_{xx}=(y^2+2y+x+2)e^x,\quad B=f''_{xy}=(2y+2)e^x,\quad C=f''_{yy}=2e^x.$$</p>
+<p>在 $(0,-1)$：$A=1,\ B=0,\ C=2$，$AC-B^2=2&gt;0$ 且 $A&gt;0$，为极小值点：</p>
+<p>$$f(0,-1)=(1-2+0)e^0=-1.$$</p>
+<h3>易错点</h3>
+<ul><li><strong>偏积分漏待定函数</strong>：不加 $\varphi(x)$，条件 $f'_x(x,0)$ 无处安放，$f$ 必错。</li><li><strong>$\int(x+1)e^x\,\mathrm dx$ 凑错</strong>：$(xe^x)'=(x+1)e^x$，求导一遍是最便宜的保险。</li><li><strong>把 $e^x$ 也当未知量硬解</strong>：$e^x&gt;0$，先约去再解，方程立刻变多项式。</li></ul>
+<blockquote>记忆锚点：偏积分"+C"= 待定函数（对 $y$ 积分加 $\varphi(x)$）；还原顺序由条件链决定；极值流程 = 驻点 + $AC-B^2$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

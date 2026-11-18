@@ -107,5 +107,22 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：等价无穷小的乘方与「差刻画」——四个命题逐条判定</h2>
+<p>答案：C</p>
+<h3>第一步：把「等价」翻译成比值语言，并交代核心工具为什么成立</h3>
+<p>一切判定都从定义出发：$\alpha\sim\beta\iff\lim\dfrac{\alpha}{\beta}=1$。另有一条核心工具——<strong>差刻画</strong>：对非零无穷小 $\alpha$，$\alpha\sim\beta\iff\alpha-\beta=o(\alpha)$。</p>
+<p><strong>为什么差刻画是充要的？</strong> 把 $\dfrac{\alpha-\beta}{\alpha}$ 改写成 $1-\dfrac{\beta}{\alpha}$：它趋于 $0$ 当且仅当 $\dfrac{\beta}{\alpha}\to1$——两个方向同时成立，没有单向性。所以 (3)(4) 是同一件事的正反两面，必然同真同假。题设「$\alpha(x)$ 是<strong>非零</strong>无穷小」正是为了保证分母 $\dfrac{\alpha-\beta}{\alpha}$ 有意义——这是使用差刻画的隐藏前提。</p>
+<h3>第二步：逐条判定</h3>
+<ul><li><strong>(1) 真</strong>：比值取平方，$\lim\dfrac{\alpha^2}{\beta^2}=\left(\lim\dfrac{\alpha}{\beta}\right)^2=1$，故 $\alpha^2\sim\beta^2$。</li><li><strong>(2) 假</strong>：$\alpha^2\sim\beta^2$ 只保证 $\dfrac{\alpha}{\beta}\to\pm1$，符号可能取负。反例 $\alpha=x,\ \beta=-x$：$\alpha^2=\beta^2=x^2$ 平方当然等价，但 $\dfrac{\alpha}{\beta}\equiv-1\not\to1$。</li><li><strong>(3) 真</strong>：$\lim\dfrac{\alpha-\beta}{\alpha}=1-\lim\dfrac{\beta}{\alpha}=1-1=0$。</li><li><strong>(4) 真</strong>：由 $\lim\dfrac{\alpha-\beta}{\alpha}=0$ 反解 $\lim\dfrac{\beta}{\alpha}=1-0=1$，即 $\alpha\sim\beta$。(3)(4) 恰是差刻画的正反两个方向，<strong>同真同假</strong>。</li></ul>
+<h3>第三步：核对选项</h3>
+<p>真命题 $(1)(3)(4)$，选 C。A 漏了 (4)，B 漏了 (3)，D 把假命题 (2) 也收进来了。</p>
+<h3>易错点</h3>
+<ul><li><strong>以为平方可以反推等价</strong>：平方把符号信息抹掉，$\dfrac{\alpha}{\beta}$ 可能恒为 $-1$。</li><li><strong>认为 (3)(4) 只能成立一个</strong>：差刻画是充要条件，两个方向同时成立，必须一起选。</li></ul>
+<blockquote>一句话结论：平方保持等价、差刻画双向成立，唯一假的是「由平方反推等价」，选 C。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

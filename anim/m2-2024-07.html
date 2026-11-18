@@ -116,5 +116,29 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：反常积分敛散三命题的真假判定（比较判别法 + 两个反例）</h2>
+<p>答案：B</p>
+<h3>第一步：把三个命题翻译成可操作的问题</h3>
+<p>(1) $\displaystyle\int_0^{+\infty}f^2$ 收敛能否推出 $\displaystyle\int_0^{+\infty}f$ 收敛？(2) 有 $p&gt;1$ 使 $x^pf(x)$ 有极限能否推出 $\int f$ 收敛？(3) 反过来，$\int f$ 收敛能否保证存在这样的 $p$？工具：比较判别法（证真）、构造反例（证伪）。</p>
+<h3>第二步：命题 (1) 假——"平方可积"推不出"本身可积"</h3>
+<p>取 $f(x)=\dfrac1{x+1}$（非负连续）：</p>
+<p>$$\int_0^{+\infty}\frac{\mathrm dx}{(x+1)^2}=1\ \text{收敛},\qquad\int_0^{+\infty}\frac{\mathrm dx}{x+1}=\lim_{b\to+\infty}\ln(b+1)=+\infty\ \text{发散}.$$</p>
+<p>直觉：$f=\frac1{x+1}$ 只是"一阶小"，平方后变"二阶小"才可积。(1) 错。</p>
+<h3>第三步：命题 (2) 真——比较判别法一步到位</h3>
+<p>设 $\lim\limits_{x\to+\infty}x^pf(x)=L$（$p&gt;1$）。取 $M=L+1$，存在 $X$，当 $x\ge X$ 时 $0\le f(x)\le\dfrac{M}{x^p}$。而 $\displaystyle\int_X^{+\infty}\frac{M}{x^p}\,\mathrm dx$ 因 $p&gt;1$ 收敛，由比较判别法 $\displaystyle\int_X^{+\infty}f$ 收敛；$[0,X]$ 上 $f$ 连续，积分为有限值。故 $\displaystyle\int_0^{+\infty}f$ 收敛。(2) 对。</p>
+<h3>第四步：命题 (3) 假——"高瘦尖峰"反例</h3>
+<p>在 $x=n\ (n\ge2)$ 处放底宽 $\dfrac{2}{n^3}$、峰高 $n$ 的三角形尖峰（峰间 $f=0$，保持连续）：</p>
+<ul><li>每个峰面积 $=\dfrac12\cdot\dfrac{2}{n^3}\cdot n=\dfrac1{n^2}$，故 $\displaystyle\int_0^{+\infty}f=\sum_{n\ge2}\frac1{n^2}$ 收敛；</li><li>但峰顶处 $x^pf(x)=n^p\cdot n=n^{p+1}\to+\infty$，谷底处为 $0$——对任何 $p&gt;1$，$x^pf(x)$ 都在 $0$ 与 $\infty$ 之间反复横跳，极限不存在。</li></ul>
+<p>(3) 错。它是 (2) 的逆命题：把"衰减得够快"弱化成"平均意义可积"后，逐点衰减性就丢了。</p>
+<h3>第五步：计数</h3>
+<p>真命题只有 (2)，个数 $1$，选 <strong>B</strong>。</p>
+<h3>易错点</h3>
+<ul><li><strong>认为 (1) 对</strong>：$\int f^2$ 收敛只说明 $f^2$ 小，$f$ 本身可以只比 $\frac1x$ 略强。</li><li><strong>认为 (3) 对</strong>：把 (2) 当成了充要条件；收敛积分允许"又高又瘦"的尖峰，逐点极限必然被破坏。</li><li><strong>反例构造失败</strong>：$\frac1{x+1}$ 同时是 (1) 的反例，注意它不能否定 (3)——它恰好满足 $x\cdot f(x)\to1$。</li></ul>
+<blockquote>一句话结论：(1) 差一阶、(2) 比较判别法稳真、(3) 被尖峰反例击穿——真命题 1 个，选 B。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

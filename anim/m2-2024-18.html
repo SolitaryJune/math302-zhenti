@@ -128,5 +128,38 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：欧拉方程化常系数 + 凑微分算定积分</h2>
+<p><strong>答案</strong>：(1) $y(x)=2x^3$；(2) $\displaystyle\int_1^2 y(x)\sqrt{4-x^2}\,\mathrm dx=\frac{22\sqrt3}{5}$。</p>
+<h3>第一步（1）：为什么欧拉方程专配变换 $x=\mathrm e^t$</h3>
+<p>$x^2y''+xy'-9y=0$ 的结构特征：每项系数都是 $x$ 的幂，且<strong>幂次等于该项导数的阶数</strong>——这是欧拉方程的标志。它为什么能用 $x=\mathrm e^t$（即 $t=\ln x$）化成常系数？机制在链式法则：</p>
+<p>$$\frac{\mathrm dt}{\mathrm dx}=\frac1x\quad\Longrightarrow\quad \frac{\mathrm d}{\mathrm dx}=\frac1x\frac{\mathrm d}{\mathrm dt},$$</p>
+<p><strong>每对 $x$ 求一次导，就多出一个因子 $\dfrac1x$</strong>；而方程每一项恰好配着同阶的幂 $x^k$（$k$ 为导数阶数），两者相乘把变系数洗成常数。由 $\dfrac{\mathrm dt}{\mathrm dx}=\dfrac1x$ 得</p>
+<p>$$y'=\frac{\dot y}{x},\qquad
+y''=\frac{\mathrm d}{\mathrm dx}\Big(\frac{\dot y}{x}\Big)
+=\frac{\dfrac{\ddot y}{x}\cdot x-\dot y}{x^2}
+=\frac{\ddot y-\dot y}{x^2},$$</p>
+<p>（商法则的分子里 $\dfrac{\ddot y}{x}\cdot x=\ddot y$，用到 $\dfrac{\mathrm d(\dot y)}{\mathrm dx}=\ddot y\dfrac{\mathrm dt}{\mathrm dx}=\dfrac{\ddot y}x$；那个 $-\dot y$ 最易漏。）代入原方程：</p>
+<p>$$x^2\cdot\frac{\ddot y-\dot y}{x^2}+x\cdot\frac{\dot y}{x}-9y=\ddot y-\dot y+\dot y-9y=\ddot y-9y=0.$$</p>
+<p>机制看得见：$y''$ 里的 $-\dot y$ 与 $xy'$ 里的 $+\dot y$ 恰好相消——这不是巧合，正是「每阶导数配一个 $\dfrac1x$」在二阶时的具体表现。变系数方程化成常系数方程 $\ddot y-9y=0$。</p>
+<h3>第二步（1）：特征根、回代与初值</h3>
+<p>$r^2-9=0$，$r=\pm3$，通解</p>
+<p>$$y=C_1\mathrm e^{3t}+C_2\mathrm e^{-3t}=C_1x^3+C_2x^{-3}.$$</p>
+<p><strong>必须把 $\mathrm e^{\pm3t}$ 换回 $x$ 再代初值</strong>：初值给在 $x=1$ 处，而 $x=1$ 对应 $t=\ln1=0$，所以也可以把初值翻进 $t$ 世界（$\dot y=xy'$，故 $\dot y\big|_{t=0}=1\cdot6=6$）再做，两条路等价；在 $x$ 世界里做还占个便宜——$x=1$ 时 $x^{\pm3}$ 都等于 $1$，系数最干净。代初值：$y(1)=C_1+C_2=2$；$y'=3C_1x^2-3C_2x^{-4}$，$y'(1)=3(C_1-C_2)=6$，即 $C_1-C_2=2$。解得 $C_1=2,\ C_2=0$，故</p>
+<p>$$y(x)=2x^3.$$</p>
+<h3>第三步（2）：为什么凑微分 $u=4-x^2$ 而不是三角换元</h3>
+<p>第 (2) 问是 $\displaystyle\int_1^2 2x^3\sqrt{4-x^2}\,\mathrm dx$。选路看被积函数的结构：根号内是 $4-x^2$，外面是<strong>奇次幂</strong> $x^3$——奇次幂保证能拆出一个 $x$ 与 $\mathrm dx$ 凑成 $\mathrm du$，剩下的 $x^2$ 用 $u$ 表示，整个被积式化为 $u$ 的幂函数。三角换元 $x=2\sin\theta$ 同样可行，但要经历 $\sin^3\theta\cos^2\theta$ 降幂，路径更长；凑微分是这里最短的路。</p>
+<p>令 $u=4-x^2$：$\mathrm du=-2x\,\mathrm dx$，$x^2=4-u$；$x:1\to2$ 对应 $u:3\to0$。拆 $2x^3\,\mathrm dx=2x^2\cdot x\,\mathrm dx=(4-u)(-\mathrm du)$，于是</p>
+<p>$$\int_1^2 2x^3\sqrt{4-x^2}\,\mathrm dx=\int_0^3(4-u)\sqrt u\,\mathrm du
+=\Big[\frac83u^{3/2}-\frac25u^{5/2}\Big]_0^3
+=8\sqrt3-\frac{18\sqrt3}{5}=\frac{22\sqrt3}{5}.$$</p>
+<p>（其中 $3^{3/2}=3\sqrt3,\ 3^{5/2}=9\sqrt3$；上下限 $u:3\to0$ 反向，翻转成 $\int_0^3$ 时负号已并入 $-\mathrm du$。）</p>
+<h3>易错点</h3>
+<ul><li><strong>二阶导变换漏 $-\dot y$</strong>：$y''=\dfrac{\ddot y-\dot y}{x^2}$，只写 $\dfrac{\ddot y}{x^2}$ 的话方程会多出错误的 $\dot y$ 项——负号来自对 $\dfrac{\dot y}{x}$ 的商法则求导。</li><li><strong>忘记把 $\mathrm e^{\pm3t}$ 换回 $x$</strong>：通解是 $C_1x^3+C_2x^{-3}$；初值要在 $x=1$（即 $t=0$）处代入。</li><li><strong>换元后上下限反向</strong>：$u:3\to0$，翻转为 $\int_0^3$ 时负号已并入 $-\mathrm du$，两头都处理才会对。</li><li><strong>拆项丢系数</strong>：$2x^3\,\mathrm dx$ 要拆成 $2x^2\cdot x\,\mathrm dx$，留一个 $x$ 给 $\mathrm du$，剩下的 $x^2$ 用 $4-u$ 替，系数 $2$ 与 $-\dfrac12$ 相乘后得 $(4-u)(-\mathrm du)$ 中的 $1$。</li></ul>
+<blockquote>一句话结论：欧拉方程经 $x=\mathrm e^t$ 化为 $\ddot y-9y=0$，初值定出 $y=2x^3$；$u=4-x^2$ 凑微分把第(2)问化成 $\displaystyle\int_0^3(4-u)\sqrt u\,\mathrm du=\frac{22\sqrt3}5$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

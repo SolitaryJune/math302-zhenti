@@ -91,5 +91,26 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：四阶行列式——倍加变换造零，再按零最多的列展开</h2>
+<p>答案：$a^4-4a^2$</p>
+<h3>第一步：观察结构，第一次造零</h3>
+<p>第 3、4 列的前两行互为相反数（$-1$ 对 $1$、$1$ 对 $-1$），做列变换 $c_3\to c_3+c_4$（倍加，值不变）：</p>
+<p>$$\begin{vmatrix}a&amp;0&amp;-1&amp;1\\0&amp;a&amp;1&amp;-1\\-1&amp;1&amp;a&amp;0\\1&amp;-1&amp;0&amp;a\end{vmatrix}=\begin{vmatrix}a&amp;0&amp;0&amp;1\\0&amp;a&amp;0&amp;-1\\-1&amp;1&amp;a&amp;0\\1&amp;-1&amp;a&amp;a\end{vmatrix}.$$</p>
+<h3>第二步：第二次造零</h3>
+<p>再做行变换 $r_4\to r_4-r_3$（值不变），第 4 行变 $(2,\,-2,\,0,\,a)$：</p>
+<p>$$=\begin{vmatrix}a&amp;0&amp;0&amp;1\\0&amp;a&amp;0&amp;-1\\-1&amp;1&amp;a&amp;0\\2&amp;-2&amp;0&amp;a\end{vmatrix}.$$</p>
+<h3>第三步：按第 3 列展开</h3>
+<p>第 3 列只剩 $a_{33}=a$ 非零，符号 $(-1)^{3+3}=+1$：</p>
+<p>$$D=a\begin{vmatrix}a&amp;0&amp;1\\0&amp;a&amp;-1\\2&amp;-2&amp;a\end{vmatrix}=a\left[a\begin{vmatrix}a&amp;-1\\-2&amp;a\end{vmatrix}+1\cdot\begin{vmatrix}0&amp;a\\2&amp;-2\end{vmatrix}\right]=a\left[a\,(a^2-2)-2a\right]=a\,(a^3-4a).$$</p>
+<h3>第四步：收口与验算</h3>
+<p>$D=a^4-4a^2$。取 $a=1$ 数值复核：原行列式 $=-3$，公式给 $1-4=-3$，一致（取 $a=2$ 亦复核通过：行列式为 0，公式给 $16-16=0$）。</p>
+<h3>易错点</h3>
+<ul><li><strong>变换记错值</strong>：$c_3\to c_3+c_4$、$r_4\to r_4-r_3$ 都是倍加变换，值不变；只有互换两行/列才变号。</li><li><strong>展开符号数错</strong>：行列数从 1 数起，$(-1)^{3+3}=+1$。</li><li><strong>三阶展开漏项或添错号</strong>：按第一行展开是 $a(a^2-2)+1\cdot(-2a)$；中间的 $0$ 项直接略去，别再拖出符号。</li></ul>
+<blockquote>一句话结论：两次倍加把第 3 列打成只剩一个 $a$，展开出三阶行列式 $a^3-4a$，最终 $D=a^4-4a^2$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

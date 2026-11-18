@@ -111,5 +111,33 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：惯性指数定合同参数，正交相似定特征值拼 $Q$</h2>
+<p><strong>答案</strong>：(1) $a=4$，$k&gt;0$；(2) $k=3$，$Q=\begin{pmatrix}\dfrac1{\sqrt3}&amp;\dfrac1{\sqrt2}&amp;\dfrac1{\sqrt6}\\[4pt] \dfrac1{\sqrt3}&amp;0&amp;-\dfrac2{\sqrt6}\\[4pt] \dfrac1{\sqrt3}&amp;-\dfrac1{\sqrt2}&amp;\dfrac1{\sqrt6}\end{pmatrix}$，使 $Q^{\mathrm T}AQ=\mathrm{diag}(3,6,0)$。</p>
+<h3>第一步：(1) 用「合同 $\Rightarrow$ 秩相等」定 $a$</h3>
+<p>合同的定义是存在可逆矩阵 $P$ 使 $B=P^{\mathrm T}AP$。<strong>可逆阵不改变秩</strong>（乘可逆阵相当于做初等变换），所以合同必保秩：$r(B)=r(A)$。$B$ 是对角阵，行列式等于对角元之积 $k\cdot6\cdot0=0$，故 $r(B)\le2$，$A$ 也必须降秩。按第一行展开：</p>
+<p>$$\det A=4(a-1)-(a+2)-2\cdot3=3a-12\overset{!}{=}0\ \Longrightarrow\ a=4.$$</p>
+<h3>第二步：(1) 用惯性指数定 $k$ 的范围</h3>
+<p>为什么"合同"等价于"秩与正、负惯性指数都相同"？合同是同一个二次型换了一组基：坐标变了，但 $x^{\mathrm T}Ax$ 取值的正负结构不会变（惯性定理）；反之，符号结构相同的两个实对称阵都能化成同一个标准形——正、负平方项个数由 $p,q$ 定，零项个数由秩定——故彼此合同。<strong>合同只看秩与正负惯性指数，到此为止。</strong></p>
+<p>$A$ 的惯性指数怎么定最稳？$a=4$ 时一阶、二阶顺序主子式为 $4&gt;0$、$\begin{vmatrix}4&amp;1\\1&amp;1\end{vmatrix}=3&gt;0$：二阶主子块正定（Sylvester 判据）；$\det A=0$ 说明第三个方向是"零方向"——两个非零方向全正，即 $r(A)=2$、$p=2$、$q=0$。想绕开判据也可直接算特征多项式（$\mathrm{tr}\,A=9$、三个二阶主子式之和 $3+12+3=18$、$\det A=0$）：</p>
+<p>$$\lambda^3-9\lambda^2+18\lambda=\lambda(\lambda-3)(\lambda-6),$$</p>
+<p>特征值 $\{3,6,0\}$ 全非负，同样得 $p=2,q=0$。$B$ 的特征值就是 $k,6,0$，要与 $p=2,\ q=0$ 一致必须 $k&gt;0$（$k&lt;0$ 多出一个负惯性指数，$k=0$ 则秩对不上）。</p>
+<h3>第三步：(2) 正交相似把条件升级，用迹定 $k$</h3>
+<p>$Q$ 正交时 $Q^{\mathrm T}=Q^{-1}$，故 $Q^{\mathrm T}AQ=B$ 同时是<strong>相似</strong>：特征值必须逐个相同（含重数）。为什么"特征值之和 $=$ 迹"？特征多项式 $\det(\lambda I-A)=\lambda^3-(\mathrm{tr}\,A)\lambda^2+\cdots$ 的 $\lambda^2$ 系数是 $-\mathrm{tr}\,A$，而根之和由系数直接读出——这是相似不变量里最快的一个。于是 $A$ 的特征值之和等于迹：</p>
+<p>$$\mathrm{tr}\,A=4+1+4=9=k+6+0\ \Longrightarrow\ k=3,$$</p>
+<p>即 $A$ 的特征值为 $\lambda_1=3,\ \lambda_2=6,\ \lambda_3=0$（与 $B=\mathrm{diag}(3,6,0)$ 的对角元按列一一对应）。</p>
+<h3>第四步：求特征向量、单位化拼 $Q$</h3>
+<p>解 $(A-\lambda I)x=0$（$A$ 取 $a=4$）：</p>
+<table><thead><tr><th>$\lambda$</th><th>方程组化简结果</th><th>特征向量</th></tr></thead><tbody><tr><td>$3$</td><td>$x_1=x_2=x_3$</td><td>$\xi_1=(1,1,1)^{\mathrm T}$</td></tr><tr><td>$6$</td><td>$x_2=0,\ x_1=-x_3$</td><td>$\xi_2=(1,0,-1)^{\mathrm T}$</td></tr><tr><td>$0$</td><td>$x_1=x_3,\ x_2=-2x_1$</td><td>$\xi_3=(1,-2,1)^{\mathrm T}$</td></tr></tbody></table>
+<p>可代回验证 $A\xi_1=3\xi_1$、$A\xi_2=6\xi_2$、$A\xi_3=\mathbf 0$。实对称矩阵<strong>不同特征值</strong>的特征向量天然正交——为什么？设 $A\xi_1=\lambda_1\xi_1,\ A\xi_2=\lambda_2\xi_2$：一方面 $\xi_1^{\mathrm T}A\xi_2=\lambda_2\xi_1^{\mathrm T}\xi_2$，另一方面由 $A^{\mathrm T}=A$ 得 $\xi_1^{\mathrm T}A\xi_2=(A\xi_1)^{\mathrm T}\xi_2=\lambda_1\xi_1^{\mathrm T}\xi_2$；两式相减得 $(\lambda_1-\lambda_2)\xi_1^{\mathrm T}\xi_2=0$，$\lambda_1\ne\lambda_2$ 迫使内积为零。本题三者两两内积为零可直接验算，无需施密特正交化，直接单位化：</p>
+<p>$$\eta_1=\frac1{\sqrt3}(1,1,1)^{\mathrm T},\quad \eta_2=\frac1{\sqrt2}(1,0,-1)^{\mathrm T},\quad \eta_3=\frac1{\sqrt6}(1,-2,1)^{\mathrm T}.$$</p>
+<p>按 $B$ 的对角元顺序 $(3,6,0)$ 排列成 $Q=(\eta_1,\eta_2,\eta_3)$，则 $Q^{\mathrm T}AQ=\mathrm{diag}(3,6,0)=B$。$Q$ 不唯一：每个特征向量可整体变号，但列与对角元的对应关系不能乱。</p>
+<h3>易错点</h3>
+<ul><li><strong>第(1)问就误把合同当相似、拿 $A$ 的特征值去和 $B$ 配对</strong>：合同不需要特征值相同（那是第(2)问正交相似才有的要求），只需 $r$ 与 $p,q$ 一致；主路是用 $\det A=0$ 定 $a$、顺序主子式定惯性。第二步里的特征多项式只是<strong>验算惯性指数</strong>的另一条路，不是拿特征值去与 $B$ 逐个配对。</li><li><strong>第(2)问仍停留在合同</strong>：正交矩阵使 $Q^{\mathrm T}=Q^{-1}$，条件被升级为相似，特征值（含重数）必须完全一致；只用惯性指数定不出唯一的 $k$，用迹最快。</li><li><strong>列序与 $B$ 的对角元不对应</strong>：$Q$ 的第 1、2、3 列必须分别属于 $\lambda=3,6,0$；顺序排错，$Q^{\mathrm T}AQ$ 就不是 $\mathrm{diag}(3,6,0)$。</li><li><strong>多余的施密特正交化</strong>：不同特征值的特征向量自动正交；只有同一特征值出多个向量时才需要正交化。忘单位化也不行——$Q$ 必须是正交矩阵。</li></ul>
+<blockquote>一句话结论：合同看秩与惯性 $\Rightarrow a=4,\ k&gt;0$；正交相似看特征值 $\Rightarrow k=3$；三个互相正交的单位特征向量按 $(3,6,0)$ 排列拼出 $Q$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

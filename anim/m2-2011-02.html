@@ -86,5 +86,23 @@ AW.init({
   },
 });
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：只给一点可导——全部凑导数定义</h2>
+<p>答案：B（$-f'(0)$）</p>
+<h3>第一步：盘点可用的工具</h3>
+<p>条件只有「$f$ 在 $x=0$ 处可导，$f(0)=0$」，没说在邻域内可导，所以<strong>洛必达与泰勒都不可用</strong>；唯一合法的武器是定义式（由 $f(0)=0$ 改写）：</p>
+<p>$$f'(0)=\lim_{u\to0}\frac{f(u)-f(0)}{u}=\lim_{u\to0}\frac{f(u)}{u}.$$</p>
+<h3>第二步：把分式拆成两个「差商」</h3>
+<p>$$\frac{x^2f(x)-2f(x^3)}{x^3}=\frac{f(x)}{x}-2\cdot\frac{f(x^3)}{x^3}.$$</p>
+<h3>第三步：逐项取极限</h3>
+<ul><li>$\dfrac{f(x)}{x}=\dfrac{f(x)-f(0)}{x-0}\to f'(0)$，就是定义式取 $u=x$；</li><li>令 $u=x^3$，$x\to0$ 时 $u\to0$，$\dfrac{f(x^3)}{x^3}=\dfrac{f(u)}{u}\to f'(0)$。</li></ul>
+<p>合并：$f'(0)-2f'(0)=-f'(0)$。</p>
+<h3>易错点</h3>
+<ul><li><strong>直接洛必达</strong>：对分子分母求导默认 $f$ 在 $0$ 的邻域内可导，题目没给，逻辑链条断裂。</li><li><strong>漏用 $f(0)=0$</strong>：没有它就凑不出 $\dfrac{f(u)-f(0)}{u}$ 的形状。</li><li><strong>系数抄丢</strong>：$2f(x^3)$ 拆开后前面带着 2，最后是 $1-2=-1$ 倍，选 C 的错误多出在这里。</li></ul>
+<blockquote>结论：选 <strong>B</strong>。凡是「只知一点可导」的极限，一律回到定义式凑差商。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

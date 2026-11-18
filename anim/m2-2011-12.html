@@ -86,5 +86,25 @@ AW.init({
   },
 });
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：指数密度的一阶矩——负半轴清零后分部积分</h2>
+<p>答案：$\dfrac{1}{\lambda}$</p>
+<h3>第一步：清理负半轴</h3>
+<p>$x\le0$ 时 $f(x)=0$，被积区间收缩为正半轴：</p>
+<p>$$\int_{-\infty}^{+\infty}xf(x)\,\mathrm dx=\int_0^{+\infty}x\cdot\lambda e^{-\lambda x}\,\mathrm dx.$$</p>
+<h3>第二步：分部积分</h3>
+<p>取 $u=x$、$\mathrm dv=\lambda e^{-\lambda x}\mathrm dx$，则 $v=-e^{-\lambda x}$：</p>
+<p>$$\int_0^{+\infty}x\lambda e^{-\lambda x}\mathrm dx=\Bigl[-x\,e^{-\lambda x}\Bigr]_0^{+\infty}+\int_0^{+\infty}e^{-\lambda x}\,\mathrm dx.$$</p>
+<p>$\lambda&gt;0$ 时 $x\,e^{-\lambda x}\to0$（指数衰减压倒线性增长），首项为零。</p>
+<h3>第三步：算剩余积分</h3>
+<p>$$\int_0^{+\infty}e^{-\lambda x}\,\mathrm dx=\Bigl[-\frac{e^{-\lambda x}}{\lambda}\Bigr]_0^{+\infty}=\frac{1}{\lambda}.$$</p>
+<p>（这正是指数分布的期望 $E(X)=\frac1\lambda$，可作快速检验。）</p>
+<h3>易错点</h3>
+<ul><li><strong>负半轴不清理</strong>：直接在 $(-\infty,+\infty)$ 上硬写容易漏掉 $f=0$ 的一段。</li><li><strong>收敛性不交代</strong>：$\lambda&gt;0$ 才保证 $xe^{-\lambda x}\to0$，缺这一步首项不能归零。</li><li><strong>$v$ 的符号错</strong>：$\int\lambda e^{-\lambda x}\mathrm dx=-e^{-\lambda x}$，负号丢了答案就变成 $-\frac1\lambda$。</li></ul>
+<blockquote>结论：填 $\dfrac{1}{\lambda}$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

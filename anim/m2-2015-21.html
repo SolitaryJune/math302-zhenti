@@ -96,5 +96,31 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：切线交点夹逼——右半靠符号，左半靠"平均斜率 &lt; 末端斜率"</h2>
+<p><strong>结论（证明题）：$a&lt;x_0&lt;b$。</strong></p>
+<h3>第 0 步：先立机制——下凸曲线在切线上方</h3>
+<p>条件 $f''(x)&gt;0$ 的几何内容是：曲线<strong>下凸</strong>，且<strong>曲线位于其任一条切线的上方</strong>。这是本题的灵魂图景：曲线过 $(a,0)$（因 $f(a)=0$）且单调上升，切线在 $(b,f(b))$ 处从下方托着曲线；要证的 $a&lt;x_0&lt;b$，说的就是切线落回 $x$ 轴的位置被夹在"曲线自己与 $x$ 轴的交点 $a$"与"切点 $b$"之间。</p>
+<h3>第 1 步：把 $x_0$ 显式化</h3>
+<p>切线 $y-f(b)=f'(b)(x-b)$，令 $y=0$ 解出</p>
+<p>$$x_0=b-\frac{f(b)}{f'(b)}.$$</p>
+<p>于是问题化成两个不等式：$\dfrac{f(b)}{f'(b)}$ 大于 $0$（给右半）、小于 $b-a$（给左半）。</p>
+<h3>第 2 步：右半 $x_0&lt;b$——为什么只靠符号就够</h3>
+<p>$f'(x)&gt;0$ 且 $b&gt;a$，故 $f(b)&gt;f(a)=0$；又 $f'(b)&gt;0$，于是 $\dfrac{f(b)}{f'(b)}&gt;0$，减去一个正数：</p>
+<p>$$x_0=b-\frac{f(b)}{f'(b)}&lt;b.$$</p>
+<h3>第 3 步：左半 $x_0&gt;a$——为什么必须请中值定理（预答）</h3>
+<p>$x_0&gt;a\iff b-\dfrac{f(b)}{f'(b)}&gt;a\iff f(b)&lt;f'(b)(b-a)$。左边 $f(b)$ 是<strong>整体增量</strong>，右边是<strong>末端瞬时斜率乘长度</strong>——比较"平均变化率"与"端点变化率"，正是拉格朗日中值定理的领地：对 $[a,b]$ 用中值定理，存在 $\xi\in(a,b)$ 使</p>
+<p>$$f(b)=f(b)-f(a)=f'(\xi)(b-a).$$</p>
+<p>$f''&gt;0\Rightarrow f'$ 严格增，而 $\xi&lt;b$，故 $f'(\xi)&lt;f'(b)$；乘正数 $b-a$ 得</p>
+<p>$$f(b)=f'(\xi)(b-a)&lt;f'(b)(b-a)\ \Longrightarrow\ \frac{f(b)}{f'(b)}&lt;b-a\ \Longrightarrow\ x_0&gt;b-(b-a)=a.$$</p>
+<p>几何上再看一眼：下凸曲线越走越陡，弦的平均斜率 $f'(\xi)$ 小于末端斜率 $f'(b)$——"按平均斜率走完 $b-a$ 的路"必然比"按末端斜率算"要矮，这就是 $f(b)&lt;f'(b)(b-a)$ 的直观来源。</p>
+<p>综合两半：$a&lt;x_0&lt;b$，证毕。</p>
+<h3>易错点</h3>
+<ul><li><strong>只证右半收工</strong>：$x_0&lt;b$ 是符号层面白送的，$x_0&gt;a$ 才是本题主体，须中值定理。</li><li><strong>单调方向记反</strong>：$f''&gt;0$ 说明 $f'$ 递<strong>增</strong>，小自变量 $\xi$ 处 $f'(\xi)&lt;f'(b)$——不等号方向正是左半的来源。</li><li><strong>变形不看符号</strong>：$f'(b)&gt;0$、$b-a&gt;0$ 是 $\dfrac{f(b)}{f'(b)}&lt;b-a\iff x_0&gt;a$ 方向不反转的前提。</li></ul>
+<blockquote>记忆锚点：下凸 $\Rightarrow$ 曲线在切线上方；$x_0=b-\dfrac{f(b)}{f'(b)}$；右半看符号，左半用"平均斜率 $&lt;$ 末端斜率"（中值定理 + $f'$ 增）。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

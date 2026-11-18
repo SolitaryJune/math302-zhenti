@@ -104,5 +104,27 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：分段函数分界点连续 + 等价无穷小求右极限</h2>
+<p>答案：<strong>A</strong>（$ab=\dfrac{1}{2}$）。</p>
+<h3>第 0 步：连续在分界点意味着什么——为什么只剩一个右极限</h3>
+<p>连续的定义是"极限值 = 函数值"。分段函数在分界点 $x=0$ 两侧表达式不同，极限必须<strong>分左右算</strong>再对账：左极限 = 右极限 = $f(0)$。本题左侧 $f(x)=b$ 是常数，左极限与 $f(0)$ 天然都等于 $b$，三个条件当场塌缩成一个——<strong>右极限也必须等于 $b$</strong>。所以全部工作就是算一个右极限。</p>
+<h3>第 1 步：右极限怎么算——为什么用等价无穷小、为什么替换合法</h3>
+<p>右极限 $\lim\limits_{x\to0^+}\dfrac{1-\cos\sqrt{x}}{ax}$ 是 $\dfrac00$ 型。洛必达也可行（求导后出现 $\dfrac{\sin\sqrt{x}}{2\sqrt{x}}$，收尾仍要靠 $\sin u\sim u$），更直接的路是等价无穷小。它的依据来自泰勒展开：</p>
+<p>$$\cos u=1-\frac{u^2}{2}+o(u^2)\ \Longrightarrow\ 1-\cos u=\frac{u^2}{2}+o(u^2)\sim\frac{u^2}{2},$$</p>
+<p>系数 $\dfrac12$ 就是 $\cos$ 的二阶泰勒系数，"平方减半"即是 $1-\cos u$ 的阶数。这里 $u=\sqrt{x}\to0$，故</p>
+<p>$$1-\cos\sqrt{x}\sim\frac{(\sqrt{x})^2}{2}=\frac{x}{2}.$$</p>
+<p><strong>为什么分子可以整体替换？</strong> 等价替换发生在<strong>乘除结构</strong>里才安全，本题恰是商：$1-\cos\sqrt x=\dfrac x2\,(1+o(1))$，除以 $ax$ 后多出的因子 $1+o(1)\to1$，不改变比值极限。于是</p>
+<p>$$\lim_{x\to0^+}\frac{1-\cos\sqrt{x}}{ax}=\lim_{x\to0^+}\frac{x/2}{ax}=\frac{1}{2a},$$</p>
+<p>其中 $a\ne0$ 是隐含前提（否则 $ax\equiv0$，表达式无意义）。</p>
+<h3>第 2 步：解出 $ab$</h3>
+<p>令右极限等于 $f(0)=b$：$\dfrac{1}{2a}=b$，即 $2ab=1$，$ab=\dfrac12$，选 <strong>A</strong>。</p>
+<h3>易错点</h3>
+<ul><li><strong>误选 D</strong>：把 $1-\cos u$ 背成 $\sim u^2$，丢掉泰勒系数 $\dfrac12$，多算一倍得 $ab=2$。</li><li><strong>误选 C</strong>：以为 $1-\cos\sqrt x$ 是比 $x$ 高阶的无穷小、极限为 $0$；实际 $\sqrt x$ 平方后恰与 $x$ <strong>同阶</strong>。</li><li><strong>误选 B</strong>：$1-\cos\sqrt x\ge0$ 且 $x&gt;0$，右极限必为正，$ab$ 为负没有来源。</li></ul>
+<blockquote>记忆锚点：分界点连续 = 左右极限与函数值三方对账；$1-\cos u\sim\dfrac{u^2}{2}$（泰勒系数）；等价替换在乘除结构里安全。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

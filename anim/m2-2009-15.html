@@ -95,5 +95,29 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：等价无穷小的「阶数匹配」——分子两因子各出二阶</h2>
+<p><strong>答案：$\dfrac{1}{4}$。</strong></p>
+<h3>第一步：先定策略——为什么用展开配阶，而不是洛必达</h3>
+<p>$x\to0$ 时这是 $\dfrac00$ 型未定式。两条常规路里选路要算成本：</p>
+<ul><li><strong>洛必达</strong>：分子求导一步就得到 $\sin x\,[x-\ln(1+\tan x)]+(1-\cos x)\big(1-\sec^2x\big)$，式子更繁，且 $x-\ln(1+\tan x)$ 的主部相消藏在深处，还得再导几轮、每轮都在放大计算量；</li><li><strong>泰勒/等价展开</strong>：把"谁消掉谁"提前到<strong>系数层面</strong>一次性看清，计算量集中在展开式里。</li></ul>
+<p>本题选第二条路。选路之后先算一笔"阶数账"：分母 $\sin^4x\sim x^4$ 是四阶；分子是乘积，$1-\cos x\sim\dfrac{x^2}2$ 已出二阶，所以另一因子 $x-\ln(1+\tan x)$ 也必须精确到二阶——二阶乘二阶才配平四阶。这笔账决定了后面的展开"预算"：<strong>只保留到 $x^2$ 项，更高阶全归 $o(x^2)$</strong>。</p>
+<h3>第二步：为什么 $\sin^4x\sim x^4$ 可以直接换，而 $\ln(1+\tan x)\sim x$ 不能直接换</h3>
+<p>等价替换的合法性来自<strong>除法结构</strong>：把一个因子换成主部，相当于分子分母同除以该主部，比值恒为 1——所以<strong>乘除因子</strong>随便换。但分子里的 $x-\ln(1+\tan x)$ 是<strong>加法</strong>：若把对数换成 $x$，差的主部整个消掉，而真正决定极限的恰好是被扔掉的二阶项，答案就错成 $0$。规矩是：<strong>乘除处可用等价，加减处必须展开到"差的主部"完整现形为止</strong>。</p>
+<h3>第三步：把对数展开到二阶（按预算执行）</h3>
+<p>两件工具：$\tan x=x+o(x^2)$（一阶就够——它只通过 $u$ 与 $u^2$ 进场，产生的误差阶都高于 $x^2$）与 $\ln(1+u)=u-\dfrac{u^2}2+o(u^2)$，取 $u=\tan x$：</p>
+<p>$$\ln(1+\tan x)=\tan x-\frac{\tan^2x}2+o(x^2)=x-\frac{x^2}2+o(x^2).$$</p>
+<p>正切的 $x^3$ 项、$\tan^2x$ 展开的高阶项都并入 $o(x^2)$，不影响二阶系数——这正是第一步"配阶预算"的作用。</p>
+<h3>第四步：作差、代入、收口</h3>
+<p>$$x-\ln(1+\tan x)=\frac{x^2}2+o(x^2)\sim\frac{x^2}2,$$</p>
+<p>差的主部已经现形，分子整体换回乘除结构后，等价替换重新合法：</p>
+<p>$$\lim_{x\to0}\frac{(1-\cos x)[x-\ln(1+\tan x)]}{\sin^4x}=\lim_{x\to0}\frac{\frac{x^2}2\cdot\frac{x^2}2}{x^4}=\frac14.$$</p>
+<h3>易错点</h3>
+<ul><li><strong>把 $\ln(1+\tan x)$ 直接等价成 $x$</strong>：加减处替换丢掉了决定结果的主部差，答案错成 $0$。</li><li><strong>阶数不够就收口</strong>：另一因子只展开到一阶，分子只有三阶，与四阶分母不匹配，极限形式上「缺阶」。</li><li><strong>洛必达硬算</strong>：不是不行，而是求导后式子更繁，还得补高阶展开，性价比极低。</li></ul>
+<blockquote>结论：分母四阶，两个分子因子各出二阶；加减中的等价替换必须展开到位，极限为 $\dfrac14$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

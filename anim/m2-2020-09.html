@@ -93,5 +93,28 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：参数方程二阶导——第二次除的还是 $x'(t)$</h2>
+<p>答案：$-\sqrt{2}$</p>
+<h3>第一步：公式链为什么长这样</h3>
+<p>$\dfrac{\mathrm{d}y}{\mathrm{d}x}=\dfrac{y'(t)}{x'(t)}$ 的依据是微分：$\mathrm{d}x=x'(t)\,\mathrm{d}t$，$\mathrm{d}y=y'(t)\,\mathrm{d}t$，一阶微分相除即得（一阶微分形式不变性）。</p>
+<p>关键是二阶：$\dfrac{\mathrm{d}y}{\mathrm{d}x}$ 算出来仍是 $t$ 的函数 $\varphi(t)$，而 $\dfrac{\mathrm{d}^2y}{\mathrm{d}x^2}=\dfrac{\mathrm{d}\varphi}{\mathrm{d}x}$ 要<strong>对 $x$</strong> 求导，只能再走一遍链式——$t$ 是 $x$ 的函数，$\dfrac{\mathrm{d}\varphi}{\mathrm{d}x}=\dfrac{\mathrm{d}\varphi}{\mathrm{d}t}\cdot\dfrac{\mathrm{d}t}{\mathrm{d}x}=\dfrac{\dfrac{\mathrm{d}\varphi}{\mathrm{d}t}}{x'(t)}$。这就是</p>
+<p>$$\frac{\mathrm{d}^2y}{\mathrm{d}x^2}=\frac{\dfrac{\mathrm{d}}{\mathrm{d}t}\left(\dfrac{y'(t)}{x'(t)}\right)}{x'(t)}.$$</p>
+<p>第二个分式的分母<strong>仍是 $x'(t)$</strong>，不是 $[x'(t)]^2$——「$[x'(t)]^2$」是把两次链式错当成两次"相除"叠出来的：第二次求导的对象是 $\varphi(t)$ 对 $t$ 的导数，除数是 $x'(t)$，仅此一次。这是参数方程求导最大的坑。</p>
+<h3>第二步：算出两个一阶导</h3>
+<p>$x=\sqrt{t^2+1}$ → $x'(t)=\dfrac{t}{\sqrt{t^2+1}}$。</p>
+<p>$y=\ln\left(t+\sqrt{t^2+1}\right)$（即反双曲正弦）→</p>
+<p>$$y'(t)=\frac{1+\dfrac{t}{\sqrt{t^2+1}}}{t+\sqrt{t^2+1}}=\frac{1}{\sqrt{t^2+1}}.$$</p>
+<h3>第三步：两次运算</h3>
+<p>$$\frac{\mathrm{d}y}{\mathrm{d}x}=\frac{1/\sqrt{t^2+1}}{t/\sqrt{t^2+1}}=\frac{1}{t},\qquad \frac{\mathrm{d}^2y}{\mathrm{d}x^2}=\frac{-1/t^2}{t/\sqrt{t^2+1}}=-\frac{\sqrt{t^2+1}}{t^3}.$$</p>
+<h3>第四步：代值</h3>
+<p>$t=1$ 时 $\dfrac{\mathrm{d}^2y}{\mathrm{d}x^2}\Big|_{t=1}=-\dfrac{\sqrt{2}}{1}=-\sqrt{2}$。</p>
+<h3>易错点</h3>
+<ul><li><strong>二阶导分母平方</strong>：写成 $\dfrac{-1/t^2}{[x'(t)]^2}$ 会得出错误的数值——第二次是「对 $t$ 求导后<strong>再除以 $x'(t)$</strong>」。</li><li><strong>$y'$ 的繁分式化简出错</strong>：分子分母同乘 $\sqrt{t^2+1}$ 立刻干净：$\dfrac{\sqrt{t^2+1}+t}{\sqrt{t^2+1}\,(t+\sqrt{t^2+1})}=\dfrac{1}{\sqrt{t^2+1}}$。</li><li><strong>代错点</strong>：题目给的是 $t=1$，别代成某个 $x$ 或 $y$ 的值。</li></ul>
+<blockquote>一句话结论：$\dfrac{\mathrm{d}y}{\mathrm{d}x}=\dfrac{1}{t}$，再除一次 $x'(t)=\dfrac{t}{\sqrt{t^2+1}}$ 得 $-\dfrac{\sqrt{t^2+1}}{t^3}$，代 $t=1$ 得 $-\sqrt{2}$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

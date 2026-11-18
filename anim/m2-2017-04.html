@@ -99,5 +99,28 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：特解设法的共振机制——什么时候必须乘 $x$</h2>
+<p>答案：<strong>C</strong>。</p>
+<h3>第 0 步：先把共振的机理讲透——为什么撞上特征根就要乘 $x$</h3>
+<p>把方程写成算子形式 $L(y)=y''-4y'+8y=f(x)$。$L$ 有个要害：它把<strong>齐次解全部打成 $0$</strong>。若自由项某块对应的"特征量"恰好是特征根，那么按标准套路设出的试探解本身就是齐次解——代进左端恒得 $0$，待定系数 $B,C$ 无论取什么都凑不出右端的 $f(x)$。唯一出路是<strong>给试探解乘一个 $x$</strong>，把它从齐次解的势力范围里抬出去，$L$ 作用后不再恒为零，系数才有得配。这与齐次方程特征重根 $r$ 要补 $x\mathrm e^{rx}$ 项是同一机制。</p>
+<p>特征量怎么看：$\mathrm e^{\lambda x}$ 的特征量是 $\lambda$；$\mathrm e^{\lambda x}\cos\beta x$ 的特征量是复数 $\lambda\pm\beta\mathrm i$——把 $\cos\beta x$ 写成 $\dfrac12\bigl(\mathrm e^{\mathrm i\beta x}+\mathrm e^{-\mathrm i\beta x}\bigr)$ 就看清了，看的是<strong>完整复指数</strong>，不是只看实部。</p>
+<h3>第 1 步：解特征方程</h3>
+<p>$$r^2-4r+8=0\ \Longrightarrow\ r=\frac{4\pm\sqrt{16-32}}{2}=2\pm2\mathrm i,$$</p>
+<p>一对单重复根，这是判断"撞不撞"的基准。</p>
+<h3>第 2 步：拆块判共振（先叙事，后表格）</h3>
+<p>$$\mathrm e^{2x}(1+\cos 2x)=\mathrm e^{2x}+\mathrm e^{2x}\cos 2x,$$</p>
+<p>两块特征量不同，必须逐块判断。<strong>块一</strong> $\mathrm e^{2x}$ 的特征量 $\lambda=2$，与 $2\pm2\mathrm i$ 都不同——$A\mathrm e^{2x}$ 不是齐次解，$L$ 作用它非零，不共振、不乘 $x$。<strong>块二</strong> $\mathrm e^{2x}\cos2x$ 的特征量 $2\pm2\mathrm i$ 恰好就是特征根——标准试探 $\mathrm e^{2x}(B\cos2x+C\sin2x)$ 已被 $L$ 打成 $0$，共振、必须乘 $x$。</p>
+<table><thead><tr><th>自由项</th><th>特征量</th><th>与 $2\pm2\mathrm i$ 比</th><th>设法</th></tr></thead><tbody><tr><td>$\mathrm e^{2x}$</td><td>$2$</td><td>不重合</td><td>$A\mathrm e^{2x}$</td></tr><tr><td>$\mathrm e^{2x}\cos2x$</td><td>$2\pm2\mathrm i$</td><td>恰为特征根</td><td>$x\mathrm e^{2x}(B\cos2x+C\sin2x)$</td></tr></tbody></table>
+<p>合并得</p>
+<p>$$y^*=A\mathrm e^{2x}+x\mathrm e^{2x}(B\cos2x+C\sin2x),$$</p>
+<p>选 <strong>C</strong>。</p>
+<h3>易错点</h3>
+<ul><li><strong>误选 B/D（给块一多乘 $x$）</strong>：看到 $\mathrm e^{2x}$ 与特征根"实部相同"就当共振——特征量是完整复数 $2\pm2\mathrm i$，实部相同不等于重合，块一绝不乘 $x$。</li><li><strong>误选 A（块二漏乘 $x$）</strong>：块二特征量恰为特征根，标准试探是齐次解，代进左端恒为 $0$，必须乘 $x$ 才能匹配自由项。</li><li><strong>三角块只设一半</strong>：求导会让 $\sin$ 与 $\cos$ 互相转化，共振块必须 $B\cos2x+C\sin2x$ 成对设出，否则左端会冒出无法消去的项。</li></ul>
+<blockquote>记忆锚点：特征量 = 完整复指数；特征量撞上特征根 ⟹ 试探解成了齐次解 ⟹ 乘 $x$ 抬出去；实部相同不算撞。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

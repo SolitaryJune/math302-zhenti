@@ -97,5 +97,33 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：无界区域的面积与旋转体体积（反常积分）</h2>
+<p><strong>答案</strong>：(1) $S=\ln\left(\sqrt2+1\right)$；(2) $V=\pi\left(1-\dfrac\pi4\right)$。</p>
+<h3>第 0 步：先立模型——为什么两个量都是反常积分、体积公式从哪来</h3>
+<p>$D$ 夹在 $y=0$ 与 $y=\dfrac{1}{x\sqrt{1+x^2}}$ 之间、沿 $x\ge1$ 无限延伸，上边界衰减到 $0$ 却永不闭合——面积只能写成无穷限反常积分 $\displaystyle\int_1^{+\infty}y(x)\,\mathrm dx$；旋转体用<strong>圆盘法</strong>：在 $x$ 处取厚度 $\mathrm dx$ 的薄片，绕 $x$ 轴转出一个半径为 $y(x)$ 的圆盘，面积 $\pi y^2$，沿 $x$ 累加即 $V=\pi\int_1^{+\infty}y^2\,\mathrm dx$。两个被积函数在无穷远分别按 $\dfrac1{x^2}$ 与 $\dfrac1{x^4}$ 衰减（$\sqrt{1+x^2}\sim x$），都收敛；但原函数都不是「一眼可积」型——难点全在怎么处理被积式。</p>
+<h3>第一步：为什么选倒代换算面积</h3>
+<p>被积式 $\dfrac{1}{x\sqrt{1+x^2}}$ 有两个「钉子」：因子 $\dfrac1x$ 与根式 $\sqrt{1+x^2}$。<strong>倒代换 $x=\dfrac1t$ 一箭双雕</strong>：$\dfrac1x=t$ 直接消因子；$\sqrt{1+x^2}=\dfrac{\sqrt{1+t^2}}{t}$（$t&gt;0$），与 $\mathrm dx=-\dfrac{\mathrm dt}{t^2}$ 相乘后 $t$ 的幂恰好约干净。凡「$\dfrac1x$ 乘 $\sqrt{a^2+x^2}$」型被积式，倒代换都是首选。另一条路 $x=\tan\theta$ 也可行（$\sqrt{1+x^2}=\sec\theta$），被积式化为 $\csc\theta$，积分结果同为 $\ln(\sqrt2+1)$，可作验算，但不如倒代换直接。</p>
+<p>令 $x=\dfrac1t$：$\mathrm dx=-\dfrac{\mathrm dt}{t^2}$，$x\sqrt{1+x^2}=\dfrac{\sqrt{1+t^2}}{t^2}$，被积式化为 $-\dfrac{\mathrm dt}{\sqrt{1+t^2}}$；$x:1\to+\infty$ 对应 $t:1\to0^+$（方向反了，负号恰好扭回来），于是</p>
+<p>$$S=\int_0^1\frac{\mathrm dt}{\sqrt{1+t^2}}.$$</p>
+<p><strong>为什么原函数是 $\ln\big(t+\sqrt{1+t^2}\big)$</strong>：求导验证——</p>
+<p>$$\frac{\mathrm d}{\mathrm dt}\ln\big(t+\sqrt{1+t^2}\big)=\frac{1+\frac{t}{\sqrt{1+t^2}}}{t+\sqrt{1+t^2}}=\frac{1}{\sqrt{1+t^2}}.$$</p>
+<p>直观上它是双曲代换 $t=\sinh u$ 的化身（此时 $\mathrm dt=\sqrt{1+t^2}\,\mathrm du$，积分变成 $\int\mathrm du$），即反双曲正弦。于是</p>
+<p>$$S=\Big[\ln\big(t+\sqrt{1+t^2}\big)\Big]_0^1=\ln(1+\sqrt2)-\ln1=\ln(\sqrt2+1).$$</p>
+<h3>第二步：为什么这样拆部分分式算体积</h3>
+<p>$$V=\pi\int_1^{+\infty}\frac{\mathrm dx}{x^2(1+x^2)}.$$</p>
+<p>分母已经写成两个现成因子的乘积 $x^2$ 与 $1+x^2$，<strong>拆分的目标是让每一段都落回基本积分表</strong>：设 $\dfrac{1}{x^2(1+x^2)}=\dfrac{a}{x^2}+\dfrac{b}{1+x^2}$，通分比较分子得 $1=a(1+x^2)+bx^2$，常数项给 $a=1$、$x^2$ 项给 $a+b=0$，故 $b=-1$：</p>
+<p>$$\frac{1}{x^2(1+x^2)}=\frac{1}{x^2}-\frac{1}{1+x^2},$$</p>
+<p>两项的原函数分别是 $-\dfrac1x$ 与 $-\arctan x$，再无技术难点（通分回验：$\dfrac{1+x^2-x^2}{x^2(1+x^2)}$ 恰为左端）。逐项积分：</p>
+<p>$$V=\pi\Big[-\frac1x-\arctan x\Big]_1^{+\infty}.$$</p>
+<p><strong>上限为什么代成 $\Big(0-\dfrac\pi2\Big)$</strong>：$x\to+\infty$ 时 $-\dfrac1x\to0$；而 $\arctan x$ 的值域是 $\left(-\dfrac\pi2,\dfrac\pi2\right)$，$x\to+\infty$ 贴的是上渐近线 $y=\dfrac\pi2$，不是 $1$。下限 $x=1$：$-1-\dfrac\pi4$。故</p>
+<p>$$V=\pi\Big[\Big(0-\frac\pi2\Big)-\Big(-1-\frac\pi4\Big)\Big]=\pi\Big(1-\frac\pi2+\frac\pi4\Big)=\pi\Big(1-\frac\pi4\Big).$$</p>
+<h3>易错点</h3>
+<ul><li><strong>倒代换后的根号</strong>：$\sqrt{1+t^2}/t$ 依赖 $t&gt;0$，若代换区间含负数必须写 $\lvert t\rvert$。</li><li><strong>上下限随代换反向</strong>：$x:1\to+\infty$ 变成 $t:1\to0^+$，方向弄反会差一个负号。</li><li><strong>部分分式系数瞎凑</strong>：按「常数项、$x^2$ 项分别相等」联立定 $a,b$，拆完通分回验一遍最保险。</li><li><strong>上限代入想当然</strong>：$x\to+\infty$ 时 $-\dfrac1x\to0$ 而 $\arctan x\to\dfrac\pi2$，别把 $\arctan$ 的极限写成 $1$。</li></ul>
+<blockquote>一句话结论：倒代换消去 $\frac1x$ 与根式的纠缠，面积化为 $\displaystyle\int_0^1\frac{\mathrm dt}{\sqrt{1+t^2}}=\ln(\sqrt2+1)$；部分分式按分母因子拆成 $\dfrac1{x^2}-\dfrac{1}{1+x^2}$，体积为 $\pi\Big(1-\dfrac\pi4\Big)$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

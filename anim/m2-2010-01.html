@@ -100,5 +100,28 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：无穷间断点的识别与计数</h2>
+<p>答案：<strong>B</strong>（无穷间断点 1 个）。</p>
+<h3>第 0 步：先立模型——间断点怎么找、怎么分类</h3>
+<p>初等函数只在「分母为零、开方无定义」的地方断开，区间内部处处连续，所以<strong>间断点只可能藏在无定义点里</strong>——本题候选只有 $x=0,\ \pm1$，一个都不能漏。判型只看一件事：<strong>左右极限</strong>。</p>
+<table><thead><tr><th>左右极限行为</th><th>类型</th></tr></thead><tbody><tr><td>都存在且相等</td><td>可去间断点（第一类）</td></tr><tr><td>都存在但不相等</td><td>跳跃间断点（第一类）</td></tr><tr><td>至少一侧趋于 $\infty$</td><td>无穷间断点（第二类）</td></tr></tbody></table>
+<p>题目只要「无穷」这一类。策略因此是：先化简 $f$，让「谁会冲到无穷」一眼可见，再逐点求左右极限对号入座。</p>
+<h3>第一步：化简——让无穷的来源现形</h3>
+<p>利用 $\sqrt{1+\dfrac{1}{x^2}}=\dfrac{\sqrt{x^2+1}}{\lvert x\rvert}$（根号内通分，$x\neq0$），并在 $x\neq1$ 处约去公因子 $(x-1)$：</p>
+<p>$$f(x)=\frac{x}{x+1}\cdot\frac{\sqrt{x^2+1}}{\lvert x\rvert}\quad(x\neq0,\ \pm1).$$</p>
+<p>关键观察：因子 $\sqrt{x^2+1}$ 恒为正、极限恒为 $1$，永远不制造无穷；<strong>无穷只可能来自分母 $\lvert x\rvert$ 或 $x+1\to0$</strong>。化简的意义就在于此——把嫌疑人从三个缩到两个。</p>
+<h3>第二步：逐点求左右极限，对号入座</h3>
+<ul><li><strong>$x=1$</strong>：$(x-1)$ 已约去（只在 $x\neq1$ 时约，这正是「可去」的含义），$\dfrac{x}{x+1}\to\dfrac12$、$\dfrac{\sqrt{x^2+1}}{\lvert x\rvert}\to\sqrt2$，极限 $=\dfrac{\sqrt2}{2}$ 存在——可去间断点，<strong>不算</strong>。</li><li><strong>$x=0$</strong>：$\dfrac{x}{\lvert x\rvert}=\pm1$，右极限 $=1$、左极限 $=-1$，都有限但不相等——跳跃间断点，<strong>不算</strong>。</li><li><strong>$x=-1$</strong>：分母 $x+1\to0$ 而分子 $x\cdot\dfrac{\sqrt{x^2+1}}{\lvert x\rvert}\to-\sqrt2\neq0$，故 $\lvert f\rvert\to+\infty$——<strong>无穷间断点，算！</strong></li></ul>
+<p>把第二步汇成一张表（叙事已讲清，表只做对号）：</p>
+<table><thead><tr><th>候选点</th><th>极限</th><th>类型</th><th>是否无穷间断</th></tr></thead><tbody><tr><td>$x=1$</td><td>$\dfrac{\sqrt2}{2}$，存在</td><td>可去（第一类）</td><td>否</td></tr><tr><td>$x=0$</td><td>右 $1$ / 左 $-1$，均有限</td><td>跳跃（第一类）</td><td>否</td></tr><tr><td>$x=-1$</td><td>$\lvert f\rvert\to+\infty$</td><td>无穷（第二类）</td><td>是</td></tr></tbody></table>
+<p>无穷间断点只有 $x=-1$ 一个，选 <strong>B</strong>。</p>
+<h3>易错点</h3>
+<ul><li><strong>误选 A（0 个）</strong>：只盯着 $x=0$ 处唬人的 $\sqrt{1+1/x^2}\to+\infty$，忘了真正的无穷在 $x=-1$——分母 $x+1\to0$、分子不为零才是标准的无穷间断点。</li><li><strong>误选 C（2 个）</strong>：把 $x=0$ 也计入。其实 $x\cdot\dfrac1{\lvert x\rvert}=\pm1$ 阶数恰好抵消，左右极限有限，是跳跃不是无穷——「一个因子趋于无穷」不等于「乘积极限为无穷」。</li><li><strong>误选 D（3 个）</strong>：见无定义就数。$x=1$ 的 $(x-1)$ 是可约去因子，极限存在，属可去间断点。</li></ul>
+<blockquote>无穷间断点 $=$ 极限为 $\infty$ 的无定义点；先化简找「无穷的来源」，再逐点求左右极限判型。本题只有 $x=-1$，选 <strong>B</strong>。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

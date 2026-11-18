@@ -105,5 +105,32 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：差商递增 $\iff$ 导函数严格递增（中值定理 + 夹逼的双向证明）</h2>
+<p><strong>结论</strong>：命题成立。$f'(x)$ 在 $(a,b)$ 内严格单调增加 $\iff$ 对任意 $x_1&lt;x_2&lt;x_3$ 有 $\dfrac{f(x_2)-f(x_1)}{x_2-x_1}&lt;\dfrac{f(x_3)-f(x_2)}{x_3-x_2}$。（几何意义：$f$ 严格凸。）</p>
+<h3>第一步：两个方向各配什么工具</h3>
+<p>「$\Rightarrow$」要从 $f'$ 递增推差商递增：把差商<strong>变成</strong>导数值，用拉格朗日中值定理。「$\Leftarrow$」要从差商不等式推出 $f'$ 递增：把差商<strong>挤成</strong>导数，用导数定义取极限。注意全程只假设 $f$ 可导——$f'$ 既不假设连续也不假设可导，凡是"对 $f'$ 用中值定理"的思路都是死路。</p>
+<h3>第二步：必要性（中值定理一步到位）</h3>
+<p>任取 $x_1&lt;x_2&lt;x_3$。对 $f$ 在 $[x_1,x_2]$、$[x_2,x_3]$ 分别用拉格朗日中值定理：存在 $\xi_1\in(x_1,x_2)$、$\xi_2\in(x_2,x_3)$ 使两差商分别等于 $f'(\xi_1)$ 与 $f'(\xi_2)$。由 $\xi_1&lt;x_2&lt;\xi_2$ 及 $f'$ 严格增，得 $f'(\xi_1)&lt;f'(\xi_2)$，即差商不等式成立。</p>
+<h3>第三步：充分性·左端夹逼</h3>
+<p>设差商不等式 $(\ast)$ 对任意相邻三点成立。要证 $f'$ 严格增：任取 $s&lt;t$，取中间点 $c\in(s,t)$。对三点 $s&lt;x&lt;c$（$x$ 取遍 $(s,c)$）用 $(\ast)$：</p>
+<p>$$\frac{f(x)-f(s)}{x-s}&lt;\frac{f(c)-f(x)}{c-x}.$$</p>
+<p>令 $x\to s^+$：左端趋于 $f'(s)$（导数定义），右端趋于 $\dfrac{f(c)-f(s)}{c-s}$。取极限只能保号不严格：</p>
+<p>$$f'(s)\le\frac{f(c)-f(s)}{c-s}.\qquad(1)$$</p>
+<h3>第四步：充分性·右端夹逼 + 中间严格式</h3>
+<p>对三点 $c&lt;y&lt;t$（$y$ 取遍 $(c,t)$）用 $(\ast)$ 并令 $y\to t^-$，同理得</p>
+<p>$$\frac{f(t)-f(c)}{t-c}\le f'(t).\qquad(2)$$</p>
+<p>而对三点 $s&lt;c&lt;t$ 直接用 $(\ast)$（不经极限）得到<strong>严格</strong>不等式</p>
+<p>$$\frac{f(c)-f(s)}{c-s}&lt;\frac{f(t)-f(c)}{t-c}.\qquad(3)$$</p>
+<p>把 $(1)(3)(2)$ 串成链：</p>
+<p>$$f'(s)\le\frac{f(c)-f(s)}{c-s}&lt;\frac{f(t)-f(c)}{t-c}\le f'(t)\ \Longrightarrow\ f'(s)&lt;f'(t).$$</p>
+<p>由 $s&lt;t$ 任意，$f'$ 在 $(a,b)$ 内严格增。两个方向合起来，充要条件得证。</p>
+<h3>易错点</h3>
+<ul><li><strong>取极限后仍写严格不等号</strong>：$x\to s^+$ 取极限只能把 $&lt;$ 退化成 $\le$；证明的严格性必须靠 $(3)$ 这条不经过极限的三点严格式，这是本题最精妙的一步。</li><li><strong>两个中值点的大小没交代</strong>：必要性里必须指出 $\xi_1&lt;x_2&lt;\xi_2$（分属被 $x_2$ 隔开的两个开区间），才有 $\xi_1&lt;\xi_2$。</li><li><strong>对 $f'$ 用中值定理/要求 $f'$ 连续</strong>：条件只给 $f$ 可导，$f'$ 可能既不连续也不可导；中值定理只对 $f$ 用。</li><li><strong>充分性里忘了插中间点 $c$</strong>：$(\ast)$ 只连接"相邻三点"，$s$ 与 $t$ 之间必须拆成 $[s,c]$、$[c,t]$ 两段各自夹逼，再用 $(\ast)$ 把两段的中点差商连起来。</li></ul>
+<blockquote>一句话结论：$\Rightarrow$ 用拉格朗日把两个差商变成 $f'(\xi_1)&lt;f'(\xi_2)$；$\Leftarrow$ 用中间点 $c$ 左右两次取极限夹成 $\le$，靠三点严格式 $(3)$ 保住严格号，串出 $f'(s)&lt;f'(t)$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

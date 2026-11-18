@@ -101,5 +101,27 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：四个反常积分谁发散——敛散问的是原函数在 $+\infty$ 处是否有限</h2>
+<p>答案：D</p>
+<h3>第一步：机制先行——反常积分的敛散到底在问什么</h3>
+<p>$\displaystyle\int_0^{+\infty}f(x)\,\mathrm{d}x$ 的定义是极限 $\lim_{b\to+\infty}\displaystyle\int_0^b f\,\mathrm{d}x$：敛，就是原函数 $F(x)$ 在 $+\infty$ 处有<strong>有限</strong>极限；散，就是 $F$ 无界。所以最稳的路子是求出原函数、代上限。<strong>为什么这题选"直接算"？</strong> 四个被积函数的原函数都能一步找到（分部或凑微分），比逐个估阶更快、不留悬念。备用标尺是衰减速度：$\displaystyle\int_1^{+\infty}\dfrac{\mathrm{d}x}{x^p}$ 当 $p&gt;1$ 收敛、$p\le1$ 发散——原函数分别是 $\dfrac{x^{1-p}}{1-p}$ 与 $\ln x$，临界恰在 $p=1$：$\ln x$ 增长无界。</p>
+<h3>第二步：收敛的三个，逐步算出来</h3>
+<p><strong>A</strong>：分部积分，$\displaystyle\int_0^{+\infty}x\mathrm{e}^{-x}\,\mathrm{d}x=\Big[-(x+1)\mathrm{e}^{-x}\Big]_0^{+\infty}=0-(-1)=1$（$b\to+\infty$ 时 $(b+1)\mathrm{e}^{-b}\to0$：指数衰减压过幂增长）。</p>
+<p><strong>B</strong>：凑微分 $x\,\mathrm{d}x=\dfrac12\,\mathrm{d}(x^2)$，原函数 $-\dfrac12\mathrm{e}^{-x^2}$，值为 $\dfrac12$。</p>
+<p><strong>C</strong>：认出 $(\arctan x)'=\dfrac{1}{1+x^2}$，整体凑成 $\dfrac12(\arctan x)^2$，值为 $\dfrac{\pi^2}{8}$。</p>
+<p>三个都落出有限值，收敛。</p>
+<h3>第三步：D 为什么炸掉</h3>
+<p>$$\int_0^{+\infty}\frac{x}{1+x^2}\,\mathrm{d}x=\Big[\frac12\ln(1+x^2)\Big]_0^{+\infty}=+\infty.$$</p>
+<p>从衰减速度看原因：分子分母约去一个 $x$，$\dfrac{x}{1+x^2}\sim\dfrac1x$，恰是 $p=1$ 的临界情形——分母的 $x^2$ 只是外壳，真实衰减率只有 $\dfrac1x$，而 $\ln$ 型原函数在 $+\infty$ 处无界，必发散。对照其余三个：A、B 靠 $\mathrm{e}^{-x}$、$\mathrm{e}^{-x^2}$ 指数衰减（快过任何幂），C 的分子 $\arctan x$ 有界，被积函数约等于 $\dfrac{\text{常数}}{x^2}$，$p=2&gt;1$，都跑得够快。</p>
+<h3>第四步：汇总对号</h3>
+<table><thead><tr><th>选项</th><th>真实衰减</th><th>原函数极限</th><th>判定</th></tr></thead><tbody><tr><td>A</td><td>指数衰减</td><td>$1$</td><td>收敛</td></tr><tr><td>B</td><td>指数衰减</td><td>$\dfrac12$</td><td>收敛</td></tr><tr><td>C</td><td>$\sim\dfrac{\pi/2}{x^2}$，$p=2&gt;1$</td><td>$\dfrac{\pi^2}{8}$</td><td>收敛</td></tr><tr><td>D</td><td>$\sim\dfrac1x$，$p=1$ 临界</td><td>$+\infty$</td><td><strong>发散</strong></td></tr></tbody></table>
+<h3>易错点</h3>
+<ul><li><strong>见到 $x\mathrm{e}^{-x^2}$ 就分部积分</strong>：完全不必，凑微分一步出结果。</li><li><strong>凭直觉认为 $\dfrac{x}{1+x^2}$ 收敛</strong>：分母是 $x^2$ 不代表收敛——分子也有 $x$，约分后真实身份是 $\dfrac1x$，这正是 D 的典型误解来源。</li><li><strong>在 C 里硬拆被积函数</strong>：见 $\dfrac{1}{1+x^2}$ 应条件反射 $(\arctan x)'$，整体凑微分即可。</li></ul>
+<blockquote>一句话结论：A、B、C 分别等于 $1$、$\dfrac12$、$\dfrac{\pi^2}{8}$ 都收敛；D 的原函数 $\dfrac12\ln(1+x^2)$ 无界，发散选 D。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

@@ -99,5 +99,24 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：被积函数含 x 的变限积分求导</h2>
+<p>答案：2</p>
+<h3>第一步：先整理，再动手</h3>
+<p>$\varphi(x)=\displaystyle\int_0^{x^2} x f(t)\,\mathrm{d}t$ 中 $x$ 既出现在被积函数里、又出现在上限——<strong>先把与 $t$ 无关的 $x$ 提到积分号外</strong>：</p>
+<p>$$\varphi(x)=x\int_0^{x^2}f(t)\,\mathrm{d}t=x\,G(x^2),\qquad G(u)=\int_0^u f(t)\,\mathrm{d}t.$$</p>
+<h3>第二步：用第一个条件</h3>
+<p>$$\varphi(1)=1\cdot G(1)=1\ \Longrightarrow\ G(1)=\int_0^1 f(t)\,\mathrm{d}t=1.$$</p>
+<h3>第三步：乘积法则 + 链式法则求导，代第二个条件</h3>
+<p>$$\varphi'(x)=G(x^2)+x\cdot G'(x^2)\cdot 2x=G(x^2)+2x^2 f(x^2),$$</p>
+<p>（用到 $G'(u)=f(u)$。）代 $x=1$ 并用 $G(1)=1$：</p>
+<p>$$5=\varphi'(1)=G(1)+2f(1)=1+2f(1)\ \Longrightarrow\ f(1)=\frac{5-1}{2}=2.$$</p>
+<h3>易错点</h3>
+<ul><li><strong>对「被积函数里的 $x$」直接求导</strong>：不先把 $x$ 提出去，变限积分求导公式用不上，全盘皆错。</li><li><strong>上限求导漏链式因子</strong>：$G'(x^2)$ 后必须乘 $(x^2)'=2x$。</li><li><strong>第二个条件里忘用 $G(1)=1$</strong>：两个条件要联立，$\varphi'(1)$ 的表达式里正好藏着 $\varphi(1)$ 的值。</li></ul>
+<blockquote>结论：$f(1)=2$。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

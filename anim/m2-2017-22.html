@@ -99,5 +99,37 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：列向量关系 + 互异特征值夹出秩，再「读出」通解</h2>
+<p>答案：(1) $r(\boldsymbol{A})=2$；(2) $\boldsymbol{x}=\begin{pmatrix}1\\1\\1\end{pmatrix}+k\begin{pmatrix}1\\2\\-1\end{pmatrix}$（$k$ 为任意常数）</p>
+<h3>第一步（问 1）：列向量关系压出上界 $r\le2$</h3>
+<p>$\boldsymbol{\alpha}_{3}=\boldsymbol{\alpha}_{1}+2\boldsymbol{\alpha}_{2}$ 即 $\boldsymbol{\alpha}_{1}+2\boldsymbol{\alpha}_{2}-\boldsymbol{\alpha}_{3}=\boldsymbol0$：三列线性相关，列秩不超过 2，故 $r(\boldsymbol{A})\le2$。由于 $r(\boldsymbol A)&lt;3$，$|\boldsymbol{A}|=0$；而 $|\boldsymbol A|=\lambda_{1}\lambda_{2}\lambda_{3}$（行列式等于全部特征值之积），所以 $0$ 是 $\boldsymbol{A}$ 的一个特征值。</p>
+<h3>第二步（问 1）：互异特征值为什么能把秩顶回 2</h3>
+<p>三条因果链，环环有据：</p>
+<ul><li><strong>互异 ⇒ 可对角化</strong>：不同特征值的特征向量线性无关（标准定理），3 个互异特征值给出 3 个线性无关的特征向量，$\boldsymbol A$ 可对角化；</li><li><strong>可对角化 ⇒ $r(\boldsymbol A)$ 等于非零特征值个数</strong>：相似不改变秩（乘可逆矩阵不改变秩），$\boldsymbol A\sim\boldsymbol\Lambda$，对角阵的秩显然等于非零对角元个数；也可以从零空间看——$\dim N(\boldsymbol A)$ 是特征值 $0$ 的几何重数，可对角化时几何重数 $=$ 代数重数 $=1$，故 $r=3-1=2$；</li><li>于是 $0$ 只占一个名额，非零特征值至少 $2$ 个：</li></ul>
+<p>$$r(\boldsymbol{A})\ge2.$$</p>
+<p>两步夹逼：$r(\boldsymbol{A})=2$。（若只有"列相关"就断言 $r=2$，是本题最典型的丢分点——上界不等于取到。）</p>
+<h3>第三步（问 2）：为什么列关系就是齐次方程的解——按列组合视角</h3>
+<p>矩阵乘向量的定义：$\boldsymbol{A}\boldsymbol{x}=x_{1}\boldsymbol{\alpha}_{1}+x_{2}\boldsymbol{\alpha}_{2}+x_{3}\boldsymbol{\alpha}_{3}$（解向量的分量就是组合系数）。所以"列的线性关系"与"齐次方程的解"是一回事的两面：</p>
+<p>$$\boldsymbol{\alpha}_{1}+2\boldsymbol{\alpha}_{2}-\boldsymbol{\alpha}_{3}=\boldsymbol{0}
+\ \Longleftrightarrow\
+\boldsymbol{A}\begin{pmatrix}1\\2\\-1\end{pmatrix}=\boldsymbol{0}.$$</p>
+<p>$r(\boldsymbol A)=2$ 给出基础解系含 $3-2=1$ 个向量，而 $\boldsymbol{\xi}=(1,2,-1)^{\mathrm T}$ 非零且是解——一个向量就构成基础解系，<strong>不用消元</strong>：矩阵是抽象的，秩的信息全藏在列关系里。</p>
+<h3>第四步（问 2）：从 $\boldsymbol{\beta}$ 的表示读出特解</h3>
+<p>同一视角看非齐次：$\boldsymbol{A}\boldsymbol{x}=\boldsymbol{\beta}$ 的解就是"$\boldsymbol\beta$ 按 $\boldsymbol\alpha_i$ 展开的系数"。由</p>
+<p>$$\boldsymbol{\beta}=\boldsymbol{\alpha}_{1}+\boldsymbol{\alpha}_{2}+\boldsymbol{\alpha}_{3}
+=\boldsymbol{A}\begin{pmatrix}1\\1\\1\end{pmatrix},$$</p>
+<p>故 $\boldsymbol{\eta}=(1,1,1)^{\mathrm T}$ 是一个特解。</p>
+<h3>第五步：写出通解并验算</h3>
+<p>非齐次通解 $=$ 一个特解 $+$ 齐次通解（$k$ 遍历所有齐次解）：</p>
+<p>$$\boldsymbol{x}=\boldsymbol{\eta}+k\boldsymbol{\xi}=\begin{pmatrix}1\\1\\1\end{pmatrix}+k\begin{pmatrix}1\\2\\-1\end{pmatrix},\quad k\ \text{为任意常数}.$$</p>
+<p>验算：$\boldsymbol{A}\boldsymbol{x}=\boldsymbol{\beta}+k\,\boldsymbol{A}\boldsymbol{\xi}=\boldsymbol{\beta}+\boldsymbol{0}=\boldsymbol{\beta}$，恒成立。</p>
+<h3>易错点</h3>
+<ul><li><strong>只用列相关说 $r=2$</strong>：线性相关只给 $r\le2$；必须再用"互异特征值 ⇒ 可对角化 ⇒ 秩等于非零特征值个数"把秩顶回 $2$。</li><li><strong>想消元求基础解系</strong>：矩阵是抽象的，消元无门；解向量要从 $\boldsymbol{A}\boldsymbol{x}=\sum x_i\boldsymbol{\alpha}_i$ 的<strong>按列组合</strong>视角直接读出。</li><li><strong>特解系数抄错</strong>：$\boldsymbol{\beta}$ 的组合系数是 $1,1,1$，对应 $(1,1,1)^{\mathrm T}$；零解的组合系数是 $1,2,-1$，别混。</li></ul>
+<blockquote>一句话结论：列相关给 $r\le2$、互异特征值（可对角化、秩 $=$ 非零特征值个数）给 $r\ge2$，夹出 $r=2$；$\boldsymbol{A}(1,2,-1)^{\mathrm T}=\boldsymbol0$ 与 $\boldsymbol{A}(1,1,1)^{\mathrm T}=\boldsymbol{\beta}$ 直接拼出通解。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>

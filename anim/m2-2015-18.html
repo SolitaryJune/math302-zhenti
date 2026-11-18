@@ -94,5 +94,32 @@ AW.init({
 });
 /* ================== 题目专属区域结束 ================== */
 </script>
+<!-- AW_EXPLAIN_START -->
+<details class="aw-explain" open>
+<summary><span class="aw-explain-title">📝 文字讲解</span><span class="aw-explain-sub">与动画配套的完整讲解 · 点击展开/收起</span></summary>
+<div class="aw-explain-body"><h2>本题讲解：镜像配对砍掉 $xy$，再挑积分次序——"圆 + 抛物线"用直角坐标</h2>
+<p><strong>答案：$\dfrac\pi4-\dfrac25$。</strong></p>
+<h3>第 0 步：先立机制——对称性为什么能"扔项"</h3>
+<p>$D$ 的两条边界 $x^2+y^2=2$ 与 $y=x^2$ 都关于 $y$ 轴对称，故 $D$ 关于 $y$ 轴对称：区域里每个点 $(x,y)$ 都带着镜像 $(-x,y)$。拆 $x(x+y)=x^2+xy$：</p>
+<ul><li>$xy$ 在镜像两点取值相反（$xy$ 与 $-xy$），一对贡献抵为零——<strong>整个区域配对消光</strong>；</li><li>$x^2$ 在镜像两点取值相同——积分翻倍（后文用 $2\int_0^1$ 实现）。</li></ul>
+<p>"奇偶砍项"的全部机制就是逐点配对求和，不是玄技巧。于是</p>
+<p>$$I=\iint_Dx^2\,\mathrm dx\,\mathrm dy.$$</p>
+<h3>第 1 步：定区域、挑次序（预答：为什么不用极坐标）</h3>
+<p>联立边界求交点：$x^2+x^4=2\Rightarrow(x^2-1)(x^2+2)=0$，交点 $(\pm1,1)$。</p>
+<p>极坐标对<strong>纯圆边界</strong>最舒服，但这里另一条边界是抛物线：$y=x^2$ 化成 $r\sin\theta=r^2\cos^2\theta$，即 $r=\dfrac{\sin\theta}{\cos^2\theta}$，下限函数又繁又怪，一条 $\theta$ 射线还要同时跟圆、抛物线打交道。反观直角坐标<strong>先 $y$ 后 $x$</strong>：内层积分就是竖线段长度 $\sqrt{2-x^2}-x^2$，干净利落。（若先 $x$ 后 $y$，$y\in[0,1]$ 段左右边界是抛物线 $\pm\sqrt y$，$y\in[1,\sqrt2]$ 段是圆 $\pm\sqrt{2-y^2}$，得拆两块——所以选先 $y$ 后 $x$。）</p>
+<h3>第 2 步：写成累次积分</h3>
+<p>$$I=\int_{-1}^1x^2\Bigl(\int_{x^2}^{\sqrt{2-x^2}}\mathrm dy\Bigr)\mathrm dx=2\int_0^1x^2\sqrt{2-x^2}\,\mathrm dx-2\int_0^1x^4\,\mathrm dx.$$</p>
+<p>第二项立即收口：$2\cdot\dfrac15=\dfrac25$。</p>
+<h3>第 3 步：三角换元消根号</h3>
+<p>第一项令 $x=\sqrt2\sin t$——目的就是让 $\sqrt{2-x^2}=\sqrt2\cos t$ 掉根号。上限由 $x=1$ 得 $\sin t=\dfrac1{\sqrt2}$，即 $t=\dfrac\pi4$：</p>
+<p>$$2\int_0^{\pi/4}2\sin^2t\cdot\sqrt2\cos t\cdot\sqrt2\cos t\,\mathrm dt=8\int_0^{\pi/4}\sin^2t\cos^2t\,\mathrm dt=2\int_0^{\pi/4}\sin^22t\,\mathrm dt.$$</p>
+<p>凑 $\sin 2t$ 一步把两个平方并成一个，再用降幂 $\sin^22t=\dfrac{1-\cos4t}2$：</p>
+<p>$$2\int_0^{\pi/4}\frac{1-\cos4t}2\,\mathrm dt=\Bigl[t-\frac{\sin4t}4\Bigr]_0^{\pi/4}=\frac\pi4.$$</p>
+<p>合并：$I=\dfrac\pi4-\dfrac25$。</p>
+<h3>易错点</h3>
+<ul><li><strong>不砍 $xy$ 硬算</strong>：计算量翻倍还易错；对称区域先做奇偶配对分析。</li><li><strong>换元上限写成 $\frac\pi2$</strong>：$x=\sqrt2\sin t$，$\sin t=\frac1{\sqrt2}$ 对应 $\frac\pi4$；系数 $\sqrt2$ 丢了限就全错。</li><li><strong>见圆就换极坐标</strong>：抛物线边界在极坐标下是 $r=\frac{\sin\theta}{\cos^2\theta}$，是个坑。</li></ul>
+<blockquote>记忆锚点：对称区域 = 镜像配对（奇消偶倍）；"圆 + 抛物线"混合边界优选直角坐标先 $y$ 后 $x$；换元的目标是消根号。</blockquote></div>
+</details>
+<!-- AW_EXPLAIN_END -->
 </body>
 </html>
